@@ -21,6 +21,13 @@ use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 interface GroupInterface extends RoleableInterface
 {
     /**
+     * Get the group name.
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
      * Get the group name used by security.
      *
      * @return string
