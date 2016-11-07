@@ -5,7 +5,7 @@ Sonatra Security
 [![Build Status](https://img.shields.io/travis/sonatra/sonatra-security/master.svg)](https://travis-ci.org/sonatra/sonatra-security)
 [![Coverage Status](https://img.shields.io/coveralls/sonatra/sonatra-security/master.svg)](https://coveralls.io/r/sonatra/sonatra-security?branch=master)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/sonatra/sonatra-security/master.svg)](https://scrutinizer-ci.com/g/sonatra/sonatra-security?branch=master)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/74707490-7a7f-4dd8-91c9-84af5de547a1.svg)](https://insight.sensiolabs.com/projects/74707490-7a7f-4dd8-91c9-84af5de547a1)
+[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/6951c069-4ec4-4cfa-a3b9-281085553fdb.svg)](https://insight.sensiolabs.com/projects/6951c069-4ec4-4cfa-a3b9-281085553fdb)
 
 The Sonatra Security implements all functionnalities of 
 [Symfony Advanced ACL Concepts](http://symfony.com/doc/current/cookbook/security/acl_advanced.html)
