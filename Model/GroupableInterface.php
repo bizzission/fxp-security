@@ -9,15 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Exception;
-
-use JMS\SecurityExtraBundle\Exception\RuntimeException;
+namespace Sonatra\Component\Security\Model;
 
 /**
- * Base JmsRuntimeException for the Security component.
+ * Groupable interface.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class JmsRuntimeException extends RuntimeException implements ExceptionInterface
+interface GroupableInterface
 {
+    /**
+     * Gets the groups granted to the user.
+     *
+     * @return \Traversable
+     */
+    public function getGroups();
 }

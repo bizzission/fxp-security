@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Dbal;
+namespace Sonatra\Component\Security\Acl\Dbal;
 
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Symfony\Component\Security\Acl\Dbal\MutableAclProvider as BaseMutableAclProvider;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\MutableAclProviderInterface;
+use Sonatra\Component\Security\Acl\Model\MutableAclProviderInterface;
 
 /**
  * Mutable Acl Provider.

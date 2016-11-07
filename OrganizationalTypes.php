@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle;
+namespace Sonatra\Component\Security;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>

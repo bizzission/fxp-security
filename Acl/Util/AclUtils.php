@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Util;
+namespace Sonatra\Component\Security\Acl\Util;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\GroupSecurityIdentity;
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\OrganizationSecurityIdentity;
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidArgumentException;
-use Sonatra\Bundle\SecurityBundle\Exception\RuntimeException;
-use Sonatra\Bundle\SecurityBundle\Model\GroupInterface;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationInterface;
+use Sonatra\Component\Security\Acl\Domain\GroupSecurityIdentity;
+use Sonatra\Component\Security\Acl\Domain\OrganizationSecurityIdentity;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Exception\RuntimeException;
+use Sonatra\Component\Security\Model\GroupInterface;
+use Sonatra\Component\Security\Model\OrganizationInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;

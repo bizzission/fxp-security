@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Rule\Definition;
+namespace Sonatra\Component\Security\Acl\Rule\Definition;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\AbstractRuleDefinition;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclRuleManagerInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleContextDefinitionInterface;
+use Sonatra\Component\Security\Acl\Domain\AbstractRuleDefinition;
+use Sonatra\Component\Security\Acl\Model\AclRuleManagerInterface;
+use Sonatra\Component\Security\Acl\Model\RuleContextDefinitionInterface;
 
 /**
  * The Affirmative ACL Rule Definition.

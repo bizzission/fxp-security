@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Util\AclUtils;
-use Sonatra\Bundle\SecurityBundle\Acl\Util\ClassUtils;
-use Sonatra\Bundle\SecurityBundle\Exception\SecurityException;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclRuleManagerInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\DependencyInjection\RuleExtensionInterface;
+use Sonatra\Component\Security\Acl\Util\AclUtils;
+use Sonatra\Component\Security\Acl\Util\ClassUtils;
+use Sonatra\Component\Security\Exception\SecurityException;
+use Sonatra\Component\Security\Acl\Model\AclRuleManagerInterface;
+use Sonatra\Component\Security\Acl\DependencyInjection\RuleExtensionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**

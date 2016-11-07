@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Listener;
+namespace Sonatra\Component\Security\Listener;
 
 /**
  * Interface for events of security identities.

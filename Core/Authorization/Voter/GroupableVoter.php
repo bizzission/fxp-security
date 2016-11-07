@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Authorization\Voter;
+namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
 /**
  * GroupableVoter to determine the groups granted on current user defined in token.
@@ -23,7 +23,7 @@ class GroupableVoter extends AbstractIdentityVoter
      */
     protected function getValidClass()
     {
-        return 'Sonatra\Bundle\SecurityBundle\Model\GroupInterface';
+        return 'Sonatra\Component\Security\Model\GroupInterface';
     }
 
     /**

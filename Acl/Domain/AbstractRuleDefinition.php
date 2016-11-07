@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleDefinitionInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleContextDefinitionInterface;
+use Sonatra\Component\Security\Acl\Model\RuleDefinitionInterface;
+use Sonatra\Component\Security\Acl\Model\RuleContextDefinitionInterface;
 
 /**
  * Abstract class for Acl Rule Definition.

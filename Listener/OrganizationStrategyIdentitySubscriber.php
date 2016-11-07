@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Listener;
+namespace Sonatra\Component\Security\Listener;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\OrganizationSecurityIdentity;
-use Sonatra\Bundle\SecurityBundle\Core\Organizational\OrganizationalContextInterface;
-use Sonatra\Bundle\SecurityBundle\Event\SecurityIdentityEvent;
-use Sonatra\Bundle\SecurityBundle\IdentityRetrievalEvents;
+use Sonatra\Component\Security\Acl\Domain\OrganizationSecurityIdentity;
+use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Event\SecurityIdentityEvent;
+use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 

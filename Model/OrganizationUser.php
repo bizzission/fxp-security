@@ -9,13 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Model;
+namespace Sonatra\Component\Security\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use FOS\UserBundle\Model\GroupInterface as FosGroupInterface;
-use FOS\UserBundle\Model\User;
-use Sonatra\Bundle\SecurityBundle\Model\Traits\RoleableTrait;
+use Sonatra\Component\Security\Model\Traits\RoleableTrait;
 
 /**
  * This is the domain class for the Organization User object.
@@ -103,8 +101,8 @@ abstract class OrganizationUser implements OrganizationUserInterface
         $roles = array_unique($roles);
 
         // we need to make sure to have at least one role
-        if (!in_array(User::ROLE_DEFAULT, $roles, true)) {
-            $roles[] = User::ROLE_DEFAULT;
+        if (!in_array('ROLE_USER', $roles, true)) {
+            $roles[] = 'ROLE_USER';
         }
 
         return $roles;
@@ -144,7 +142,7 @@ abstract class OrganizationUser implements OrganizationUserInterface
     /**
      * {@inheritdoc}
      */
-    public function addGroup(FosGroupInterface $group)
+    public function addGroup(GroupInterface $group)
     {
         if (!$this->getGroups()->contains($group)) {
             $this->getGroups()->add($group);
@@ -156,7 +154,7 @@ abstract class OrganizationUser implements OrganizationUserInterface
     /**
      * {@inheritdoc}
      */
-    public function removeGroup(FosGroupInterface $group)
+    public function removeGroup(GroupInterface $group)
     {
         if ($this->getGroups()->contains($group)) {
             $this->getGroups()->removeElement($group);

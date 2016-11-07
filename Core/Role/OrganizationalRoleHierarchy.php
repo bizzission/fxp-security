@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Role;
+namespace Sonatra\Component\Security\Core\Role;
 
+use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Bundle\SecurityBundle\Core\Organizational\OrganizationalContextInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
 
 /**
  * RoleHierarchy defines a role hierarchy.
@@ -31,12 +31,12 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
      * Constructor.
      *
      * @param array                               $hierarchy     An array defining the hierarchy
-     * @param RegistryInterface                   $registry
+     * @param ManagerRegistryInterface            $registry
      * @param string                              $roleClassname
      * @param CacheItemPoolInterface|null         $cache
      * @param OrganizationalContextInterface|null $context
      */
-    public function __construct(array $hierarchy, RegistryInterface $registry, $roleClassname,
+    public function __construct(array $hierarchy, ManagerRegistryInterface $registry, $roleClassname,
                                 CacheItemPoolInterface $cache = null, OrganizationalContextInterface $context = null)
     {
         parent::__construct($hierarchy, $registry, $roleClassname, $cache);

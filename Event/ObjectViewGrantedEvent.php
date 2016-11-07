@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Event;
+namespace Sonatra\Component\Security\Event;
 
 /**
  * The object view granted event.

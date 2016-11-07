@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Exception;
+namespace Sonatra\Component\Security\Exception;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as BaseAccessDeniedException;
 

@@ -9,20 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Role;
+namespace Sonatra\Component\Security\Core\Role;
 
+use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Bundle\SecurityBundle\Model\RoleHierarchisableInterface;
-use Sonatra\Bundle\SecurityBundle\ReachableRoleEvents;
+use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\ReachableRoleEvents;
 use Symfony\Component\Security\Core\Role\RoleHierarchy as BaseRoleHierarchy;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Sonatra\Bundle\SecurityBundle\Event\ReachableRoleEvent;
-use Sonatra\Bundle\SecurityBundle\Exception\SecurityException;
+use Sonatra\Component\Security\Event\ReachableRoleEvent;
+use Sonatra\Component\Security\Exception\SecurityException;
 
 /**
  * RoleHierarchy defines a role hierarchy.
@@ -32,7 +32,7 @@ use Sonatra\Bundle\SecurityBundle\Exception\SecurityException;
 class RoleHierarchy extends BaseRoleHierarchy
 {
     /**
-     * @var RegistryInterface
+     * @var ManagerRegistryInterface
      */
     private $registry;
 
@@ -60,11 +60,11 @@ class RoleHierarchy extends BaseRoleHierarchy
      * Constructor.
      *
      * @param array                       $hierarchy     An array defining the hierarchy
-     * @param RegistryInterface           $registry
+     * @param ManagerRegistryInterface    $registry
      * @param string                      $roleClassname
      * @param CacheItemPoolInterface|null $cache
      */
-    public function __construct(array $hierarchy, RegistryInterface $registry, $roleClassname,
+    public function __construct(array $hierarchy, ManagerRegistryInterface $registry, $roleClassname,
                                 CacheItemPoolInterface $cache = null)
     {
         parent::__construct($hierarchy);
@@ -147,10 +147,10 @@ class RoleHierarchy extends BaseRoleHierarchy
 
         // build hierarchy
         $reachableRoles = parent::getReachableRoles($roles);
-        /* @var EntityManagerInterface $em */
         $em = $this->registry->getManagerForClass($this->roleClassname);
         $repo = $em->getRepository($this->roleClassname);
         $entityRoles = array();
+        $filters = array();
         /* @var ReachableRoleEvent $event */
         $event = null;
 
@@ -161,10 +161,12 @@ class RoleHierarchy extends BaseRoleHierarchy
             $reachableRoles = $event->geReachableRoles();
         }
 
-        $filters = array_keys($em->getFilters()->getEnabledFilters());
+        if (class_exists('Doctrine\ORM\EntityManagerInterface') && $em instanceof EntityManagerInterface) {
+            $filters = array_keys($em->getFilters()->getEnabledFilters());
 
-        foreach ($filters as $name) {
-            $em->getFilters()->disable($name);
+            foreach ($filters as $name) {
+                $em->getFilters()->disable($name);
+            }
         }
 
         if (count($roleNames) > 0) {
@@ -176,8 +178,10 @@ class RoleHierarchy extends BaseRoleHierarchy
             $reachableRoles = array_merge($reachableRoles, $this->getReachableRoles($eRole->getChildren()->toArray()));
         }
 
-        foreach ($filters as $name) {
-            $em->getFilters()->enable($name);
+        if (count($filters) > 0) {
+            foreach ($filters as $name) {
+                $em->getFilters()->enable($name);
+            }
         }
 
         // cleaning double

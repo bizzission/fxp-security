@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Bundle\SecurityBundle\AclManipulatorEvents;
-use Sonatra\Bundle\SecurityBundle\Event\AclManipulatorEvent;
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\AclManipulatorEvents;
+use Sonatra\Component\Security\Event\AclManipulatorEvent;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManipulatorInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\PermissionContextInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Util\AclUtils;
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidDomainObjectException;
+use Sonatra\Component\Security\Acl\Model\AclManipulatorInterface;
+use Sonatra\Component\Security\Acl\Model\PermissionContextInterface;
+use Sonatra\Component\Security\Acl\Util\AclUtils;
+use Sonatra\Component\Security\Exception\InvalidDomainObjectException;
 use Symfony\Component\Security\Acl\Model\DomainObjectInterface;
 use Symfony\Component\Security\Acl\Model\MutableAclInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;

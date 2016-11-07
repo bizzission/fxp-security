@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle;
+namespace Sonatra\Component\Security;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -20,7 +20,7 @@ final class AclManipulatorEvents
      * The AclManipulatorEvents::GET event occurs before the getting of acls.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\AclManipulatorEvent instance.
+     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
      *
      * @var string
      */
@@ -30,7 +30,7 @@ final class AclManipulatorEvents
      * The AclManipulatorEvents::ADD event occurs before the adding of acls.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\AclManipulatorEvent instance.
+     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
      *
      * @var string
      */
@@ -40,7 +40,7 @@ final class AclManipulatorEvents
      * The AclManipulatorEvents::SET event occurs before the setting of acls.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\AclManipulatorEvent instance.
+     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
      *
      * @var string
      */
@@ -50,7 +50,7 @@ final class AclManipulatorEvents
      * The AclManipulatorEvents::REVOKE event occurs before the revoking of acls.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\AclManipulatorEvent instance.
+     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
      *
      * @var string
      */
@@ -60,7 +60,7 @@ final class AclManipulatorEvents
      * The AclManipulatorEvents::DELETE event occurs before the deleting of acls.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\AclManipulatorEvent instance.
+     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
      *
      * @var string
      */

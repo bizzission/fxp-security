@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
 use Symfony\Component\Security\Acl\Model\AuditableEntryInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManipulatorInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\PermissionContextInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Util\AclUtils;
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Acl\Model\AclManipulatorInterface;
+use Sonatra\Component\Security\Acl\Model\PermissionContextInterface;
+use Sonatra\Component\Security\Acl\Util\AclUtils;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
 
 /**
  * Implementation of persmission context.

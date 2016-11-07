@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Model;
+namespace Sonatra\Component\Security\Model;
 
-use FOS\UserBundle\Model\GroupableInterface;
-use Sonatra\Bundle\SecurityBundle\Model\Traits\RoleableInterface;
+use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 
 /**
  * Organization user interface.

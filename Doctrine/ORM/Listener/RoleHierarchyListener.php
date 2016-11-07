@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Doctrine\ORM\Listener;
+namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -17,12 +17,12 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\SecurityIdentityRetrievalStrategy;
-use Sonatra\Bundle\SecurityBundle\Core\Organizational\OrganizationalContextInterface;
-use Sonatra\Bundle\SecurityBundle\Model\GroupInterface;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationInterface;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationUserInterface;
-use Sonatra\Bundle\SecurityBundle\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\Acl\Domain\SecurityIdentityRetrievalStrategy;
+use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Model\GroupInterface;
+use Sonatra\Component\Security\Model\OrganizationInterface;
+use Sonatra\Component\Security\Model\OrganizationUserInterface;
+use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -179,10 +179,10 @@ class RoleHierarchyListener implements EventSubscriber
     {
         $ref = new \ReflectionClass($mapping['sourceEntity']);
 
-        if (in_array('Sonatra\\Bundle\\SecurityBundle\\Model\\RoleHierarchisableInterface', $ref->getInterfaceNames())
+        if (in_array('Sonatra\\Component\\Security\\Model\\RoleHierarchisableInterface', $ref->getInterfaceNames())
                 && 'children' === $mapping['fieldName']) {
             return true;
-        } elseif (in_array('FOS\\UserBundle\\Model\\GroupableInterface', $ref->getInterfaceNames())
+        } elseif (in_array('Sonatra\\Component\\Security\\Model\\GroupableInterface', $ref->getInterfaceNames())
                 && 'groups' === $mapping['fieldName']) {
             return true;
         }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Model;
+namespace Sonatra\Component\Security\Model;
 
 use Symfony\Component\Security\Core\Role\RoleInterface as BaseRoleInterface;
 

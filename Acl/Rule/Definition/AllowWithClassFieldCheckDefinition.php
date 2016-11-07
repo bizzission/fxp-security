@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Rule\Definition;
+namespace Sonatra\Component\Security\Acl\Rule\Definition;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\AbstractRuleDefinition;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManagerInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleContextDefinitionInterface;
+use Sonatra\Component\Security\Acl\Domain\AbstractRuleDefinition;
+use Sonatra\Component\Security\Acl\Model\AclManagerInterface;
+use Sonatra\Component\Security\Acl\Model\RuleContextDefinitionInterface;
 
 /**
  * The Allow ACL Rule Definition but check the grant of class field

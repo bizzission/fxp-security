@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\DependencyInjection;
+namespace Sonatra\Component\Security\Acl\DependencyInjection;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Model\ObjectFilterVoterInterface;
+use Sonatra\Component\Security\Acl\Model\ObjectFilterVoterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

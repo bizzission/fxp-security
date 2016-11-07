@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Model\Traits;
+namespace Sonatra\Component\Security\Model\Traits;
 
-use FOS\UserBundle\Model\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Trait of roleable model.
@@ -54,7 +54,7 @@ trait RoleableTrait
     {
         $role = strtoupper($role);
 
-        if (!in_array($role, $this->roles, true) && $role !== User::ROLE_DEFAULT) {
+        if (!in_array($role, $this->roles, true) && $role !== 'ROLE_USER') {
             $this->roles[] = $role;
         }
 
@@ -82,8 +82,8 @@ trait RoleableTrait
         $roles = $this->roles;
 
         // we need to make sure to have at least one role
-        if ($this instanceof User && !in_array(User::ROLE_DEFAULT, $roles, true)) {
-            $roles[] = User::ROLE_DEFAULT;
+        if ($this instanceof UserInterface && !in_array('ROLE_USER', $roles, true)) {
+            $roles[] = 'ROLE_USER';
         }
 
         return $roles;

@@ -9,18 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclObjectFilterInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManagerInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\DependencyInjection\ObjectFilterExtensionInterface;
-use Sonatra\Bundle\SecurityBundle\Event\ObjectFieldViewGrantedEvent;
-use Sonatra\Bundle\SecurityBundle\Event\ObjectViewGrantedEvent;
-use Sonatra\Bundle\SecurityBundle\Event\PostCommitObjectFilterEvent;
-use Sonatra\Bundle\SecurityBundle\Event\PreCommitObjectFilterEvent;
-use Sonatra\Bundle\SecurityBundle\Event\RestoreViewGrantedEvent;
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidArgumentException;
-use Sonatra\Bundle\SecurityBundle\ObjectFilterEvents;
+use Sonatra\Component\Security\Acl\Model\AclObjectFilterInterface;
+use Sonatra\Component\Security\Acl\Model\AclManagerInterface;
+use Sonatra\Component\Security\Acl\DependencyInjection\ObjectFilterExtensionInterface;
+use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
+use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
+use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;
+use Sonatra\Component\Security\Event\PreCommitObjectFilterEvent;
+use Sonatra\Component\Security\Event\RestoreViewGrantedEvent;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\ObjectFilterEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Permission\BasicPermissionMap;
 use Symfony\Component\Security\Acl\Voter\FieldVote;

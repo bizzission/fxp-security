@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\DependencyInjection;
+namespace Sonatra\Component\Security\Acl\DependencyInjection;
 
 /**
  * Interface for extensions which provide object filter voters.

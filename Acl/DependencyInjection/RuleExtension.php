@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\DependencyInjection;
+namespace Sonatra\Component\Security\Acl\DependencyInjection;
 
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

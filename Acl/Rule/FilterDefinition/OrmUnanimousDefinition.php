@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Rule\FilterDefinition;
+namespace Sonatra\Component\Security\Acl\Rule\FilterDefinition;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\AbstractRuleOrmFilterDefinition;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclRuleManagerInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\OrmFilterRuleContextDefinitionInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleOrmFilterDefinitionInterface;
+use Sonatra\Component\Security\Acl\Domain\AbstractRuleOrmFilterDefinition;
+use Sonatra\Component\Security\Acl\Model\AclRuleManagerInterface;
+use Sonatra\Component\Security\Acl\Model\OrmFilterRuleContextDefinitionInterface;
+use Sonatra\Component\Security\Acl\Model\RuleOrmFilterDefinitionInterface;
 
 /**
  * The Unanimous ACL Rule Filter Definition.

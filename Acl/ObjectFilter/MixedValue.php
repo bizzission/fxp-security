@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\ObjectFilter;
+namespace Sonatra\Component\Security\Acl\ObjectFilter;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Model\ObjectFilterVoterInterface;
+use Sonatra\Component\Security\Acl\Model\ObjectFilterVoterInterface;
 
 /**
  * The Mixed Value Object Filter Voter.

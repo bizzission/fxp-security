@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle;
+namespace Sonatra\Component\Security;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -19,7 +19,7 @@ final class ObjectFilterEvents
     /**
      * The PRE_COMMIT event occurs before the preloading of ACLs and filtering of objects.
      *
-     * @Event("Sonatra\Bundle\SecurityBundle\Event\PreCommitObjectFilterEvent")
+     * @Event("Sonatra\Component\Security\Event\PreCommitObjectFilterEvent")
      *
      * @var string
      */
@@ -28,7 +28,7 @@ final class ObjectFilterEvents
     /**
      * The POST_COMMIT event occurs after the filtering of objects.
      *
-     * @Event("Sonatra\Bundle\SecurityBundle\Event\PostCommitObjectFilterEvent")
+     * @Event("Sonatra\Component\Security\Event\PostCommitObjectFilterEvent")
      *
      * @var string
      */
@@ -40,7 +40,7 @@ final class ObjectFilterEvents
      *
      * This event allow you to defined the granted value, and skip the ACL rules.
      *
-     * @Event("Sonatra\Bundle\SecurityBundle\Event\ObjectViewGrantedEvent")
+     * @Event("Sonatra\Component\Security\Event\ObjectViewGrantedEvent")
      *
      * @var string
      */
@@ -52,7 +52,7 @@ final class ObjectFilterEvents
      *
      * This event allow you to defined the granted value, and skip the ACL rules.
      *
-     * @Event("Sonatra\Bundle\SecurityBundle\Event\ObjectFieldViewGrantedEvent")
+     * @Event("Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent")
      *
      * @var string
      */
@@ -64,7 +64,7 @@ final class ObjectFilterEvents
      *
      * This event allow you to defined the granted value, and skip the ACL rules.
      *
-     * @Event("Sonatra\Bundle\SecurityBundle\Event\RestoreViewGrantedEvent")
+     * @Event("Sonatra\Component\Security\Event\RestoreViewGrantedEvent")
      *
      * @var string
      */

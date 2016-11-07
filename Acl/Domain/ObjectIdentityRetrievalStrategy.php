@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Voter\FieldVote;
 use Symfony\Component\Security\Acl\Exception\InvalidDomainObjectException;
-use Sonatra\Bundle\SecurityBundle\Acl\Util\AclUtils;
+use Sonatra\Component\Security\Acl\Util\AclUtils;
 
 /**
  * Strategy to be used for retrieving object identities from domain objects.

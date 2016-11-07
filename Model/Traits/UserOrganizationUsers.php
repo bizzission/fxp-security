@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Model\Traits;
+namespace Sonatra\Component\Security\Model\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationUserInterface;
+use Sonatra\Component\Security\Model\OrganizationUserInterface;
 
 /**
  * Trait of organization users in user model.

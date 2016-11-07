@@ -9,17 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Model;
+namespace Sonatra\Component\Security\Model;
 
-use FOS\UserBundle\Model\GroupInterface as BaseGroupInterface;
-use Sonatra\Bundle\SecurityBundle\Model\Traits\RoleableInterface;
+use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 
 /**
  * User interface.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface GroupInterface extends BaseGroupInterface, RoleableInterface
+interface GroupInterface extends RoleableInterface
 {
     /**
      * Get the group name used by security.

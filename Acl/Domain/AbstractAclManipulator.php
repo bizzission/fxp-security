@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Model\MutableAclProviderInterface;
-use Sonatra\Bundle\SecurityBundle\AclManipulatorEvents;
-use Sonatra\Bundle\SecurityBundle\Event\AclManipulatorEvent;
+use Sonatra\Component\Security\Acl\Model\MutableAclProviderInterface;
+use Sonatra\Component\Security\AclManipulatorEvents;
+use Sonatra\Component\Security\Event\AclManipulatorEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Exception\NoAceFoundException;
@@ -24,10 +24,10 @@ use Symfony\Component\Security\Acl\Model\MutableAclInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\PermissionContextInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManipulatorInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Util\AclUtils;
-use Sonatra\Bundle\SecurityBundle\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Acl\Model\PermissionContextInterface;
+use Sonatra\Component\Security\Acl\Model\AclManipulatorInterface;
+use Sonatra\Component\Security\Acl\Util\AclUtils;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

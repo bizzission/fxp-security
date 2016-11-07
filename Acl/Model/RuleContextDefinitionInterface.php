@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Model;
+namespace Sonatra\Component\Security\Acl\Model;
 
 /**
  * Acl Rule Context Interface for acl rule definition.

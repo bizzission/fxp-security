@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle;
+namespace Sonatra\Component\Security;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -21,7 +21,7 @@ final class IdentityRetrievalEvents
      * all security identities.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\SecurityIdentityEvent instance.
+     * Sonatra\Component\Security\Event\SecurityIdentityEvent instance.
      *
      * @var string
      */
@@ -32,7 +32,7 @@ final class IdentityRetrievalEvents
      * identities are adding.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\SecurityIdentityEvent instance.
+     * Sonatra\Component\Security\Event\SecurityIdentityEvent instance.
      *
      * @var string
      */
@@ -43,7 +43,7 @@ final class IdentityRetrievalEvents
      * all security identities.
      *
      * The event listener method receives a
-     * Sonatra\Bundle\SecurityBundle\Event\SecurityIdentityEvent instance.
+     * Sonatra\Component\Security\Event\SecurityIdentityEvent instance.
      *
      * @var string
      */

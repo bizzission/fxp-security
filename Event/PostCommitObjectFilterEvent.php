@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Event;
+namespace Sonatra\Component\Security\Event;
 
 /**
  * The post commit object filter event.

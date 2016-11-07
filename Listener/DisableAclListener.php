@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Listener;
+namespace Sonatra\Component\Security\Listener;
 
-use Sonatra\Bundle\SecurityBundle\IdentityRetrievalEvents;
-use Sonatra\Bundle\SecurityBundle\ReachableRoleEvents;
+use Sonatra\Component\Security\IdentityRetrievalEvents;
+use Sonatra\Component\Security\ReachableRoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManagerInterface;
+use Sonatra\Component\Security\Acl\Model\AclManagerInterface;
 
 /**
  * Listener for disable/re-enable the acl doctrine orm filter.

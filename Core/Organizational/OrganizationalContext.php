@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Organizational;
+namespace Sonatra\Component\Security\Core\Organizational;
 
-use Sonatra\Bundle\SecurityBundle\Exception\RuntimeException;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationInterface;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationUserInterface;
-use Sonatra\Bundle\SecurityBundle\Model\UserInterface;
-use Sonatra\Bundle\SecurityBundle\OrganizationalTypes;
+use Sonatra\Component\Security\Exception\RuntimeException;
+use Sonatra\Component\Security\Model\OrganizationInterface;
+use Sonatra\Component\Security\Model\OrganizationUserInterface;
+use Sonatra\Component\Security\Model\UserInterface;
+use Sonatra\Component\Security\OrganizationalTypes;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 

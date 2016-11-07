@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Doctrine\ORM\Util;
+namespace Sonatra\Component\Security\Doctrine\ORM\Util;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\BigIntType;
@@ -21,7 +21,7 @@ use Doctrine\DBAL\Types\SmallIntType;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sonatra\Bundle\SecurityBundle\Exception\RuntimeException;
+use Sonatra\Component\Security\Exception\RuntimeException;
 
 /**
  * Utils for doctrine ORM.

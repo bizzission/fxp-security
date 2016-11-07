@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Bundle\SecurityBundle\Event\SecurityIdentityEvent;
-use Sonatra\Bundle\SecurityBundle\IdentityRetrievalEvents;
-use Sonatra\Bundle\SecurityBundle\Listener\EventStrategyIdentityInterface;
+use Sonatra\Component\Security\Event\SecurityIdentityEvent;
+use Sonatra\Component\Security\IdentityRetrievalEvents;
+use Sonatra\Component\Security\Listener\EventStrategyIdentityInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Acl\Domain\SecurityIdentityRetrievalStrategy as BaseSecurityIdentityRetrievalStrategy;

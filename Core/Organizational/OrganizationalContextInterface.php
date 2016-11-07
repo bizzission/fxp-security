@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Organizational;
+namespace Sonatra\Component\Security\Core\Organizational;
 
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationInterface;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationUserInterface;
+use Sonatra\Component\Security\Model\OrganizationInterface;
+use Sonatra\Component\Security\Model\OrganizationUserInterface;
 
 /**
  * Organizational Context interface.

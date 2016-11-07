@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Authorization\Voter;
+namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
 /**
  * OrganizationVoter to determine the organization granted on current user defined in token.
@@ -23,7 +23,7 @@ class OrganizationVoter extends AbstractIdentityVoter
      */
     protected function getValidClass()
     {
-        return 'Sonatra\Bundle\SecurityBundle\Model\OrganizationInterface';
+        return 'Sonatra\Component\Security\Model\OrganizationInterface';
     }
 
     /**

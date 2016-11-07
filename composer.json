@@ -1,9 +1,9 @@
 {
-    "name": "sonatra/security-bundle",
-    "type": "symfony-bundle",
+    "name": "sonatra/security",
+    "type": "library",
     "description": "Implements all features of Symfony2 Advanced ACL Concepts and adds some interesting features",
     "keywords": ["ACL", "ACE", "Advanced ACL Concept Implementation", "Rule definition", "Sharing rule", "ACL Voter", "JMS Expression"],
-    "homepage": "https://github.com/sonatra/SonatraSecurityBundle",
+    "homepage": "https://github.com/sonatra/sonatra-security",
     "license": "MIT",
     "authors": [
         {
@@ -13,26 +13,23 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "symfony/framework-bundle": "~3.0",
-        "symfony/security-bundle": "~3.0",
+        "symfony/security": "~3.0",
+        "symfony/security-acl": "~3.0",
+        "symfony/event-dispatcher": "~3.0",
         "symfony/expression-language": "~3.0",
         "symfony/validator": "~3.0",
-        "symfony/security-acl": "~3.0",
         "doctrine/common": "~2.5",
-        "friendsofsymfony/user-bundle": "~2.0@dev",
         "psr/cache": "~1.0"
     },
     "require-dev": {
-        "doctrine/doctrine-bundle": "~1.6",
-        "doctrine/orm": "~2.5",
-        "jms/security-extra-bundle": "~1.5"
+        "symfony/dependency-injection": "~3.0",
+        "doctrine/orm": "~2.5"
     },
     "suggest": {
-        "jms/security-extra-bundle": "For JMS Security Extra Expression features",
         "doctrine/orm": "For ORM filter query feature"
     },
     "autoload": {
-        "psr-4": { "Sonatra\\Bundle\\SecurityBundle\\": "" },
+        "psr-4": { "Sonatra\\Component\\Security\\": "" },
         "exclude-from-classmap": [
             "/Tests/"
         ]

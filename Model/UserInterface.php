@@ -9,19 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Model;
+namespace Sonatra\Component\Security\Model;
 
 use Doctrine\Common\Collections\Collection;
-use FOS\UserBundle\Model\GroupableInterface;
-use FOS\UserBundle\Model\UserInterface as BaseUserInterface;
-use Sonatra\Bundle\SecurityBundle\Model\Traits\RoleableInterface;
+use Sonatra\Component\Security\Model\Traits\RoleableInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * User interface.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface UserInterface extends BaseUserInterface, RoleableInterface, GroupableInterface
+interface UserInterface extends AdvancedUserInterface, RoleableInterface, GroupableInterface
 {
     /**
      * Get the organizations of user.

@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Doctrine\ORM\Filter;
+namespace Sonatra\Component\Security\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\OrmFilterRuleContextDefinition;
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\AbstractRuleOrmFilterDefinition;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleOrmFilterDefinitionInterface;
-use Sonatra\Bundle\SecurityBundle\Doctrine\ORM\Listener\AclListener;
-use Sonatra\Bundle\SecurityBundle\Exception\RuntimeException;
+use Sonatra\Component\Security\Acl\Domain\OrmFilterRuleContextDefinition;
+use Sonatra\Component\Security\Acl\Domain\AbstractRuleOrmFilterDefinition;
+use Sonatra\Component\Security\Acl\Model\RuleOrmFilterDefinitionInterface;
+use Sonatra\Component\Security\Doctrine\ORM\Listener\AclListener;
+use Sonatra\Component\Security\Exception\RuntimeException;
 use Symfony\Component\Security\Acl\Permission\BasicPermissionMap;
 
 /**

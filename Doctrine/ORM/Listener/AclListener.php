@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Doctrine\ORM\Listener;
+namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\Events;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManagerInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclObjectFilterInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclRuleManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Sonatra\Component\Security\Acl\Model\AclManagerInterface;
+use Sonatra\Component\Security\Acl\Model\AclObjectFilterInterface;
+use Sonatra\Component\Security\Acl\Model\AclRuleManagerInterface;
+use Sonatra\Component\Security\Exception\SecurityException;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Acl\Permission\BasicPermissionMap;
-use Sonatra\Bundle\SecurityBundle\Core\Token\ConsoleToken;
-use Sonatra\Bundle\SecurityBundle\Exception\AccessDeniedException;
+use Sonatra\Component\Security\Core\Token\ConsoleToken;
+use Sonatra\Component\Security\Exception\AccessDeniedException;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -33,11 +33,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class AclListener implements EventSubscriber
 {
-    /**
-     * @var ContainerInterface
-     */
-    public $container;
-
     /**
      * @var TokenStorageInterface
      */
@@ -67,6 +62,11 @@ class AclListener implements EventSubscriber
      * @var array
      */
     protected $postResetAcls = array();
+
+    /**
+     * @var bool
+     */
+    protected $initialized = false;
 
     /**
      * Specifies the list of listened events.
@@ -233,17 +233,96 @@ class AclListener implements EventSubscriber
     }
 
     /**
+     * Set the token storage.
+     *
+     * @param TokenStorageInterface $tokenStorage The token storage
+     *
+     * @return self
+     */
+    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+
+        return $this;
+    }
+
+    /**
+     * Set the authorization checker.
+     *
+     * @param AuthorizationCheckerInterface $authorizationChecker The authorization checker
+     *
+     * @return self
+     */
+    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authChecker = $authorizationChecker;
+
+        return $this;
+    }
+
+    /**
+     * Set the acl manager.
+     *
+     * @param AclManagerInterface $aclManager The acl manager
+     *
+     * @return self
+     */
+    public function setAclManager(AclManagerInterface $aclManager)
+    {
+        $this->aclManager = $aclManager;
+
+        return $this;
+    }
+
+    /**
+     * Set the acl rule manager.
+     *
+     * @param AclRuleManagerInterface $aclRuleManager The acl rule manager
+     *
+     * @return self
+     */
+    public function setAclRuleManager(AclRuleManagerInterface $aclRuleManager)
+    {
+        $this->aclRuleManager = $aclRuleManager;
+
+        return $this;
+    }
+
+    /**
+     * Set the acl object filter.
+     *
+     * @param AclObjectFilterInterface $aclObjectFilter The acl object filter
+     *
+     * @return self
+     */
+    public function setAclObjectFilter(AclObjectFilterInterface $aclObjectFilter)
+    {
+        $this->aclObjectFilter = $aclObjectFilter;
+
+        return $this;
+    }
+
+    /**
      * Init listener.
      */
-    private function init()
+    protected function init()
     {
-        if (null !== $this->container) {
-            $this->tokenStorage = $this->container->get('security.token_storage');
-            $this->authChecker = $this->container->get('security.authorization_checker');
-            $this->aclManager = $this->container->get('sonatra_security.acl.manager');
-            $this->aclRuleManager = $this->container->get('sonatra_security.acl.rule_manager');
-            $this->aclObjectFilter = $this->container->get('sonatra_security.acl.object_filter');
-            $this->container = null;
+        if (!$this->initialized) {
+            $msg = 'The "%s()" method must ba called before the init of the doctrine orm acl listener';
+
+            if (null === $this->tokenStorage) {
+                throw new SecurityException(sprintf($msg, 'setTokenStorage'));
+            } elseif (null === $this->authChecker) {
+                throw new SecurityException(sprintf($msg, 'setAuthorizationChecker'));
+            } elseif (null === $this->aclManager) {
+                throw new SecurityException(sprintf($msg, 'setAclManager'));
+            } elseif (null === $this->aclRuleManager) {
+                throw new SecurityException(sprintf($msg, 'setAclRuleManager'));
+            } elseif (null === $this->aclObjectFilter) {
+                throw new SecurityException(sprintf($msg, 'setAclObjectFilter'));
+            }
+
+            $this->initialized = true;
         }
     }
 }

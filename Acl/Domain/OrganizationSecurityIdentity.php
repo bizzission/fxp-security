@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Domain;
+namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Util\ClassUtils;
-use Sonatra\Bundle\SecurityBundle\Core\Organizational\OrganizationalContextInterface;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationInterface;
-use Sonatra\Bundle\SecurityBundle\Model\OrganizationUserInterface;
-use Sonatra\Bundle\SecurityBundle\Model\Traits\RoleableInterface;
-use Sonatra\Bundle\SecurityBundle\Model\UserInterface;
+use Sonatra\Component\Security\Acl\Util\ClassUtils;
+use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Model\OrganizationInterface;
+use Sonatra\Component\Security\Model\OrganizationUserInterface;
+use Sonatra\Component\Security\Model\Traits\RoleableInterface;
+use Sonatra\Component\Security\Model\UserInterface;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

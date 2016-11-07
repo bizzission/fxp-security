@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Exception;
+namespace Sonatra\Component\Security\Exception;
 
 /**
  * Base LogicException for the Security component.

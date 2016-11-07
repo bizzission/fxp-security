@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Rule\FilterDefinition;
+namespace Sonatra\Component\Security\Acl\Rule\FilterDefinition;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Domain\AbstractRuleOrmFilterDefinition;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\OrmFilterRuleContextDefinitionInterface;
+use Sonatra\Component\Security\Acl\Domain\AbstractRuleOrmFilterDefinition;
+use Sonatra\Component\Security\Acl\Model\OrmFilterRuleContextDefinitionInterface;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Doctrine\ORM\EntityManagerInterface;

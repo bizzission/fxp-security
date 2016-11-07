@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\DependencyInjection;
+namespace Sonatra\Component\Security\Acl\DependencyInjection;
 
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleDefinitionInterface;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\RuleFilterDefinitionInterface;
+use Sonatra\Component\Security\Acl\Model\RuleDefinitionInterface;
+use Sonatra\Component\Security\Acl\Model\RuleFilterDefinitionInterface;
 
 /**
  * Interface for extensions which provide rule definitions.

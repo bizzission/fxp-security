@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Authorization\Voter;
+namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Acl\Model\DomainObjectInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Voter\FieldVote;
-use Sonatra\Bundle\SecurityBundle\Acl\Model\AclManagerInterface;
+use Sonatra\Component\Security\Acl\Model\AclManagerInterface;
 
 /**
  * AclVoter to determine the roles granted on object, object field, class, or

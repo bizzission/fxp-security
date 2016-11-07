@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Acl\Util;
+namespace Sonatra\Component\Security\Acl\Util;
 
 use Doctrine\Common\Util\ClassUtils as DoctrineClassUtils;
 

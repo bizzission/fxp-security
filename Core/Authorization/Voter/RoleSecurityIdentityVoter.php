@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Bundle\SecurityBundle\Core\Authorization\Voter;
+namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
