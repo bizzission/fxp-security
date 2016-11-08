@@ -17,6 +17,7 @@ use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
+use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
 use Sonatra\Component\Security\Model\UserInterface;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
@@ -82,13 +83,15 @@ final class OrganizationSecurityIdentity
     {
         $sids = array();
 
-        foreach ($user->getUserOrganizations() as $userOrg) {
-            $sids[] = self::fromAccount($userOrg->getOrganization());
-            $sids = array_merge($sids, static::getOrganizationGroups($userOrg));
-            $roles = static::getOrganizationRoles($userOrg, $roleHierarchy);
+        if ($user instanceof UserOrganizationUsersInterface) {
+            foreach ($user->getUserOrganizations() as $userOrg) {
+                $sids[] = self::fromAccount($userOrg->getOrganization());
+                $sids = array_merge($sids, static::getOrganizationGroups($userOrg));
+                $roles = static::getOrganizationRoles($userOrg, $roleHierarchy);
 
-            foreach ($roles as $role) {
-                $sids[] = new RoleSecurityIdentity($role->getRole());
+                foreach ($roles as $role) {
+                    $sids[] = new RoleSecurityIdentity($role->getRole());
+                }
             }
         }
 
