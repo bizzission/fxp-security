@@ -182,7 +182,7 @@ class RoleHierarchyListener implements EventSubscriber
         if (in_array('Sonatra\\Component\\Security\\Model\\RoleHierarchisableInterface', $ref->getInterfaceNames())
                 && 'children' === $mapping['fieldName']) {
             return true;
-        } elseif (in_array('Sonatra\\Component\\Security\\Model\\GroupableInterface', $ref->getInterfaceNames())
+        } elseif (in_array('Sonatra\\Component\\Security\\Model\\Traits\\GroupableInterface', $ref->getInterfaceNames())
                 && 'groups' === $mapping['fieldName']) {
             return true;
         }
