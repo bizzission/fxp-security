@@ -445,7 +445,11 @@ class AclManager implements AclManagerInterface
             $mask = implode('', AclUtils::convertToAclName($mask));
 
             if ($map->contains($mask)) {
-                $all = array_merge($all, $map->getMasks($mask, $object));
+                $mapMasks = $map->getMasks($mask, $object);
+
+                if (null !== $mapMasks) {
+                    $all = array_merge($all, $mapMasks);
+                }
             }
         }
 
