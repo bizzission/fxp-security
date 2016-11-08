@@ -150,7 +150,7 @@ final class OrganizationSecurityIdentity
             if ($org instanceof RoleableInterface) {
                 foreach ($org->getRoles() as $orgRole) {
                     if (!in_array((string) $orgRole, $existingRoles)) {
-                        $roles[] = new Role($orgRole);
+                        $roles[] = new Role((string) $orgRole);
                     }
                 }
             }
