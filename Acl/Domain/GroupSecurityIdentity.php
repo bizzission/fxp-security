@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Acl\Domain;
 
 use Sonatra\Component\Security\Acl\Util\ClassUtils;
-use Sonatra\Component\Security\Model\GroupableInterface;
+use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -47,7 +47,7 @@ final class GroupSecurityIdentity
      *
      * @return UserSecurityIdentity[]
      *
-     * @throws InvalidArgumentException When the user class not implements "Sonatra\Component\Security\Model\GroupableInterface"
+     * @throws InvalidArgumentException When the user class not implements "Sonatra\Component\Security\Model\Traits\GroupableInterface"
      */
     public static function fromToken(TokenInterface $token)
     {
@@ -64,6 +64,6 @@ final class GroupSecurityIdentity
             return $sids;
         }
 
-        throw new InvalidArgumentException('The user class must implement "Sonatra\Component\Security\Model\GroupableInterface"');
+        throw new InvalidArgumentException('The user class must implement "Sonatra\Component\Security\Model\Traits\GroupableInterface"');
     }
 }

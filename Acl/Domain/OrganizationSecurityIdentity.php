@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Acl\Domain;
 
 use Sonatra\Component\Security\Acl\Util\ClassUtils;
 use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Model\GroupableInterface;
+use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;

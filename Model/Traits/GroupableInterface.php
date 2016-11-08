@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Model;
+namespace Sonatra\Component\Security\Model\Traits;
 
 /**
  * Groupable interface.
