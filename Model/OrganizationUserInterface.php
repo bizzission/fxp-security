@@ -11,14 +11,12 @@
 
 namespace Sonatra\Component\Security\Model;
 
-use Sonatra\Component\Security\Model\Traits\RoleableInterface;
-
 /**
  * Organization user interface.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface OrganizationUserInterface extends RoleableInterface, GroupableInterface
+interface OrganizationUserInterface
 {
     /**
      * Set the organization.
@@ -51,13 +49,6 @@ interface OrganizationUserInterface extends RoleableInterface, GroupableInterfac
      * @return UserInterface|null
      */
     public function getUser();
-
-    /**
-     * Check if the organization user is an admin (contain the ROLE_ADMIN).
-     *
-     * @return bool
-     */
-    public function isAdmin();
 
     /**
      * @return string

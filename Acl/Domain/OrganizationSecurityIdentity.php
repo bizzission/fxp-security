@@ -13,6 +13,7 @@ namespace Sonatra\Component\Security\Acl\Domain;
 
 use Sonatra\Component\Security\Acl\Util\ClassUtils;
 use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Model\GroupableInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
@@ -134,6 +135,10 @@ final class OrganizationSecurityIdentity
      */
     protected static function getOrganizationRoles(OrganizationUserInterface $user, $roleHierarchy = null)
     {
+        if (!$user instanceof RoleableInterface && !$user instanceof OrganizationUserInterface) {
+            return array();
+        }
+
         $roles = $user->getRoles();
         $org = $user->getOrganization();
         $id = strtoupper($org->getName());
@@ -168,6 +173,10 @@ final class OrganizationSecurityIdentity
     protected static function getOrganizationGroups(OrganizationUserInterface $user)
     {
         $sids = array();
+
+        if (!$user instanceof GroupableInterface && !$user instanceof OrganizationUserInterface) {
+            return $sids;
+        }
 
         foreach ($user->getGroups() as $group) {
             try {
