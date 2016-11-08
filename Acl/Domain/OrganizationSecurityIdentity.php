@@ -135,29 +135,29 @@ final class OrganizationSecurityIdentity
      */
     protected static function getOrganizationRoles(OrganizationUserInterface $user, $roleHierarchy = null)
     {
-        if (!$user instanceof RoleableInterface && !$user instanceof OrganizationUserInterface) {
-            return array();
-        }
+        $roles = array();
 
-        $roles = $user->getRoles();
-        $org = $user->getOrganization();
-        $id = strtoupper($org->getName());
-        $existingRoles = $roles;
+        if ($user instanceof RoleableInterface && $user instanceof OrganizationUserInterface) {
+            $roles = $user->getRoles();
+            $org = $user->getOrganization();
+            $id = strtoupper($org->getName());
+            $existingRoles = $roles;
 
-        foreach ($roles as $i => $role) {
-            $roles[$i] = new Role($roles[$i].'__'.$id);
-        }
+            foreach ($roles as $i => $role) {
+                $roles[$i] = new Role($roles[$i].'__'.$id);
+            }
 
-        if ($org instanceof RoleableInterface) {
-            foreach ($org->getRoles() as $orgRole) {
-                if (!in_array((string) $orgRole, $existingRoles)) {
-                    $roles[] = new Role($orgRole);
+            if ($org instanceof RoleableInterface) {
+                foreach ($org->getRoles() as $orgRole) {
+                    if (!in_array((string) $orgRole, $existingRoles)) {
+                        $roles[] = new Role($orgRole);
+                    }
                 }
             }
-        }
 
-        if ($roleHierarchy instanceof RoleHierarchyInterface) {
-            $roles = $roleHierarchy->getReachableRoles($roles);
+            if ($roleHierarchy instanceof RoleHierarchyInterface) {
+                $roles = $roleHierarchy->getReachableRoles($roles);
+            }
         }
 
         return $roles;
@@ -174,15 +174,13 @@ final class OrganizationSecurityIdentity
     {
         $sids = array();
 
-        if (!$user instanceof GroupableInterface && !$user instanceof OrganizationUserInterface) {
-            return $sids;
-        }
-
-        foreach ($user->getGroups() as $group) {
-            try {
-                $sids[] = GroupSecurityIdentity::fromAccount($group);
-            } catch (\InvalidArgumentException $invalid) {
-                // ignore, group has no group security identity
+        if ($user instanceof GroupableInterface) {
+            foreach ($user->getGroups() as $group) {
+                try {
+                    $sids[] = GroupSecurityIdentity::fromAccount($group);
+                } catch (\InvalidArgumentException $invalid) {
+                    // ignore, group has no group security identity
+                }
             }
         }
 
