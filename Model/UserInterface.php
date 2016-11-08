@@ -12,7 +12,6 @@
 namespace Sonatra\Component\Security\Model;
 
 use Doctrine\Common\Collections\Collection;
-use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -20,7 +19,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface UserInterface extends AdvancedUserInterface, RoleableInterface, GroupableInterface
+interface UserInterface extends AdvancedUserInterface
 {
     /**
      * Get the organizations of user.
