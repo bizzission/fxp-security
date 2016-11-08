@@ -105,12 +105,16 @@ class AclVoter implements VoterInterface
             return $result;
         }
 
-        /* @var SecurityIdentityInterface[] $sids */
-        $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
+        /* @var SecurityIdentityInterface[]|null $sids */
+        $sids = null;
 
         foreach ($attributes as $attribute) {
             if (!$this->supportsAttribute($attribute)) {
                 continue;
+            }
+
+            if (null === $sids) {
+                $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
             }
 
             $result = VoterInterface::ACCESS_DENIED;
