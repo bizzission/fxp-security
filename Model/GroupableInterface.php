@@ -19,6 +19,15 @@ namespace Sonatra\Component\Security\Model;
 interface GroupableInterface
 {
     /**
+     * Indicates whether the model belongs to the specified group or not.
+     *
+     * @param string $name The name of the group
+     *
+     * @return bool
+     */
+    public function hasGroup($name);
+
+    /**
      * Gets the groups granted to the user.
      *
      * @return \Traversable
