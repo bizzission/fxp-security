@@ -255,7 +255,7 @@ abstract class Organization implements OrganizationInterface
      */
     public function addOrganizationUser(OrganizationUserInterface $organizationUser)
     {
-        if (!$organizationUser->getOrganization()->isUserOrganization()
+        if (!$this->isUserOrganization()
             && !$this->getOrganizationUsers()->contains($organizationUser)) {
             $this->getOrganizationUsers()->add($organizationUser);
         }
