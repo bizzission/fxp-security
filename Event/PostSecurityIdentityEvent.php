@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Event;
 
 use Sonatra\Component\Security\Event\Traits\SecurityIdentityEventTrait;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * The post security identity retrieval strategy event.
@@ -21,4 +22,18 @@ use Sonatra\Component\Security\Event\Traits\SecurityIdentityEventTrait;
 class PostSecurityIdentityEvent extends AbstractSecurityEvent
 {
     use SecurityIdentityEventTrait;
+
+    /**
+     * Constructor.
+     *
+     * @param TokenInterface                                                    $token              The token
+     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
+     * @param bool                                                              $aclEnabled         Check if the acl is enabled
+     */
+    public function __construct(TokenInterface $token, array $securityIdentities = array(), $aclEnabled = true)
+    {
+        $this->token = $token;
+        $this->securityIdentities = $securityIdentities;
+        $this->aclEnabled = $aclEnabled;
+    }
 }

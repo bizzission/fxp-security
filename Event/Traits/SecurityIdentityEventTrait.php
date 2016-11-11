@@ -31,18 +31,6 @@ trait SecurityIdentityEventTrait
     protected $securityIdentities;
 
     /**
-     * Constructor.
-     *
-     * @param TokenInterface                                                    $token              The token
-     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
-     */
-    public function __construct(TokenInterface $token, array $securityIdentities = array())
-    {
-        $this->token = $token;
-        $this->securityIdentities = $securityIdentities;
-    }
-
-    /**
      * Get the token.
      *
      * @return TokenInterface

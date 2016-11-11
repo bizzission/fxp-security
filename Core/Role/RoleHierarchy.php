@@ -152,11 +152,13 @@ class RoleHierarchy extends BaseRoleHierarchy
         $repo = $em->getRepository($this->roleClassname);
         $entityRoles = array();
         $filters = array();
+        $isAclEnabled = true;
 
         if (null !== $this->eventDispatcher) {
             $event = new PreReachableRoleEvent($reachableRoles);
             $this->eventDispatcher->dispatch(ReachableRoleEvents::PRE, $event);
             $reachableRoles = $event->getReachableRoles();
+            $isAclEnabled = $event->isAclEnabled();
         }
 
         if (class_exists('Doctrine\ORM\EntityManagerInterface') && $em instanceof EntityManagerInterface) {
@@ -206,7 +208,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         $this->cacheExec[$id] = $finalRoles;
 
         if (null !== $this->eventDispatcher) {
-            $event = new PostReachableRoleEvent($finalRoles);
+            $event = new PostReachableRoleEvent($finalRoles, $isAclEnabled);
             $this->eventDispatcher->dispatch(ReachableRoleEvents::POST, $event);
             $finalRoles = $event->getReachableRoles();
         }

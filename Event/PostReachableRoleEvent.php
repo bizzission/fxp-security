@@ -21,4 +21,16 @@ use Sonatra\Component\Security\Event\Traits\ReachableRoleEventTrait;
 class PostReachableRoleEvent extends AbstractSecurityEvent
 {
     use ReachableRoleEventTrait;
+
+    /**
+     * Constructor.
+     *
+     * @param \Symfony\Component\Security\Core\Role\RoleInterface[] $reachableRoles The reachable roles
+     * @param bool                                                  $aclEnabled     Check if the acl is enabled
+     */
+    public function __construct(array $reachableRoles, $aclEnabled = true)
+    {
+        $this->reachableRoles = $reachableRoles;
+        $this->aclEnabled = $aclEnabled;
+    }
 }

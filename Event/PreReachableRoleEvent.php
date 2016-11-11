@@ -21,4 +21,14 @@ use Sonatra\Component\Security\Event\Traits\ReachableRoleEventTrait;
 class PreReachableRoleEvent extends AbstractEditableSecurityEvent
 {
     use ReachableRoleEventTrait;
+
+    /**
+     * Constructor.
+     *
+     * @param \Symfony\Component\Security\Core\Role\RoleInterface[] $reachableRoles The reachable roles
+     */
+    public function __construct(array $reachableRoles)
+    {
+        $this->reachableRoles = $reachableRoles;
+    }
 }

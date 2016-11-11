@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Event;
 
 use Sonatra\Component\Security\Event\Traits\SecurityIdentityEventTrait;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * The pre security identity retrieval strategy event.
@@ -21,4 +22,16 @@ use Sonatra\Component\Security\Event\Traits\SecurityIdentityEventTrait;
 class PreSecurityIdentityEvent extends AbstractEditableSecurityEvent
 {
     use SecurityIdentityEventTrait;
+
+    /**
+     * Constructor.
+     *
+     * @param TokenInterface                                                    $token              The token
+     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
+     */
+    public function __construct(TokenInterface $token, array $securityIdentities = array())
+    {
+        $this->token = $token;
+        $this->securityIdentities = $securityIdentities;
+    }
 }

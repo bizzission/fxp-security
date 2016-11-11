@@ -24,16 +24,6 @@ trait ReachableRoleEventTrait
     protected $reachableRoles;
 
     /**
-     * Constructor.
-     *
-     * @param \Symfony\Component\Security\Core\Role\RoleInterface[] $reachableRoles The reachable roles
-     */
-    public function __construct(array $reachableRoles)
-    {
-        $this->reachableRoles = $reachableRoles;
-    }
-
-    /**
      * Set reachable roles.
      *
      * @param \Symfony\Component\Security\Core\Role\RoleInterface[] $reachableRoles

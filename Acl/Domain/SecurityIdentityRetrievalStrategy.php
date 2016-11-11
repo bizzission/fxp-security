@@ -81,15 +81,15 @@ class SecurityIdentityRetrievalStrategy extends BaseSecurityIdentityRetrievalStr
         // add group security identity
         if ($token instanceof TokenInterface && !$token instanceof AnonymousToken) {
             // dispatch pre event
-            $event = new PreSecurityIdentityEvent($token, $sids);
-            $this->dispatcher->dispatch(IdentityRetrievalEvents::PRE, $event);
+            $eventPre = new PreSecurityIdentityEvent($token, $sids);
+            $this->dispatcher->dispatch(IdentityRetrievalEvents::PRE, $eventPre);
             // dispatch add event
-            $event = new AddSecurityIdentityEvent($token, $sids);
-            $this->dispatcher->dispatch(IdentityRetrievalEvents::ADD, $event);
-            $sids = $event->getSecurityIdentities();
+            $eventAdd = new AddSecurityIdentityEvent($token, $sids);
+            $this->dispatcher->dispatch(IdentityRetrievalEvents::ADD, $eventAdd);
+            $sids = $eventAdd->getSecurityIdentities();
             // dispatch post event
-            $event = new PostSecurityIdentityEvent($token, $sids);
-            $this->dispatcher->dispatch(IdentityRetrievalEvents::POST, $event);
+            $eventPost = new PostSecurityIdentityEvent($token, $sids, $eventPre->isAclEnabled());
+            $this->dispatcher->dispatch(IdentityRetrievalEvents::POST, $eventPost);
 
             $this->cacheExec[$id] = $sids;
         }
