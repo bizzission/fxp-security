@@ -11,7 +11,9 @@
 
 namespace Sonatra\Component\Security\Acl\Domain;
 
-use Sonatra\Component\Security\Event\SecurityIdentityEvent;
+use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
+use Sonatra\Component\Security\Event\PostSecurityIdentityEvent;
+use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
 use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Sonatra\Component\Security\Listener\EventStrategyIdentityInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -74,21 +76,19 @@ class SecurityIdentityRetrievalStrategy extends BaseSecurityIdentityRetrievalStr
             return $this->cacheExec[$id];
         }
 
-        /* @var SecurityIdentityEvent $event */
-        $event = null;
         $sids = parent::getSecurityIdentities($token);
 
         // add group security identity
         if ($token instanceof TokenInterface && !$token instanceof AnonymousToken) {
             // dispatch pre event
-            $event = new SecurityIdentityEvent($token);
-            $event->setSecurityIdentities($sids);
+            $event = new PreSecurityIdentityEvent($token, $sids);
             $this->dispatcher->dispatch(IdentityRetrievalEvents::PRE, $event);
             // dispatch add event
-            $event->setSecurityIdentities($sids);
+            $event = new AddSecurityIdentityEvent($token, $sids);
             $this->dispatcher->dispatch(IdentityRetrievalEvents::ADD, $event);
             $sids = $event->getSecurityIdentities();
             // dispatch post event
+            $event = new PostSecurityIdentityEvent($token, $sids);
             $this->dispatcher->dispatch(IdentityRetrievalEvents::POST, $event);
 
             $this->cacheExec[$id] = $sids;

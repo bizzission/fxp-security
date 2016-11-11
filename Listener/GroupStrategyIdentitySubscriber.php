@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Listener;
 
 use Sonatra\Component\Security\Acl\Domain\GroupSecurityIdentity;
-use Sonatra\Component\Security\Event\SecurityIdentityEvent;
+use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -36,9 +36,9 @@ class GroupStrategyIdentitySubscriber implements EventSubscriberInterface
     /**
      * Add group security identities.
      *
-     * @param SecurityIdentityEvent $event
+     * @param AddSecurityIdentityEvent $event The event
      */
-    public function addGroupSecurityIdentities(SecurityIdentityEvent $event)
+    public function addGroupSecurityIdentities(AddSecurityIdentityEvent $event)
     {
         try {
             $sids = $event->getSecurityIdentities();

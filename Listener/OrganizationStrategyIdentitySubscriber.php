@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Listener;
 
 use Sonatra\Component\Security\Acl\Domain\OrganizationSecurityIdentity;
 use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Event\SecurityIdentityEvent;
+use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
@@ -73,9 +73,9 @@ class OrganizationStrategyIdentitySubscriber implements EventSubscriberInterface
     /**
      * Add organization security identities.
      *
-     * @param SecurityIdentityEvent $event
+     * @param AddSecurityIdentityEvent $event The event
      */
-    public function addOrganizationSecurityIdentities(SecurityIdentityEvent $event)
+    public function addOrganizationSecurityIdentities(AddSecurityIdentityEvent $event)
     {
         try {
             $sids = $event->getSecurityIdentities();

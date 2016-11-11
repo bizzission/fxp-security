@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Event;
+namespace Sonatra\Component\Security\Event\Traits;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * The security identity retrieval strategy event.
+ * The security identity retrieval strategy event trait.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SecurityIdentityEvent extends AbstractEditableSecurityEvent
+trait SecurityIdentityEventTrait
 {
     /**
      * @var TokenInterface
@@ -50,16 +50,6 @@ class SecurityIdentityEvent extends AbstractEditableSecurityEvent
     public function getToken()
     {
         return $this->token;
-    }
-
-    /**
-     * Set security identities.
-     *
-     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
-     */
-    public function setSecurityIdentities(array $securityIdentities)
-    {
-        $this->securityIdentities = $securityIdentities;
     }
 
     /**
