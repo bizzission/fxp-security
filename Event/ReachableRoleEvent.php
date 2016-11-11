@@ -16,7 +16,7 @@ namespace Sonatra\Component\Security\Event;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ReachableRoleEvent extends AbstractSecurityEvent
+class ReachableRoleEvent extends AbstractEditableSecurityEvent
 {
     /**
      * @var \Symfony\Component\Security\Core\Role\RoleInterface[]

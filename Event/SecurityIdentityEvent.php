@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SecurityIdentityEvent extends AbstractSecurityEvent
+class SecurityIdentityEvent extends AbstractEditableSecurityEvent
 {
     /**
      * @var TokenInterface

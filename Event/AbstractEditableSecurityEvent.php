@@ -11,27 +11,20 @@
 
 namespace Sonatra\Component\Security\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 /**
- * The abstract security event.
+ * The abstract editable security event.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-abstract class AbstractSecurityEvent extends Event
+abstract class AbstractEditableSecurityEvent extends AbstractSecurityEvent
 {
     /**
-     * @var bool
-     */
-    protected $aclEnabled = true;
-
-    /**
-     * Check if the acl is enabled.
+     * Defined if the acl must be enable or not.
      *
-     * @return bool
+     * @param bool $enabled The value
      */
-    public function isAclEnabled()
+    public function setAclEnabled($enabled)
     {
-        return $this->aclEnabled;
+        $this->aclEnabled = (bool) $enabled;
     }
 }
