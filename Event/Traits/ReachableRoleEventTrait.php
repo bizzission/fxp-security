@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Event;
+namespace Sonatra\Component\Security\Event\Traits;
 
 /**
  * This is a general purpose reachable role event.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ReachableRoleEvent extends AbstractEditableSecurityEvent
+trait ReachableRoleEventTrait
 {
     /**
      * @var \Symfony\Component\Security\Core\Role\RoleInterface[]

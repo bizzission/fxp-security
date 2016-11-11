@@ -11,13 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
-use Sonatra\Component\Security\Event\ReachableRoleEvent;
+use Sonatra\Component\Security\Event\PostReachableRoleEvent;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ReachableRoleEventTest extends \PHPUnit_Framework_TestCase
+class PostReachableRoleEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testEvent()
     {
@@ -26,14 +26,12 @@ class ReachableRoleEventTest extends \PHPUnit_Framework_TestCase
             new Role('ROLE_BAR'),
         );
 
-        $event = new ReachableRoleEvent($roles);
+        $event = new PostReachableRoleEvent($roles);
         $this->assertSame($roles, $event->getReachableRoles());
         $this->assertTrue($event->isAclEnabled());
 
         $roles[] = new Role('ROLE_BAZ');
         $event->setReachableRoles($roles);
-        $event->setAclEnabled(false);
         $this->assertSame($roles, $event->getReachableRoles());
-        $this->assertFalse($event->isAclEnabled());
     }
 }

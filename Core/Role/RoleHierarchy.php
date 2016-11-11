@@ -15,13 +15,14 @@ use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Sonatra\Component\Security\Event\PostReachableRoleEvent;
+use Sonatra\Component\Security\Event\PreReachableRoleEvent;
 use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
 use Sonatra\Component\Security\ReachableRoleEvents;
 use Symfony\Component\Security\Core\Role\RoleHierarchy as BaseRoleHierarchy;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sonatra\Component\Security\Event\ReachableRoleEvent;
 use Sonatra\Component\Security\Exception\SecurityException;
 
 /**
@@ -151,12 +152,10 @@ class RoleHierarchy extends BaseRoleHierarchy
         $repo = $em->getRepository($this->roleClassname);
         $entityRoles = array();
         $filters = array();
-        /* @var ReachableRoleEvent $event */
-        $event = null;
 
         if (null !== $this->eventDispatcher) {
-            $event = new ReachableRoleEvent($reachableRoles);
-            $event = $this->eventDispatcher->dispatch(ReachableRoleEvents::PRE, $event);
+            $event = new PreReachableRoleEvent($reachableRoles);
+            $this->eventDispatcher->dispatch(ReachableRoleEvents::PRE, $event);
             $reachableRoles = $event->getReachableRoles();
         }
 
@@ -207,8 +206,8 @@ class RoleHierarchy extends BaseRoleHierarchy
         $this->cacheExec[$id] = $finalRoles;
 
         if (null !== $this->eventDispatcher) {
-            $event->setReachableRoles($finalRoles);
-            $event = $this->eventDispatcher->dispatch(ReachableRoleEvents::POST, $event);
+            $event = new PostReachableRoleEvent($finalRoles);
+            $this->eventDispatcher->dispatch(ReachableRoleEvents::POST, $event);
             $finalRoles = $event->getReachableRoles();
         }
 
