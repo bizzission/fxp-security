@@ -155,10 +155,9 @@ class RoleHierarchy extends BaseRoleHierarchy
         $event = null;
 
         if (null !== $this->eventDispatcher) {
-            $event = new ReachableRoleEvent();
-            $event->setReachableRoles($reachableRoles);
+            $event = new ReachableRoleEvent($reachableRoles);
             $event = $this->eventDispatcher->dispatch(ReachableRoleEvents::PRE, $event);
-            $reachableRoles = $event->geReachableRoles();
+            $reachableRoles = $event->getReachableRoles();
         }
 
         if (class_exists('Doctrine\ORM\EntityManagerInterface') && $em instanceof EntityManagerInterface) {
@@ -210,7 +209,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         if (null !== $this->eventDispatcher) {
             $event->setReachableRoles($finalRoles);
             $event = $this->eventDispatcher->dispatch(ReachableRoleEvents::POST, $event);
-            $finalRoles = $event->geReachableRoles();
+            $finalRoles = $event->getReachableRoles();
         }
 
         return $finalRoles;
