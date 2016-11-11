@@ -12,15 +12,20 @@
 namespace Sonatra\Component\Security\Event;
 
 use Sonatra\Component\Security\Acl\Model\PermissionContextInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * The acl manipulator event.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class AclManipulatorEvent extends GenericEvent
+class AclManipulatorEvent extends Event
 {
+    /**
+     * @var PermissionContextInterface
+     */
+    protected $context;
+
     /**
      * Constructor.
      *
@@ -28,7 +33,7 @@ class AclManipulatorEvent extends GenericEvent
      */
     public function __construct(PermissionContextInterface $context)
     {
-        parent::__construct($context, array());
+        $this->context = $context;
     }
 
     /**
@@ -38,6 +43,6 @@ class AclManipulatorEvent extends GenericEvent
      */
     public function getPermissionContext()
     {
-        return $this->subject;
+        return $this->context;
     }
 }
