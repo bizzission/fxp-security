@@ -24,7 +24,7 @@ abstract class OrganizationUser implements OrganizationUserInterface
     protected $organization;
 
     /**
-     * @var UserInterface|null
+     * @var UserInterface
      */
     protected $user;
 
@@ -43,7 +43,7 @@ abstract class OrganizationUser implements OrganizationUserInterface
     /**
      * {@inheritdoc}
      */
-    public function setOrganization($organization)
+    public function setOrganization(OrganizationInterface $organization)
     {
         $this->organization = $organization;
 
@@ -61,7 +61,7 @@ abstract class OrganizationUser implements OrganizationUserInterface
     /**
      * {@inheritdoc}
      */
-    public function setUser($user)
+    public function setUser(UserInterface $user)
     {
         $this->user = $user;
 

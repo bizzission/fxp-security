@@ -25,7 +25,7 @@ interface OrganizationUserInterface
      *
      * @return self
      */
-    public function setOrganization($organization);
+    public function setOrganization(OrganizationInterface $organization);
 
     /**
      * Get the organization.
@@ -37,16 +37,16 @@ interface OrganizationUserInterface
     /**
      * Set the user of organization.
      *
-     * @param UserInterface|null $user The user of organization
+     * @param UserInterface $user The user of organization
      *
      * @return self
      */
-    public function setUser($user);
+    public function setUser(UserInterface $user);
 
     /**
      * Get the user of organization.
      *
-     * @return UserInterface|null
+     * @return UserInterface
      */
     public function getUser();
 
