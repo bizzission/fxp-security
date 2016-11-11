@@ -19,8 +19,7 @@ final class AclManipulatorEvents
     /**
      * The AclManipulatorEvents::GET event occurs before the getting of acls.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
+     * @Event("Sonatra\Component\Security\Event\AclManipulatorEvent")
      *
      * @var string
      */
@@ -29,8 +28,7 @@ final class AclManipulatorEvents
     /**
      * The AclManipulatorEvents::ADD event occurs before the adding of acls.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
+     * @Event("Sonatra\Component\Security\Event\AclManipulatorEvent")
      *
      * @var string
      */
@@ -39,8 +37,7 @@ final class AclManipulatorEvents
     /**
      * The AclManipulatorEvents::SET event occurs before the setting of acls.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
+     * @Event("Sonatra\Component\Security\Event\AclManipulatorEvent")
      *
      * @var string
      */
@@ -49,8 +46,7 @@ final class AclManipulatorEvents
     /**
      * The AclManipulatorEvents::REVOKE event occurs before the revoking of acls.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
+     * @Event("Sonatra\Component\Security\Event\AclManipulatorEvent")
      *
      * @var string
      */
@@ -59,8 +55,7 @@ final class AclManipulatorEvents
     /**
      * The AclManipulatorEvents::DELETE event occurs before the deleting of acls.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\AclManipulatorEvent instance.
+     * @Event("Sonatra\Component\Security\Event\AclManipulatorEvent")
      *
      * @var string
      */

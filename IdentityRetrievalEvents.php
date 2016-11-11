@@ -20,8 +20,7 @@ final class IdentityRetrievalEvents
      * The IdentityRetrievalEvents::PRE event occurs before the retrieval of
      * all security identities.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\SecurityIdentityEvent instance.
+     * @Event("Sonatra\Component\Security\Event\SecurityIdentityEvent")
      *
      * @var string
      */
@@ -31,8 +30,7 @@ final class IdentityRetrievalEvents
      * The IdentityRetrievalEvents::ADD event occurs when the security
      * identities are adding.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\SecurityIdentityEvent instance.
+     * @Event("Sonatra\Component\Security\Event\SecurityIdentityEvent")
      *
      * @var string
      */
@@ -42,8 +40,7 @@ final class IdentityRetrievalEvents
      * The IdentityRetrievalEvents::POST event occurs after the retrieval of
      * all security identities.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\SecurityIdentityEvent instance.
+     * @Event("Sonatra\Component\Security\Event\SecurityIdentityEvent")
      *
      * @var string
      */

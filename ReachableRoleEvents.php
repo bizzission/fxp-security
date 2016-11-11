@@ -20,8 +20,7 @@ final class ReachableRoleEvents
      * The ReachableRoleEvents::PRE event occurs before the research of all
      * children roles.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\ReachableRoleEvent instance.
+     * @Event("Sonatra\Component\Security\Event\ReachableRoleEvent")
      *
      * @var string
      */
@@ -31,8 +30,7 @@ final class ReachableRoleEvents
      * The ReachableRoleEvents::POST event occurs after the research of all
      * children roles.
      *
-     * The event listener method receives a
-     * Sonatra\Component\Security\Event\ReachableRoleEvent instance.
+     * @Event("Sonatra\Component\Security\Event\ReachableRoleEvent")
      *
      * @var string
      */
