@@ -19,7 +19,7 @@ use Sonatra\Component\Security\Model\OrganizationUserInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-trait UserOrganizationUsers
+trait UserOrganizationUsersTrait
 {
     /**
      * @var \Doctrine\Common\Collections\Collection|null

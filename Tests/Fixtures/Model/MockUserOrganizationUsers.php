@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Fixtures\Model;
 
-use Sonatra\Component\Security\Model\Traits\UserOrganizationUsers;
+use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersTrait;
 use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
 
 /**
@@ -19,5 +19,5 @@ use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
  */
 class MockUserOrganizationUsers extends MockUserRoleable implements UserOrganizationUsersInterface
 {
-    use UserOrganizationUsers;
+    use UserOrganizationUsersTrait;
 }
