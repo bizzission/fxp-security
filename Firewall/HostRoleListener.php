@@ -140,7 +140,7 @@ class HostRoleListener implements ListenerInterface
         $hostname = $event->getRequest()->getHttpHost();
 
         foreach ($this->config as $host => $role) {
-            if (preg_match('/.'.$host.'/', $hostname)) {
+            if (preg_match('/'.$host.'/', $hostname)) {
                 $hostRole = new Role($role);
                 break;
             }
