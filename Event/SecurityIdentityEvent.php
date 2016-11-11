@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\Event;
 
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -19,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SecurityIdentityEvent extends GenericEvent
+class SecurityIdentityEvent extends AbstractSecurityEvent
 {
     /**
      * @var TokenInterface
@@ -27,15 +26,20 @@ class SecurityIdentityEvent extends GenericEvent
     protected $token;
 
     /**
+     * @var \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[]
+     */
+    protected $securityIdentities;
+
+    /**
      * Constructor.
      *
-     * @param TokenInterface $token The token
+     * @param TokenInterface                                                    $token              The token
+     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
      */
-    public function __construct(TokenInterface $token)
+    public function __construct(TokenInterface $token, array $securityIdentities = array())
     {
-        parent::__construct(array(), array());
-
         $this->token = $token;
+        $this->securityIdentities = $securityIdentities;
     }
 
     /**
@@ -51,11 +55,11 @@ class SecurityIdentityEvent extends GenericEvent
     /**
      * Set security identities.
      *
-     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities
+     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
      */
     public function setSecurityIdentities(array $securityIdentities)
     {
-        $this->subject = $securityIdentities;
+        $this->securityIdentities = $securityIdentities;
     }
 
     /**
@@ -65,6 +69,6 @@ class SecurityIdentityEvent extends GenericEvent
      */
     public function getSecurityIdentities()
     {
-        return $this->subject;
+        return $this->securityIdentities;
     }
 }

@@ -11,10 +11,10 @@
 
 namespace Sonatra\Component\Security\Listener;
 
+use Sonatra\Component\Security\Event\AbstractSecurityEvent;
 use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Sonatra\Component\Security\ReachableRoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Sonatra\Component\Security\Acl\Model\AclManagerInterface;
 
 /**
@@ -55,12 +55,12 @@ class DisableAclListener implements EventSubscriberInterface
     /**
      * Disable the acl.
      *
-     * @param GenericEvent $event
+     * @param AbstractSecurityEvent $event The event
      */
-    public function disableAcl(GenericEvent $event)
+    public function disableAcl(AbstractSecurityEvent $event)
     {
         $isEnabled = !$this->aclManager->isDisabled();
-        $event->setArgument('sonatraSecurityAclIsEnabled', $isEnabled);
+        $event->setAclEnabled($isEnabled);
 
         if ($isEnabled) {
             $this->aclManager->disable();
@@ -70,11 +70,11 @@ class DisableAclListener implements EventSubscriberInterface
     /**
      * Enable the acl.
      *
-     * @param GenericEvent $event
+     * @param AbstractSecurityEvent $event The event
      */
-    public function enableAcl(GenericEvent $event)
+    public function enableAcl(AbstractSecurityEvent $event)
     {
-        if ($event->getArgument('sonatraSecurityAclIsEnabled')) {
+        if ($event->isAclEnabled()) {
             $this->aclManager->enable();
         }
     }

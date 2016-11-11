@@ -11,14 +11,12 @@
 
 namespace Sonatra\Component\Security\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 /**
  * This is a general purpose reachable role event.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ReachableRoleEvent extends Event
+class ReachableRoleEvent extends AbstractSecurityEvent
 {
     /**
      * @var \Symfony\Component\Security\Core\Role\RoleInterface[]
