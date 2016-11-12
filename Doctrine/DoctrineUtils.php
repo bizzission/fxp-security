@@ -86,16 +86,25 @@ abstract class DoctrineUtils
     {
         if (!isset(static::$cacheZeroIds[$targetEntity->getName()])) {
             $type = static::getIdentifierType($targetEntity);
-            $value = null;
 
-            if ($type instanceof GuidType) {
-                $value = '00000000-0000-0000-0000-000000000000';
-            } elseif ($type instanceof IntegerType || $type instanceof SmallIntType
-                    || $type instanceof BigIntType || $type instanceof DecimalType
-                    || $type instanceof FloatType) {
-                $value = 0;
-            } elseif ($type instanceof StringType || $type instanceof TextType) {
-                $value = '';
+            switch (true) {
+                case $type instanceof GuidType:
+                    $value = '00000000-0000-0000-0000-000000000000';
+                    break;
+                case $type instanceof IntegerType:
+                case $type instanceof SmallIntType:
+                case $type instanceof BigIntType:
+                case $type instanceof DecimalType:
+                case $type instanceof FloatType:
+                    $value = 0;
+                    break;
+                case $type instanceof StringType:
+                case $type instanceof TextType:
+                    $value = '';
+                    break;
+                default:
+                    $value = null;
+                    break;
             }
 
             static::$cacheZeroIds[$targetEntity->getName()] = $value;
