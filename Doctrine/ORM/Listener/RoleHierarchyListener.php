@@ -125,13 +125,13 @@ class RoleHierarchyListener implements EventSubscriber
      */
     protected function getAllCollections(UnitOfWork $uow)
     {
-        $collection = $uow->getScheduledEntityInsertions();
-        $collection = array_merge($collection, $uow->getScheduledEntityUpdates());
-        $collection = array_merge($collection, $uow->getScheduledEntityDeletions());
-        $collection = array_merge($collection, $uow->getScheduledCollectionUpdates());
-        $collection = array_merge($collection, $uow->getScheduledCollectionDeletions());
-
-        return $collection;
+        return array_merge(
+            $uow->getScheduledEntityInsertions(),
+            $uow->getScheduledEntityUpdates(),
+            $uow->getScheduledEntityDeletions(),
+            $uow->getScheduledCollectionUpdates(),
+            $uow->getScheduledCollectionDeletions()
+        );
     }
 
     /**
