@@ -144,7 +144,7 @@ class DoctrineUtils
      *
      * @throws RuntimeException When the doctrine dbal type is not found
      */
-    protected static function getIdentifierType(ClassMetadata $targetEntity)
+    public static function getIdentifierType(ClassMetadata $targetEntity)
     {
         $identifier = static::getIdentifier($targetEntity);
         $type = $targetEntity->getTypeOfField($identifier);
