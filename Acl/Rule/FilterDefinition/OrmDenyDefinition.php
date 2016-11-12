@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Acl\Rule\FilterDefinition;
 
 use Sonatra\Component\Security\Acl\Domain\AbstractRuleOrmFilterDefinition;
 use Sonatra\Component\Security\Acl\Model\OrmFilterRuleContextDefinitionInterface;
-use Sonatra\Component\Security\Doctrine\ORM\Util\DoctrineUtils;
+use Sonatra\Component\Security\Doctrine\DoctrineUtils;
 
 /**
  * The Deny ACL Rule Filter Definition.

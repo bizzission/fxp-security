@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Acl\Rule\FilterDefinition;
 
 use Sonatra\Component\Security\Acl\Domain\AbstractRuleOrmFilterDefinition;
 use Sonatra\Component\Security\Acl\Model\OrmFilterRuleContextDefinitionInterface;
-use Sonatra\Component\Security\Doctrine\ORM\Util\DoctrineUtils;
+use Sonatra\Component\Security\Doctrine\DoctrineUtils;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Doctrine\ORM\EntityManagerInterface;

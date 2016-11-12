@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Util;
+namespace Sonatra\Component\Security\Doctrine;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\BigIntType;
 use Doctrine\DBAL\Types\DecimalType;
@@ -20,7 +21,6 @@ use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\DBAL\Types\SmallIntType;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Sonatra\Component\Security\Exception\RuntimeException;
 
 /**
