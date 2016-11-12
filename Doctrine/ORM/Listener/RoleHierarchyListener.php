@@ -104,7 +104,7 @@ class RoleHierarchyListener implements EventSubscriber
      */
     protected function flushCache(array $invalidates)
     {
-        if ('' !== implode('', $invalidates)) {
+        if (count($invalidates) > 0) {
             if (null !== $this->cache && null === $this->context) {
                 $this->cache->clear();
             } elseif (null !== $this->cache) {
@@ -145,10 +145,7 @@ class RoleHierarchyListener implements EventSubscriber
      */
     protected function invalidateCache($uow, $object)
     {
-        if ($object instanceof UserInterface
-                || $object instanceof RoleHierarchisableInterface
-                || $object instanceof GroupInterface
-                || $object instanceof OrganizationUserInterface) {
+        if ($this->isCacheableObject($object)) {
             $fields = array_keys($uow->getEntityChangeSet($object));
             $checkFields = array('roles');
 
@@ -167,6 +164,21 @@ class RoleHierarchyListener implements EventSubscriber
         }
 
         return false;
+    }
+
+    /**
+     * Check if the object is cacheable or not.
+     *
+     * @param object $object The object
+     *
+     * @return bool
+     */
+    protected function isCacheableObject($object)
+    {
+        return $object instanceof UserInterface
+            || $object instanceof RoleHierarchisableInterface
+            || $object instanceof GroupInterface
+            || $object instanceof OrganizationUserInterface;
     }
 
     /**
@@ -200,14 +212,16 @@ class RoleHierarchyListener implements EventSubscriber
      */
     protected function getPrefix($object)
     {
+        $id = 'user';
+
         if (method_exists($object, 'getOrganization')) {
             $org = $object->getOrganization();
 
             if ($org instanceof OrganizationInterface) {
-                return $org->getId().'__';
+                $id = (string) $org->getId();
             }
         }
 
-        return 'user__';
+        return $id.'__';
     }
 }
