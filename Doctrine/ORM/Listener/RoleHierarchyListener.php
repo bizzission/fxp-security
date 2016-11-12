@@ -23,6 +23,7 @@ use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -179,10 +180,10 @@ class RoleHierarchyListener implements EventSubscriber
     {
         $ref = new \ReflectionClass($mapping['sourceEntity']);
 
-        if (in_array('Sonatra\\Component\\Security\\Model\\RoleHierarchisableInterface', $ref->getInterfaceNames())
+        if (in_array(RoleHierarchisableInterface::class, $ref->getInterfaceNames())
                 && 'children' === $mapping['fieldName']) {
             return true;
-        } elseif (in_array('Sonatra\\Component\\Security\\Model\\Traits\\GroupableInterface', $ref->getInterfaceNames())
+        } elseif (in_array(GroupableInterface::class, $ref->getInterfaceNames())
                 && 'groups' === $mapping['fieldName']) {
             return true;
         }
