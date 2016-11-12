@@ -51,9 +51,9 @@ abstract class DoctrineUtils
      */
     public static function clearCaches()
     {
-        static::$cacheIdentifiers = array();
-        static::$cacheZeroIds = array();
-        static::$cacheCastIdentifiers = array();
+        self::$cacheIdentifiers = array();
+        self::$cacheZeroIds = array();
+        self::$cacheCastIdentifiers = array();
     }
 
     /**
@@ -65,14 +65,14 @@ abstract class DoctrineUtils
      */
     public static function getIdentifier(ClassMetadata $targetEntity)
     {
-        if (!isset(static::$cacheIdentifiers[$targetEntity->getName()])) {
+        if (!isset(self::$cacheIdentifiers[$targetEntity->getName()])) {
             $identifier = $targetEntity->getIdentifierFieldNames();
-            static::$cacheIdentifiers[$targetEntity->getName()] = 0 < count($identifier)
+            self::$cacheIdentifiers[$targetEntity->getName()] = 0 < count($identifier)
                 ? $identifier[0]
                 : 'id';
         }
 
-        return static::$cacheIdentifiers[$targetEntity->getName()];
+        return self::$cacheIdentifiers[$targetEntity->getName()];
     }
 
     /**
@@ -84,8 +84,8 @@ abstract class DoctrineUtils
      */
     public static function getMockZeroId(ClassMetadata $targetEntity)
     {
-        if (!isset(static::$cacheZeroIds[$targetEntity->getName()])) {
-            $type = static::getIdentifierType($targetEntity);
+        if (!isset(self::$cacheZeroIds[$targetEntity->getName()])) {
+            $type = self::getIdentifierType($targetEntity);
 
             switch (true) {
                 case $type instanceof GuidType:
@@ -107,10 +107,10 @@ abstract class DoctrineUtils
                     break;
             }
 
-            static::$cacheZeroIds[$targetEntity->getName()] = $value;
+            self::$cacheZeroIds[$targetEntity->getName()] = $value;
         }
 
-        return static::$cacheZeroIds[$targetEntity->getName()];
+        return self::$cacheZeroIds[$targetEntity->getName()];
     }
 
     /**
@@ -123,19 +123,19 @@ abstract class DoctrineUtils
      */
     public static function castIdentifier(ClassMetadata $targetEntity, Connection $connection)
     {
-        if (!isset(static::$cacheCastIdentifiers[$targetEntity->getName()])) {
+        if (!isset(self::$cacheCastIdentifiers[$targetEntity->getName()])) {
             $cast = '';
 
             if ('postgresql' === $connection->getDatabasePlatform()->getName()) {
-                $type = static::getIdentifierType($targetEntity);
+                $type = self::getIdentifierType($targetEntity);
                 $cast = '::'.$type->getSQLDeclaration($targetEntity->getIdentifierFieldNames(),
                                                       $connection->getDatabasePlatform());
             }
 
-            static::$cacheCastIdentifiers[$targetEntity->getName()] = $cast;
+            self::$cacheCastIdentifiers[$targetEntity->getName()] = $cast;
         }
 
-        return static::$cacheCastIdentifiers[$targetEntity->getName()];
+        return self::$cacheCastIdentifiers[$targetEntity->getName()];
     }
 
     /**
@@ -149,7 +149,7 @@ abstract class DoctrineUtils
      */
     public static function getIdentifierType(ClassMetadata $targetEntity)
     {
-        $identifier = static::getIdentifier($targetEntity);
+        $identifier = self::getIdentifier($targetEntity);
         $type = $targetEntity->getTypeOfField($identifier);
 
         if ($type instanceof Type) {
