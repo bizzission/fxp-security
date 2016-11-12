@@ -161,7 +161,7 @@ class RoleHierarchy extends BaseRoleHierarchy
             $isAclEnabled = $event->isAclEnabled();
         }
 
-        if (class_exists('Doctrine\ORM\EntityManagerInterface') && $em instanceof EntityManagerInterface) {
+        if (interface_exists('Doctrine\ORM\EntityManagerInterface') && $em instanceof EntityManagerInterface) {
             $filters = array_keys($em->getFilters()->getEnabledFilters());
 
             foreach ($filters as $name) {
