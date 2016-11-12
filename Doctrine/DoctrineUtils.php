@@ -29,7 +29,7 @@ use Sonatra\Component\Security\Exception\RuntimeException;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class DoctrineUtils
+abstract class DoctrineUtils
 {
     /**
      * @var array
@@ -45,13 +45,6 @@ class DoctrineUtils
      * @var array
      */
     private static $cacheCastIdentifiers = array();
-
-    /**
-     * This class should not be instantiated.
-     */
-    private function __construct()
-    {
-    }
 
     /**
      * Clear the caches.
