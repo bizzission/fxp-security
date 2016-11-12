@@ -56,7 +56,7 @@ class ClassUtils
             return DoctrineClassUtils::getRealClass($class);
         }
 
-        // fallback in case doctrine common  is not installed
+        // fallback in case doctrine common is not installed
         if (false === $pos = strrpos($class, '\\'.self::MARKER.'\\')) {
             return $class;
         }
