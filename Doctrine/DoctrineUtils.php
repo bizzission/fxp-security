@@ -20,6 +20,7 @@ use Doctrine\DBAL\Types\GuidType;
 use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\DBAL\Types\SmallIntType;
 use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\TextType;
 use Doctrine\DBAL\Types\Type;
 use Sonatra\Component\Security\Exception\RuntimeException;
 
@@ -100,7 +101,7 @@ class DoctrineUtils
                     || $type instanceof BigIntType || $type instanceof DecimalType
                     || $type instanceof FloatType) {
                 $value = 0;
-            } elseif ($type instanceof StringType) {
+            } elseif ($type instanceof StringType || $type instanceof TextType) {
                 $value = '';
             }
 
