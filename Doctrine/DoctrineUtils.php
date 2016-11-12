@@ -53,6 +53,16 @@ class DoctrineUtils
     }
 
     /**
+     * Clear the caches.
+     */
+    public static function clearCaches()
+    {
+        static::$cacheIdentifiers = array();
+        static::$cacheZeroIds = array();
+        static::$cacheCastIdentifiers = array();
+    }
+
+    /**
      * Get the identifier of entity.
      *
      * @param ClassMetadata $targetEntity The target entity
