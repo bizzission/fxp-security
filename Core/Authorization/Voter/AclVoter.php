@@ -11,8 +11,7 @@
 
 namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
-use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Acl\Model\DomainObjectInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
@@ -26,7 +25,7 @@ use Sonatra\Component\Security\Acl\Model\AclManagerInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class AclVoter implements VoterInterface
+class AclVoter extends Voter
 {
     /**
      * @var AclManagerInterface
@@ -41,11 +40,11 @@ class AclVoter implements VoterInterface
     /**
      * Constructor.
      *
-     * @param AclManagerInterface                        $aclManager
-     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy
+     * @param AclManagerInterface                        $aclManager           The acl manager
+     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security identity retrieval strategy
      */
     public function __construct(AclManagerInterface $aclManager,
-            SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy)
+                                SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy)
     {
         $this->aclManager = $aclManager;
         $this->sidRetrievalStrategy = $sidRetrievalStrategy;
@@ -54,76 +53,32 @@ class AclVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsAttribute($attribute)
+    protected function supports($attribute, $subject)
     {
-        return is_string($attribute) || is_int($attribute);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsClass($class)
-    {
-        // field
-        if ($class instanceof FieldVote) {
-            $domainObject = $class->getDomainObject();
-
-            if (is_string($domainObject)
-                    || $domainObject instanceof DomainObjectInterface
-                    || $domainObject instanceof ObjectIdentityInterface) {
-                return true;
-            }
-
-            if (is_object($domainObject)) {
-                return method_exists($domainObject, 'getId');
-            }
+        if (!is_string($attribute) && !is_int($attribute)) {
+            return false;
         }
-        // class
-        if (is_string($class)
-                || $class instanceof DomainObjectInterface
-                || $class instanceof ObjectIdentityInterface) {
+
+        if ($subject instanceof FieldVote) {
+            $subject = $subject->getDomainObject();
+        }
+
+        if (is_string($subject)
+                || $subject instanceof DomainObjectInterface
+                || $subject instanceof ObjectIdentityInterface) {
             return true;
         }
 
-        if (is_object($class)) {
-            $ref = new \ReflectionClass($class);
-
-            return $ref->hasMethod('getId');
-        }
-
-        return  false;
+        return is_object($subject) && method_exists($subject, 'getId');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function vote(TokenInterface $token, $object, array $attributes)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $result = VoterInterface::ACCESS_ABSTAIN;
+        $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
 
-        if (!$this->supportsClass($object)) {
-            return $result;
-        }
-
-        /* @var SecurityIdentityInterface[]|null $sids */
-        $sids = null;
-
-        foreach ($attributes as $attribute) {
-            if (!$this->supportsAttribute($attribute)) {
-                continue;
-            }
-
-            if (null === $sids) {
-                $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
-            }
-
-            $result = VoterInterface::ACCESS_DENIED;
-
-            if ($this->aclManager->isGranted($sids, $object, $attribute)) {
-                return VoterInterface::ACCESS_GRANTED;
-            }
-        }
-
-        return $result;
+        return $this->aclManager->isGranted($sids, $subject, $attribute);
     }
 }
