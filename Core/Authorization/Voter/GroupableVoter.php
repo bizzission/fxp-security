@@ -11,6 +11,8 @@
 
 namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
+use Sonatra\Component\Security\Model\GroupInterface;
+
 /**
  * GroupableVoter to determine the groups granted on current user defined in token.
  *
@@ -23,7 +25,7 @@ class GroupableVoter extends AbstractIdentityVoter
      */
     protected function getValidClass()
     {
-        return 'Sonatra\Component\Security\Model\GroupInterface';
+        return GroupInterface::class;
     }
 
     /**
