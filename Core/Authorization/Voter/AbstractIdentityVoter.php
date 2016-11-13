@@ -12,8 +12,7 @@
 namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 
@@ -22,7 +21,7 @@ use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterf
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-abstract class AbstractIdentityVoter implements VoterInterface
+abstract class AbstractIdentityVoter extends Voter
 {
     /**
      * @var SecurityIdentityRetrievalStrategyInterface
@@ -37,8 +36,8 @@ abstract class AbstractIdentityVoter implements VoterInterface
     /**
      * Constructor.
      *
-     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy
-     * @param string|null                                $prefix
+     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security identity retrieval strategy
+     * @param string|null                                $prefix               The attribute prefix
      */
     public function __construct(SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy, $prefix = null)
     {
@@ -49,7 +48,7 @@ abstract class AbstractIdentityVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsAttribute($attribute)
+    protected function supports($attribute, $subject)
     {
         return is_string($attribute) && 0 === strpos($attribute, $this->prefix);
     }
@@ -57,46 +56,30 @@ abstract class AbstractIdentityVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsClass($class)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        return true;
-    }
+        $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function vote(TokenInterface $token, $object, array $attributes)
-    {
-        $result = VoterInterface::ACCESS_ABSTAIN;
-
-        /* @var SecurityIdentityInterface[]|null $sids */
-        $sids = null;
-
-        foreach ($attributes as $attribute) {
-            if (!$this->supportsAttribute($attribute)) {
-                continue;
-            }
-
-            if (null === $sids) {
-                $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
-            }
-
-            $result = VoterInterface::ACCESS_DENIED;
-            foreach ($sids as $sid) {
-                if ($sid instanceof UserSecurityIdentity && $this->isValidIdentity($attribute, $sid)) {
-                    return VoterInterface::ACCESS_GRANTED;
-                }
+        foreach ($sids as $sid) {
+            if ($sid instanceof UserSecurityIdentity && $this->isValidIdentity($attribute, $sid)) {
+                return true;
             }
         }
 
-        return $result;
+        return false;
     }
 
+    /**
+     * Check if the security identity is valid for this voter.
+     *
+     * @param string               $attribute The attribute
+     * @param UserSecurityIdentity $sid       The security identity
+     *
+     * @return bool
+     */
     protected function isValidIdentity($attribute, UserSecurityIdentity $sid)
     {
-        $ref = new \ReflectionClass($sid->getClass());
-
-        return in_array($this->getValidClass(), $ref->getInterfaceNames())
+        return in_array($this->getValidClass(), class_implements($sid->getClass()))
                 && substr($attribute, strlen($this->prefix)) === $sid->getUsername();
     }
 
