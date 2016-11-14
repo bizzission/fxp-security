@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Tests\Event;
 
 use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
-use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -32,9 +32,9 @@ class PreSecurityIdentityEventTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($token, $event->getToken());
         $this->assertSame($sids, $event->getSecurityIdentities());
-        $this->assertTrue($event->isAclEnabled());
+        $this->assertTrue($event->isPermissionEnabled());
 
-        $event->setAclEnabled(false);
-        $this->assertFalse($event->isAclEnabled());
+        $event->setPermissionEnabled(false);
+        $this->assertFalse($event->isPermissionEnabled());
     }
 }

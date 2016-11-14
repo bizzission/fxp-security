@@ -11,10 +11,10 @@
 
 namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 
 /**
  * AbstractIdentityVoter to determine the identities granted on current user defined in token.
@@ -61,7 +61,7 @@ abstract class AbstractIdentityVoter extends Voter
         $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
 
         foreach ($sids as $sid) {
-            if ($sid instanceof UserSecurityIdentity && $this->isValidIdentity($attribute, $sid)) {
+            if ($this->isValidIdentity($attribute, $sid)) {
                 return true;
             }
         }
@@ -72,23 +72,23 @@ abstract class AbstractIdentityVoter extends Voter
     /**
      * Check if the security identity is valid for this voter.
      *
-     * @param string               $attribute The attribute
-     * @param UserSecurityIdentity $sid       The security identity
+     * @param string                    $attribute The attribute
+     * @param SecurityIdentityInterface $sid       The security identity
      *
      * @return bool
      */
-    protected function isValidIdentity($attribute, UserSecurityIdentity $sid)
+    protected function isValidIdentity($attribute, SecurityIdentityInterface $sid)
     {
-        return in_array($this->getValidClass(), class_implements($sid->getClass()))
-                && substr($attribute, strlen($this->prefix)) === $sid->getUsername();
+        return $this->getValidType() === $sid->getType()
+                && substr($attribute, strlen($this->prefix)) === $sid->getIdentifier();
     }
 
     /**
-     * Get the valid class of identity.
+     * Get the valid type of identity.
      *
      * @return string
      */
-    abstract protected function getValidClass();
+    abstract protected function getValidType();
 
     /**
      * Get the default prefix.

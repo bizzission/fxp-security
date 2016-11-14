@@ -11,8 +11,8 @@
 
 namespace Sonatra\Component\Security\Listener;
 
-use Sonatra\Component\Security\Acl\Domain\GroupSecurityIdentity;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
+use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
 use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

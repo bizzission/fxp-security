@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
-use Sonatra\Component\Security\Model\OrganizationInterface;
+use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
 
 /**
  * OrganizationVoter to determine the organization granted on current user defined in token.
@@ -23,9 +23,9 @@ class OrganizationVoter extends AbstractIdentityVoter
     /**
      * {@inheritdoc}
      */
-    protected function getValidClass()
+    protected function getValidType()
     {
-        return OrganizationInterface::class;
+        return OrganizationSecurityIdentity::TYPE;
     }
 
     /**

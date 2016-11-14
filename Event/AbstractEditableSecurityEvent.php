@@ -19,12 +19,12 @@ namespace Sonatra\Component\Security\Event;
 abstract class AbstractEditableSecurityEvent extends AbstractSecurityEvent
 {
     /**
-     * Defined if the acl must be enable or not.
+     * Defined if the permission manager must be enable or not.
      *
      * @param bool $enabled The value
      */
-    public function setAclEnabled($enabled)
+    public function setPermissionEnabled($enabled)
     {
-        $this->aclEnabled = (bool) $enabled;
+        $this->permissionEnabled = (bool) $enabled;
     }
 }

@@ -28,12 +28,12 @@ class PreReachableRoleEventTest extends \PHPUnit_Framework_TestCase
 
         $event = new PreReachableRoleEvent($roles);
         $this->assertSame($roles, $event->getReachableRoles());
-        $this->assertTrue($event->isAclEnabled());
+        $this->assertTrue($event->isPermissionEnabled());
 
         $roles[] = new Role('ROLE_BAZ');
         $event->setReachableRoles($roles);
-        $event->setAclEnabled(false);
+        $event->setPermissionEnabled(false);
         $this->assertSame($roles, $event->getReachableRoles());
-        $this->assertFalse($event->isAclEnabled());
+        $this->assertFalse($event->isPermissionEnabled());
     }
 }

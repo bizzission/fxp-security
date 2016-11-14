@@ -17,14 +17,14 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\Security\Acl\Domain\SecurityIdentityRetrievalStrategy;
 use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Identity\CacheSecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
-use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -111,7 +111,7 @@ class RoleHierarchyListener implements EventSubscriber
                 $this->cache->deleteItems($invalidates);
             }
 
-            if ($this->strategy instanceof SecurityIdentityRetrievalStrategy) {
+            if ($this->strategy instanceof CacheSecurityIdentityRetrievalStrategyInterface) {
                 $this->strategy->invalidateCache();
             }
         }

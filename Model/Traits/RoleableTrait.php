@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 trait RoleableTrait
 {
     /**
-     * @var array
+     * @var string[]
      */
     protected $roles = array();
 

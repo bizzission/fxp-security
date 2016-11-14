@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Event\Traits;
 
+use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -26,7 +27,7 @@ trait SecurityIdentityEventTrait
     protected $token;
 
     /**
-     * @var \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[]
+     * @var SecurityIdentityInterface[]
      */
     protected $securityIdentities;
 
@@ -43,7 +44,7 @@ trait SecurityIdentityEventTrait
     /**
      * Get security identities.
      *
-     * @return \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[]
+     * @return SecurityIdentityInterface[]
      */
     public function getSecurityIdentities()
     {

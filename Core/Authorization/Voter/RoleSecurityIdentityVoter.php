@@ -11,10 +11,10 @@
 
 namespace Sonatra\Component\Security\Core\Authorization\Voter;
 
-use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
+use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
+use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
@@ -65,7 +65,7 @@ class RoleSecurityIdentityVoter extends RoleVoter
 
         foreach ($sids as $sid) {
             if ($sid instanceof RoleSecurityIdentity) {
-                $role = $sid->getRole();
+                $role = $sid->getIdentifier();
                 $roles[] = new Role($role);
             }
         }

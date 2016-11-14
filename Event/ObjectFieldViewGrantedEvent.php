@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Event;
 
-use Symfony\Component\Security\Acl\Voter\FieldVote;
+use Sonatra\Component\Security\Core\Authorization\Voter\FieldVote;
 
 /**
  * The object field view granted event.
@@ -28,7 +28,7 @@ class ObjectFieldViewGrantedEvent extends AbstractViewGrantedEvent
     /**
      * Constructor.
      *
-     * @param FieldVote $fieldVote The ACL field vote
+     * @param FieldVote $fieldVote The permission field vote
      */
     public function __construct(FieldVote $fieldVote)
     {
@@ -38,7 +38,7 @@ class ObjectFieldViewGrantedEvent extends AbstractViewGrantedEvent
     }
 
     /**
-     * Get the ACL field vote.
+     * Get the permission field vote.
      *
      * @return FieldVote
      */

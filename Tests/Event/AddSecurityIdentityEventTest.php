@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Tests\Event;
 
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
-use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**

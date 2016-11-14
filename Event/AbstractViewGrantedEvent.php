@@ -81,7 +81,7 @@ abstract class AbstractViewGrantedEvent extends Event
     }
 
     /**
-     * Skip the ACL Authorization checker or not.
+     * Skip the permission authorization checker or not.
      *
      * @param bool $skip The value
      *
@@ -95,7 +95,7 @@ abstract class AbstractViewGrantedEvent extends Event
     }
 
     /**
-     * Check if the ACL Authorization checker must be skipped or not.
+     * Check if the permission authorization checker must be skipped or not.
      *
      * @return bool
      */

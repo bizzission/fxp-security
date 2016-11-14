@@ -7,29 +7,33 @@ Sonatra Security
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/sonatra/sonatra-security/master.svg)](https://scrutinizer-ci.com/g/sonatra/sonatra-security?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/6951c069-4ec4-4cfa-a3b9-281085553fdb.svg)](https://insight.sensiolabs.com/projects/6951c069-4ec4-4cfa-a3b9-281085553fdb)
 
-The Sonatra Security implements all functionnalities of 
-[Symfony Advanced ACL Concepts](http://symfony.com/doc/current/cookbook/security/acl_advanced.html)
-and adds some interesting features.
-
+The Sonatra Security Component is a Role-Based Access Control Level 2 with advanced permissions
+and sharing rules.
 
 Features include:
 
-- Ability to define permissions for Entity (Class, Class Field, Record, Record Field)
-- Service manipulator (helper) for ACL/ACE manipulation (read, grant, revoke permissions)
-- Service manager (helper) for check granting on domain object (granted, field granted, preload ACLs)
-- ACL Rule Definition for optimize the ACL queries (and ability to create a sharing rule)
-- ACL Rule Filter Definition for filter the records in query
-- ACL Voter for use the Symfony Authorization Checker
-- Ability to set permissions on roles or users, but also directly on groups
-- Ability to define a hierarchy of role (with all roles in all associated groups)
-- Merge the permissions of roles children of associated roles with user, role, group, and token
+- Compatible with Symfony Security and user manager library (ex. [Friends Of Symfony User Bundle](https://github.com/FriendsOfSymfony/FOSUserBundle))
+- Compatible with [Doctrine extensions](https://github.com/Atlantic18/DoctrineExtensions)
+- Define the roles with hierarchy in Doctrine
+- Define the groups with her roles in Doctrine
+- Define the user with her roles and groups in Doctrine
+- Define the organization with her roles in Doctrine (optional)
+- Define the organization user with her roles and groups in Doctrine (optional)
+- Defined the permissions on the roles in Doctrine
+- Merge the permissions of roles children of associated roles with user, role, group, organization, and token
+- Security Identity Retrieval Strategy for retrieving security identities from tokens (current user,
+  all roles, all groups and organization)
+- AuthorizationChecker to check the permissions for domain objects
+- Permission Manager retrieve and manipulate the permissions with her operations
+- Permission Voter to use the Symfony Authorization Checker
 - Define a role for various host with direct injection in token (regex compatible)
-- Execution cache system for the ACL/ACE getter
-- Execution cache and PSR-6 Caching Implementation for the determination of all roles in hierarchy (with user, group, role, token)
-- Doctrine ORM Filter for filter the records in query (using ACL Rule Filter Definition)
+- Execution cache system and PSR-6 Caching Implementation for the permissions getter
+- Execution cache and PSR-6 Caching Implementation for the determination of all roles in
+  hierarchy (with user, group, role, organization, organization user, token)
+- Share each records by user, role, groups or organization and defined her permissions
+- Doctrine ORM Filter for filtering  the records in query defined by the sharing rules
 - Doctrine Listener for empty the record field value for all query type
 - Doctrine Listener for keep the old value in the record field value if the user has not the permission of action
-- Ability to define a role for a hostname (defined with regex)
 
 Documentation
 -------------

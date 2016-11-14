@@ -23,15 +23,15 @@ abstract class AbstractSecurityEvent extends Event
     /**
      * @var bool
      */
-    protected $aclEnabled = true;
+    protected $permissionEnabled = true;
 
     /**
-     * Check if the acl is enabled.
+     * Check if the permission manager is enabled.
      *
      * @return bool
      */
-    public function isAclEnabled()
+    public function isPermissionEnabled()
     {
-        return $this->aclEnabled;
+        return $this->permissionEnabled;
     }
 }

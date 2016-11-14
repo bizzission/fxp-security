@@ -11,6 +11,8 @@
 
 namespace Sonatra\Component\Security\Model\Traits;
 
+use Sonatra\Component\Security\Model\GroupInterface;
+
 /**
  * Groupable interface.
  *
@@ -30,7 +32,7 @@ interface GroupableInterface
     /**
      * Gets the groups granted to the user.
      *
-     * @return \Traversable
+     * @return \Traversable|GroupInterface[]
      */
     public function getGroups();
 }

@@ -28,7 +28,7 @@ class PostReachableRoleEventTest extends \PHPUnit_Framework_TestCase
 
         $event = new PostReachableRoleEvent($roles);
         $this->assertSame($roles, $event->getReachableRoles());
-        $this->assertTrue($event->isAclEnabled());
+        $this->assertTrue($event->isPermissionEnabled());
 
         $roles[] = new Role('ROLE_BAZ');
         $event->setReachableRoles($roles);

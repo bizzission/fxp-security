@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Event;
 
 use Sonatra\Component\Security\Event\Traits\SecurityIdentityEventTrait;
+use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -27,8 +28,8 @@ class AddSecurityIdentityEvent extends Event
     /**
      * Constructor.
      *
-     * @param TokenInterface                                                    $token              The token
-     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
+     * @param TokenInterface              $token              The token
+     * @param SecurityIdentityInterface[] $securityIdentities The security identities
      */
     public function __construct(TokenInterface $token, array $securityIdentities = array())
     {
@@ -39,7 +40,7 @@ class AddSecurityIdentityEvent extends Event
     /**
      * Set security identities.
      *
-     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
+     * @param SecurityIdentityInterface[] $securityIdentities The security identities
      */
     public function setSecurityIdentities(array $securityIdentities)
     {

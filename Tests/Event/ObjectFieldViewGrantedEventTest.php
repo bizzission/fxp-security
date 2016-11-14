@@ -11,8 +11,8 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use Sonatra\Component\Security\Core\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
-use Symfony\Component\Security\Acl\Voter\FieldVote;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>

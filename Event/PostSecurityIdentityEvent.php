@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Event;
 
 use Sonatra\Component\Security\Event\Traits\SecurityIdentityEventTrait;
+use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -26,14 +27,14 @@ class PostSecurityIdentityEvent extends AbstractSecurityEvent
     /**
      * Constructor.
      *
-     * @param TokenInterface                                                    $token              The token
-     * @param \Symfony\Component\Security\Acl\Model\SecurityIdentityInterface[] $securityIdentities The security identities
-     * @param bool                                                              $aclEnabled         Check if the acl is enabled
+     * @param TokenInterface              $token              The token
+     * @param SecurityIdentityInterface[] $securityIdentities The security identities
+     * @param bool                        $permissionEnabled  Check if the permission manager is enabled
      */
-    public function __construct(TokenInterface $token, array $securityIdentities = array(), $aclEnabled = true)
+    public function __construct(TokenInterface $token, array $securityIdentities = array(), $permissionEnabled = true)
     {
         $this->token = $token;
         $this->securityIdentities = $securityIdentities;
-        $this->aclEnabled = $aclEnabled;
+        $this->permissionEnabled = $permissionEnabled;
     }
 }

@@ -18,9 +18,9 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\Security\Acl\Domain\SecurityIdentityRetrievalStrategy;
 use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
+use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
@@ -34,7 +34,7 @@ use Sonatra\Component\Security\Model\UserInterface;
 class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SecurityIdentityRetrievalStrategy|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $strategy;
 
@@ -65,7 +65,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->strategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategy::class)->disableOriginalConstructor()->getMock();
+        $this->strategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
         $this->cache = $this->getMockBuilder(CacheItemPoolInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();

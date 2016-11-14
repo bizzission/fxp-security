@@ -21,61 +21,45 @@ use Symfony\Component\Security\Core\Role\Role;
 interface RoleableInterface
 {
     /**
-     * Never use this to check if this user has access to anything!
+     * Check if the role exist.
      *
-     * Use the SecurityContext, or an implementation of AccessDecisionManager
-     * instead, e.g.
-     *
-     *         $securityContext->isGranted('ROLE_USER');
-     *
-     * @param string $role
+     * @param string $role The role name
      *
      * @return bool
      */
     public function hasRole($role);
 
     /**
-     * Sets the roles of the user of organization.
+     * Set the roles.
      *
      * This overwrites any previous roles.
      *
-     * @param array $roles
+     * @param string[] $roles The roles
      *
      * @return self
      */
     public function setRoles(array $roles);
 
     /**
-     * Adds a role to the user of organization.
+     * Add a role.
      *
-     * @param string $role
+     * @param string $role The role name
      *
      * @return self
      */
     public function addRole($role);
 
     /**
-     * Removes a role to the user of organization.
+     * Remove a role.
      *
-     * @param string $role
+     * @param string $role The role name
      *
      * @return self
      */
     public function removeRole($role);
 
     /**
-     * Returns the roles granted to the user of organization.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
+     * Get the roles.
      *
      * @return Role[] The user roles
      */

@@ -12,8 +12,8 @@
 namespace Sonatra\Component\Security\Tests\Core\Authorization\Voter;
 
 use Sonatra\Component\Security\Core\Authorization\Voter\RoleSecurityIdentityVoter;
-use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
-use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
+use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 

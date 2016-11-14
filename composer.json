@@ -1,8 +1,8 @@
 {
     "name": "sonatra/security",
     "type": "library",
-    "description": "Implements all features of Symfony2 Advanced ACL Concepts and adds some interesting features",
-    "keywords": ["ACL", "ACE", "Advanced ACL Concept Implementation", "Rule definition", "Sharing rule", "ACL Voter", "JMS Expression"],
+    "description": "A Role-Based Access Control Level 2 with advanced permissions and sharing rules",
+    "keywords": ["RBAC", "Permission", "Sharing", "Security"],
     "homepage": "https://github.com/sonatra/sonatra-security",
     "license": "MIT",
     "authors": [
@@ -13,20 +13,16 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "symfony/security": "~3.0",
-        "symfony/security-acl": "~3.0",
-        "symfony/event-dispatcher": "~3.0",
-        "symfony/expression-language": "~3.0",
-        "symfony/validator": "~3.0",
+        "symfony/security": "~3.1",
+        "symfony/event-dispatcher": "~3.1",
+        "symfony/expression-language": "~3.1",
+        "symfony/validator": "~3.1",
         "doctrine/common": "~2.5",
         "psr/cache": "~1.0"
     },
     "require-dev": {
-        "symfony/dependency-injection": "~3.0",
+        "symfony/dependency-injection": "~3.1",
         "doctrine/orm": "~2.5"
-    },
-    "suggest": {
-        "doctrine/orm": "For ORM filter query feature"
     },
     "autoload": {
         "psr-4": { "Sonatra\\Component\\Security\\": "" },
