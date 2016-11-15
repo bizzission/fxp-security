@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Identity;
 
+use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
@@ -20,6 +21,7 @@ use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
 use Sonatra\Component\Security\Model\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -143,10 +145,8 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
 
         if ($user instanceof GroupableInterface) {
             foreach ($user->getGroups() as $group) {
-                try {
+                if ($group instanceof GroupInterface) {
                     $sids[] = GroupSecurityIdentity::fromAccount($group);
-                } catch (\InvalidArgumentException $invalid) {
-                    // ignore, group has no group security identity
                 }
             }
         }
@@ -169,16 +169,17 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
         if ($user instanceof RoleableInterface && $user instanceof OrganizationUserInterface) {
             $roles = $user->getRoles();
             $org = $user->getOrganization();
+            $id = strtoupper($org->getName());
             $existingRoles = $roles;
 
-            foreach ($roles as $role) {
-                $existingRoles[] = $role->getRole();
+            foreach ($roles as $i => $role) {
+                $roles[$i] = new Role($roles[$i].'__'.$id);
             }
 
             if ($org instanceof RoleableInterface) {
                 foreach ($org->getRoles() as $orgRole) {
-                    if (!in_array($orgRole->getRole(), $existingRoles)) {
-                        $roles[] = $orgRole;
+                    if (!in_array((string) $orgRole, $existingRoles)) {
+                        $roles[] = new Role((string) $orgRole);
                     }
                 }
             }
