@@ -12,10 +12,13 @@
 namespace Sonatra\Component\Security\Tests\Fixtures\Model;
 
 use Sonatra\Component\Security\Model\Organization;
+use Sonatra\Component\Security\Model\Traits\RoleableInterface;
+use Sonatra\Component\Security\Model\Traits\RoleableTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class MockOrganization extends Organization
+class MockOrganization extends Organization implements RoleableInterface
 {
+    use RoleableTrait;
 }
