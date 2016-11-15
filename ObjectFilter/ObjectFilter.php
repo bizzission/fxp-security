@@ -128,10 +128,9 @@ class ObjectFilter implements ObjectFilterInterface
         foreach ($this->queue as $id => $object) {
             if (in_array($id, $this->toFilter)) {
                 $this->doFilter($object);
-                continue;
+            } else {
+                $this->doRestore($object);
             }
-
-            $this->doRestore($object);
         }
 
         $event = new PostCommitObjectFilterEvent($this->queue);
