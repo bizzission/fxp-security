@@ -253,7 +253,7 @@ class ObjectFilter implements ObjectFilterInterface
                 && !$this->ac->isGranted('edit', $fieldVote))
             || (null !== $values['old'] && null === $values['new']
                 && !$this->ac->isGranted('delete', $fieldVote)
-                && !$this->ac->isGranted('delete', $fieldVote));
+                && !$this->ac->isGranted('edit', $fieldVote));
     }
 
     /**
