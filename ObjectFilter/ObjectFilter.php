@@ -84,13 +84,15 @@ class ObjectFilter implements ObjectFilterInterface
      * @param PermissionManagerInterface     $pm         The permission manager
      * @param AuthorizationCheckerInterface  $ac         The authorization checker
      * @param EventDispatcherInterface       $dispatcher The event dispatcher
+     * @param UnitOfWorkInterface            $uow        The unit of work
      */
     public function __construct(ObjectFilterExtensionInterface $ofe,
                                 PermissionManagerInterface $pm,
                                 AuthorizationCheckerInterface  $ac,
-                                EventDispatcherInterface $dispatcher)
+                                EventDispatcherInterface $dispatcher,
+                                UnitOfWorkInterface $uow = null)
     {
-        $this->uow = new UnitOfWork();
+        $this->uow = null !== $uow ? $uow : new UnitOfWork();
         $this->ofe = $ofe;
         $this->pm = $pm;
         $this->ac = $ac;
