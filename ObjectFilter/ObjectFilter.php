@@ -17,7 +17,7 @@ use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
 use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;
 use Sonatra\Component\Security\Event\PreCommitObjectFilterEvent;
 use Sonatra\Component\Security\Event\RestoreViewGrantedEvent;
-use Sonatra\Component\Security\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Exception\UnexpectedTypeException;
 use Sonatra\Component\Security\ObjectFilterEvents;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -145,7 +145,7 @@ class ObjectFilter implements ObjectFilterInterface
     public function filter($object)
     {
         if (!is_object($object)) {
-            throw new InvalidArgumentException('The "object" parameter must be an object instance');
+            throw new UnexpectedTypeException($object, 'object');
         }
 
         $id = spl_object_hash($object);
@@ -165,7 +165,7 @@ class ObjectFilter implements ObjectFilterInterface
     public function restore($object)
     {
         if (!is_object($object)) {
-            throw new InvalidArgumentException('The "object" parameter must be an object instance');
+            throw new UnexpectedTypeException($object, 'object');
         }
 
         $this->uow->attach($object);
