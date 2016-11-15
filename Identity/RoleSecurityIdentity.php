@@ -59,7 +59,7 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
             return $sids;
         }
 
-        throw new InvalidArgumentException('The user class must implement "Sonatra\Component\Security\Model\Traits\GroupableInterface"');
+        throw new InvalidArgumentException('The user class must implement "Sonatra\Component\Security\Model\Traits\RoleableInterface"');
     }
 
     /**
