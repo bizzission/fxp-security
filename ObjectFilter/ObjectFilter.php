@@ -142,30 +142,6 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function attach($object)
-    {
-        $this->uow->attach($object);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function detach($object)
-    {
-        $this->uow->detach($object);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function flush()
-    {
-        $this->uow->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function filter($object)
     {
         if (!is_object($object)) {

@@ -36,25 +36,6 @@ interface ObjectFilterInterface
     public function commit();
 
     /**
-     * Attaches an object from the object filter management.
-     *
-     * @param object $object The object to attach
-     */
-    public function attach($object);
-
-    /**
-     * Detaches an object from the object filter management.
-     *
-     * @param object $object The object to detach
-     */
-    public function detach($object);
-
-    /**
-     * Clears the UnitOfWork.
-     */
-    public function flush();
-
-    /**
      * Filtering the object fields with null value for unauthorized access field.
      *
      * @param object $object The object instance
