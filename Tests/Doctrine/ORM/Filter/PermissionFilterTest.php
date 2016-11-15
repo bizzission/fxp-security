@@ -103,4 +103,9 @@ class PermissionFilterTest extends \PHPUnit_Framework_TestCase
         $filter = new PermissionFilter($em);
         $filter->addFilterConstraint($this->targetClass, 't');
     }
+
+    public function testAddFilterConstraint()
+    {
+        $this->assertSame('', $this->filter->addFilterConstraint($this->targetClass, 't'));
+    }
 }
