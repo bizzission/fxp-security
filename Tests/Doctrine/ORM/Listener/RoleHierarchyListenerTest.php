@@ -18,9 +18,9 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
+use Sonatra\Component\Security\Identity\CacheSecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
@@ -34,7 +34,7 @@ use Sonatra\Component\Security\Model\UserInterface;
 class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var CacheSecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $strategy;
 
@@ -65,7 +65,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->strategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
+        $this->strategy = $this->getMockBuilder(CacheSecurityIdentityRetrievalStrategyInterface::class)->getMock();
         $this->cache = $this->getMockBuilder(CacheItemPoolInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
@@ -105,6 +105,9 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method('deleteItems')
             ->with(array('user__'));
+
+        $this->strategy->expects($this->once())
+            ->method('invalidateCache');
 
         $this->listener->onFlush($args);
     }
@@ -166,6 +169,9 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('deleteItems')
             ->with(array('user__'));
 
+        $this->strategy->expects($this->once())
+            ->method('invalidateCache');
+
         $this->listener->onFlush($args);
     }
 
@@ -195,6 +201,9 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method('deleteItems')
             ->with(array('user__'));
+
+        $this->strategy->expects($this->once())
+            ->method('invalidateCache');
 
         $this->listener->onFlush($args);
     }
@@ -234,6 +243,9 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method('deleteItems')
             ->with(array('42__'));
+
+        $this->strategy->expects($this->once())
+            ->method('invalidateCache');
 
         $this->listener->onFlush($args);
     }
@@ -279,6 +291,9 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method('deleteItems')
             ->with(array('user__'));
+
+        $this->strategy->expects($this->once())
+            ->method('invalidateCache');
 
         $this->listener->onFlush($args);
     }
@@ -344,6 +359,9 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->cache->expects($this->once())
             ->method('clear')
             ->with();
+
+        $this->strategy->expects($this->once())
+            ->method('invalidateCache');
 
         $listener = new RoleHierarchyListener($this->strategy, $this->cache);
         $listener->onFlush($args);
