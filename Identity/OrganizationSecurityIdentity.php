@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Identity;
 
-use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\RoleInterface;

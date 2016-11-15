@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Listener;
 
-use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
 use Sonatra\Component\Security\IdentityRetrievalEvents;

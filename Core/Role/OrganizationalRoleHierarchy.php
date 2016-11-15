@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Core\Role;
 
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 
 /**
  * RoleHierarchy defines a role hierarchy.

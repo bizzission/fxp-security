@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Core\Organizational;
+namespace Sonatra\Component\Security\Organizational;
 
 use Sonatra\Component\Security\Exception\RuntimeException;
 use Sonatra\Component\Security\Model\OrganizationInterface;

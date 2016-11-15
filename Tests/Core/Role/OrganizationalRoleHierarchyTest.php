@@ -19,7 +19,7 @@ use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Core\Role\OrganizationalRoleHierarchy;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\RoleHierarchicalInterface;

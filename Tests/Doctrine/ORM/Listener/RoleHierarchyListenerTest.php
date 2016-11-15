@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Model\GroupInterface;

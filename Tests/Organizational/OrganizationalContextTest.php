@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Core\Organizational;
+namespace Sonatra\Component\Security\Tests\Organizational;
 
-use Sonatra\Component\Security\Core\Organizational\OrganizationalContext;
+use Sonatra\Component\Security\Organizational\OrganizationalContext;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\UserInterface;
