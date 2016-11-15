@@ -11,8 +11,6 @@
 
 namespace Sonatra\Component\Security\ObjectFilter;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * Object filter extension for add the object filter voter.
  *
@@ -21,28 +19,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ObjectFilterExtension implements ObjectFilterExtensionInterface
 {
     /**
-     * @var ContainerInterface
+     * @var ObjectFilterVoterInterface[]
      */
-    public $container;
-
-    /**
-     * @var array
-     */
-    protected $voterServiceIds;
-
-    /**
-     * @var array
-     */
-    protected $cache;
+    protected $voters;
 
     /**
      * Constructor.
      *
-     * @param array $voterServiceIds
+     * @param ObjectFilterVoterInterface[] $voters The object filter voters
      */
-    public function __construct(array $voterServiceIds)
+    public function __construct(array $voters)
     {
-        $this->voterServiceIds = $voterServiceIds;
+        $this->voters = $voters;
     }
 
     /**
@@ -52,9 +40,7 @@ class ObjectFilterExtension implements ObjectFilterExtensionInterface
     {
         $val = null;
 
-        foreach ($this->voterServiceIds as $id) {
-            $voter = $this->getVoter($id);
-
+        foreach ($this->voters as $voter) {
             if ($voter->supports($value)) {
                 $val = $voter->getValue($value);
                 break;
@@ -62,23 +48,5 @@ class ObjectFilterExtension implements ObjectFilterExtensionInterface
         }
 
         return $val;
-    }
-
-    /**
-     * Get voter.
-     *
-     * @param string $id
-     *
-     * @return ObjectFilterVoterInterface
-     */
-    protected function getVoter($id)
-    {
-        if (isset($this->cache[$id])) {
-            return $this->cache[$id];
-        }
-
-        $this->cache[$id] = $this->container->get($id);
-
-        return $this->cache[$id];
     }
 }
