@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\ObjectFilter;
 
-use Sonatra\Component\Security\Core\Authorization\Voter\FieldVote;
+use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
 use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
 use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;

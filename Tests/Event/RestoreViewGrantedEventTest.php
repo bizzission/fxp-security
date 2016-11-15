@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
-use Sonatra\Component\Security\Core\Authorization\Voter\FieldVote;
+use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Event\RestoreViewGrantedEvent;
 
 /**

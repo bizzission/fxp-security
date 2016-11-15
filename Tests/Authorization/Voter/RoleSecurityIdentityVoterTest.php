@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Core\Authorization\Voter;
+namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
-use Sonatra\Component\Security\Core\Authorization\Voter\GroupableVoter;
-use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
+use Sonatra\Component\Security\Authorization\Voter\RoleSecurityIdentityVoter;
+use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class GroupableVoterTest extends \PHPUnit_Framework_TestCase
+class RoleSecurityIdentityVoterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -28,22 +28,22 @@ class GroupableVoterTest extends \PHPUnit_Framework_TestCase
     protected $sidStrategy;
 
     /**
-     * @var GroupableVoter
+     * @var RoleSecurityIdentityVoter
      */
     protected $voter;
 
     protected function setUp()
     {
         $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
-        $this->voter = new GroupableVoter($this->sidStrategy, null);
+        $this->voter = new RoleSecurityIdentityVoter($this->sidStrategy, 'TEST_');
     }
 
     public function getAccessResults()
     {
         return array(
-            array(array('GROUP_FOO'), VoterInterface::ACCESS_GRANTED),
-            array(array('GROUP_BAR'), VoterInterface::ACCESS_DENIED),
-            array(array('TEST_FOO'), VoterInterface::ACCESS_ABSTAIN),
+            array(array('TEST_ADMIN'), VoterInterface::ACCESS_GRANTED),
+            array(array('TEST_USER'), VoterInterface::ACCESS_DENIED),
+            array(array('ROLE_ADMIN'), VoterInterface::ACCESS_ABSTAIN),
         );
     }
 
@@ -59,14 +59,12 @@ class GroupableVoterTest extends \PHPUnit_Framework_TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $sids = array(
-            new GroupSecurityIdentity('FOO'),
+            new RoleSecurityIdentity('TEST_ADMIN'),
         );
 
-        if (VoterInterface::ACCESS_ABSTAIN !== $access) {
-            $this->sidStrategy->expects($this->atLeast(2))
-                ->method('getSecurityIdentities')
-                ->willReturn($sids);
-        }
+        $this->sidStrategy->expects($this->atLeast(2))
+            ->method('getSecurityIdentities')
+            ->willReturn($sids);
 
         $this->assertSame($access, $this->voter->vote($token, null, $attributes));
         $this->assertSame($access, $this->voter->vote($token, null, $attributes));
