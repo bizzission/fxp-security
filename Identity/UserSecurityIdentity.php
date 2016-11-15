@@ -39,7 +39,7 @@ final class UserSecurityIdentity extends AbstractSecurityIdentity
      *
      * @param TokenInterface $token The token
      *
-     * @return self[]
+     * @return self
      *
      * @throws InvalidArgumentException When the user class not implements "Sonatra\Component\Security\Model\UserInterface"
      */
