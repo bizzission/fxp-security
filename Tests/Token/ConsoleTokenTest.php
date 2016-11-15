@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Core\Token;
+namespace Sonatra\Component\Security\Tests\Token;
 
-use Sonatra\Component\Security\Core\Token\ConsoleToken;
+use Sonatra\Component\Security\Token\ConsoleToken;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>

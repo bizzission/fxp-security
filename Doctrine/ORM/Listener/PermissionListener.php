@@ -16,7 +16,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Sonatra\Component\Security\Exception\SecurityException;
-use Sonatra\Component\Security\Core\Token\ConsoleToken;
+use Sonatra\Component\Security\Token\ConsoleToken;
 use Sonatra\Component\Security\Exception\AccessDeniedException;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;

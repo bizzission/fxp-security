@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
-use Sonatra\Component\Security\Core\Token\ConsoleToken;
+use Sonatra\Component\Security\Token\ConsoleToken;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\PermissionListener;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
