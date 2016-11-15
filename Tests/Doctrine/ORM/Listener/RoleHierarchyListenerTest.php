@@ -24,7 +24,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterfa
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
-use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\UserInterface;
 
@@ -139,11 +139,11 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener->onFlush($args);
     }
 
-    public function testOnFLushWithRoleHierarchisableObject()
+    public function testOnFLushWithRoleHierarchicalObject()
     {
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
-        $object = $this->getMockBuilder(RoleHierarchisableInterface::class)->getMock();
+        $object = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $changeSet = array(
             'roles' => array(
                 array(),
@@ -241,7 +241,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
     public function getCollectionInterfaces()
     {
         return array(
-            array(RoleHierarchisableInterface::class, 'children'),
+            array(RoleHierarchicalInterface::class, 'children'),
             array(GroupableInterface::class, 'groups'),
         );
     }
@@ -322,7 +322,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
     {
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
-        $object = $this->getMockBuilder(RoleHierarchisableInterface::class)->getMock();
+        $object = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $changeSet = array(
             'roles' => array(
                 array(),

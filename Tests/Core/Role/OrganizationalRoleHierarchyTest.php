@@ -22,7 +22,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Security\Core\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Core\Role\OrganizationalRoleHierarchy;
 use Sonatra\Component\Security\Model\OrganizationInterface;
-use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Role\Role;
@@ -175,7 +175,7 @@ class OrganizationalRoleHierarchyTest extends \PHPUnit_Framework_TestCase
             ->method('disable')
             ->with('test_filter');
 
-        $dbRole = $this->getMockBuilder(RoleHierarchisableInterface::class)->getMock();
+        $dbRole = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $dbRoleChildren = $this->getMockBuilder(Collection::class)->getMock();
 
         $dbRole->expects($this->once())

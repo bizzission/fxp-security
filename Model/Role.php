@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\Collection;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-abstract class Role implements RoleHierarchisableInterface
+abstract class Role implements RoleHierarchicalInterface
 {
     /**
      * @var int|string|null
@@ -91,7 +91,7 @@ abstract class Role implements RoleHierarchisableInterface
     /**
      * {@inheritdoc}
      */
-    public function addParent(RoleHierarchisableInterface $role)
+    public function addParent(RoleHierarchicalInterface $role)
     {
         $role->addChild($this);
         $this->parents->add($role);
@@ -102,7 +102,7 @@ abstract class Role implements RoleHierarchisableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeParent(RoleHierarchisableInterface $parent)
+    public function removeParent(RoleHierarchicalInterface $parent)
     {
         if ($this->getParents()->contains($parent)) {
             $this->getParents()->removeElement($parent);
@@ -146,7 +146,7 @@ abstract class Role implements RoleHierarchisableInterface
     /**
      * {@inheritdoc}
      */
-    public function addChild(RoleHierarchisableInterface $role)
+    public function addChild(RoleHierarchicalInterface $role)
     {
         $this->children->add($role);
 
@@ -156,7 +156,7 @@ abstract class Role implements RoleHierarchisableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeChild(RoleHierarchisableInterface $child)
+    public function removeChild(RoleHierarchicalInterface $child)
     {
         if ($this->getChildren()->contains($child)) {
             $this->getChildren()->removeElement($child);

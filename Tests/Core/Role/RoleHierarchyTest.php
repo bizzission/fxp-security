@@ -20,7 +20,7 @@ use Doctrine\ORM\Query\FilterCollection;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Security\Core\Role\RoleHierarchy;
-use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Role\Role;
@@ -160,7 +160,7 @@ class RoleHierarchyTest extends \PHPUnit_Framework_TestCase
             ->method('disable')
             ->with('test_filter');
 
-        $dbRole = $this->getMockBuilder(RoleHierarchisableInterface::class)->getMock();
+        $dbRole = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $dbRoleChildren = $this->getMockBuilder(Collection::class)->getMock();
 
         $dbRole->expects($this->once())

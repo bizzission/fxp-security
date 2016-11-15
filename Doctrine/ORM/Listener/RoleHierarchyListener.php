@@ -23,7 +23,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterfa
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
-use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -149,7 +149,7 @@ class RoleHierarchyListener implements EventSubscriber
             $fields = array_keys($uow->getEntityChangeSet($object));
             $checkFields = array('roles');
 
-            if ($object instanceof RoleHierarchisableInterface || $object instanceof OrganizationUserInterface) {
+            if ($object instanceof RoleHierarchicalInterface || $object instanceof OrganizationUserInterface) {
                 $checkFields = array_merge($checkFields, array('name'));
             }
 
@@ -176,7 +176,7 @@ class RoleHierarchyListener implements EventSubscriber
     protected function isCacheableObject($object)
     {
         return $object instanceof UserInterface
-            || $object instanceof RoleHierarchisableInterface
+            || $object instanceof RoleHierarchicalInterface
             || $object instanceof GroupInterface
             || $object instanceof OrganizationUserInterface;
     }
@@ -192,7 +192,7 @@ class RoleHierarchyListener implements EventSubscriber
     {
         $ref = new \ReflectionClass($mapping['sourceEntity']);
 
-        if (in_array(RoleHierarchisableInterface::class, $ref->getInterfaceNames())
+        if (in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames())
                 && 'children' === $mapping['fieldName']) {
             return true;
         } elseif (in_array(GroupableInterface::class, $ref->getInterfaceNames())

@@ -17,7 +17,7 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Security\Event\PostReachableRoleEvent;
 use Sonatra\Component\Security\Event\PreReachableRoleEvent;
-use Sonatra\Component\Security\Model\RoleHierarchisableInterface;
+use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\ReachableRoleEvents;
 use Symfony\Component\Security\Core\Role\RoleHierarchy as BaseRoleHierarchy;
 use Symfony\Component\Security\Core\Role\RoleInterface;
@@ -173,7 +173,7 @@ class RoleHierarchy extends BaseRoleHierarchy
             $entityRoles = $repo->findBy(array('name' => $roleNames));
         }
 
-        /* @var RoleHierarchisableInterface $eRole */
+        /* @var RoleHierarchicalInterface $eRole */
         foreach ($entityRoles as $eRole) {
             $reachableRoles = array_merge($reachableRoles, $this->getReachableRoles($eRole->getChildren()->toArray()));
         }

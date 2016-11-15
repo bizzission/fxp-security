@@ -14,34 +14,34 @@ namespace Sonatra\Component\Security\Model;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Interface for role hierarchisable.
+ * Interface for role hierarchical.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface RoleHierarchisableInterface extends RoleInterface
+interface RoleHierarchicalInterface extends RoleInterface
 {
     /**
      * Add a parent on the current role.
      *
-     * @param RoleHierarchisableInterface $role
+     * @param RoleHierarchicalInterface $role
      *
      * @return self
      */
-    public function addParent(RoleHierarchisableInterface $role);
+    public function addParent(RoleHierarchicalInterface $role);
 
     /**
      * Remove a parent on the current role.
      *
-     * @param RoleHierarchisableInterface $parent
+     * @param RoleHierarchicalInterface $parent
      *
      * @return self
      */
-    public function removeParent(RoleHierarchisableInterface $parent);
+    public function removeParent(RoleHierarchicalInterface $parent);
 
     /**
      * Gets all parent.
      *
-     * @return Collection|RoleHierarchisableInterface[]
+     * @return Collection|RoleHierarchicalInterface[]
      */
     public function getParents();
 
@@ -64,25 +64,25 @@ interface RoleHierarchisableInterface extends RoleInterface
     /**
      * Add a child on the current role.
      *
-     * @param RoleHierarchisableInterface $role
+     * @param RoleHierarchicalInterface $role
      *
      * @return self
      */
-    public function addChild(RoleHierarchisableInterface $role);
+    public function addChild(RoleHierarchicalInterface $role);
 
     /**
      * Remove a child on the current role.
      *
-     * @param RoleHierarchisableInterface $child
+     * @param RoleHierarchicalInterface $child
      *
      * @return self
      */
-    public function removeChild(RoleHierarchisableInterface $child);
+    public function removeChild(RoleHierarchicalInterface $child);
 
     /**
      * Gets all children.
      *
-     * @return Collection|RoleHierarchisableInterface[]
+     * @return Collection|RoleHierarchicalInterface[]
      */
     public function getChildren();
 
