@@ -91,7 +91,6 @@ class UnitOfWorkTest extends \PHPUnit_Framework_TestCase
 
         $obj->setName('bar');
 
-
         $valid = array(
             'name' => array(
                 'old' => 'foo',
