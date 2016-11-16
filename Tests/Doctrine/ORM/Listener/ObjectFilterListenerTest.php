@@ -152,8 +152,8 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($token);
 
         $this->permissionManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(true);
+            ->method('isEnabled')
+            ->willReturn(false);
 
         $this->objectFilter->expects($this->never())
             ->method('filter');
@@ -204,8 +204,8 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($token);
 
         $this->permissionManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(false);
+            ->method('isEnabled')
+            ->willReturn(true);
 
         $args->expects($this->once())
             ->method('getEntity')
@@ -231,8 +231,8 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($token);
 
         $this->permissionManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(true);
+            ->method('isEnabled')
+            ->willReturn(false);
 
         $this->objectFilter->expects($this->never())
             ->method('filter');
@@ -287,8 +287,8 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($token);
 
         $this->permissionManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(false);
+            ->method('isEnabled')
+            ->willReturn(true);
 
         $args->expects($this->once())
             ->method('getEntityManager')
@@ -328,8 +328,8 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($token);
 
         $this->permissionManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(false);
+            ->method('isEnabled')
+            ->willReturn(true);
 
         $args->expects($this->once())
             ->method('getEntityManager')
@@ -373,8 +373,8 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($token);
 
         $this->permissionManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(false);
+            ->method('isEnabled')
+            ->willReturn(true);
 
         $args->expects($this->once())
             ->method('getEntityManager')
@@ -414,8 +414,8 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($token);
 
         $this->permissionManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(false);
+            ->method('isEnabled')
+            ->willReturn(true);
 
         $args->expects($this->once())
             ->method('getEntityManager')

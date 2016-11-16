@@ -60,7 +60,7 @@ class DisablePermissionListener implements EventSubscriberInterface
      */
     public function disablePermissionManager(AbstractEditableSecurityEvent $event)
     {
-        $isEnabled = !$this->permManager->isDisabled();
+        $isEnabled = $this->permManager->isEnabled();
         $event->setPermissionEnabled($isEnabled);
 
         if ($isEnabled) {

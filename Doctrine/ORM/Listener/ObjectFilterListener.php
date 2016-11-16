@@ -83,7 +83,7 @@ class ObjectFilterListener implements EventSubscriber
     {
         $token = $this->getTokenStorage()->getToken();
 
-        if ($this->permissionManager->isDisabled()
+        if (!$this->permissionManager->isEnabled()
                 || null === $token || $token instanceof ConsoleToken) {
             return;
         }
@@ -104,7 +104,7 @@ class ObjectFilterListener implements EventSubscriber
         $this->postResetPermissions = array();
         $token = $this->getTokenStorage()->getToken();
 
-        if ($this->permissionManager->isDisabled()
+        if (!$this->permissionManager->isEnabled()
                 || null === $token || $token instanceof ConsoleToken) {
             return;
         }

@@ -32,7 +32,7 @@ interface PermissionManagerInterface
      *
      * @return bool
      */
-    public function isDisabled();
+    public function isEnabled();
 
     /**
      * Enables the permission manager (the asked authorizations will be accepted
@@ -51,6 +51,15 @@ interface PermissionManagerInterface
     public function disable();
 
     /**
+     * Get the security identities of token.
+     *
+     * @param TokenInterface $token The token
+     *
+     * @return SecurityIdentityInterface[]
+     */
+    public function getSecurityIdentities(TokenInterface $token = null);
+
+    /**
      * Preload permissions of objects.
      *
      * @param object[] $objects The objects
@@ -67,13 +76,4 @@ interface PermissionManagerInterface
      * @return self
      */
     public function resetPreloadPermissions(array $objects);
-
-    /**
-     * Get the security identities of token.
-     *
-     * @param TokenInterface $token The token
-     *
-     * @return SecurityIdentityInterface[]
-     */
-    public function getSecurityIdentities(TokenInterface $token = null);
 }

@@ -40,8 +40,8 @@ class DisablePermissionListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->getMockForAbstractClass(AbstractEditableSecurityEvent::class);
 
         $this->aclManager->expects($this->once())
-            ->method('isDisabled')
-            ->willReturn(false);
+            ->method('isEnabled')
+            ->willReturn(true);
 
         $this->aclManager->expects($this->once())
             ->method('disable');
