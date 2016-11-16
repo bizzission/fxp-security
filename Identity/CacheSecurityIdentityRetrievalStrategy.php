@@ -13,7 +13,6 @@ namespace Sonatra\Component\Security\Identity;
 
 use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Sonatra\Component\Security\Listener\EventStrategyIdentityInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -67,10 +66,11 @@ class CacheSecurityIdentityRetrievalStrategy extends SecurityIdentityRetrievalSt
         $id = spl_object_hash($token);
 
         if (null === $this->cacheIdName) {
-            /* @var EventSubscriberInterface[] $listeners */
             $listeners = $this->dispatcher->getListeners(IdentityRetrievalEvents::ADD);
 
             foreach ($listeners as $listener) {
+                $listener = is_array($listener) && count($listener) > 1 ? $listener[0] : $listener;
+
                 if ($listener instanceof EventStrategyIdentityInterface) {
                     $this->cacheIdName .= '_'.$listener->getCacheId();
                 }
