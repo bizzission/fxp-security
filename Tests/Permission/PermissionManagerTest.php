@@ -57,7 +57,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getSecurityIdentities')
             ->with($token)
             ->willReturn(array(
-                $sid
+                $sid,
             ));
 
         $sids = $this->pm->getSecurityIdentities($token);
