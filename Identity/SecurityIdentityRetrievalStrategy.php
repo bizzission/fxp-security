@@ -16,9 +16,9 @@ use Sonatra\Component\Security\Event\PostSecurityIdentityEvent;
 use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
 use Sonatra\Component\Security\IdentityRetrievalEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
@@ -40,20 +40,20 @@ class SecurityIdentityRetrievalStrategy implements SecurityIdentityRetrievalStra
     protected $roleHierarchy;
 
     /**
-     * @var AuthenticationTrustResolver
+     * @var AuthenticationTrustResolverInterface
      */
     protected $authenticationTrustResolver;
 
     /**
      * Constructor.
      *
-     * @param EventDispatcherInterface    $dispatcher                  The event dispatcher
-     * @param RoleHierarchyInterface      $roleHierarchy               The role hierarchy
-     * @param AuthenticationTrustResolver $authenticationTrustResolver The authentication trust resolver
+     * @param EventDispatcherInterface             $dispatcher                  The event dispatcher
+     * @param RoleHierarchyInterface               $roleHierarchy               The role hierarchy
+     * @param AuthenticationTrustResolverInterface $authenticationTrustResolver The authentication trust resolver
      */
     public function __construct(EventDispatcherInterface $dispatcher,
                                 RoleHierarchyInterface $roleHierarchy,
-                                AuthenticationTrustResolver $authenticationTrustResolver)
+                                AuthenticationTrustResolverInterface $authenticationTrustResolver)
     {
         $this->dispatcher = $dispatcher;
         $this->roleHierarchy = $roleHierarchy;
