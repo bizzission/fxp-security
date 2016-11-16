@@ -47,11 +47,13 @@ class HostRoleListener implements ListenerInterface
     /**
      * Constructor.
      *
-     * @param TokenStorageInterface $tokenStorage
-     * @param array                 $config
-     * @param ListenerInterface     $anonymousListener
+     * @param TokenStorageInterface $tokenStorage      The token storage
+     * @param array                 $config            The config
+     * @param ListenerInterface     $anonymousListener The anonymous listener
      */
-    public function __construct(TokenStorageInterface $tokenStorage, array $config, ListenerInterface $anonymousListener)
+    public function __construct(TokenStorageInterface $tokenStorage,
+                                array $config,
+                                ListenerInterface $anonymousListener)
     {
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;

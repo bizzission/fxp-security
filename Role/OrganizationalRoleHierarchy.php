@@ -31,13 +31,16 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
      * Constructor.
      *
      * @param array                               $hierarchy     An array defining the hierarchy
-     * @param ManagerRegistryInterface            $registry
-     * @param string                              $roleClassname
-     * @param CacheItemPoolInterface|null         $cache
-     * @param OrganizationalContextInterface|null $context
+     * @param ManagerRegistryInterface            $registry      The doctrine registry
+     * @param string                              $roleClassname The classname of role
+     * @param CacheItemPoolInterface|null         $cache         The cache
+     * @param OrganizationalContextInterface|null $context       The organizational context
      */
-    public function __construct(array $hierarchy, ManagerRegistryInterface $registry, $roleClassname,
-                                CacheItemPoolInterface $cache = null, OrganizationalContextInterface $context = null)
+    public function __construct(array $hierarchy,
+                                ManagerRegistryInterface $registry,
+                                $roleClassname,
+                                CacheItemPoolInterface $cache = null,
+                                OrganizationalContextInterface $context = null)
     {
         parent::__construct($hierarchy, $registry, $roleClassname, $cache);
         $this->context = $context;

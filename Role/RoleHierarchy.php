@@ -61,11 +61,13 @@ class RoleHierarchy extends BaseRoleHierarchy
      * Constructor.
      *
      * @param array                       $hierarchy     An array defining the hierarchy
-     * @param ManagerRegistryInterface    $registry
-     * @param string                      $roleClassname
-     * @param CacheItemPoolInterface|null $cache
+     * @param ManagerRegistryInterface    $registry      The doctrine registry
+     * @param string                      $roleClassname The classname of role
+     * @param CacheItemPoolInterface|null $cache         The cache
      */
-    public function __construct(array $hierarchy, ManagerRegistryInterface $registry, $roleClassname,
+    public function __construct(array $hierarchy,
+                                ManagerRegistryInterface $registry,
+                                $roleClassname,
                                 CacheItemPoolInterface $cache = null)
     {
         parent::__construct($hierarchy);

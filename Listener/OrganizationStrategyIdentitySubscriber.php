@@ -38,8 +38,8 @@ class OrganizationStrategyIdentitySubscriber implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param RoleHierarchyInterface         $roleHierarchy
-     * @param OrganizationalContextInterface $context
+     * @param RoleHierarchyInterface         $roleHierarchy The role hierarchy
+     * @param OrganizationalContextInterface $context       The organizational context
      */
     public function __construct(RoleHierarchyInterface $roleHierarchy,
                                 OrganizationalContextInterface $context)

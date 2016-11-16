@@ -44,7 +44,7 @@ abstract class Role implements RoleHierarchicalInterface
     /**
      * Constructor.
      *
-     * @param string $name
+     * @param string $name The role name
      */
     public function __construct($name)
     {

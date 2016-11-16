@@ -53,9 +53,9 @@ class RoleHierarchyListener implements EventSubscriber
     /**
      * Constructor.
      *
-     * @param SecurityIdentityRetrievalStrategyInterface $strategy
-     * @param CacheItemPoolInterface|null                $cache
-     * @param OrganizationalContextInterface|null        $context
+     * @param SecurityIdentityRetrievalStrategyInterface $strategy The security identity retrieval strategy
+     * @param CacheItemPoolInterface|null                $cache    The cache
+     * @param OrganizationalContextInterface|null        $context  The organizational context
      */
     public function __construct(SecurityIdentityRetrievalStrategyInterface $strategy,
                                 CacheItemPoolInterface $cache = null,

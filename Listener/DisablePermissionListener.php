@@ -33,7 +33,7 @@ class DisablePermissionListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param PermissionManagerInterface $permManager
+     * @param PermissionManagerInterface $permManager The permission manager
      */
     public function __construct(PermissionManagerInterface $permManager)
     {

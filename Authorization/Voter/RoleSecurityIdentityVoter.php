@@ -38,8 +38,8 @@ class RoleSecurityIdentityVoter extends RoleVoter
     /**
      * Constructor.
      *
-     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy
-     * @param string                                     $prefix
+     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security identity retrieval strategy
+     * @param string                                     $prefix               The role prefix
      */
     public function __construct(SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy, $prefix = 'ROLE_')
     {

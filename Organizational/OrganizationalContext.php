@@ -47,7 +47,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     protected $organizationUser;
 
     /**
-     * @param TokenStorageInterface $tokenStorage
+     * @param TokenStorageInterface $tokenStorage The token storage
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
