@@ -218,8 +218,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener->postLoad($args);
     }
 
-    //////////////////////////////////////////
-
     public function testOnFlushWithDisabledAclManager()
     {
         /* @var OnFlushEventArgs $args */
@@ -314,7 +312,7 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Sonatra\Component\Security\Exception\AccessDeniedException
-     * @expectedExceptionMessage Insufficient privilege to update the entity
+     * @expectedExceptionMessage Insufficient privilege to edit the entity
      */
     public function testOnFLushWithInsufficientPrivilegeToUpdateEntity()
     {

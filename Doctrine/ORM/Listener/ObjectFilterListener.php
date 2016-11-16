@@ -113,32 +113,9 @@ class ObjectFilterListener implements EventSubscriber
         $uow = $em->getUnitOfWork();
         $this->getObjectFilter()->beginTransaction();
 
-        // check all scheduled insertions
-        foreach ($uow->getScheduledEntityInsertions() as $object) {
-            $this->postResetPermissions[] = $object;
-            $this->getObjectFilter()->restore($object);
-
-            if (!$this->getAuthorizationChecker()->isGranted('create', $object)) {
-                throw new AccessDeniedException('Insufficient privilege to create the entity');
-            }
-        }
-
-        // check all scheduled updates
-        foreach ($uow->getScheduledEntityUpdates() as $object) {
-            $this->postResetPermissions[] = $object;
-            $this->getObjectFilter()->restore($object);
-
-            if (!$this->getAuthorizationChecker()->isGranted('edit', $object)) {
-                throw new AccessDeniedException('Insufficient privilege to update the entity');
-            }
-        }
-
-        // check all scheduled deletations
-        foreach ($uow->getScheduledEntityDeletions() as $object) {
-            if (!$this->getAuthorizationChecker()->isGranted('delete', $object)) {
-                throw new AccessDeniedException('Insufficient privilege to delete the entity');
-            }
-        }
+        $this->checkAllScheduledByAction($uow->getScheduledEntityInsertions(), 'create');
+        $this->checkAllScheduledByAction($uow->getScheduledEntityUpdates(), 'edit');
+        $this->checkAllScheduledDeletions($uow->getScheduledEntityDeletions());
 
         $this->getObjectFilter()->commit();
     }
@@ -275,6 +252,38 @@ class ObjectFilterListener implements EventSubscriber
             }
 
             $this->initialized = true;
+        }
+    }
+
+    /**
+     * Check all scheduled objects by action type.
+     *
+     * @param object[] $objects The objects
+     * @param string   $action  The action name
+     */
+    protected function checkAllScheduledByAction(array $objects, $action)
+    {
+        foreach ($objects as $object) {
+            $this->postResetPermissions[] = $object;
+            $this->getObjectFilter()->restore($object);
+
+            if (!$this->getAuthorizationChecker()->isGranted($action, $object)) {
+                throw new AccessDeniedException('Insufficient privilege to '.$action.' the entity');
+            }
+        }
+    }
+
+    /**
+     * Check all scheduled deletions.
+     *
+     * @param object[] $objects The objects
+     */
+    protected function checkAllScheduledDeletions(array $objects)
+    {
+        foreach ($objects as $object) {
+            if (!$this->getAuthorizationChecker()->isGranted('delete', $object)) {
+                throw new AccessDeniedException('Insufficient privilege to delete the entity');
+            }
         }
     }
 }
