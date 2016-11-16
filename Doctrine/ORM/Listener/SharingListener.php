@@ -75,7 +75,7 @@ class SharingListener implements EventSubscriber
      *
      * @return PermissionManagerInterface
      */
-    protected function getPermissionManager()
+    public function getPermissionManager()
     {
         $this->init();
 
