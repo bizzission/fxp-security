@@ -28,9 +28,4 @@ interface SecurityIdentityRetrievalStrategyInterface
      * @return SecurityIdentityInterface[] The security identities
      */
     public function getSecurityIdentities(TokenInterface $token);
-
-    /**
-     * Invalidate the execution cache.
-     */
-    public function invalidateCache();
 }
