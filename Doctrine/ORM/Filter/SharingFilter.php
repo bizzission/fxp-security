@@ -14,18 +14,18 @@ namespace Sonatra\Component\Security\Doctrine\ORM\Filter;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\PermissionListener;
+use Sonatra\Component\Security\Doctrine\ORM\Listener\SharingListener;
 use Sonatra\Component\Security\Exception\RuntimeException;
 
 /**
- * Permission filter.
+ * Sharing filter.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionFilter extends SQLFilter
+class SharingFilter extends SQLFilter
 {
     /**
-     * @var PermissionListener|null
+     * @var SharingListener|null
      */
     protected $listener;
 
@@ -45,9 +45,9 @@ class PermissionFilter extends SQLFilter
     }
 
     /**
-     * Get the Permission Doctrine ORM Listener.
+     * Get the Doctrine ORM Sharing Listener.
      *
-     * @return PermissionListener
+     * @return SharingListener
      *
      * @throws RuntimeException
      */
@@ -59,7 +59,7 @@ class PermissionFilter extends SQLFilter
 
             foreach ($evm->getListeners() as $listeners) {
                 foreach ($listeners as $listener) {
-                    if ($listener instanceof PermissionListener) {
+                    if ($listener instanceof SharingListener) {
                         $this->listener = $listener;
                         break 2;
                     }
@@ -67,7 +67,8 @@ class PermissionFilter extends SQLFilter
             }
 
             if (null === $this->listener) {
-                throw new RuntimeException('Listener "PermissionListener" was not added to the EventManager!');
+                $msg = 'The listener "Sonatra\Component\Security\Doctrine\ORM\SharingListener" was not added to the Doctrine ORM Event Manager';
+                throw new RuntimeException($msg);
             }
         }
 

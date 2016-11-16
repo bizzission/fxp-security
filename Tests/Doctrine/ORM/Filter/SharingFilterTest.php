@@ -16,14 +16,13 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sonatra\Component\Security\Doctrine\ORM\Filter\PermissionFilter;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\PermissionListener;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
+use Sonatra\Component\Security\Doctrine\ORM\Filter\SharingFilter;
+use Sonatra\Component\Security\Doctrine\ORM\Listener\SharingListener;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionFilterTest extends \PHPUnit_Framework_TestCase
+class SharingFilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -41,12 +40,12 @@ class PermissionFilterTest extends \PHPUnit_Framework_TestCase
     protected $targetClass;
 
     /**
-     * @var PermissionListener|\PHPUnit_Framework_MockObject_MockObject
+     * @var SharingListener|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $permissionListener;
+    protected $sharingListener;
 
     /**
-     * @var PermissionFilter
+     * @var SharingFilter
      */
     protected $filter;
 
@@ -54,20 +53,20 @@ class PermissionFilterTest extends \PHPUnit_Framework_TestCase
     {
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->eventManager = new EventManager();
-        $this->filter = new PermissionFilter($this->em);
-        $this->permissionListener = $this->getMockBuilder(PermissionListener::class)->getMock();
+        $this->filter = new SharingFilter($this->em);
+        $this->sharingListener = $this->getMockBuilder(SharingListener::class)->getMock();
         $this->eventManager->addEventListener(Events::postLoad, $this->getMockBuilder(EventSubscriber::class)->getMock());
-        $this->eventManager->addEventListener(Events::postLoad, $this->permissionListener);
+        $this->eventManager->addEventListener(Events::postLoad, $this->sharingListener);
 
         $this->em->expects($this->any())
             ->method('getEventManager')
             ->willReturn($this->eventManager);
 
-        $this->permissionListener->expects($this->any())
+        /*$this->sharingListener->expects($this->any())
             ->method('getSecurityIdentities')
             ->willReturn(array(
                 new RoleSecurityIdentity('ROLE_TEST'),
-            ));
+            ));*/
 
         $this->targetClass = $this->getMockForAbstractClass(
             ClassMetadata::class,
@@ -88,10 +87,11 @@ class PermissionFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Sonatra\Component\Security\Exception\RuntimeException
-     * @expectedExceptionMessage Listener "PermissionListener" was not added to the EventManager!
+     * @expectedExceptionMessage The listener "Sonatra\Component\Security\Doctrine\ORM\SharingListener" was not added to the Doctrine ORM Event Manager
      */
     public function testAddFilterConstraintWithoutListener()
     {
+        /* @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject $em */
         $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $evm = new EventManager();
 
@@ -99,8 +99,7 @@ class PermissionFilterTest extends \PHPUnit_Framework_TestCase
             ->method('getEventManager')
             ->willReturn($evm);
 
-        /* @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject $em */
-        $filter = new PermissionFilter($em);
+        $filter = new SharingFilter($em);
         $filter->addFilterConstraint($this->targetClass, 't');
     }
 

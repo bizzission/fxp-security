@@ -16,8 +16,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
 use Sonatra\Component\Security\Token\ConsoleToken;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\PermissionListener;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
+use Sonatra\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -27,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionListenerTest extends \PHPUnit_Framework_TestCase
+class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -60,7 +59,7 @@ class PermissionListenerTest extends \PHPUnit_Framework_TestCase
     protected $uow;
 
     /**
-     * @var PermissionListener
+     * @var ObjectFilterListener
      */
     protected $listener;
 
@@ -72,7 +71,7 @@ class PermissionListenerTest extends \PHPUnit_Framework_TestCase
         $this->objectFilter = $this->getMockBuilder(ObjectFilterInterface::class)->getMock();
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->uow = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
-        $this->listener = new PermissionListener();
+        $this->listener = new ObjectFilterListener();
 
         $this->em->expects($this->any())
             ->method('getUnitOfWork')
@@ -106,10 +105,10 @@ class PermissionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidInit($method, array $setters)
     {
-        $msg = sprintf('The "%s()" method must ba called before the init of the doctrine orm permission listener', $method);
+        $msg = sprintf('The "%s()" method must be called before the init of the doctrine orm object filter listener', $method);
         $this->expectExceptionMessage($msg);
 
-        $listener = new PermissionListener();
+        $listener = new ObjectFilterListener();
 
         if (in_array('tokenStorage', $setters)) {
             $listener->setTokenStorage($this->tokenStorage);
@@ -127,34 +126,10 @@ class PermissionListenerTest extends \PHPUnit_Framework_TestCase
             $listener->setObjectFilter($this->objectFilter);
         }
 
-        $listener->getPermissionManager();
-    }
+        /* @var LifecycleEventArgs $args */
+        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
 
-    public function testManagerGetters()
-    {
-        $this->assertInstanceOf(TokenStorageInterface::class, $this->listener->getTokenStorage());
-        $this->assertInstanceOf(AuthorizationCheckerInterface::class, $this->listener->getAuthorizationChecker());
-        $this->assertInstanceOf(PermissionManagerInterface::class, $this->listener->getPermissionManager());
-        $this->assertInstanceOf(ObjectFilterInterface::class, $this->listener->getObjectFilter());
-    }
-
-    public function testGetSecurityIdentities()
-    {
-        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $sids = array(
-            new RoleSecurityIdentity('ROLE_TEST'),
-        );
-
-        $this->tokenStorage->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token);
-
-        $this->permissionManager->expects($this->once())
-            ->method('getSecurityIdentities')
-            ->with($token)
-            ->willReturn($sids);
-
-        $this->assertSame($sids, $this->listener->getSecurityIdentities());
+        $listener->postLoad($args);
     }
 
     public function testPostFlush()

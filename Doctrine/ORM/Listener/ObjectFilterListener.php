@@ -12,7 +12,6 @@
 namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\Events;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Sonatra\Component\Security\Exception\SecurityException;
@@ -29,25 +28,25 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionListener implements EventSubscriber
+class ObjectFilterListener implements EventSubscriber
 {
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|null
      */
     protected $tokenStorage;
 
     /**
-     * @var AuthorizationCheckerInterface
+     * @var AuthorizationCheckerInterface|null
      */
     protected $authChecker;
 
     /**
-     * @var PermissionManagerInterface
+     * @var PermissionManagerInterface|null
      */
     protected $permissionManager;
 
     /**
-     * @var ObjectFilterInterface
+     * @var ObjectFilterInterface|null
      */
     protected $objectFilter;
 
@@ -154,66 +153,6 @@ class PermissionListener implements EventSubscriber
     }
 
     /**
-     * Gets security token storage.
-     *
-     * @return TokenStorageInterface
-     */
-    public function getTokenStorage()
-    {
-        $this->init();
-
-        return $this->tokenStorage;
-    }
-
-    /**
-     * Gets security authorization checker.
-     *
-     * @return AuthorizationCheckerInterface
-     */
-    public function getAuthorizationChecker()
-    {
-        $this->init();
-
-        return $this->authChecker;
-    }
-
-    /**
-     * Get the Permission Manager.
-     *
-     * @return PermissionManagerInterface
-     */
-    public function getPermissionManager()
-    {
-        $this->init();
-
-        return $this->permissionManager;
-    }
-
-    /**
-     * Get the Object Filter.
-     *
-     * @return ObjectFilterInterface
-     */
-    public function getObjectFilter()
-    {
-        $this->init();
-
-        return $this->objectFilter;
-    }
-
-    /**
-     * Get the security identities.
-     *
-     * @return SecurityIdentityInterface[]
-     */
-    public function getSecurityIdentities()
-    {
-        $token = $this->getTokenStorage()->getToken();
-
-        return $this->permissionManager->getSecurityIdentities($token);
-    }
-
-    /**
      * Set the token storage.
      *
      * @param TokenStorageInterface $tokenStorage The token storage
@@ -270,12 +209,60 @@ class PermissionListener implements EventSubscriber
     }
 
     /**
+     * Gets security token storage.
+     *
+     * @return TokenStorageInterface
+     */
+    protected function getTokenStorage()
+    {
+        $this->init();
+
+        return $this->tokenStorage;
+    }
+
+    /**
+     * Gets security authorization checker.
+     *
+     * @return AuthorizationCheckerInterface
+     */
+    protected function getAuthorizationChecker()
+    {
+        $this->init();
+
+        return $this->authChecker;
+    }
+
+    /**
+     * Get the Permission Manager.
+     *
+     * @return PermissionManagerInterface
+     */
+    protected function getPermissionManager()
+    {
+        $this->init();
+
+        return $this->permissionManager;
+    }
+
+    /**
+     * Get the Object Filter.
+     *
+     * @return ObjectFilterInterface
+     */
+    protected function getObjectFilter()
+    {
+        $this->init();
+
+        return $this->objectFilter;
+    }
+
+    /**
      * Init listener.
      */
     protected function init()
     {
         if (!$this->initialized) {
-            $msg = 'The "%s()" method must ba called before the init of the doctrine orm permission listener';
+            $msg = 'The "%s()" method must be called before the init of the doctrine orm object filter listener';
 
             if (null === $this->tokenStorage) {
                 throw new SecurityException(sprintf($msg, 'setTokenStorage'));
