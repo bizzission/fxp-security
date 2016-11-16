@@ -88,7 +88,7 @@ class SharingListener implements EventSubscriber
     protected function init()
     {
         if (!$this->initialized) {
-            $msg = 'The "%s()" method must be called before the init of the doctrine orm object filter listener';
+            $msg = 'The "%s()" method must be called before the init of the doctrine orm sharing listener';
 
             if (null === $this->permissionManager) {
                 throw new SecurityException(sprintf($msg, 'setPermissionManager'));
