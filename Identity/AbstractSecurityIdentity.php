@@ -60,6 +60,8 @@ abstract class AbstractSecurityIdentity implements SecurityIdentityInterface
      */
     public function __toString()
     {
-        return sprintf('%s(%s)', basename(get_class($this)), $this->getIdentifier());
+        $name = (new \ReflectionClass($this))->getShortName();
+
+        return sprintf('%s(%s)', $name, $this->getIdentifier());
     }
 }
