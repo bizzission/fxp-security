@@ -122,7 +122,7 @@ class SecurityIdentityRetrievalStrategy implements SecurityIdentityRetrievalStra
     protected function addReachableRoles(TokenInterface $token, array $sids)
     {
         foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
-            $sids[] = new RoleSecurityIdentity($role);
+            $sids[] = RoleSecurityIdentity::fromAccount($role);
         }
 
         return $sids;

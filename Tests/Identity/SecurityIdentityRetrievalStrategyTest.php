@@ -21,6 +21,7 @@ use Sonatra\Component\Security\Model\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -111,7 +112,7 @@ class SecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
             ->willReturn('user.test');
 
         $tokenRoles = array(
-            'ROLE_TOKEN',
+            new Role('ROLE_TOKEN'),
         );
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
