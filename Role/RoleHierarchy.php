@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Role;
 
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -115,23 +116,9 @@ class RoleHierarchy extends BaseRoleHierarchy
             return $roles;
         }
 
-        $roleNames = array();
-        $nRoles = array();
         $item = null;
-
-        foreach ($roles as $role) {
-            if (!is_string($role) && !($role instanceof RoleInterface)) {
-                $roleClass = 'Symfony\Component\Security\Core\Role\RoleInterface';
-
-                throw new SecurityException(sprintf('The Role class must be an instance of "%s"', $roleClass));
-            }
-
-            $roleNames[] = ($role instanceof RoleInterface) ? $role->getRole() : $role;
-            $nRoles[] = ($role instanceof RoleInterface) ? $role : new Role((string) $role);
-        }
-
-        $roles = $nRoles;
-        $id = $this->getUniqueId($roleNames);
+        $roles = $this->formatRoles($roles);
+        $id = $this->getUniqueId(array_keys($roles));
 
         // find the hierarchy in execution cache
         if (isset($this->cacheExec[$id])) {
@@ -149,11 +136,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         }
 
         // build hierarchy
-        $reachableRoles = parent::getReachableRoles($roles);
-        $em = $this->registry->getManagerForClass($this->roleClassname);
-        $repo = $em->getRepository($this->roleClassname);
-        $entityRoles = array();
-        $filters = array();
+        $reachableRoles = parent::getReachableRoles(array_values($roles));
         $isPermEnabled = true;
 
         if (null !== $this->eventDispatcher) {
@@ -163,30 +146,118 @@ class RoleHierarchy extends BaseRoleHierarchy
             $isPermEnabled = $event->isPermissionEnabled();
         }
 
-        if (interface_exists('Doctrine\ORM\EntityManagerInterface') && $em instanceof EntityManagerInterface) {
-            $filters = array_keys($em->getFilters()->getEnabledFilters());
+        return $this->getAllRoles($reachableRoles, $roles, $id, $item, $isPermEnabled);
+    }
 
-            foreach ($filters as $name) {
-                $em->getFilters()->disable($name);
-            }
+    /**
+     * Get the unique id.
+     *
+     * @param array $roleNames The role names
+     *
+     * @return string
+     */
+    protected function getUniqueId(array $roleNames)
+    {
+        return sha1(implode('|', $roleNames));
+    }
+
+    /**
+     * Get all roles.
+     *
+     * @param RoleInterface[]         $reachableRoles The reachable roles
+     * @param RoleInterface[]         $roles          The roles
+     * @param string                  $id             The cache item id
+     * @param CacheItemInterface|null $item           The cache item
+     * @param bool                    $isPermEnabled  Check if the permission manager is enabled
+     *
+     * @return RoleInterface[]
+     */
+    private function getAllRoles(array $reachableRoles, array $roles, $id, $item, $isPermEnabled)
+    {
+        $reachableRoles = $this->findRecords($reachableRoles, array_keys($roles));
+        $reachableRoles = $this->getCleanedRoles($reachableRoles);
+
+        // insert in cache
+        if (null !== $this->cache && $item instanceof CacheItemInterface) {
+            $item->set($reachableRoles);
+            $this->cache->save($item);
         }
 
+        $this->cacheExec[$id] = $reachableRoles;
+
+        if (null !== $this->eventDispatcher) {
+            $event = new PostReachableRoleEvent($reachableRoles, $isPermEnabled);
+            $this->eventDispatcher->dispatch(ReachableRoleEvents::POST, $event);
+            $reachableRoles = $event->getReachableRoles();
+        }
+
+        return $reachableRoles;
+    }
+
+    /**
+     * Format the roles.
+     *
+     * @param RoleInterface[] $roles The roles
+     *
+     * @return RoleInterface[]
+     *
+     * @throws SecurityException When the role is not a string or an instance of RoleInterface
+     */
+    private function formatRoles(array $roles)
+    {
+        $nRoles = array();
+
+        foreach ($roles as $role) {
+            if (!is_string($role) && !($role instanceof RoleInterface)) {
+                throw new SecurityException(sprintf('The Role class must be an instance of "%s"', RoleInterface::class));
+            }
+
+            $name = ($role instanceof RoleInterface) ? $role->getRole() : $role;
+            $nRoles[$name] = ($role instanceof RoleInterface) ? $role : new Role($name);
+        }
+
+        return $nRoles;
+    }
+
+    /**
+     * Find the roles in database.
+     *
+     * @param RoleInterface[] $reachableRoles The reachable roles
+     * @param string[]        $roleNames      The role names
+     *
+     * @return RoleInterface[]
+     */
+    private function findRecords(array $reachableRoles, array $roleNames)
+    {
+        $recordRoles = array();
+        $om = $this->registry->getManagerForClass($this->roleClassname);
+        $repo = $om->getRepository($this->roleClassname);
+
+        $filters = $this->disableFilters($om);
+
         if (count($roleNames) > 0) {
-            $entityRoles = $repo->findBy(array('name' => $roleNames));
+            $recordRoles = $repo->findBy(array('name' => $roleNames));
         }
 
         /* @var RoleHierarchicalInterface $eRole */
-        foreach ($entityRoles as $eRole) {
+        foreach ($recordRoles as $eRole) {
             $reachableRoles = array_merge($reachableRoles, $this->getReachableRoles($eRole->getChildren()->toArray()));
         }
 
-        if (count($filters) > 0) {
-            foreach ($filters as $name) {
-                $em->getFilters()->enable($name);
-            }
-        }
+        $this->enableFilters($om, $filters);
 
-        // cleaning double
+        return $reachableRoles;
+    }
+
+    /**
+     * Cleaning the double roles.
+     *
+     * @param RoleInterface[] $reachableRoles The reachable roles
+     *
+     * @return RoleInterface[]
+     */
+    private function getCleanedRoles(array $reachableRoles)
+    {
         $existingRoles = array();
         $finalRoles = array();
 
@@ -201,32 +272,45 @@ class RoleHierarchy extends BaseRoleHierarchy
             }
         }
 
-        // insert in cache
-        if (null !== $this->cache && $item instanceof CacheItemInterface) {
-            $item->set($finalRoles);
-            $this->cache->save($item);
-        }
-
-        $this->cacheExec[$id] = $finalRoles;
-
-        if (null !== $this->eventDispatcher) {
-            $event = new PostReachableRoleEvent($finalRoles, $isPermEnabled);
-            $this->eventDispatcher->dispatch(ReachableRoleEvents::POST, $event);
-            $finalRoles = $event->getReachableRoles();
-        }
-
         return $finalRoles;
     }
 
     /**
-     * Get the unique id.
+     * Disable and get the orm filters.
      *
-     * @param array $roleNames The role names
+     * @param ObjectManager|null $om The object manager
      *
-     * @return string
+     * @return string[]
      */
-    protected function getUniqueId(array $roleNames)
+    private function disableFilters($om)
     {
-        return sha1(implode('|', $roleNames));
+        $filters = array();
+
+        if (interface_exists('Doctrine\ORM\EntityManagerInterface')
+                && $om instanceof EntityManagerInterface) {
+            $filters = array_keys($om->getFilters()->getEnabledFilters());
+
+            foreach ($filters as $name) {
+                $om->getFilters()->disable($name);
+            }
+        }
+
+        return $filters;
+    }
+
+    /**
+     * Enable the orm filters.
+     *
+     * @param ObjectManager|null $om      The object manager
+     * @param string[]           $filters The filter names
+     */
+    private function enableFilters($om, array $filters)
+    {
+        if (count($filters) > 0 && interface_exists('Doctrine\ORM\EntityManagerInterface')
+                && $om instanceof EntityManagerInterface) {
+            foreach ($filters as $name) {
+                $om->getFilters()->enable($name);
+            }
+        }
     }
 }
