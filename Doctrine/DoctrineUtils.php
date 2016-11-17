@@ -86,28 +86,7 @@ abstract class DoctrineUtils
     {
         if (!isset(self::$cacheZeroIds[$targetEntity->getName()])) {
             $type = self::getIdentifierType($targetEntity);
-
-            switch (true) {
-                case $type instanceof GuidType:
-                    $value = '00000000-0000-0000-0000-000000000000';
-                    break;
-                case $type instanceof IntegerType:
-                case $type instanceof SmallIntType:
-                case $type instanceof BigIntType:
-                case $type instanceof DecimalType:
-                case $type instanceof FloatType:
-                    $value = 0;
-                    break;
-                case $type instanceof StringType:
-                case $type instanceof TextType:
-                    $value = '';
-                    break;
-                default:
-                    $value = null;
-                    break;
-            }
-
-            self::$cacheZeroIds[$targetEntity->getName()] = $value;
+            self::$cacheZeroIds[$targetEntity->getName()] = self::findZeroIdValue($type);
         }
 
         return self::$cacheZeroIds[$targetEntity->getName()];
@@ -162,5 +141,56 @@ abstract class DoctrineUtils
 
         $msg = 'The Doctrine DBAL type is not found for "%s::%s" identifier';
         throw new RuntimeException(sprintf($msg, $targetEntity->getName(), $identifier));
+    }
+
+    /**
+     * Find the zero id by identifier type.
+     *
+     * @param Type $type The dbal identifier type
+     *
+     * @return string|int|null
+     */
+    private static function findZeroIdValue(Type $type)
+    {
+        if ($type instanceof GuidType) {
+            $value = '00000000-0000-0000-0000-000000000000';
+        } elseif (self::isNumberType($type)) {
+            $value = 0;
+        } elseif (self::isStringType($type)) {
+            $value = '';
+        } else {
+            $value = null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Check if the type is a number type.
+     *
+     * @param Type $type The dbal identifier type
+     *
+     * @return bool
+     */
+    private static function isNumberType(Type $type)
+    {
+        return $type instanceof IntegerType
+            || $type instanceof SmallIntType
+            || $type instanceof BigIntType
+            || $type instanceof DecimalType
+            || $type instanceof FloatType;
+    }
+
+    /**
+     * Check if the type is a string type.
+     *
+     * @param Type $type The dbal identifier type
+     *
+     * @return bool
+     */
+    private static function isStringType(Type $type)
+    {
+        return $type instanceof StringType
+            || $type instanceof TextType;
     }
 }
