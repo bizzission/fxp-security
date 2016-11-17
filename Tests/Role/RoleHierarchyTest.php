@@ -104,21 +104,6 @@ class RoleHierarchyTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->filters);
     }
 
-    public function testGetConfigReachableRoles()
-    {
-        $roles = array(
-            new Role('ROLE_ADMIN'),
-        );
-        $validRoles = array_merge($roles, array(
-            new Role('ROLE_USER'),
-        ));
-
-        $fullRoles = $this->roleHierarchy->getConfigReachableRoles($roles);
-
-        $this->assertCount(2, $fullRoles);
-        $this->assertEquals($validRoles, $fullRoles);
-    }
-
     public function testGetReachableRolesWithCustomRoles()
     {
         $roles = array(
