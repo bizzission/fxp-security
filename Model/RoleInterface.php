@@ -39,7 +39,7 @@ interface RoleInterface extends BaseRoleInterface
      *
      * @param string $name
      *
-     * @return Role the current object
+     * @return self
      */
     public function setName($name = null);
 

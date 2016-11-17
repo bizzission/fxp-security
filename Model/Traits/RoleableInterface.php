@@ -61,7 +61,7 @@ interface RoleableInterface
     /**
      * Get the roles.
      *
-     * @return Role[] The user roles
+     * @return Role[]|string[] The user roles
      */
     public function getRoles();
 }
