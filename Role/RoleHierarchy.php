@@ -108,19 +108,8 @@ class RoleHierarchy extends BaseRoleHierarchy
         $roles = $this->formatRoles($roles);
         $id = $this->getUniqueId(array_keys($roles));
 
-        // find the hierarchy in execution cache
-        if (isset($this->cacheExec[$id])) {
-            return $this->cacheExec[$id];
-        }
-
-        // find the hierarchy in cache
-        if (null !== $this->cache) {
-            $item = $this->cache->getItem($id);
-            $reachableRoles = $item->get();
-
-            if ($item->isHit() && null !== $reachableRoles) {
-                return $reachableRoles;
-            }
+        if (null !== ($reachableRoles = $this->getCachedReachableRoles($id, $item))) {
+            return $reachableRoles;
         }
 
         // build hierarchy
@@ -147,6 +136,36 @@ class RoleHierarchy extends BaseRoleHierarchy
     protected function getUniqueId(array $roleNames)
     {
         return sha1(implode('|', $roleNames));
+    }
+
+    /**
+     * Get the reachable roles in cache if available.
+     *
+     * @param string $id   The cache id
+     * @param null   $item The cache item variable passed by reference
+     *
+     * @return RoleInterface[]|null
+     */
+    private function getCachedReachableRoles($id, &$item)
+    {
+        $roles = null;
+
+        // find the hierarchy in execution cache
+        if (isset($this->cacheExec[$id])) {
+            return $this->cacheExec[$id];
+        }
+
+        // find the hierarchy in cache
+        if (null !== $this->cache) {
+            $item = $this->cache->getItem($id);
+            $reachableRoles = $item->get();
+
+            if ($item->isHit() && null !== $reachableRoles) {
+                $roles = $reachableRoles;
+            }
+        }
+
+        return $roles;
     }
 
     /**
