@@ -31,7 +31,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class ObjectFilter implements ObjectFilterInterface
 {
     /**
-     * @var UnitOfWork
+     * @var UnitOfWorkInterface
      */
     private $uow;
 
