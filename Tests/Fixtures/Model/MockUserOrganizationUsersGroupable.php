@@ -47,6 +47,6 @@ class MockUserOrganizationUsersGroupable extends MockUserOrganizationUsers imple
      */
     public function getGroups()
     {
-        return $this->groups;
+        return array_values($this->groups);
     }
 }
