@@ -37,7 +37,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     protected $tokenStorage;
 
     /**
-     * @var OrganizationInterface|null
+     * @var OrganizationInterface|false|null
      */
     protected $organization;
 
