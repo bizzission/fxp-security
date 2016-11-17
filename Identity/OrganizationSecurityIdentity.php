@@ -49,7 +49,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * @param OrganizationalContextInterface|null $context       The organizational context
      * @param RoleHierarchyInterface|null         $roleHierarchy The role hierarchy
      *
-     * @return self[]
+     * @return SecurityIdentityInterface[]
      */
     public static function fromToken(TokenInterface $token,
                                      OrganizationalContextInterface $context = null,
@@ -80,7 +80,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * @param UserInterface               $user          The user
      * @param RoleHierarchyInterface|null $roleHierarchy The role hierarchy
      *
-     * @return UserSecurityIdentity[]
+     * @return SecurityIdentityInterface[]
      */
     protected static function getSecurityIdentityForAllOrganizations(UserInterface $user, $roleHierarchy = null)
     {
@@ -107,7 +107,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * @param OrganizationalContextInterface $context       The organizational context
      * @param RoleHierarchyInterface|null    $roleHierarchy The role hierarchy
      *
-     * @return UserSecurityIdentity[]
+     * @return SecurityIdentityInterface[]
      */
     protected static function getSecurityIdentityForCurrentOrganization(OrganizationalContextInterface $context,
                                                                         $roleHierarchy = null)
@@ -137,7 +137,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      *
      * @param OrganizationUserInterface $user The organization user
      *
-     * @return array
+     * @return GroupSecurityIdentity[]
      */
     protected static function getOrganizationGroups(OrganizationUserInterface $user)
     {
