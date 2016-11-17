@@ -14,6 +14,7 @@ namespace Sonatra\Component\Security\Organizational;
 use Sonatra\Component\Security\Exception\RuntimeException;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
+use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
 use Sonatra\Component\Security\Model\UserInterface;
 use Sonatra\Component\Security\OrganizationalTypes;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -75,7 +76,7 @@ class OrganizationalContext implements OrganizationalContextInterface
             $token = $this->tokenStorage->getToken();
             $user = null !== $token ? $token->getUser() : null;
 
-            if ($user instanceof UserInterface && method_exists($user, 'getOrganization')) {
+            if ($user instanceof UserInterface && $user instanceof OrganizationalInterface) {
                 $org = $user->getOrganization();
 
                 if ($org instanceof OrganizationInterface) {
