@@ -15,7 +15,6 @@ use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
-use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
@@ -114,16 +113,17 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
                                                                         $roleHierarchy = null)
     {
         $sids = array();
-
         $org = $context->getCurrentOrganization();
+        $userOrg = $context->getCurrentOrganizationUser();
+
         if ($org) {
             $sids[] = self::fromAccount($org);
         }
 
-        $userOrg = $context->getCurrentOrganizationUser();
         if (null !== $userOrg) {
             $sids = array_merge($sids, static::getOrganizationGroups($userOrg));
             $roles = static::getOrganizationRoles($userOrg, $roleHierarchy);
+
             foreach ($roles as $role) {
                 $sids[] = RoleSecurityIdentity::fromAccount($role);
             }
@@ -160,32 +160,68 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * @param OrganizationUserInterface   $user          The organization user
      * @param RoleHierarchyInterface|null $roleHierarchy The role hierarchy
      *
-     * @return RoleInterface[]
+     * @return Role[]
      */
     protected static function getOrganizationRoles(OrganizationUserInterface $user, $roleHierarchy = null)
     {
         $roles = array();
 
         if ($user instanceof RoleableInterface && $user instanceof OrganizationUserInterface) {
-            $roles = $user->getRoles();
             $org = $user->getOrganization();
-            $id = strtoupper($org->getName());
-            $existingRoles = $roles;
-
-            foreach ($roles as $i => $role) {
-                $roles[$i] = new Role($roles[$i].'__'.$id);
-            }
-
-            if ($org instanceof RoleableInterface) {
-                foreach ($org->getRoles() as $orgRole) {
-                    if (!in_array((string) $orgRole, $existingRoles)) {
-                        $roles[] = new Role((string) $orgRole);
-                    }
-                }
-            }
+            $roles = self::buildOrganizationUserRoles($roles, $user, strtoupper($org->getName()));
+            $roles = self::buildOrganizationRoles($roles, $org);
 
             if ($roleHierarchy instanceof RoleHierarchyInterface) {
                 $roles = $roleHierarchy->getReachableRoles($roles);
+            }
+        }
+
+        return $roles;
+    }
+
+    /**
+     * Build the organization user roles.
+     *
+     * @param Role[]            $roles The roles
+     * @param RoleableInterface $user  The organization user
+     * @param string            $orgId The organization id
+     *
+     * @return Role[]
+     */
+    private static function buildOrganizationUserRoles(array $roles, RoleableInterface $user, $orgId)
+    {
+        foreach ($user->getRoles() as $role) {
+            $roleName = $role instanceof Role ? $role->getRole() : $role;
+            $roles[] = new Role($roleName.'__'.$orgId);
+        }
+
+        return $roles;
+    }
+
+    /**
+     * Build the user organization roles.
+     *
+     * @param Role[]                $roles The roles
+     * @param OrganizationInterface $org   The organization of user
+     *
+     * @return Role[]
+     */
+    private static function buildOrganizationRoles(array $roles, OrganizationInterface $org)
+    {
+        if ($org instanceof RoleableInterface) {
+            $existingRoles = array();
+
+            foreach ($roles as $role) {
+                $existingRoles[] = $role->getRole();
+            }
+
+            foreach ($org->getRoles() as $orgRole) {
+                $roleName = $orgRole instanceof Role ? $orgRole->getRole() : $orgRole;
+
+                if (!in_array($roleName, $existingRoles)) {
+                    $roles[] = new Role($roleName);
+                    $existingRoles[] = $roleName;
+                }
             }
         }
 
