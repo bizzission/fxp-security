@@ -138,29 +138,44 @@ class RoleHierarchyListener implements EventSubscriber
     /**
      * Check if the role hierarchy cache must be invalidated.
      *
-     * @param UnitOfWork $uow
-     * @param object     $object
+     * @param UnitOfWork $uow    The unit of work
+     * @param object     $object The object
      *
      * @return string|false
      */
-    protected function invalidateCache($uow, $object)
+    protected function invalidateCache(UnitOfWork $uow, $object)
     {
         if ($this->isCacheableObject($object)) {
-            $fields = array_keys($uow->getEntityChangeSet($object));
-            $checkFields = array('roles');
-
-            if ($object instanceof RoleHierarchicalInterface || $object instanceof OrganizationUserInterface) {
-                $checkFields = array_merge($checkFields, array('name'));
-            }
-
-            foreach ($fields as $field) {
-                if (in_array($field, $checkFields)) {
-                    return $this->getPrefix($object);
-                }
-            }
+            return $this->invalidateCacheableObject($uow, $object);
         } elseif ($object instanceof PersistentCollection
                 && $this->isRequireAssociation($object->getMapping())) {
             return $this->getPrefix($object->getOwner());
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the object cache must be invalidated.
+     *
+     * @param UnitOfWork $uow    The unit of work
+     * @param object     $object The object
+     *
+     * @return bool|string
+     */
+    private function invalidateCacheableObject(UnitOfWork $uow, $object)
+    {
+        $fields = array_keys($uow->getEntityChangeSet($object));
+        $checkFields = array('roles');
+
+        if ($object instanceof RoleHierarchicalInterface || $object instanceof OrganizationUserInterface) {
+            $checkFields = array_merge($checkFields, array('name'));
+        }
+
+        foreach ($fields as $field) {
+            if (in_array($field, $checkFields)) {
+                return $this->getPrefix($object);
+            }
         }
 
         return false;
