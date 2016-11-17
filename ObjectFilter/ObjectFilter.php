@@ -61,7 +61,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @var bool
      */
-    private $isTransactionnal = false;
+    private $isTransactional = false;
 
     /**
      * The object list not analyzed (empty after commit).
@@ -112,7 +112,7 @@ class ObjectFilter implements ObjectFilterInterface
      */
     public function beginTransaction()
     {
-        $this->isTransactionnal = true;
+        $this->isTransactional = true;
     }
 
     /**
@@ -137,7 +137,7 @@ class ObjectFilter implements ObjectFilterInterface
         $this->dispatcher->dispatch(ObjectFilterEvents::POST_COMMIT, $event);
 
         $this->queue = array();
-        $this->isTransactionnal = false;
+        $this->isTransactional = false;
     }
 
     /**
@@ -155,7 +155,7 @@ class ObjectFilter implements ObjectFilterInterface
         $this->queue[$id] = $object;
         $this->toFilter[] = $id;
 
-        if (!$this->isTransactionnal) {
+        if (!$this->isTransactional) {
             $this->commit();
         }
     }
@@ -172,7 +172,7 @@ class ObjectFilter implements ObjectFilterInterface
         $this->uow->attach($object);
         $this->queue[spl_object_hash($object)] = $object;
 
-        if (!$this->isTransactionnal) {
+        if (!$this->isTransactional) {
             $this->commit();
         }
     }
