@@ -99,34 +99,9 @@ class HostRoleListener implements ListenerInterface
 
         $token = $this->getToken($event);
 
-        if (null === $token) {
-            return;
+        if (null !== $token) {
+            $this->injectHostRole($token, $hostRole);
         }
-
-        $tRoles = $token->getRoles();
-        $alreadyInclude = false;
-
-        foreach ($tRoles as $role) {
-            if ($hostRole->getRole() === $role->getRole()) {
-                $alreadyInclude = true;
-                break;
-            }
-        }
-
-        //add anonymous role host on existing token
-        if (!$alreadyInclude) {
-            $tRoles[] = $hostRole;
-
-            $ref = new \ReflectionClass($token);
-            $prop = $ref->getParentClass()->getProperty('roles');
-            $prop->setAccessible(true);
-            $prop->setValue($token, $tRoles);
-            $prop = $ref->getParentClass()->getProperty('authenticated');
-            $prop->setAccessible(true);
-            $prop->setValue($token, true);
-        }
-
-        $this->tokenStorage->setToken($token);
     }
 
     /**
@@ -169,5 +144,38 @@ class HostRoleListener implements ListenerInterface
         }
 
         return $token;
+    }
+
+    /**
+     * Add the host role in existing token.
+     *
+     * @param TokenInterface $token    The token
+     * @param Role           $hostRole The host role
+     */
+    private function injectHostRole(TokenInterface $token, Role $hostRole)
+    {
+        $tRoles = $token->getRoles();
+        $alreadyInclude = false;
+
+        foreach ($tRoles as $role) {
+            if ($hostRole->getRole() === $role->getRole()) {
+                $alreadyInclude = true;
+                break;
+            }
+        }
+
+        if (!$alreadyInclude) {
+            $tRoles[] = $hostRole;
+
+            $ref = new \ReflectionClass($token);
+            $prop = $ref->getParentClass()->getProperty('roles');
+            $prop->setAccessible(true);
+            $prop->setValue($token, $tRoles);
+            $prop = $ref->getParentClass()->getProperty('authenticated');
+            $prop->setAccessible(true);
+            $prop->setValue($token, true);
+        }
+
+        $this->tokenStorage->setToken($token);
     }
 }
