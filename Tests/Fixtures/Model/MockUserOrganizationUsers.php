@@ -21,12 +21,4 @@ use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
 class MockUserOrganizationUsers extends MockUserRoleable implements OrganizationalInterface, UserOrganizationUsersInterface
 {
     use UserOrganizationUsersTrait;
-
-    /**
-     * Get the organization.
-     */
-    public function getOrganization()
-    {
-        return null;
-    }
 }
