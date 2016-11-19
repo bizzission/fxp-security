@@ -14,32 +14,21 @@ namespace Sonatra\Component\Security\Model\Traits;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 
 /**
- * Trait to indicate that the model is linked with an organization.
+ * Trait to indicate that the model is linked with a required organization.
  *
  * @author François Pluchino <francois.pluchino@helloguest.com>
  */
-trait OrganizationalTrait
+trait OrganizationalRequiredTrait
 {
-    /**
-     * @var OrganizationInterface|null
-     */
-    protected $organization;
+    use OrganizationalTrait;
 
     /**
      * {@inheritdoc}
      */
-    public function getOrganization()
+    public function setOrganization(OrganizationInterface $organization)
     {
-        return $this->organization;
-    }
+        $this->organization = $organization;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getOrganizationId()
-    {
-        return null !== $this->getOrganization()
-            ? $this->getOrganization()->getId()
-            : null;
+        return $this;
     }
 }

@@ -14,23 +14,18 @@ namespace Sonatra\Component\Security\Model\Traits;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 
 /**
- * Interface to indicate that the model is linked with an organization.
+ * Interface to indicate that the model is linked with a required organization.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface OrganizationalInterface
+interface OrganizationalRequiredInterface extends OrganizationalInterface
 {
     /**
-     * Get the organization.
+     * Set the organization.
      *
-     * @return OrganizationInterface|null
-     */
-    public function getOrganization();
-
-    /**
-     * Get the organization id.
+     * @param OrganizationInterface $organization The organization
      *
-     * @return int|string|null
+     * @return self
      */
-    public function getOrganizationId();
+    public function setOrganization(OrganizationInterface $organization);
 }

@@ -21,8 +21,6 @@ use Sonatra\Component\Security\Model\OrganizationUserInterface;
  */
 trait UserOrganizationUsersTrait
 {
-    use OrganizationalTrait;
-
     /**
      * @var \Doctrine\Common\Collections\Collection|null
      */

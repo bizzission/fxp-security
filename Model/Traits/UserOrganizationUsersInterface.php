@@ -19,7 +19,7 @@ use Sonatra\Component\Security\Model\OrganizationUserInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface UserOrganizationUsersInterface extends OrganizationalInterface
+interface UserOrganizationUsersInterface
 {
     /**
      * Get the organizations associated with this user.

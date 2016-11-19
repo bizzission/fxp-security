@@ -21,13 +21,18 @@ class OrganizationalTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testModel()
     {
-        /* @var OrganizationInterface $org */
+        /* @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
+        $org->expects($this->once())
+            ->method('getId')
+            ->willReturn(42);
+
         $user = new MockUserOrganizationUsers();
 
         $this->assertNull($user->getOrganization());
 
         $user->setOrganization($org);
         $this->assertSame($org, $user->getOrganization());
+        $this->assertSame(42, $user->getOrganizationId());
     }
 }
