@@ -39,11 +39,6 @@ abstract class Organization implements OrganizationInterface
     /**
      * @var Collection|null
      */
-    protected $organizationRoles;
-
-    /**
-     * @var Collection|null
-     */
     protected $organizationGroups;
 
     /**
@@ -111,60 +106,6 @@ abstract class Organization implements OrganizationInterface
     public function isUserOrganization()
     {
         return null !== $this->getUser();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOrganizationRoles()
-    {
-        return $this->organizationRoles ?: $this->organizationRoles = new ArrayCollection();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOrganizationRoleNames()
-    {
-        $names = array();
-        foreach ($this->getOrganizationRoles() as $role) {
-            $names[] = $role->getName();
-        }
-
-        return $names;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasOrganizationRole($role)
-    {
-        return in_array($role, $this->getOrganizationRoleNames());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addOrganizationRole(RoleInterface $role)
-    {
-        if (!$this->isUserOrganization()
-            && !$this->getOrganizationRoles()->contains($role)) {
-            $this->getOrganizationRoles()->add($role);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeOrganizationRole(RoleInterface $role)
-    {
-        if ($this->getOrganizationRoles()->contains($role)) {
-            $this->getOrganizationRoles()->removeElement($role);
-        }
-
-        return $this;
     }
 
     /**

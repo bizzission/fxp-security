@@ -67,47 +67,6 @@ interface OrganizationInterface
     public function isUserOrganization();
 
     /**
-     * Get the roles of organization.
-     *
-     * @return Collection
-     */
-    public function getOrganizationRoles();
-
-    /**
-     * Get the role names of organization.
-     *
-     * @return string[]
-     */
-    public function getOrganizationRoleNames();
-
-    /**
-     * Check the presence of role in organization.
-     *
-     * @param string $role The role name
-     *
-     * @return bool
-     */
-    public function hasOrganizationRole($role);
-
-    /**
-     * Add a role in organization.
-     *
-     * @param RoleInterface $role The role
-     *
-     * @return self
-     */
-    public function addOrganizationRole(RoleInterface $role);
-
-    /**
-     * Remove a role in organization.
-     *
-     * @param RoleInterface $role The role
-     *
-     * @return self
-     */
-    public function removeOrganizationRole(RoleInterface $role);
-
-    /**
      * Get the groups of organization.
      *
      * @return Collection
