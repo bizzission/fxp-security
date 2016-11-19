@@ -19,6 +19,13 @@ namespace Sonatra\Component\Security\Model;
 interface OrganizationUserInterface
 {
     /**
+     * Get id.
+     *
+     * @return int|string|null
+     */
+    public function getId();
+
+    /**
      * Set the organization.
      *
      * @param OrganizationInterface $organization The organization

@@ -19,6 +19,11 @@ namespace Sonatra\Component\Security\Model;
 abstract class OrganizationUser implements OrganizationUserInterface
 {
     /**
+     * @var int|string|null
+     */
+    protected $id;
+
+    /**
      * @var OrganizationInterface
      */
     protected $organization;
@@ -38,6 +43,14 @@ abstract class OrganizationUser implements OrganizationUserInterface
     {
         $this->organization = $organization;
         $this->user = $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
