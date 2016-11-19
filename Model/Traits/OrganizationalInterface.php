@@ -21,6 +21,15 @@ use Sonatra\Component\Security\Model\OrganizationInterface;
 interface OrganizationalInterface
 {
     /**
+     * Set the organization.
+     *
+     * @param OrganizationInterface $organization The organization
+     *
+     * @return self
+     */
+    public function setOrganization(OrganizationInterface $organization);
+
+    /**
      * Get the organization.
      *
      * @return OrganizationInterface|null
