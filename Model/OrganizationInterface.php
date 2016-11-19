@@ -67,47 +67,6 @@ interface OrganizationInterface
     public function isUserOrganization();
 
     /**
-     * Get the groups of organization.
-     *
-     * @return Collection
-     */
-    public function getOrganizationGroups();
-
-    /**
-     * Get the group names of organization.
-     *
-     * @return string[]
-     */
-    public function getOrganizationGroupNames();
-
-    /**
-     * Check the presence of group in organization.
-     *
-     * @param string $group The group name
-     *
-     * @return bool
-     */
-    public function hasOrganizationGroup($group);
-
-    /**
-     * Add a group in organization.
-     *
-     * @param GroupInterface $group The group
-     *
-     * @return self
-     */
-    public function addOrganizationGroup(GroupInterface $group);
-
-    /**
-     * Remove a group in organization.
-     *
-     * @param GroupInterface $group The group
-     *
-     * @return self
-     */
-    public function removeOrganizationGroup(GroupInterface $group);
-
-    /**
      * Get the users of organization.
      *
      * @return Collection|OrganizationUserInterface[]
