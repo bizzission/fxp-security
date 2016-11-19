@@ -34,6 +34,7 @@ Features include:
 - Doctrine ORM Filter for filtering  the records in query defined by the sharing rules
 - Doctrine Listener for empty the record field value for all query type
 - Doctrine Listener for keep the old value in the record field value if the user has not the permission of action
+- Organization with users and roles
 
 Documentation
 -------------
