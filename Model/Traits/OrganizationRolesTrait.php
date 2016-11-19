@@ -86,5 +86,5 @@ trait OrganizationRolesTrait
      *
      * @return bool
      */
-    public abstract function isUserOrganization();
+    abstract public function isUserOrganization();
 }
