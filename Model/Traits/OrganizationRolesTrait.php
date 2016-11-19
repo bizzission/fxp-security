@@ -80,4 +80,11 @@ trait OrganizationRolesTrait
 
         return $this;
     }
+
+    /**
+     * Check if the organization is a user organization or not.
+     *
+     * @return bool
+     */
+    public abstract function isUserOrganization();
 }
