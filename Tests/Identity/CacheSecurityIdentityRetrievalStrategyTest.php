@@ -56,9 +56,6 @@ class CacheSecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_Test
         );
     }
 
-    /**
-     * @group fxp
-     */
     public function testGetSecurityIdentities()
     {
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
