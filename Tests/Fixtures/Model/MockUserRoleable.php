@@ -25,6 +25,14 @@ class MockUserRoleable implements UserInterface, RoleableInterface
     /**
      * {@inheritdoc}
      */
+    public function getId()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isAccountNonExpired()
     {
         return false;

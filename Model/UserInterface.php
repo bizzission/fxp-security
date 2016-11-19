@@ -20,4 +20,10 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  */
 interface UserInterface extends AdvancedUserInterface
 {
+    /**
+     * Get id.
+     *
+     * @return int|string|null
+     */
+    public function getId();
 }
