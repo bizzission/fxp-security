@@ -79,8 +79,10 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
             $this->expressionLanguage,
             $this->trustResolver,
             $this->sidStrategy,
-            $this->context,
-            $this->orgRole
+            array(
+                'organizational_context' => $this->context,
+                'organizational_role' => $this->orgRole,
+            )
         );
     }
 

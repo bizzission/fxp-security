@@ -14,8 +14,6 @@ namespace Sonatra\Component\Security\Authorization\Voter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,24 +36,14 @@ class ExpressionVoter implements VoterInterface
     private $expressionLanguage;
 
     /**
-     * @var AuthenticationTrustResolverInterface
-     */
-    private $trustResolver;
-
-    /**
      * @var SecurityIdentityRetrievalStrategyInterface|null
      */
     private $sidStrategy;
 
     /**
-     * @var OrganizationalContextInterface|null
+     * @var array<string, mixed>
      */
-    private $context;
-
-    /**
-     * @var OrganizationalRoleInterface|null
-     */
-    private $orgRole;
+    private $variables;
 
     /**
      * Constructor.
@@ -63,20 +51,22 @@ class ExpressionVoter implements VoterInterface
      * @param ExpressionLanguage                              $expressionLanguage The expression language
      * @param AuthenticationTrustResolverInterface            $trustResolver      The trust resolver
      * @param SecurityIdentityRetrievalStrategyInterface|null $sidStrategy        The security identity retrieval strategy
-     * @param OrganizationalContextInterface|null             $context            The organizational context
-     * @param OrganizationalRoleInterface|null                $orgRole            The organizational role
+     * @param array<string, mixed>                            $variables          The expression variables
      */
     public function __construct(ExpressionLanguage $expressionLanguage,
                                 AuthenticationTrustResolverInterface $trustResolver,
                                 SecurityIdentityRetrievalStrategyInterface $sidStrategy = null,
-                                OrganizationalContextInterface $context = null,
-                                OrganizationalRoleInterface $orgRole = null)
+                                array $variables = array())
     {
         $this->expressionLanguage = $expressionLanguage;
-        $this->trustResolver = $trustResolver;
         $this->sidStrategy = $sidStrategy;
-        $this->context = $context;
-        $this->orgRole = $orgRole;
+        $this->variables = array(
+            'trust_resolver' => $trustResolver,
+        );
+
+        foreach ($variables as $name => $value) {
+            $this->addVariable($name, $value);
+        }
     }
 
     /**
@@ -87,6 +77,17 @@ class ExpressionVoter implements VoterInterface
     public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
     {
         $this->expressionLanguage->registerProvider($provider);
+    }
+
+    /**
+     * Add a variable in the expression language evaluate variables.
+     *
+     * @param string $name  The name of expression variable
+     * @param mixed  $value The value of expression variable
+     */
+    public function addVariable($name, $value)
+    {
+        $this->variables[$name] = $value;
     }
 
     /**
@@ -124,41 +125,20 @@ class ExpressionVoter implements VoterInterface
      *
      * @return array
      */
-    private function getVariables(TokenInterface $token, $subject)
+    protected function getVariables(TokenInterface $token, $subject)
     {
-        $variables = array(
+        $variables = array_merge($this->variables, array(
             'token' => $token,
             'user' => $token->getUser(),
             'object' => $subject,
             'subject' => $subject,
             'roles' => $this->getAllRoles($token),
-            'trust_resolver' => $this->trustResolver,
-        );
-
-        if ($this->context instanceof OrganizationalContextInterface) {
-            $variables['organizational_context'] = $this->context;
-        }
-
-        if ($this->orgRole instanceof OrganizationalRoleInterface) {
-            $variables['organizational_role'] = $this->orgRole;
-        }
+        ));
 
         if ($subject instanceof Request) {
             $variables['request'] = $subject;
         }
 
-        return $this->getExtraVariables($variables);
-    }
-
-    /**
-     * Add extra variable.
-     *
-     * @param array $variables The variables
-     *
-     * @return array
-     */
-    protected function getExtraVariables(array $variables)
-    {
         return $variables;
     }
 

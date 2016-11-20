@@ -35,6 +35,7 @@ Features include:
 - Doctrine Listener for empty the record field value for all query type
 - Doctrine Listener for keep the old value in the record field value if the user has not the permission of action
 - Organization with users and roles
+- Authorization expression voter with injectable custom variables (to build custom expression functions with dependencies)
 - `is_basic_auth` expression language function
 - `has_org_role` expression language function
 
