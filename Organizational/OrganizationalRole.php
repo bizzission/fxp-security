@@ -75,7 +75,7 @@ class OrganizationalRole implements OrganizationalRoleInterface
         $roles = (array) $roles;
         $sidRoles = $this->getTokenRoles();
 
-        if (!$sidRoles) {
+        if (0 === count($sidRoles)) {
             return false;
         }
 
