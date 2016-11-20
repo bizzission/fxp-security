@@ -39,7 +39,7 @@ class IsBasicAuthProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($expressionLanguage->evaluate('is_basic_auth()', $variables));
 
-        $compiled = '$token && $token instanceof \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken) && !$trust_resolver->isAnonymous($token)';
+        $compiled = '$token && $token instanceof \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken && !$trust_resolver->isAnonymous($token)';
         $this->assertEquals($compiled, $expressionLanguage->compile('is_basic_auth()'));
     }
 }

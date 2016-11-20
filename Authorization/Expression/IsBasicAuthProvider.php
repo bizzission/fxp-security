@@ -31,7 +31,7 @@ class IsBasicAuthProvider implements ExpressionFunctionProviderInterface
             new ExpressionFunction('is_basic_auth', function () {
                 $class = '\\'.UsernamePasswordToken::class;
 
-                return sprintf('$token && $token instanceof %1$s) && !$trust_resolver->isAnonymous($token)', $class);
+                return sprintf('$token && $token instanceof %1$s && !$trust_resolver->isAnonymous($token)', $class);
             }, function (array $variables) {
                 return $variables['token']
                     && $variables['token'] instanceof UsernamePasswordToken
