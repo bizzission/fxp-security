@@ -36,6 +36,7 @@ Features include:
 - Doctrine Listener for keep the old value in the record field value if the user has not the permission of action
 - Organization with users and roles
 - `is_basic_auth` expression language function
+- `has_org_role` expression language function
 
 Documentation
 -------------

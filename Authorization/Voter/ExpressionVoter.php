@@ -15,6 +15,7 @@ use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,22 +53,30 @@ class ExpressionVoter implements VoterInterface
     private $context;
 
     /**
+     * @var OrganizationalRoleInterface|null
+     */
+    private $orgRole;
+
+    /**
      * Constructor.
      *
      * @param ExpressionLanguage                              $expressionLanguage The expression language
      * @param AuthenticationTrustResolverInterface            $trustResolver      The trust resolver
      * @param SecurityIdentityRetrievalStrategyInterface|null $sidStrategy        The security identity retrieval strategy
      * @param OrganizationalContextInterface|null             $context            The organizational context
+     * @param OrganizationalRoleInterface|null                $orgRole            The organizational role
      */
     public function __construct(ExpressionLanguage $expressionLanguage,
                                 AuthenticationTrustResolverInterface $trustResolver,
                                 SecurityIdentityRetrievalStrategyInterface $sidStrategy = null,
-                                OrganizationalContextInterface $context = null)
+                                OrganizationalContextInterface $context = null,
+                                OrganizationalRoleInterface $orgRole = null)
     {
         $this->expressionLanguage = $expressionLanguage;
         $this->trustResolver = $trustResolver;
         $this->sidStrategy = $sidStrategy;
         $this->context = $context;
+        $this->orgRole = $orgRole;
     }
 
     /**
@@ -128,6 +137,10 @@ class ExpressionVoter implements VoterInterface
 
         if ($this->context instanceof OrganizationalContextInterface) {
             $variables['organizational_context'] = $this->context;
+        }
+
+        if ($this->orgRole instanceof OrganizationalRoleInterface) {
+            $variables['organizational_role'] = $this->orgRole;
         }
 
         if ($subject instanceof Request) {

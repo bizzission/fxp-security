@@ -15,6 +15,7 @@ use Sonatra\Component\Security\Authorization\Voter\ExpressionVoter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,11 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
     protected $context;
 
     /**
+     * @var OrganizationalRoleInterface
+     */
+    protected $orgRole;
+
+    /**
      * @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $token;
@@ -66,13 +72,15 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
         $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
+        $this->orgRole = $this->getMockBuilder(OrganizationalRoleInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->voter = new ExpressionVoter(
             $this->expressionLanguage,
             $this->trustResolver,
             $this->sidStrategy,
-            $this->context
+            $this->context,
+            $this->orgRole
         );
     }
 
@@ -125,7 +133,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
             ->method('evaluate')
             ->willReturnCallback(function ($attribute, array $variables) use ($resultExpression) {
                 $this->assertInstanceOf(Expression::class, $attribute);
-                $this->assertCount(7, $variables);
+                $this->assertCount(8, $variables);
                 $this->assertArrayHasKey('token', $variables);
                 $this->assertArrayHasKey('user', $variables);
                 $this->assertArrayHasKey('object', $variables);
@@ -133,6 +141,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
                 $this->assertArrayHasKey('roles', $variables);
                 $this->assertArrayHasKey('trust_resolver', $variables);
                 $this->assertArrayHasKey('organizational_context', $variables);
+                $this->assertArrayHasKey('organizational_role', $variables);
                 $this->assertArrayNotHasKey('request', $variables);
 
                 $this->assertEquals(array('ROLE_USER'), $variables['roles']);
@@ -164,6 +173,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
                 $this->assertArrayHasKey('roles', $variables);
                 $this->assertArrayHasKey('trust_resolver', $variables);
                 $this->assertArrayNotHasKey('organizational_context', $variables);
+                $this->assertArrayNotHasKey('organizational_role', $variables);
                 $this->assertArrayHasKey('request', $variables);
 
                 $this->assertEquals(array('ROLE_USER'), $variables['roles']);
