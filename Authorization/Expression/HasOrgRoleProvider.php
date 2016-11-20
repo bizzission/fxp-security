@@ -30,7 +30,7 @@ class HasOrgRoleProvider implements ExpressionFunctionProviderInterface
             new ExpressionFunction('has_org_role', function ($role) {
                 return sprintf('$organizational_role && $organizational_role->hasRole(%s)', $role);
             }, function (array $variables, $role) {
-                return $variables['organizational_role']
+                return isset($variables['organizational_role'])
                     && $variables['organizational_role']->hasRole($role);
             }),
         );

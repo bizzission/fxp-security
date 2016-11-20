@@ -33,7 +33,7 @@ class IsBasicAuthProvider implements ExpressionFunctionProviderInterface
 
                 return sprintf('$token && $token instanceof %1$s && !$trust_resolver->isAnonymous($token)', $class);
             }, function (array $variables) {
-                return $variables['token']
+                return isset($variables['token'])
                     && $variables['token'] instanceof UsernamePasswordToken
                     && !$variables['trust_resolver']->isAnonymous($variables['token']);
             }),
