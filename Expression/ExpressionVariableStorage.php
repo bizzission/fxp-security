@@ -17,7 +17,6 @@ use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
@@ -26,13 +25,8 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ExpressionVariableStorage implements EventSubscriberInterface
+class ExpressionVariableStorage implements ExpressionVariableStorageInterface, EventSubscriberInterface
 {
-    /**
-     * @var AuthenticationTrustResolverInterface
-     */
-    private $trustResolver;
-
     /**
      * @var SecurityIdentityRetrievalStrategyInterface|null
      */
@@ -46,19 +40,16 @@ class ExpressionVariableStorage implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param AuthenticationTrustResolverInterface            $trustResolver The trust resolver
-     * @param SecurityIdentityRetrievalStrategyInterface|null $sidStrategy   The security identity retrieval strategy
-     * @param array<string, mixed>                            $variables     The expression variables
+     * @param array<string, mixed>                            $variables   The expression variables
+     * @param SecurityIdentityRetrievalStrategyInterface|null $sidStrategy The security identity retrieval strategy
      */
-    public function __construct(AuthenticationTrustResolverInterface $trustResolver,
-                                SecurityIdentityRetrievalStrategyInterface $sidStrategy = null,
-                                array $variables = array())
+    public function __construct(array $variables = array(),
+                                SecurityIdentityRetrievalStrategyInterface $sidStrategy = null)
     {
-        $this->trustResolver = $trustResolver;
         $this->sidStrategy = $sidStrategy;
 
         foreach ($variables as $name => $value) {
-            $this->addVariable($name, $value);
+            $this->add($name, $value);
         }
     }
 
@@ -68,27 +59,60 @@ class ExpressionVariableStorage implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ExpressionVariableEvents::GET => array('setVariables', 0),
+            ExpressionVariableEvents::GET => array('inject', 0),
         );
     }
 
     /**
-     * Add a variable in the expression language evaluate variables.
-     *
-     * @param string $name  The name of expression variable
-     * @param mixed  $value The value of expression variable
+     * {@inheritdoc}
      */
-    public function addVariable($name, $value)
+    public function add($name, $value)
     {
         $this->variables[$name] = $value;
+
+        return $this;
     }
 
     /**
-     * Set the variables in event.
-     *
-     * @param GetExpressionVariablesEvent $event The event
+     * {@inheritdoc}
      */
-    public function setVariables(GetExpressionVariablesEvent $event)
+    public function remove($name)
+    {
+        unset($this->variables[$name]);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has($name)
+    {
+        return isset($this->variables[$name]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($name)
+    {
+        return $this->has($name)
+            ? $this->variables[$name]
+            : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAll()
+    {
+        return $this->variables;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function inject(GetExpressionVariablesEvent $event)
     {
         $token = $event->getToken();
 
@@ -96,7 +120,6 @@ class ExpressionVariableStorage implements EventSubscriberInterface
             'token' => $token,
             'user' => $token->getUser(),
             'roles' => $this->getAllRoles($token),
-            'trust_resolver' => $this->trustResolver,
         )));
     }
 

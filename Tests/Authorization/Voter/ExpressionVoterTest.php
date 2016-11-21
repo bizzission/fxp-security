@@ -89,13 +89,14 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->variableStorage = new ExpressionVariableStorage(
-            $this->trustResolver,
-            $this->sidStrategy,
             array(
                 'organizational_context' => $this->context,
                 'organizational_role' => $this->orgRole,
-            )
+            ),
+            $this->sidStrategy
         );
+        $this->variableStorage->add('trust_resolver', $this->trustResolver);
+
         $this->dispatcher->addSubscriber($this->variableStorage);
 
         $this->voter = new ExpressionVoter(
@@ -201,7 +202,8 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
                 return true;
             });
 
-        $variableStorage = new ExpressionVariableStorage($this->trustResolver);
+        $variableStorage = new ExpressionVariableStorage();
+        $variableStorage->add('trust_resolver', $this->trustResolver);
         $dispatcher = new EventDispatcher();
         $dispatcher->addSubscriber($variableStorage);
 
@@ -209,8 +211,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $expression = new Expression('"ROLE_USER" in roles');
         $voter = new ExpressionVoter(
             $dispatcher,
-            $this->expressionLanguage,
-            $this->trustResolver
+            $this->expressionLanguage
         );
         $res = $voter->vote($this->token, $request, array($expression));
 

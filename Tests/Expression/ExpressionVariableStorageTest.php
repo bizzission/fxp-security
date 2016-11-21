@@ -76,14 +76,14 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
             ->willReturn($sids);
 
         $variableStorage = new ExpressionVariableStorage(
-            $this->trustResolver,
-            $this->sidStrategy,
             array(
                 'organizational_context' => $this->context,
                 'organizational_role' => $this->orgRole,
-            )
+            ),
+            $this->sidStrategy
         );
-        $variableStorage->setVariables($event);
+        $variableStorage->add('trust_resolver', $this->trustResolver);
+        $variableStorage->inject($event);
 
         $variables = $event->getVariables();
         $this->assertCount(6, $variables);
@@ -106,8 +106,9 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
             ));
 
         $event = new GetExpressionVariablesEvent($this->token);
-        $variableStorage = new ExpressionVariableStorage($this->trustResolver);
-        $variableStorage->setVariables($event);
+        $variableStorage = new ExpressionVariableStorage();
+        $variableStorage->add('trust_resolver', $this->trustResolver);
+        $variableStorage->inject($event);
 
         $variables = $event->getVariables();
         $this->assertCount(4, $variables);
@@ -117,5 +118,42 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('trust_resolver', $variables);
         $this->assertEquals(array('ROLE_USER'), $variables['roles']);
         $this->assertCount(1, $variableStorage->getSubscribedEvents());
+    }
+
+    public function testHasVariable()
+    {
+        $variableStorage = new ExpressionVariableStorage(array(
+            'foo' => 'bar',
+        ));
+
+        $this->assertFalse($variableStorage->has('bar'));
+        $this->assertTrue($variableStorage->has('foo'));
+    }
+
+    public function testAddVariable()
+    {
+        $variableStorage = new ExpressionVariableStorage();
+
+        $this->assertFalse($variableStorage->has('foo'));
+        $this->assertNull($variableStorage->get('foo'));
+
+        $variableStorage->add('foo', 'bar');
+
+        $this->assertTrue($variableStorage->has('foo'));
+        $this->assertSame('bar', $variableStorage->get('foo'));
+        $this->assertCount(1, $variableStorage->getAll());
+    }
+
+    public function testRemoveVariable()
+    {
+        $variableStorage = new ExpressionVariableStorage(array(
+            'foo' => 'bar',
+        ));
+
+        $this->assertTrue($variableStorage->has('foo'));
+
+        $variableStorage->remove('foo');
+
+        $this->assertFalse($variableStorage->has('foo'));
     }
 }
