@@ -78,6 +78,22 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $sids);
     }
 
+    public function testIsManaged()
+    {
+        $object = new \stdClass();
+
+        $this->assertTrue($this->pm->isManaged($object));
+    }
+
+    public function testIsFieldManaged()
+    {
+        $object = new \stdClass();
+        $object->foo = 42;
+        $field = 'foo';
+
+        $this->assertTrue($this->pm->isFieldManaged($object, $field));
+    }
+
     public function testPreloadPermissions()
     {
         $objects = array(

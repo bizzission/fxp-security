@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Permission;
 
+use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -60,6 +61,24 @@ interface PermissionManagerInterface
     public function getSecurityIdentities(TokenInterface $token = null);
 
     /**
+     * Check if the domain object is managed.
+     *
+     * @param FieldVote|object|string $domainObject The object or class name
+     *
+     * @return bool
+     */
+    public function isManaged($domainObject);
+
+    /**
+     * Check if the domain object is managed.
+     *
+     * @param object|string $domainObject The object or class name
+     * @param string        $field        The field
+     *
+     * @return bool
+     */
+    public function isFieldManaged($domainObject, $field);
+
      * Preload permissions of objects.
      *
      * @param object[] $objects The objects

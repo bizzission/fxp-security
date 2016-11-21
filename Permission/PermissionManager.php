@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Permission;
 
+use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -84,6 +85,19 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function isManaged($domainObject)
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFieldManaged($domainObject, $field)
+    {
+        return $this->isManaged(new FieldVote($domainObject, $field));
+    }
+
     public function preloadPermissions(array $objects)
     {
         return new \SplObjectStorage();
