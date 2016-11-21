@@ -60,7 +60,7 @@ interface ExpressionVariableStorageInterface
     /**
      * Get all variables.
      *
-     * @return array<string, mixed>
+     * @return array
      */
     public function getAll();
 
