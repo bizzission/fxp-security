@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
 use Sonatra\Component\Security\Authorization\Voter\ExpressionVoter;
-use Sonatra\Component\Security\Authorization\Voter\ExpressionVoterVariableStorage;
+use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
@@ -69,7 +69,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
     protected $token;
 
     /**
-     * @var ExpressionVoterVariableStorage
+     * @var ExpressionVariableStorage
      */
     protected $variableStorage;
 
@@ -88,17 +88,19 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $this->orgRole = $this->getMockBuilder(OrganizationalRoleInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->variableStorage = new ExpressionVoterVariableStorage(array(
-            'organizational_context' => $this->context,
-            'organizational_role' => $this->orgRole,
-        ));
+        $this->variableStorage = new ExpressionVariableStorage(
+            $this->trustResolver,
+            $this->sidStrategy,
+            array(
+                'organizational_context' => $this->context,
+                'organizational_role' => $this->orgRole,
+            )
+        );
         $this->dispatcher->addSubscriber($this->variableStorage);
 
         $this->voter = new ExpressionVoter(
             $this->dispatcher,
-            $this->expressionLanguage,
-            $this->trustResolver,
-            $this->sidStrategy
+            $this->expressionLanguage
         );
     }
 
@@ -199,10 +201,14 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
                 return true;
             });
 
+        $variableStorage = new ExpressionVariableStorage($this->trustResolver);
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addSubscriber($variableStorage);
+
         $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
         $expression = new Expression('"ROLE_USER" in roles');
         $voter = new ExpressionVoter(
-            new EventDispatcher(),
+            $dispatcher,
             $this->expressionLanguage,
             $this->trustResolver
         );

@@ -14,14 +14,14 @@ namespace Sonatra\Component\Security;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-final class ExpressionVoterEvents
+final class ExpressionVariableEvents
 {
     /**
-     * The GET_VARIABLES event occurs when the expression voter try to get the global variables.
+     * The GET event occurs when a service try to get the global variables.
      *
      * @Event("Sonatra\Component\Security\Event\GetExpressionVariablesEvent")
      *
      * @var string
      */
-    const GET_VARIABLES = 'sonatra_security.expression_voter.get_variables';
+    const GET = 'sonatra_security.expression.get_variables';
 }

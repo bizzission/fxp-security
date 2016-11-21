@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * The get expression variables event.
@@ -21,6 +22,11 @@ use Symfony\Component\EventDispatcher\Event;
 class GetExpressionVariablesEvent extends Event
 {
     /**
+     * @var TokenInterface
+     */
+    protected $token;
+
+    /**
      * @var array<string, mixed>
      */
     protected $variables;
@@ -28,11 +34,23 @@ class GetExpressionVariablesEvent extends Event
     /**
      * Constructor.
      *
+     * @param TokenInterface       $token     The token
      * @param array<string, mixed> $variables The variables
      */
-    public function __construct(array $variables = array())
+    public function __construct(TokenInterface $token, array $variables = array())
     {
+        $this->token = $token;
         $this->variables = $variables;
+    }
+
+    /**
+     * Get the token.
+     *
+     * @return TokenInterface
+     */
+    public function getToken()
+    {
+        return $this->token;
     }
 
     /**
