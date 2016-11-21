@@ -61,16 +61,25 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
         $object = new \stdClass();
         $object->foo = 42;
         $fieldVote = new FieldVote($object, 'foo');
+        $arrayValid = array($object, 'foo');
+        $arrayInvalid = array($object);
 
         return array(
             array(array(42), $object, VoterInterface::ACCESS_ABSTAIN),
             array(array(42), $fieldVote, VoterInterface::ACCESS_ABSTAIN),
+            array(array(42), $arrayValid, VoterInterface::ACCESS_ABSTAIN),
+            array(array(42), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
             array(array('view'), $object, VoterInterface::ACCESS_ABSTAIN),
             array(array('view'), $fieldVote, VoterInterface::ACCESS_ABSTAIN),
+            array(array('view'), $arrayValid, VoterInterface::ACCESS_ABSTAIN),
+            array(array('view'), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
             array(array('perm_view'), $object, VoterInterface::ACCESS_GRANTED, true),
             array(array('perm_view'), $object, VoterInterface::ACCESS_DENIED, false),
             array(array('perm_view'), $fieldVote, VoterInterface::ACCESS_GRANTED, true),
             array(array('perm_view'), $fieldVote, VoterInterface::ACCESS_DENIED, false),
+            array(array('perm_view'), $arrayValid, VoterInterface::ACCESS_GRANTED, true),
+            array(array('perm_view'), $arrayValid, VoterInterface::ACCESS_DENIED, false),
+            array(array('perm_view'), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
         );
     }
 
@@ -98,6 +107,13 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
                 $this->permManager->expects($this->once())
                     ->method('isManaged')
                     ->with($subject)
+                    ->willReturn(true);
+            }
+
+            if (is_array($subject) && isset($subject[0]) && isset($subject[1])) {
+                $this->permManager->expects($this->once())
+                    ->method('isManaged')
+                    ->with(new FieldVote($subject[0], $subject[1]))
                     ->willReturn(true);
             }
 

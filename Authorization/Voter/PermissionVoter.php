@@ -55,6 +55,10 @@ class PermissionVoter extends Voter
             return false;
         }
 
+        if (is_array($subject) && isset($subject[0]) && isset($subject[1])) {
+            $subject = new FieldVote($subject[0], $subject[1]);
+        }
+
         return $this->permissionManager->isManaged($subject);
     }
 
@@ -79,7 +83,15 @@ class PermissionVoter extends Voter
      */
     protected function isSubjectSupported($subject)
     {
-        return is_string($subject) || $subject instanceof FieldVote || is_object($subject);
+        if (is_string($subject) || $subject instanceof FieldVote || is_object($subject)) {
+            return true;
+        }
+
+        return is_array($subject)
+            && isset($subject[0])
+            && isset($subject[1])
+            && (is_string($subject[0]) || is_object($subject[0]))
+            && is_string($subject[1]);
     }
 
     /**
