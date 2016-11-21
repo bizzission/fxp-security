@@ -44,7 +44,7 @@ class RestoreViewGrantedEvent extends AbstractViewGrantedEvent
      */
     public function __construct(FieldVote $fieldVote, $oldValue, $newValue)
     {
-        parent::__construct($fieldVote->getDomainObject());
+        parent::__construct($this->validateFieldVoteDomainObject($fieldVote));
 
         $this->fieldVote = $fieldVote;
         $this->oldValue = $oldValue;

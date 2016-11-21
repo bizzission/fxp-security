@@ -11,6 +11,8 @@
 
 namespace Sonatra\Component\Security\Event;
 
+use Sonatra\Component\Security\Authorization\Voter\FieldVote;
+use Sonatra\Component\Security\Exception\UnexpectedTypeException;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -102,5 +104,23 @@ abstract class AbstractViewGrantedEvent extends Event
     public function isSkipAuthorizationChecker()
     {
         return $this->skip;
+    }
+
+    /**
+     * Validate and return the domain object instance in field vote.
+     *
+     * @param FieldVote $fieldVote The field vote
+     *
+     * @return object
+     */
+    protected function validateFieldVoteDomainObject(FieldVote $fieldVote)
+    {
+        $domainObject = $fieldVote->getDomainObject();
+
+        if (!is_object($domainObject)) {
+            throw new UnexpectedTypeException($domainObject, 'object');
+        }
+
+        return $domainObject;
     }
 }

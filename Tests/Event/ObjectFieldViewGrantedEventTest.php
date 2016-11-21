@@ -36,4 +36,16 @@ class ObjectFieldViewGrantedEventTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($event->isSkipAuthorizationChecker());
         $this->assertFalse($event->isGranted());
     }
+
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\UnexpectedTypeException
+     * @expectedExceptionMessage Expected argument of type "object", "NULL" given
+     */
+    public function testEventWithInvalidFieldVote()
+    {
+        $object = \stdClass::class;
+        $fieldVote = new FieldVote($object, 'foo');
+
+        new ObjectFieldViewGrantedEvent($fieldVote);
+    }
 }

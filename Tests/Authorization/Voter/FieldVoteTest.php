@@ -26,6 +26,31 @@ class FieldVoteTest extends \PHPUnit_Framework_TestCase
         $fv = new FieldVote($object, $field);
 
         $this->assertSame($object, $fv->getDomainObject());
+        $this->assertSame(get_class($object), $fv->getClass());
         $this->assertSame($field, $fv->getField());
+    }
+
+    public function testFieldVoteWithClassname()
+    {
+        $object = \stdClass::class;
+        $field = 'field';
+
+        $fv = new FieldVote($object, $field);
+
+        $this->assertNull($fv->getDomainObject());
+        $this->assertSame(\stdClass::class, $fv->getClass());
+        $this->assertSame($field, $fv->getField());
+    }
+
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\UnexpectedTypeException
+     * @expectedExceptionMessage Expected argument of type "object|string", "integer" given
+     */
+    public function testFieldVoteWithInvalidDomainObject()
+    {
+        $object = 42;
+        $field = 'field';
+
+        new FieldVote($object, $field);
     }
 }

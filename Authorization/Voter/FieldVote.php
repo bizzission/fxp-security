@@ -10,6 +10,7 @@
  */
 
 namespace Sonatra\Component\Security\Authorization\Voter;
+use Sonatra\Component\Security\Exception\UnexpectedTypeException;
 
 /**
  * Field vote.
@@ -19,9 +20,14 @@ namespace Sonatra\Component\Security\Authorization\Voter;
 class FieldVote
 {
     /**
-     * @var object
+     * @var object|null
      */
     private $domainObject;
+
+    /**
+     * @var string
+     */
+    private $class;
 
     /**
      * @var string
@@ -31,23 +37,41 @@ class FieldVote
     /**
      * Constructor.
      *
-     * @param object $domainObject The domain object
-     * @param string $field        The field name
+     * @param object|string $domainObject The domain object or classname
+     * @param string        $field        The field name
      */
     public function __construct($domainObject, $field)
     {
-        $this->domainObject = $domainObject;
+        if (is_string($domainObject)) {
+            $this->class = $domainObject;
+        } elseif (is_object($domainObject)) {
+            $this->domainObject = $domainObject;
+            $this->class = get_class($domainObject);
+        } else {
+            throw new UnexpectedTypeException($domainObject, 'object|string');
+        }
+
         $this->field = $field;
     }
 
     /**
      * Get the domain object.
      *
-     * @return object
+     * @return object|null
      */
     public function getDomainObject()
     {
         return $this->domainObject;
+    }
+
+    /**
+     * Get the classname.
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 
     /**
