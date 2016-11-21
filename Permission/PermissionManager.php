@@ -98,6 +98,25 @@ class PermissionManager implements PermissionManagerInterface
         return $this->isManaged(new FieldVote($domainObject, $field));
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function isGranted(array $sids, $domainObject, $permissions)
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFieldGranted(array $sids, $domainObject, $field, $permissions)
+    {
+        return $this->isGranted($sids, new FieldVote($domainObject, $field), $permissions);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function preloadPermissions(array $objects)
     {
         return new \SplObjectStorage();

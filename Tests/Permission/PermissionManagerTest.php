@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Permission;
 
+use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Permission\PermissionManager;
@@ -92,6 +93,30 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $field = 'foo';
 
         $this->assertTrue($this->pm->isFieldManaged($object, $field));
+    }
+
+    public function testIsGranted()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = new \stdClass();
+        $permissions = 'view';
+
+        $this->assertTrue($this->pm->isGranted($sids, $object, $permissions));
+    }
+
+    public function testIsFieldGranted()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = new \stdClass();
+        $object->foo = 42;
+        $field = 'foo';
+        $permissions = 'view';
+
+        $this->assertTrue($this->pm->isFieldGranted($sids, $object, $field, $permissions));
     }
 
     public function testPreloadPermissions()

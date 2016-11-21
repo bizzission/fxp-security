@@ -79,6 +79,30 @@ interface PermissionManagerInterface
      */
     public function isFieldManaged($domainObject, $field);
 
+    /**
+     * Determines whether access is granted.
+     *
+     * @param SecurityIdentityInterface[] $sids         The security identities
+     * @param FieldVote|object|string     $domainObject The object or class name or field vote
+     * @param string|string[]             $permissions  The permissions
+     *
+     * @return bool
+     */
+    public function isGranted(array $sids, $domainObject, $permissions);
+
+    /**
+     * Determines whether access is granted.
+     *
+     * @param SecurityIdentityInterface[] $sids         The security identities
+     * @param object|string               $domainObject The object or class name
+     * @param string                      $field        The field
+     * @param string|string[]             $permissions  The permissions
+     *
+     * @return bool
+     */
+    public function isFieldGranted(array $sids, $domainObject, $field, $permissions);
+
+    /**
      * Preload permissions of objects.
      *
      * @param object[] $objects The objects
