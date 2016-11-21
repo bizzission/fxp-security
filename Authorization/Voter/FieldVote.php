@@ -10,6 +10,7 @@
  */
 
 namespace Sonatra\Component\Security\Authorization\Voter;
+
 use Sonatra\Component\Security\Exception\UnexpectedTypeException;
 
 /**
