@@ -267,7 +267,7 @@ class ObjectFilterListener implements EventSubscriber
             $this->postResetPermissions[] = $object;
             $this->getObjectFilter()->restore($object);
 
-            if (!$this->getAuthorizationChecker()->isGranted($action, $object)) {
+            if (!$this->getAuthorizationChecker()->isGranted('perm_'.$action, $object)) {
                 throw new AccessDeniedException('Insufficient privilege to '.$action.' the entity');
             }
         }
@@ -281,7 +281,7 @@ class ObjectFilterListener implements EventSubscriber
     protected function checkAllScheduledDeletions(array $objects)
     {
         foreach ($objects as $object) {
-            if (!$this->getAuthorizationChecker()->isGranted('delete', $object)) {
+            if (!$this->getAuthorizationChecker()->isGranted('perm_delete', $object)) {
                 throw new AccessDeniedException('Insufficient privilege to delete the entity');
             }
         }

@@ -304,7 +304,7 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
-            ->with('create', $object)
+            ->with('perm_create', $object)
             ->willReturn(false);
 
         $this->listener->onFlush($args);
@@ -349,7 +349,7 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
-            ->with('edit', $object)
+            ->with('perm_edit', $object)
             ->willReturn(false);
 
         $this->listener->onFlush($args);
@@ -395,7 +395,7 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
-            ->with('delete', $object)
+            ->with('perm_delete', $object)
             ->willReturn(false);
 
         $this->listener->onFlush($args);

@@ -283,13 +283,13 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
 
         $this->ac->expects($this->at(0))
             ->method('isGranted')
-            ->with('view', $fv)
+            ->with('perm_view', $fv)
             ->willReturn($allowView);
 
         if ($allowView) {
             $this->ac->expects($this->at(1))
                 ->method('isGranted')
-                ->with('edit', $fv)
+                ->with('perm_edit', $fv)
                 ->willReturn($allowEdit);
         }
 

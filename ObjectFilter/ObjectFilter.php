@@ -244,8 +244,8 @@ class ObjectFilter implements ObjectFilterInterface
             return !$event->isGranted();
         }
 
-        return !$this->ac->isGranted('view', $fieldVote)
-            || !$this->ac->isGranted('edit', $fieldVote);
+        return !$this->ac->isGranted('perm_view', $fieldVote)
+            || !$this->ac->isGranted('perm_edit', $fieldVote);
     }
 
     /**
@@ -271,6 +271,6 @@ class ObjectFilter implements ObjectFilterInterface
             return $event->isGranted();
         }
 
-        return $this->ac->isGranted('view', $object);
+        return $this->ac->isGranted('perm_view', $object);
     }
 }
