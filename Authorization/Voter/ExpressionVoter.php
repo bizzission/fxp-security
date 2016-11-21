@@ -11,9 +11,12 @@
 
 namespace Sonatra\Component\Security\Authorization\Voter;
 
+use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
+use Sonatra\Component\Security\ExpressionVoterEvents;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,9 +34,19 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 class ExpressionVoter implements VoterInterface
 {
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * @var ExpressionLanguage
      */
     private $expressionLanguage;
+
+    /**
+     * @var AuthenticationTrustResolverInterface
+     */
+    private $trustResolver;
 
     /**
      * @var SecurityIdentityRetrievalStrategyInterface|null
@@ -41,32 +54,22 @@ class ExpressionVoter implements VoterInterface
     private $sidStrategy;
 
     /**
-     * @var array<string, mixed>
-     */
-    private $variables;
-
-    /**
      * Constructor.
      *
+     * @param EventDispatcherInterface                        $dispatcher         The event dispatcher
      * @param ExpressionLanguage                              $expressionLanguage The expression language
      * @param AuthenticationTrustResolverInterface            $trustResolver      The trust resolver
      * @param SecurityIdentityRetrievalStrategyInterface|null $sidStrategy        The security identity retrieval strategy
-     * @param array<string, mixed>                            $variables          The expression variables
      */
-    public function __construct(ExpressionLanguage $expressionLanguage,
+    public function __construct(EventDispatcherInterface $dispatcher,
+                                ExpressionLanguage $expressionLanguage,
                                 AuthenticationTrustResolverInterface $trustResolver,
-                                SecurityIdentityRetrievalStrategyInterface $sidStrategy = null,
-                                array $variables = array())
+                                SecurityIdentityRetrievalStrategyInterface $sidStrategy = null)
     {
+        $this->dispatcher = $dispatcher;
         $this->expressionLanguage = $expressionLanguage;
+        $this->trustResolver = $trustResolver;
         $this->sidStrategy = $sidStrategy;
-        $this->variables = array(
-            'trust_resolver' => $trustResolver,
-        );
-
-        foreach ($variables as $name => $value) {
-            $this->addVariable($name, $value);
-        }
     }
 
     /**
@@ -77,17 +80,6 @@ class ExpressionVoter implements VoterInterface
     public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
     {
         $this->expressionLanguage->registerProvider($provider);
-    }
-
-    /**
-     * Add a variable in the expression language evaluate variables.
-     *
-     * @param string $name  The name of expression variable
-     * @param mixed  $value The value of expression variable
-     */
-    public function addVariable($name, $value)
-    {
-        $this->variables[$name] = $value;
     }
 
     /**
@@ -127,12 +119,16 @@ class ExpressionVoter implements VoterInterface
      */
     protected function getVariables(TokenInterface $token, $subject)
     {
-        $variables = array_merge($this->variables, array(
+        $event = new GetExpressionVariablesEvent();
+        $this->dispatcher->dispatch(ExpressionVoterEvents::GET_VARIABLES, $event);
+
+        $variables = array_merge($event->getVariables(), array(
             'token' => $token,
             'user' => $token->getUser(),
             'object' => $subject,
             'subject' => $subject,
             'roles' => $this->getAllRoles($token),
+            'trust_resolver' => $this->trustResolver,
         ));
 
         if ($subject instanceof Request) {

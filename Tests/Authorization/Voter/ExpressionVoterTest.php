@@ -12,10 +12,12 @@
 namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
 use Sonatra\Component\Security\Authorization\Voter\ExpressionVoter;
+use Sonatra\Component\Security\Authorization\Voter\ExpressionVoterVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +33,11 @@ use Symfony\Component\Security\Core\Role\Role;
  */
 class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var EventDispatcher
+     */
+    protected $dispatcher;
+
     /**
      * @var ExpressionLanguage|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -62,12 +69,18 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
     protected $token;
 
     /**
+     * @var ExpressionVoterVariableStorage
+     */
+    protected $variableStorage;
+
+    /**
      * @var ExpressionVoter
      */
     protected $voter;
 
     protected function setUp()
     {
+        $this->dispatcher = new EventDispatcher();
         $this->expressionLanguage = $this->getMockBuilder(ExpressionLanguage::class)->disableOriginalConstructor()->getMock();
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
         $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
@@ -75,14 +88,17 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $this->orgRole = $this->getMockBuilder(OrganizationalRoleInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
+        $this->variableStorage = new ExpressionVoterVariableStorage(array(
+            'organizational_context' => $this->context,
+            'organizational_role' => $this->orgRole,
+        ));
+        $this->dispatcher->addSubscriber($this->variableStorage);
+
         $this->voter = new ExpressionVoter(
+            $this->dispatcher,
             $this->expressionLanguage,
             $this->trustResolver,
-            $this->sidStrategy,
-            array(
-                'organizational_context' => $this->context,
-                'organizational_role' => $this->orgRole,
-            )
+            $this->sidStrategy
         );
     }
 
@@ -186,6 +202,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
         $expression = new Expression('"ROLE_USER" in roles');
         $voter = new ExpressionVoter(
+            new EventDispatcher(),
             $this->expressionLanguage,
             $this->trustResolver
         );
