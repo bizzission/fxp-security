@@ -11,9 +11,8 @@
 
 namespace Sonatra\Component\Security\Permission;
 
-use Sonatra\Component\Security\Exception\UnexpectedTypeException;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+use Sonatra\Component\Security\Identity\SubjectUtils;
 
 /**
  * Field vote.
@@ -40,16 +39,7 @@ class FieldVote
      */
     public function __construct($subject, $field)
     {
-        if ($subject instanceof SubjectIdentityInterface) {
-            $this->subject = $subject;
-        } elseif (is_string($subject)) {
-            $this->subject = SubjectIdentity::fromClassname($subject);
-        } elseif (is_object($subject)) {
-            $this->subject = SubjectIdentity::fromObject($subject);
-        } else {
-            throw new UnexpectedTypeException($subject, SubjectIdentityInterface::class.'|object|string');
-        }
-
+        $this->subject = SubjectUtils::getSubjectIdentity($subject);
         $this->field = $field;
     }
 
