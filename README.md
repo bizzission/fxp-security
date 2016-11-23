@@ -23,7 +23,7 @@ Features include:
 - Merge the permissions of roles children of associated roles with user, role, group, organization, and token
 - Security Identity Retrieval Strategy for retrieving security identities from tokens (current user,
   all roles, all groups and organization)
-- AuthorizationChecker to check the permissions for domain objects
+- AuthorizationChecker to check the permissions for objects
 - Permission Manager retrieve and manipulate the permissions with her operations
 - Permission Voter to use the Symfony Authorization Checker
 - Define a role for various host with direct injection in token (regex compatible)
