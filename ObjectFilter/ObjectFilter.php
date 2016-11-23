@@ -199,9 +199,7 @@ class ObjectFilter implements ObjectFilterInterface
             $fieldVote = new FieldVote($object, $property->getName());
             $value = $property->getValue($object);
 
-            if (null !== $value
-                    && !$this->isIdentifier($fieldVote, $value)
-                    && ($clearAll || !$this->isViewGranted($fieldVote))) {
+            if ($this->isFilterViewGranted($fieldVote, $value, $clearAll)) {
                 $value = $this->ofe->filterValue($value);
                 $property->setValue($object, $value);
             }
@@ -227,6 +225,22 @@ class ObjectFilter implements ObjectFilterInterface
                 $property->setValue($object, $values['old']);
             }
         }
+    }
+
+    /**
+     * Check if the field value must be filtered.
+     *
+     * @param FieldVote $fieldVote The field vote
+     * @param mixed     $value     The value
+     * @param bool      $clearAll  Check if all fields must be filtered
+     *
+     * @return bool
+     */
+    protected function isFilterViewGranted(FieldVote $fieldVote, $value, $clearAll)
+    {
+        return null !== $value
+            && !$this->isIdentifier($fieldVote, $value)
+            && ($clearAll || !$this->isViewGranted($fieldVote));
     }
 
     /**
@@ -287,7 +301,7 @@ class ObjectFilter implements ObjectFilterInterface
     protected function isIdentifier(FieldVote $fieldVote, $value)
     {
         if ((string) $value === $fieldVote->getSubject()->getIdentifier()
-            && in_array($fieldVote->getField(), array('id', 'objectIdentifier'))) {
+                && in_array($fieldVote->getField(), array('id', 'subjectIdentifier'))) {
             return true;
         }
 
