@@ -75,7 +75,7 @@ final class SubjectIdentity implements SubjectIdentityInterface
      *
      * @throws InvalidSubjectIdentityException
      *
-     * @return SubjectIdentity
+     * @return SubjectIdentityInterface
      */
     public static function fromObject($object)
     {
@@ -84,7 +84,9 @@ final class SubjectIdentity implements SubjectIdentityInterface
                 throw new UnexpectedTypeException($object, 'object');
             }
 
-            if ($object instanceof SubjectInterface) {
+            if ($object instanceof SubjectIdentityInterface) {
+                return $object;
+            } elseif ($object instanceof SubjectInterface) {
                 return new self(ClassUtils::getClass($object), (string) $object->getSubjectIdentifier(), $object);
             } elseif (method_exists($object, 'getId')) {
                 return new self(ClassUtils::getClass($object), (string) $object->getId(), $object);

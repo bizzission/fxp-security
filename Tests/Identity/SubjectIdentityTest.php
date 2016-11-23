@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Tests\Identity;
 
 use Sonatra\Component\Security\Identity\SubjectIdentity;
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockSubjectObject;
 
@@ -129,6 +130,15 @@ class SubjectIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(MockSubjectObject::class, $si->getType());
         $this->assertSame((string) $object->getSubjectIdentifier(), $si->getIdentifier());
         $this->assertSame($object, $si->getObject());
+    }
+
+    public function testFromObjectWithSubjectIdentityInstance()
+    {
+        $object = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
+
+        $si = SubjectIdentity::fromObject($object);
+
+        $this->assertSame($object, $si);
     }
 
     /**
