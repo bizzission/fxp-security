@@ -14,6 +14,7 @@ namespace Sonatra\Component\Security\Tests\Permission;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -80,15 +81,71 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $sids);
     }
 
+    public function testHasConfig()
+    {
+        $pm = new PermissionManager($this->sidRetrievalStrategy, array(
+            new PermissionConfig(MockObject::class),
+        ));
+
+        $this->assertTrue($pm->hasConfig(MockObject::class));
+    }
+
+    public function testHasNotConfig()
+    {
+        $this->assertFalse($this->pm->hasConfig(MockObject::class));
+    }
+
+    public function testAddConfig()
+    {
+        $this->assertFalse($this->pm->hasConfig(MockObject::class));
+
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
+
+        $this->assertTrue($this->pm->hasConfig(MockObject::class));
+    }
+
+    public function testGetConfig()
+    {
+        $config = new PermissionConfig(MockObject::class);
+        $this->pm->addConfig($config);
+
+        $this->assertTrue($this->pm->hasConfig(MockObject::class));
+        $this->assertSame($config, $this->pm->getConfig(MockObject::class));
+    }
+
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\PermissionConfigNotFoundException
+     * @expectedExceptionMessage The permission configuration for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockObject" is not found
+     */
+    public function testGetConfigWithNotManagedClass()
+    {
+        $this->pm->getConfig(MockObject::class);
+    }
+
     public function testIsManaged()
     {
-        $object = new \stdClass();
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
+        $object = new MockObject('foo');
 
         $this->assertTrue($this->pm->isManaged($object));
     }
 
+    public function testIsManagedWithInvalidSubject()
+    {
+        $object = new \stdClass();
+
+        $this->assertFalse($this->pm->isManaged($object));
+    }
+
+    public function testIsManagedWithNonManagedClass()
+    {
+        $this->assertFalse($this->pm->isManaged(MockObject::class));
+    }
+
     public function testIsFieldManaged()
     {
+        $this->pm->addConfig(new PermissionConfig(MockObject::class, array('name')));
+
         $object = new MockObject('foo');
         $field = 'name';
 

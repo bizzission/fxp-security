@@ -11,7 +11,12 @@
 
 namespace Sonatra\Component\Security\Permission;
 
+use Doctrine\Common\Util\ClassUtils;
+use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
+use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+use Sonatra\Component\Security\Identity\SubjectUtils;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -27,6 +32,11 @@ class PermissionManager implements PermissionManagerInterface
     protected $sidRetrievalStrategy;
 
     /**
+     * @var array
+     */
+    protected $configs;
+
+    /**
      * @var bool
      */
     protected $enabled = true;
@@ -35,10 +45,17 @@ class PermissionManager implements PermissionManagerInterface
      * Constructor.
      *
      * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security identity retrieval strategy
+     * @param PermissionConfigInterface[]                $configs              The permission configs
      */
-    public function __construct(SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy)
+    public function __construct(SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy,
+                                array $configs = array())
     {
         $this->sidRetrievalStrategy = $sidRetrievalStrategy;
+        $this->configs = array();
+
+        foreach ($configs as $config) {
+            $this->addConfig($config);
+        }
     }
 
     /**
@@ -72,6 +89,36 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function addConfig(PermissionConfigInterface $config)
+    {
+        $this->configs[$config->getType()] = $config;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasConfig($class)
+    {
+        return isset($this->configs[ClassUtils::getRealClass($class)]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfig($class)
+    {
+        $class = ClassUtils::getRealClass($class);
+
+        if (!$this->hasConfig($class)) {
+            throw new PermissionConfigNotFoundException($class);
+        }
+
+        return $this->configs[$class];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSecurityIdentities(TokenInterface $token = null)
     {
         if (null === $token) {
@@ -86,7 +133,24 @@ class PermissionManager implements PermissionManagerInterface
      */
     public function isManaged($subject)
     {
-        return true;
+        try {
+            /* @var SubjectIdentityInterface $subject */
+            list($subject, $field) = $this->getSubjectAndField($subject);
+
+            if ($this->hasConfig($subject->getType())) {
+                if (null === $field) {
+                    return true;
+                } else {
+                    $config = $this->getConfig($subject->getType());
+
+                    return in_array($field, $config->getFields());
+                }
+            }
+        } catch (InvalidSubjectIdentityException $e) {
+            // do nothing
+        }
+
+        return false;
     }
 
     /**
@@ -127,5 +191,25 @@ class PermissionManager implements PermissionManagerInterface
     public function resetPreloadPermissions(array $objects)
     {
         return $this;
+    }
+
+    /**
+     * Get the subject identity and field.
+     *
+     * @param FieldVote|SubjectIdentityInterface|object|string $subject The subject instance or classname
+     *
+     * @return array
+     */
+    private function getSubjectAndField($subject)
+    {
+        if ($subject instanceof FieldVote) {
+            $field = $subject->getField();
+            $subject = $subject->getSubject();
+        } else {
+            $field = null;
+            $subject = SubjectUtils::getSubjectIdentity($subject);
+        }
+
+        return array($subject, $field);
     }
 }
