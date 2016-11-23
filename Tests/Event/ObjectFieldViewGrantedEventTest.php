@@ -28,7 +28,7 @@ class ObjectFieldViewGrantedEventTest extends \PHPUnit_Framework_TestCase
         $event = new ObjectFieldViewGrantedEvent($fieldVote);
 
         $this->assertSame($fieldVote, $event->getFieldVote());
-        $this->assertSame($fieldVote->getDomainObject(), $event->getObject());
+        $this->assertSame($fieldVote->getSubject(), $event->getObject());
         $this->assertFalse($event->isSkipAuthorizationChecker());
         $this->assertTrue($event->isGranted());
 

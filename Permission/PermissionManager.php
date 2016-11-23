@@ -85,7 +85,7 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isManaged($domainObject)
+    public function isManaged($subject)
     {
         return true;
     }
@@ -93,15 +93,15 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isFieldManaged($domainObject, $field)
+    public function isFieldManaged($subject, $field)
     {
-        return $this->isManaged(new FieldVote($domainObject, $field));
+        return $this->isManaged(new FieldVote($subject, $field));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isGranted(array $sids, $domainObject, $permissions)
+    public function isGranted(array $sids, $subject, $permissions)
     {
         return true;
     }
@@ -109,9 +109,9 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isFieldGranted(array $sids, $domainObject, $field, $permissions)
+    public function isFieldGranted(array $sids, $subject, $field, $permissions)
     {
-        return $this->isGranted($sids, new FieldVote($domainObject, $field), $permissions);
+        return $this->isGranted($sids, new FieldVote($subject, $field), $permissions);
     }
 
     /**

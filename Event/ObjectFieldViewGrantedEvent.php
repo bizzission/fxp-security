@@ -32,7 +32,7 @@ class ObjectFieldViewGrantedEvent extends AbstractViewGrantedEvent
      */
     public function __construct(FieldVote $fieldVote)
     {
-        parent::__construct($this->validateFieldVoteDomainObject($fieldVote));
+        parent::__construct($this->validateFieldVoteSubject($fieldVote));
 
         $this->fieldVote = $fieldVote;
     }

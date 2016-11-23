@@ -113,14 +113,14 @@ abstract class AbstractViewGrantedEvent extends Event
      *
      * @return object
      */
-    protected function validateFieldVoteDomainObject(FieldVote $fieldVote)
+    protected function validateFieldVoteSubject(FieldVote $fieldVote)
     {
-        $domainObject = $fieldVote->getDomainObject();
+        $subject = $fieldVote->getSubject();
 
-        if (!is_object($domainObject)) {
-            throw new UnexpectedTypeException($domainObject, 'object');
+        if (!is_object($subject)) {
+            throw new UnexpectedTypeException($subject, 'object');
         }
 
-        return $domainObject;
+        return $subject;
     }
 }

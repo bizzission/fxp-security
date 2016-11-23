@@ -61,46 +61,46 @@ interface PermissionManagerInterface
     public function getSecurityIdentities(TokenInterface $token = null);
 
     /**
-     * Check if the domain object is managed.
+     * Check if the subject is managed.
      *
-     * @param FieldVote|object|string $domainObject The object or class name
+     * @param FieldVote|object|string $subject The object or class name
      *
      * @return bool
      */
-    public function isManaged($domainObject);
+    public function isManaged($subject);
 
     /**
-     * Check if the domain object is managed.
+     * Check if the field of subject is managed.
      *
-     * @param object|string $domainObject The object or class name
-     * @param string        $field        The field
-     *
-     * @return bool
-     */
-    public function isFieldManaged($domainObject, $field);
-
-    /**
-     * Determines whether access is granted.
-     *
-     * @param SecurityIdentityInterface[] $sids         The security identities
-     * @param FieldVote|object|string     $domainObject The object or class name or field vote
-     * @param string|string[]             $permissions  The permissions
+     * @param object|string $subject The object or class name
+     * @param string        $field   The field
      *
      * @return bool
      */
-    public function isGranted(array $sids, $domainObject, $permissions);
+    public function isFieldManaged($subject, $field);
 
     /**
      * Determines whether access is granted.
      *
-     * @param SecurityIdentityInterface[] $sids         The security identities
-     * @param object|string               $domainObject The object or class name
-     * @param string                      $field        The field
-     * @param string|string[]             $permissions  The permissions
+     * @param SecurityIdentityInterface[] $sids        The security identities
+     * @param FieldVote|object|string     $subject     The object or class name or field vote
+     * @param string|string[]             $permissions The permissions
      *
      * @return bool
      */
-    public function isFieldGranted(array $sids, $domainObject, $field, $permissions);
+    public function isGranted(array $sids, $subject, $permissions);
+
+    /**
+     * Determines whether access is granted.
+     *
+     * @param SecurityIdentityInterface[] $sids        The security identities
+     * @param object|string               $subject     The object or class name
+     * @param string                      $field       The field
+     * @param string|string[]             $permissions The permissions
+     *
+     * @return bool
+     */
+    public function isFieldGranted(array $sids, $subject, $field, $permissions);
 
     /**
      * Preload permissions of objects.

@@ -23,7 +23,7 @@ class FieldVote
     /**
      * @var object|null
      */
-    private $domainObject;
+    private $subject;
 
     /**
      * @var string
@@ -38,31 +38,31 @@ class FieldVote
     /**
      * Constructor.
      *
-     * @param object|string $domainObject The domain object or classname
-     * @param string        $field        The field name
+     * @param object|string $subject The subject instance or classname
+     * @param string        $field   The field name
      */
-    public function __construct($domainObject, $field)
+    public function __construct($subject, $field)
     {
-        if (is_string($domainObject)) {
-            $this->class = $domainObject;
-        } elseif (is_object($domainObject)) {
-            $this->domainObject = $domainObject;
-            $this->class = get_class($domainObject);
+        if (is_string($subject)) {
+            $this->class = $subject;
+        } elseif (is_object($subject)) {
+            $this->subject = $subject;
+            $this->class = get_class($subject);
         } else {
-            throw new UnexpectedTypeException($domainObject, 'object|string');
+            throw new UnexpectedTypeException($subject, 'object|string');
         }
 
         $this->field = $field;
     }
 
     /**
-     * Get the domain object.
+     * Get the subject.
      *
      * @return object|null
      */
-    public function getDomainObject()
+    public function getSubject()
     {
-        return $this->domainObject;
+        return $this->subject;
     }
 
     /**

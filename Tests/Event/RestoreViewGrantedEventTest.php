@@ -30,7 +30,7 @@ class RestoreViewGrantedEventTest extends \PHPUnit_Framework_TestCase
         $event = new RestoreViewGrantedEvent($fieldVote, $oldValue, $newValue);
 
         $this->assertSame($fieldVote, $event->getFieldVote());
-        $this->assertSame($fieldVote->getDomainObject(), $event->getObject());
+        $this->assertSame($fieldVote->getSubject(), $event->getObject());
         $this->assertSame($oldValue, $event->getOldValue());
         $this->assertSame($newValue, $event->getNewValue());
         $this->assertFalse($event->isSkipAuthorizationChecker());
