@@ -37,7 +37,7 @@ abstract class Organization implements OrganizationInterface
     protected $user;
 
     /**
-     * @var Collection|null
+     * @var Collection|OrganizationUserInterface[]|null
      */
     protected $organizationUsers;
 

@@ -32,12 +32,12 @@ abstract class Role implements RoleHierarchicalInterface
     protected $name;
 
     /**
-     * @var Collection
+     * @var Collection|null
      */
     protected $parents;
 
     /**
-     * @var Collection
+     * @var Collection|null
      */
     protected $children;
 
