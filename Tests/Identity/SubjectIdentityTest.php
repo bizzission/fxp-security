@@ -104,12 +104,12 @@ class SubjectIdentityTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage The class "FooBar" does not exist
      */
-    public function testFromWithNonExistentClass()
+    public function testFromClassnameWithNonExistentClass()
     {
         SubjectIdentity::fromClassname('FooBar');
     }
 
-    public function testFormObject()
+    public function testFromObject()
     {
         $object = new MockObject('foo');
 
@@ -120,7 +120,7 @@ class SubjectIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($object, $si->getObject());
     }
 
-    public function testFormObjectWithSubjectInstance()
+    public function testFromObjectWithSubjectInstance()
     {
         $object = new MockSubjectObject('foo');
 
@@ -135,7 +135,7 @@ class SubjectIdentityTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage Expected argument of type "object", "integer" given
      */
-    public function testFormObjectWithNonObject()
+    public function testFromObjectWithNonObject()
     {
         /* @var object $object */
         $object = 42;
@@ -147,7 +147,7 @@ class SubjectIdentityTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage The identifier cannot be empty
      */
-    public function testFormObjectWithEmptyIdentifier()
+    public function testFromObjectWithEmptyIdentifier()
     {
         $object = new MockObject('foo', null);
 
@@ -158,7 +158,7 @@ class SubjectIdentityTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage The object must either implement the SubjectInterface, or have a method named "getId"
      */
-    public function testFormObjectWithInvalidObject()
+    public function testFromObjectWithInvalidObject()
     {
         $object = new \stdClass();
 
