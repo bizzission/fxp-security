@@ -49,9 +49,6 @@ abstract class Role implements RoleHierarchicalInterface
     public function __construct($name)
     {
         $this->name = $name;
-
-        $this->parents = new ArrayCollection();
-        $this->children = new ArrayCollection();
     }
 
     /**
@@ -94,7 +91,7 @@ abstract class Role implements RoleHierarchicalInterface
     public function addParent(RoleHierarchicalInterface $role)
     {
         $role->addChild($this);
-        $this->parents->add($role);
+        $this->getParents()->add($role);
 
         return $this;
     }
@@ -117,7 +114,7 @@ abstract class Role implements RoleHierarchicalInterface
      */
     public function getParents()
     {
-        return $this->parents;
+        return $this->parents ?: $this->parents = new ArrayCollection();
     }
 
     /**
@@ -148,7 +145,7 @@ abstract class Role implements RoleHierarchicalInterface
      */
     public function addChild(RoleHierarchicalInterface $role)
     {
-        $this->children->add($role);
+        $this->getChildren()->add($role);
 
         return $this;
     }
@@ -170,7 +167,7 @@ abstract class Role implements RoleHierarchicalInterface
      */
     public function getChildren()
     {
-        return $this->children;
+        return $this->children ?: $this->children = new ArrayCollection();
     }
 
     /**

@@ -28,20 +28,20 @@ interface RoleInterface extends BaseRoleInterface
     public function getId();
 
     /**
+     * Sets the role name.
+     *
+     * @param string $name The role name
+     *
+     * @return self
+     */
+    public function setName($name);
+
+    /**
      * Gets the role name.
      *
      * @return string the role name
      */
     public function getName();
-
-    /**
-     * Sets the role name.
-     *
-     * @param string $name
-     *
-     * @return self
-     */
-    public function setName($name = null);
 
     /**
      * @return string
