@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Authorization\Voter;
+namespace Sonatra\Component\Security\Permission;
 
 use Sonatra\Component\Security\Exception\UnexpectedTypeException;
+use Sonatra\Component\Security\Identity\SubjectIdentity;
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 
 /**
  * Field vote.
@@ -21,14 +23,9 @@ use Sonatra\Component\Security\Exception\UnexpectedTypeException;
 class FieldVote
 {
     /**
-     * @var object|null
+     * @var SubjectIdentityInterface
      */
     private $subject;
-
-    /**
-     * @var string
-     */
-    private $class;
 
     /**
      * @var string
@@ -38,18 +35,19 @@ class FieldVote
     /**
      * Constructor.
      *
-     * @param object|string $subject The subject instance or classname
-     * @param string        $field   The field name
+     * @param SubjectIdentityInterface|object|string $subject The subject instance or classname
+     * @param string                                 $field   The field name
      */
     public function __construct($subject, $field)
     {
-        if (is_string($subject)) {
-            $this->class = $subject;
-        } elseif (is_object($subject)) {
+        if ($subject instanceof SubjectIdentityInterface) {
             $this->subject = $subject;
-            $this->class = get_class($subject);
+        } elseif (is_string($subject)) {
+            $this->subject = SubjectIdentity::fromClassname($subject);
+        } elseif (is_object($subject)) {
+            $this->subject = SubjectIdentity::fromObject($subject);
         } else {
-            throw new UnexpectedTypeException($subject, 'object|string');
+            throw new UnexpectedTypeException($subject, SubjectIdentityInterface::class.'|object|string');
         }
 
         $this->field = $field;
@@ -58,21 +56,11 @@ class FieldVote
     /**
      * Get the subject.
      *
-     * @return object|null
+     * @return SubjectIdentityInterface
      */
     public function getSubject()
     {
         return $this->subject;
-    }
-
-    /**
-     * Get the classname.
-     *
-     * @return string
-     */
-    public function getClass()
-    {
-        return $this->class;
     }
 
     /**

@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\Permission;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -63,7 +62,7 @@ interface PermissionManagerInterface
     /**
      * Check if the subject is managed.
      *
-     * @param FieldVote|object|string $subject The object or class name
+     * @param SubjectIdentityInterface|FieldVote|object|string $subject The object or class name
      *
      * @return bool
      */
@@ -72,8 +71,8 @@ interface PermissionManagerInterface
     /**
      * Check if the field of subject is managed.
      *
-     * @param object|string $subject The object or class name
-     * @param string        $field   The field
+     * @param SubjectIdentityInterface|object|string $subject The object or class name
+     * @param string                                 $field   The field
      *
      * @return bool
      */
@@ -82,9 +81,9 @@ interface PermissionManagerInterface
     /**
      * Determines whether access is granted.
      *
-     * @param SecurityIdentityInterface[] $sids        The security identities
-     * @param FieldVote|object|string     $subject     The object or class name or field vote
-     * @param string|string[]             $permissions The permissions
+     * @param SecurityIdentityInterface[]                      $sids        The security identities
+     * @param SubjectIdentityInterface|FieldVote|object|string $subject     The object or class name or field vote
+     * @param string|string[]                                  $permissions The permissions
      *
      * @return bool
      */
@@ -93,10 +92,10 @@ interface PermissionManagerInterface
     /**
      * Determines whether access is granted.
      *
-     * @param SecurityIdentityInterface[] $sids        The security identities
-     * @param object|string               $subject     The object or class name
-     * @param string                      $field       The field
-     * @param string|string[]             $permissions The permissions
+     * @param SecurityIdentityInterface[]            $sids        The security identities
+     * @param SubjectIdentityInterface|object|string $subject     The object or class name
+     * @param string                                 $field       The field
+     * @param string|string[]                        $permissions The permissions
      *
      * @return bool
      */

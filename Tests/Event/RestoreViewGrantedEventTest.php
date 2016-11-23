@@ -11,8 +11,9 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Event\RestoreViewGrantedEvent;
+use Sonatra\Component\Security\Permission\FieldVote;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -21,16 +22,15 @@ class RestoreViewGrantedEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testEvent()
     {
-        $object = new \stdClass();
-        $object->foo = 42;
-        $fieldVote = new FieldVote($object, 'foo');
-        $oldValue = 23;
-        $newValue = $object->foo;
+        $object = new MockObject('foo');
+        $fieldVote = new FieldVote($object, 'name');
+        $oldValue = 'bar';
+        $newValue = $object->getName();
 
         $event = new RestoreViewGrantedEvent($fieldVote, $oldValue, $newValue);
 
         $this->assertSame($fieldVote, $event->getFieldVote());
-        $this->assertSame($fieldVote->getSubject(), $event->getObject());
+        $this->assertSame($fieldVote->getSubject()->getObject(), $event->getObject());
         $this->assertSame($oldValue, $event->getOldValue());
         $this->assertSame($newValue, $event->getNewValue());
         $this->assertFalse($event->isSkipAuthorizationChecker());

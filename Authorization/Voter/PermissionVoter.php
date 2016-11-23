@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Authorization\Voter;
 
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

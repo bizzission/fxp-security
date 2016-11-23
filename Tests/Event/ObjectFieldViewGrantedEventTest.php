@@ -11,8 +11,9 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
+use Sonatra\Component\Security\Permission\FieldVote;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -21,14 +22,13 @@ class ObjectFieldViewGrantedEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testEvent()
     {
-        $object = new \stdClass();
-        $object->foo = 42;
-        $fieldVote = new FieldVote($object, 'foo');
+        $object = new MockObject('foo');
+        $fieldVote = new FieldVote($object, 'name');
 
         $event = new ObjectFieldViewGrantedEvent($fieldVote);
 
         $this->assertSame($fieldVote, $event->getFieldVote());
-        $this->assertSame($fieldVote->getSubject(), $event->getObject());
+        $this->assertSame($fieldVote->getSubject()->getObject(), $event->getObject());
         $this->assertFalse($event->isSkipAuthorizationChecker());
         $this->assertTrue($event->isGranted());
 
@@ -43,7 +43,7 @@ class ObjectFieldViewGrantedEventTest extends \PHPUnit_Framework_TestCase
      */
     public function testEventWithInvalidFieldVote()
     {
-        $object = \stdClass::class;
+        $object = MockObject::class;
         $fieldVote = new FieldVote($object, 'foo');
 
         new ObjectFieldViewGrantedEvent($fieldVote);

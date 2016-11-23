@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Event;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
+use Sonatra\Component\Security\Permission\FieldVote;
 
 /**
  * The object field view granted event.

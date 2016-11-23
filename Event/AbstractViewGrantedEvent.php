@@ -11,8 +11,8 @@
 
 namespace Sonatra\Component\Security\Event;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Exception\UnexpectedTypeException;
+use Sonatra\Component\Security\Permission\FieldVote;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -115,12 +115,12 @@ abstract class AbstractViewGrantedEvent extends Event
      */
     protected function validateFieldVoteSubject(FieldVote $fieldVote)
     {
-        $subject = $fieldVote->getSubject();
+        $object = $fieldVote->getSubject()->getObject();
 
-        if (!is_object($subject)) {
-            throw new UnexpectedTypeException($subject, 'object');
+        if (!is_object($object)) {
+            throw new UnexpectedTypeException($object, 'object');
         }
 
-        return $subject;
+        return $object;
     }
 }

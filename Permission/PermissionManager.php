@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\Permission;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 

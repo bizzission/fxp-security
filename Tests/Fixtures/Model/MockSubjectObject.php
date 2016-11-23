@@ -11,15 +11,17 @@
 
 namespace Sonatra\Component\Security\Tests\Fixtures\Model;
 
+use Sonatra\Component\Security\Identity\SubjectInterface;
+
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class MockObject
+class MockSubjectObject implements SubjectInterface
 {
     /**
      * @var int|string|null
      */
-    protected $id;
+    protected $subjectIdentifier;
 
     /**
      * @var string
@@ -29,18 +31,18 @@ class MockObject
     /**
      * Constructor.
      *
-     * @param string          $name The name
-     * @param int|string|null $id   The id
+     * @param string          $name              The name
+     * @param int|string|null $subjectIdentifier The subject identifier
      */
-    public function __construct($name, $id = 42)
+    public function __construct($name, $subjectIdentifier = 42)
     {
         $this->name = $name;
-        $this->id = $id;
+        $this->subjectIdentifier = $subjectIdentifier;
     }
 
-    public function getId()
+    public function getSubjectIdentifier()
     {
-        return $this->id;
+        return $this->subjectIdentifier;
     }
 
     /**

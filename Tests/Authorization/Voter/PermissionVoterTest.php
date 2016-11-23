@@ -11,11 +11,12 @@
 
 namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Authorization\Voter\PermissionVoter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -58,10 +59,9 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
 
     public function getVoteAttributes()
     {
-        $object = new \stdClass();
-        $object->foo = 42;
-        $fieldVote = new FieldVote($object, 'foo');
-        $arrayValid = array($object, 'foo');
+        $object = new MockObject('foo');
+        $fieldVote = new FieldVote($object, 'name');
+        $arrayValid = array($object, 'name');
         $arrayInvalid = array($object);
 
         return array(

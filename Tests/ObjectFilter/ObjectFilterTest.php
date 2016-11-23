@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\Tests\ObjectFilter;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
 use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
 use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;
@@ -21,6 +20,7 @@ use Sonatra\Component\Security\ObjectFilter\ObjectFilter;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterExtensionInterface;
 use Sonatra\Component\Security\ObjectFilter\UnitOfWorkInterface;
 use Sonatra\Component\Security\ObjectFilterEvents;
+use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -133,6 +133,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
         $this->of->filter($object);
         $this->of->commit();
 
+        $this->assertSame(42, $object->getId());
         $this->assertNull($object->getName());
     }
 

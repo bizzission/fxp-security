@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\ObjectFilter;
 
-use Sonatra\Component\Security\Authorization\Voter\FieldVote;
 use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
 use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
 use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;
@@ -19,6 +18,7 @@ use Sonatra\Component\Security\Event\PreCommitObjectFilterEvent;
 use Sonatra\Component\Security\Event\RestoreViewGrantedEvent;
 use Sonatra\Component\Security\Exception\UnexpectedTypeException;
 use Sonatra\Component\Security\ObjectFilterEvents;
+use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -199,7 +199,9 @@ class ObjectFilter implements ObjectFilterInterface
             $fieldVote = new FieldVote($object, $property->getName());
             $value = $property->getValue($object);
 
-            if (null !== $value && ($clearAll || !$this->isViewGranted($fieldVote))) {
+            if (null !== $value
+                    && !$this->isIdentifier($fieldVote, $value)
+                    && ($clearAll || !$this->isViewGranted($fieldVote))) {
                 $value = $this->ofe->filterValue($value);
                 $property->setValue($object, $value);
             }
@@ -272,5 +274,23 @@ class ObjectFilter implements ObjectFilterInterface
         }
 
         return $this->ac->isGranted('perm_view', $object);
+    }
+
+    /**
+     * Check if the field is an identifier.
+     *
+     * @param FieldVote $fieldVote The field vote
+     * @param mixed     $value     The value
+     *
+     * @return bool
+     */
+    protected function isIdentifier(FieldVote $fieldVote, $value)
+    {
+        if ((string) $value === $fieldVote->getSubject()->getIdentifier()
+            && in_array($fieldVote->getField(), array('id', 'objectIdentifier'))) {
+            return true;
+        }
+
+        return false;
     }
 }

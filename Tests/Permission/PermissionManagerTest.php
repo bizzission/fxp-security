@@ -15,6 +15,7 @@ use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
 use Sonatra\Component\Security\Permission\PermissionManager;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -88,9 +89,8 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsFieldManaged()
     {
-        $object = new \stdClass();
-        $object->foo = 42;
-        $field = 'foo';
+        $object = new MockObject('foo');
+        $field = 'name';
 
         $this->assertTrue($this->pm->isFieldManaged($object, $field));
     }
@@ -111,9 +111,8 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $sids = array(
             new RoleSecurityIdentity('ROLE_USER'),
         );
-        $object = new \stdClass();
-        $object->foo = 42;
-        $field = 'foo';
+        $object = new MockObject('foo');
+        $field = 'name';
         $permissions = 'view';
 
         $this->assertTrue($this->pm->isFieldGranted($sids, $object, $field, $permissions));
