@@ -14,7 +14,6 @@ namespace Sonatra\Component\Security\Permission;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Permission manager Interface.
@@ -78,15 +77,6 @@ interface PermissionManagerInterface
      * @throws PermissionConfigNotFoundException When the configuration of permission is not found
      */
     public function getConfig($class);
-
-    /**
-     * Get the security identities of token.
-     *
-     * @param TokenInterface $token The token
-     *
-     * @return SecurityIdentityInterface[]
-     */
-    public function getSecurityIdentities(TokenInterface $token = null);
 
     /**
      * Check if the subject is managed.

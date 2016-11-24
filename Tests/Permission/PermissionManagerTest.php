@@ -12,12 +12,9 @@
 namespace Sonatra\Component\Security\Tests\Permission;
 
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -25,19 +22,13 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $sidManager;
-
-    /**
      * @var PermissionManager
      */
     protected $pm;
 
     protected function setUp()
     {
-        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->pm = new PermissionManager($this->sidManager);
+        $this->pm = new PermissionManager();
     }
 
     public function testIsEnabled()
@@ -51,39 +42,9 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->pm->isEnabled());
     }
 
-    public function testGetSecurityIdentities()
-    {
-        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $sid = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
-
-        $this->sidManager->expects($this->once())
-            ->method('getSecurityIdentities')
-            ->with($token)
-            ->willReturn(array(
-                $sid,
-            ));
-
-        $sids = $this->pm->getSecurityIdentities($token);
-
-        $this->assertTrue(is_array($sids));
-        $this->assertCount(1, $sids);
-        $this->assertSame($sid, $sids[0]);
-    }
-
-    public function testGetSecurityIdentitiesWithoutToken()
-    {
-        $this->sidManager->expects($this->never())
-            ->method('getSecurityIdentities');
-
-        $sids = $this->pm->getSecurityIdentities();
-
-        $this->assertTrue(is_array($sids));
-        $this->assertCount(0, $sids);
-    }
-
     public function testHasConfig()
     {
-        $pm = new PermissionManager($this->sidManager, array(
+        $pm = new PermissionManager(array(
             new PermissionConfig(MockObject::class),
         ));
 

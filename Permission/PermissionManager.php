@@ -14,10 +14,8 @@ namespace Sonatra\Component\Security\Permission;
 use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Permission manager.
@@ -26,11 +24,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 class PermissionManager implements PermissionManagerInterface
 {
-    /**
-     * @var SecurityIdentityManagerInterface
-     */
-    protected $sim;
-
     /**
      * @var array
      */
@@ -44,13 +37,10 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * Constructor.
      *
-     * @param SecurityIdentityManagerInterface $sim     The security identity manager
-     * @param PermissionConfigInterface[]      $configs The permission configs
+     * @param PermissionConfigInterface[] $configs The permission configs
      */
-    public function __construct(SecurityIdentityManagerInterface $sim,
-                                array $configs = array())
+    public function __construct(array $configs = array())
     {
-        $this->sim = $sim;
         $this->configs = array();
 
         foreach ($configs as $config) {
@@ -114,18 +104,6 @@ class PermissionManager implements PermissionManagerInterface
         }
 
         return $this->configs[$class];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSecurityIdentities(TokenInterface $token = null)
-    {
-        if (null === $token) {
-            return array();
-        }
-
-        return $this->sim->getSecurityIdentities($token);
     }
 
     /**
