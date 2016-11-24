@@ -23,7 +23,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class DisablePermissionListener implements EventSubscriberInterface
+class DisablePermissionSubscriber implements EventSubscriberInterface
 {
     /**
      * @var PermissionManagerInterface

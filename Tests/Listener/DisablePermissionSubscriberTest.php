@@ -13,13 +13,13 @@ namespace Sonatra\Component\Security\Tests\Listener;
 
 use Sonatra\Component\Security\Event\AbstractEditableSecurityEvent;
 use Sonatra\Component\Security\Event\PostReachableRoleEvent;
-use Sonatra\Component\Security\Listener\DisablePermissionListener;
+use Sonatra\Component\Security\Listener\DisablePermissionSubscriber;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class DisablePermissionListenerTest extends \PHPUnit_Framework_TestCase
+class DisablePermissionSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -33,7 +33,7 @@ class DisablePermissionListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testDisableAcl()
     {
-        $listener = new DisablePermissionListener($this->aclManager);
+        $listener = new DisablePermissionSubscriber($this->aclManager);
         $this->assertCount(4, $listener->getSubscribedEvents());
 
         /* @var AbstractEditableSecurityEvent|\PHPUnit_Framework_MockObject_MockObject $event */
@@ -51,7 +51,7 @@ class DisablePermissionListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testEnableAcl()
     {
-        $listener = new DisablePermissionListener($this->aclManager);
+        $listener = new DisablePermissionSubscriber($this->aclManager);
         $this->assertCount(4, $listener->getSubscribedEvents());
 
         $event = new PostReachableRoleEvent(array(), true);
