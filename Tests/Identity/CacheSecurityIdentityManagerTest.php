@@ -11,8 +11,8 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
-use Sonatra\Component\Security\Identity\CacheSecurityIdentityRetrievalStrategy;
-use Sonatra\Component\Security\Tests\Fixtures\Listener\MockEventStrategyIdentity;
+use Sonatra\Component\Security\Identity\CacheSecurityIdentityManager;
+use Sonatra\Component\Security\Tests\Fixtures\Listener\MockCacheSecurityIdentitySubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class CacheSecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
+class CacheSecurityIdentityManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var EventDispatcher
@@ -39,9 +39,9 @@ class CacheSecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_Test
     protected $authenticationTrustResolver;
 
     /**
-     * @var CacheSecurityIdentityRetrievalStrategy
+     * @var CacheSecurityIdentityManager
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     protected function setUp()
     {
@@ -49,7 +49,7 @@ class CacheSecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_Test
         $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
         $this->authenticationTrustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
 
-        $this->sidStrategy = new CacheSecurityIdentityRetrievalStrategy(
+        $this->sidManager = new CacheSecurityIdentityManager(
             $this->dispatcher,
             $this->roleHierarchy,
             $this->authenticationTrustResolver
@@ -88,16 +88,26 @@ class CacheSecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_Test
             ->with($token)
             ->willReturn(true);
 
-        $this->dispatcher->addSubscriber(new MockEventStrategyIdentity());
+        $this->dispatcher->addSubscriber(new MockCacheSecurityIdentitySubscriber());
 
-        $sids = $this->sidStrategy->getSecurityIdentities($token);
-        $cacheSids = $this->sidStrategy->getSecurityIdentities($token);
+        $sids = $this->sidManager->getSecurityIdentities($token);
+        $cacheSids = $this->sidManager->getSecurityIdentities($token);
 
-        $this->sidStrategy->invalidateCache();
+        $this->sidManager->invalidateCache();
 
-        $newSids = $this->sidStrategy->getSecurityIdentities($token);
+        $newSids = $this->sidManager->getSecurityIdentities($token);
 
         $this->assertSame($sids, $cacheSids);
         $this->assertEquals($sids, $newSids);
+    }
+
+    public function testGetSecurityIdentitiesWithoutToken()
+    {
+        $this->roleHierarchy->expects($this->never())
+            ->method('getReachableRoles');
+
+        $sids = $this->sidManager->getSecurityIdentities(null);
+
+        $this->assertCount(0, $sids);
     }
 }

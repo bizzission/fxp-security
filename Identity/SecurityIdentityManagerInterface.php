@@ -14,18 +14,18 @@ namespace Sonatra\Component\Security\Identity;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Interface for retrieving security identities from tokens.
+ * Interface to retrieving security identities from tokens.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface SecurityIdentityRetrievalStrategyInterface
+interface SecurityIdentityManagerInterface
 {
     /**
      * Retrieves the available security identities for the given token.
      *
-     * @param TokenInterface $token
+     * @param TokenInterface|null $token The token
      *
      * @return SecurityIdentityInterface[] The security identities
      */
-    public function getSecurityIdentities(TokenInterface $token);
+    public function getSecurityIdentities(TokenInterface $token = null);
 }

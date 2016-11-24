@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * The add security identity retrieval strategy event.
+ * The add security identity event.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */

@@ -14,7 +14,7 @@ namespace Sonatra\Component\Security\Tests\Expression;
 use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
 use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -33,9 +33,9 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
     protected $trustResolver;
 
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     /**
      * @var OrganizationalContextInterface
@@ -55,11 +55,11 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
-        $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
     }
 
-    public function testSetVariablesWithSecurityIdentityStrategy()
+    public function testSetVariablesWithSecurityIdentityManager()
     {
         $event = new GetExpressionVariablesEvent($this->token);
         $sids = array(
@@ -70,7 +70,7 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
         $this->token->expects($this->never())
             ->method('getRoles');
 
-        $this->sidStrategy->expects($this->once())
+        $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($this->token)
             ->willReturn($sids);
@@ -80,7 +80,7 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
                 'organizational_context' => $this->context,
                 'organizational_role' => $this->orgRole,
             ),
-            $this->sidStrategy
+            $this->sidManager
         );
         $variableStorage->add('trust_resolver', $this->trustResolver);
         $variableStorage->inject($event);
@@ -97,7 +97,7 @@ class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $variableStorage->getSubscribedEvents());
     }
 
-    public function testSetVariablesWithoutSecurityIdentityStrategy()
+    public function testSetVariablesWithoutSecurityIdentityManager()
     {
         $this->token->expects($this->once())
             ->method('getRoles')

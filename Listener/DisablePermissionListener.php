@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Listener;
 
 use Sonatra\Component\Security\Event\AbstractEditableSecurityEvent;
 use Sonatra\Component\Security\Event\AbstractSecurityEvent;
-use Sonatra\Component\Security\IdentityRetrievalEvents;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\ReachableRoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -46,9 +46,9 @@ class DisablePermissionListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            IdentityRetrievalEvents::PRE => array('disablePermissionManager', -255),
+            SecurityIdentityEvents::RETRIEVAL_PRE => array('disablePermissionManager', -255),
             ReachableRoleEvents::PRE => array('disablePermissionManager', -255),
-            IdentityRetrievalEvents::POST => array('enablePermissionManager', 255),
+            SecurityIdentityEvents::RETRIEVAL_POST => array('enablePermissionManager', 255),
             ReachableRoleEvents::POST => array('enablePermissionManager', 255),
         );
     }

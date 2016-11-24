@@ -15,8 +15,8 @@ use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Event\PostSecurityIdentityEvent;
 use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategy;
-use Sonatra\Component\Security\IdentityRetrievalEvents;
+use Sonatra\Component\Security\Identity\SecurityIdentityManager;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Sonatra\Component\Security\Model\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
+class SecurityIdentityManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var EventDispatcher
@@ -45,9 +45,9 @@ class SecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
     protected $authenticationTrustResolver;
 
     /**
-     * @var SecurityIdentityRetrievalStrategy
+     * @var SecurityIdentityManager
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     protected function setUp()
     {
@@ -55,7 +55,7 @@ class SecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
         $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
         $this->authenticationTrustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
 
-        $this->sidStrategy = new SecurityIdentityRetrievalStrategy(
+        $this->sidManager = new SecurityIdentityManager(
             $this->dispatcher,
             $this->roleHierarchy,
             $this->authenticationTrustResolver
@@ -85,12 +85,12 @@ class SecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
 
         $customSid = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
 
-        $this->dispatcher->addListener(IdentityRetrievalEvents::PRE, function (PreSecurityIdentityEvent $event) use (&$objects, &$preEventAction) {
+        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_PRE, function (PreSecurityIdentityEvent $event) use (&$objects, &$preEventAction) {
             $preEventAction = true;
             $this->assertCount(0, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(IdentityRetrievalEvents::ADD, function (AddSecurityIdentityEvent $event) use (&$objects, &$addEventAction, $customSid) {
+        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_ADD, function (AddSecurityIdentityEvent $event) use (&$objects, &$addEventAction, $customSid) {
             $addEventAction = true;
             $this->assertCount(2, $event->getSecurityIdentities());
 
@@ -101,7 +101,7 @@ class SecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
             $this->assertCount(3, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(IdentityRetrievalEvents::POST, function (PostSecurityIdentityEvent $event) use (&$objects, &$postEventAction, $sidFinalSize) {
+        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_POST, function (PostSecurityIdentityEvent $event) use (&$objects, &$postEventAction, $sidFinalSize) {
             $postEventAction = true;
             $this->assertCount($sidFinalSize, $event->getSecurityIdentities());
         });
@@ -149,10 +149,20 @@ class SecurityIdentityRetrievalStrategyTest extends \PHPUnit_Framework_TestCase
             ->with($token)
             ->willReturn(true);
 
-        $this->sidStrategy->getSecurityIdentities($token);
+        $this->sidManager->getSecurityIdentities($token);
 
         $this->assertTrue($preEventAction);
         $this->assertTrue($addEventAction);
         $this->assertTrue($postEventAction);
+    }
+
+    public function testGetSecurityIdentitiesWithoutToken()
+    {
+        $this->roleHierarchy->expects($this->never())
+            ->method('getReachableRoles');
+
+        $sids = $this->sidManager->getSecurityIdentities(null);
+
+        $this->assertCount(0, $sids);
     }
 }

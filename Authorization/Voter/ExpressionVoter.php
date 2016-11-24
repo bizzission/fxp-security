@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authorization\ExpressionLanguage;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
- * Override the Expression Voter to use Security Identity Retrieval Strategy to get all roles.
+ * Override the Expression Voter to use Security Identity Manager to get all roles.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */

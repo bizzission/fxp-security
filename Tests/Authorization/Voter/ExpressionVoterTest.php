@@ -14,7 +14,7 @@ namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 use Sonatra\Component\Security\Authorization\Voter\ExpressionVoter;
 use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -49,9 +49,9 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
     protected $trustResolver;
 
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     /**
      * @var OrganizationalContextInterface
@@ -83,7 +83,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher = new EventDispatcher();
         $this->expressionLanguage = $this->getMockBuilder(ExpressionLanguage::class)->disableOriginalConstructor()->getMock();
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
-        $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $this->orgRole = $this->getMockBuilder(OrganizationalRoleInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
@@ -93,7 +93,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
                 'organizational_context' => $this->context,
                 'organizational_role' => $this->orgRole,
             ),
-            $this->sidStrategy
+            $this->sidManager
         );
         $this->variableStorage->add('trust_resolver', $this->trustResolver);
 
@@ -145,7 +145,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
             new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
         );
 
-        $this->sidStrategy->expects($this->once())
+        $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($this->token)
             ->willReturn($sids);
@@ -176,7 +176,7 @@ class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($resultVoter, $res);
     }
 
-    public function testWithoutIdentityStrategyButWithRequestSubject()
+    public function testWithoutSecurityIdentityManagerButWithRequestSubject()
     {
         $this->token->expects($this->once())
             ->method('getRoles')

@@ -16,7 +16,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * The pre security identity retrieval strategy event.
+ * The pre security identity event.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */

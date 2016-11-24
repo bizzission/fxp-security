@@ -17,7 +17,7 @@ namespace Sonatra\Component\Security;
 final class ReachableRoleEvents
 {
     /**
-     * The ReachableRoleEvents::PRE event occurs before the research of all
+     * The ReachableRoleEvents::RETRIEVAL_PRE event occurs before the research of all
      * children roles.
      *
      * @Event("Sonatra\Component\Security\Event\PreReachableRoleEvent")
@@ -27,7 +27,7 @@ final class ReachableRoleEvents
     const PRE = 'sonatra_security.reachable_roles.pre';
 
     /**
-     * The ReachableRoleEvents::POST event occurs after the research of all
+     * The ReachableRoleEvents::RETRIEVAL_POST event occurs after the research of all
      * children roles.
      *
      * @Event("Sonatra\Component\Security\Event\PostReachableRoleEvent")

@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Tests\Organizational;
 
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalRole;
@@ -35,9 +35,9 @@ class OrganizationalRoleTest extends \PHPUnit_Framework_TestCase
     protected $token;
 
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     /**
      * @var OrganizationalContextInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -53,9 +53,9 @@ class OrganizationalRoleTest extends \PHPUnit_Framework_TestCase
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
-        $this->orgRole = new OrganizationalRole($this->context, $this->sidStrategy, $this->tokenStorage);
+        $this->orgRole = new OrganizationalRole($this->context, $this->sidManager, $this->tokenStorage);
 
         $this->tokenStorage->expects($this->any())
             ->method('getToken')
@@ -66,7 +66,7 @@ class OrganizationalRoleTest extends \PHPUnit_Framework_TestCase
     {
         /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
-        $orgRole = new OrganizationalRole($this->context, $this->sidStrategy, $tokenStorage);
+        $orgRole = new OrganizationalRole($this->context, $this->sidManager, $tokenStorage);
 
         $tokenStorage->expects($this->once())
             ->method('getToken')
@@ -77,7 +77,7 @@ class OrganizationalRoleTest extends \PHPUnit_Framework_TestCase
 
     public function testHasRoleWithoutSecurityIdentities()
     {
-        $this->sidStrategy->expects($this->once())
+        $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($this->token)
             ->willReturn(array());
@@ -98,7 +98,7 @@ class OrganizationalRoleTest extends \PHPUnit_Framework_TestCase
             ->method('getName')
             ->willReturn('foo');
 
-        $this->sidStrategy->expects($this->once())
+        $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($this->token)
             ->willReturn($sid);
@@ -124,7 +124,7 @@ class OrganizationalRoleTest extends \PHPUnit_Framework_TestCase
             ->method('getName')
             ->willReturn('foo');
 
-        $this->sidStrategy->expects($this->atLeast(2))
+        $this->sidManager->expects($this->atLeast(2))
             ->method('getSecurityIdentities')
             ->with($this->token)
             ->willReturn($sid);

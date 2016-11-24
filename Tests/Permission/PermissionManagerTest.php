@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Tests\Permission;
 
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -25,9 +25,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sidRetrievalStrategy;
+    protected $sidManager;
 
     /**
      * @var PermissionManager
@@ -36,8 +36,8 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sidRetrievalStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
-        $this->pm = new PermissionManager($this->sidRetrievalStrategy);
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
+        $this->pm = new PermissionManager($this->sidManager);
     }
 
     public function testIsEnabled()
@@ -56,7 +56,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sid = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
 
-        $this->sidRetrievalStrategy->expects($this->once())
+        $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($token)
             ->willReturn(array(
@@ -72,7 +72,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSecurityIdentitiesWithoutToken()
     {
-        $this->sidRetrievalStrategy->expects($this->never())
+        $this->sidManager->expects($this->never())
             ->method('getSecurityIdentities');
 
         $sids = $this->pm->getSecurityIdentities();
@@ -83,7 +83,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasConfig()
     {
-        $pm = new PermissionManager($this->sidRetrievalStrategy, array(
+        $pm = new PermissionManager($this->sidManager, array(
             new PermissionConfig(MockObject::class),
         ));
 

@@ -21,7 +21,7 @@ Features include:
 - Define the organization user with her roles and groups in Doctrine (optional)
 - Defined the permissions on the roles in Doctrine
 - Merge the permissions of roles children of associated roles with user, role, group, organization, and token
-- Security Identity Retrieval Strategy for retrieving security identities from tokens (current user,
+- Security Identity Manager to retrieving security identities from tokens (current user,
   all roles, all groups and organization)
 - AuthorizationChecker to check the permissions for objects
 - Permission Manager retrieve and manipulate the permissions with her operations

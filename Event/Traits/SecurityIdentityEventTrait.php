@@ -15,7 +15,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * The security identity retrieval strategy event trait.
+ * The security identity event trait.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */

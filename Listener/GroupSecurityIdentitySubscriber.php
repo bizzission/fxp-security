@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Listener;
 
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
-use Sonatra\Component\Security\IdentityRetrievalEvents;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class GroupStrategyIdentitySubscriber implements EventSubscriberInterface
+class GroupSecurityIdentitySubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -29,7 +29,7 @@ class GroupStrategyIdentitySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            IdentityRetrievalEvents::ADD => array('addGroupSecurityIdentities', 0),
+            SecurityIdentityEvents::RETRIEVAL_ADD => array('addGroupSecurityIdentities', 0),
         );
     }
 

@@ -14,7 +14,7 @@ namespace Sonatra\Component\Security\Permission;
 use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -27,9 +27,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class PermissionManager implements PermissionManagerInterface
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface
+     * @var SecurityIdentityManagerInterface
      */
-    protected $sidRetrievalStrategy;
+    protected $sim;
 
     /**
      * @var array
@@ -44,13 +44,13 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * Constructor.
      *
-     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security identity retrieval strategy
-     * @param PermissionConfigInterface[]                $configs              The permission configs
+     * @param SecurityIdentityManagerInterface $sim     The security identity manager
+     * @param PermissionConfigInterface[]      $configs The permission configs
      */
-    public function __construct(SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy,
+    public function __construct(SecurityIdentityManagerInterface $sim,
                                 array $configs = array())
     {
-        $this->sidRetrievalStrategy = $sidRetrievalStrategy;
+        $this->sim = $sim;
         $this->configs = array();
 
         foreach ($configs as $config) {
@@ -125,7 +125,7 @@ class PermissionManager implements PermissionManagerInterface
             return array();
         }
 
-        return $this->sidRetrievalStrategy->getSecurityIdentities($token);
+        return $this->sim->getSecurityIdentities($token);
     }
 
     /**

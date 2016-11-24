@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Tests\Listener;
 
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
-use Sonatra\Component\Security\Listener\OrganizationStrategyIdentitySubscriber;
+use Sonatra\Component\Security\Listener\OrganizationSecurityIdentitySubscriber;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OrganizationStrategyIdentitySubscriberTest extends \PHPUnit_Framework_TestCase
+class OrganizationSecurityIdentitySubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var RoleHierarchyInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -34,7 +34,7 @@ class OrganizationStrategyIdentitySubscriberTest extends \PHPUnit_Framework_Test
     protected $orgContext;
 
     /**
-     * @var OrganizationStrategyIdentitySubscriber
+     * @var OrganizationSecurityIdentitySubscriber
      */
     protected $listener;
 
@@ -42,7 +42,7 @@ class OrganizationStrategyIdentitySubscriberTest extends \PHPUnit_Framework_Test
     {
         $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
         $this->orgContext = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
-        $this->listener = new OrganizationStrategyIdentitySubscriber($this->roleHierarchy, $this->orgContext);
+        $this->listener = new OrganizationSecurityIdentitySubscriber($this->roleHierarchy, $this->orgContext);
 
         $this->assertCount(1, $this->listener->getSubscribedEvents());
     }

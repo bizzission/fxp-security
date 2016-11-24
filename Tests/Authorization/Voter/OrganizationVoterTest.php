@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
 use Sonatra\Component\Security\Authorization\Voter\OrganizationVoter;
 use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -23,9 +23,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class OrganizationVoterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     /**
      * @var OrganizationVoter
@@ -34,8 +34,8 @@ class OrganizationVoterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
-        $this->voter = new OrganizationVoter($this->sidStrategy, null);
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
+        $this->voter = new OrganizationVoter($this->sidManager, null);
     }
 
     public function getAccessResults()
@@ -63,7 +63,7 @@ class OrganizationVoterTest extends \PHPUnit_Framework_TestCase
         );
 
         if (VoterInterface::ACCESS_ABSTAIN !== $access) {
-            $this->sidStrategy->expects($this->atLeast(2))
+            $this->sidManager->expects($this->atLeast(2))
                 ->method('getSecurityIdentities')
                 ->willReturn($sids);
         }

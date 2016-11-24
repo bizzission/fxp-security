@@ -11,7 +11,7 @@
 
 namespace Sonatra\Component\Security\Authorization\Voter;
 
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -30,21 +30,21 @@ class PermissionVoter extends Voter
     private $permissionManager;
 
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface
+     * @var SecurityIdentityManagerInterface
      */
-    private $sidStrategy;
+    private $sim;
 
     /**
      * Constructor.
      *
-     * @param PermissionManagerInterface                 $permissionManager The permission manager
-     * @param SecurityIdentityRetrievalStrategyInterface $sidStrategy       The security identity retrieval strategy
+     * @param PermissionManagerInterface       $permissionManager The permission manager
+     * @param SecurityIdentityManagerInterface $sim               The security identity manager
      */
     public function __construct(PermissionManagerInterface $permissionManager,
-                                SecurityIdentityRetrievalStrategyInterface $sidStrategy)
+                                SecurityIdentityManagerInterface $sim)
     {
         $this->permissionManager = $permissionManager;
-        $this->sidStrategy = $sidStrategy;
+        $this->sim = $sim;
     }
 
     /**
@@ -100,7 +100,7 @@ class PermissionVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $sids = $this->sidStrategy->getSecurityIdentities($token);
+        $sids = $this->sim->getSecurityIdentities($token);
         $attribute = substr($attribute, 5);
 
         return $this->permissionManager->isGranted($sids, $subject, $attribute);

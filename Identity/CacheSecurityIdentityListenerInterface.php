@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Listener;
+namespace Sonatra\Component\Security\Identity;
 
 /**
  * Interface for events of security identities.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface EventStrategyIdentityInterface
+interface CacheSecurityIdentityListenerInterface
 {
     /**
      * Get the cache id for the event security identities.

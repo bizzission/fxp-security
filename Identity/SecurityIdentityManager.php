@@ -14,7 +14,7 @@ namespace Sonatra\Component\Security\Identity;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Event\PostSecurityIdentityEvent;
 use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
-use Sonatra\Component\Security\IdentityRetrievalEvents;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -23,11 +23,11 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
- * Strategy for retrieving security identities.
+ * Manager to retrieving security identities.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SecurityIdentityRetrievalStrategy implements SecurityIdentityRetrievalStrategyInterface
+class SecurityIdentityManager implements SecurityIdentityManagerInterface
 {
     /**
      * @var EventDispatcherInterface
@@ -63,13 +63,17 @@ class SecurityIdentityRetrievalStrategy implements SecurityIdentityRetrievalStra
     /**
      * {@inheritdoc}
      */
-    public function getSecurityIdentities(TokenInterface $token)
+    public function getSecurityIdentities(TokenInterface $token = null)
     {
         $sids = array();
 
+        if (null === $token) {
+            return $sids;
+        }
+
         // dispatch pre event
         $eventPre = new PreSecurityIdentityEvent($token, $sids);
-        $this->dispatcher->dispatch(IdentityRetrievalEvents::PRE, $eventPre);
+        $this->dispatcher->dispatch(SecurityIdentityEvents::RETRIEVAL_PRE, $eventPre);
 
         // add current user and reachable roles
         $sids = $this->addCurrentUser($token, $sids);
@@ -77,7 +81,7 @@ class SecurityIdentityRetrievalStrategy implements SecurityIdentityRetrievalStra
 
         // dispatch add event to add custom security identities
         $eventAdd = new AddSecurityIdentityEvent($token, $sids);
-        $this->dispatcher->dispatch(IdentityRetrievalEvents::ADD, $eventAdd);
+        $this->dispatcher->dispatch(SecurityIdentityEvents::RETRIEVAL_ADD, $eventAdd);
         $sids = $eventAdd->getSecurityIdentities();
 
         // add special roles
@@ -85,7 +89,7 @@ class SecurityIdentityRetrievalStrategy implements SecurityIdentityRetrievalStra
 
         // dispatch post event
         $eventPost = new PostSecurityIdentityEvent($token, $sids, $eventPre->isPermissionEnabled());
-        $this->dispatcher->dispatch(IdentityRetrievalEvents::POST, $eventPost);
+        $this->dispatcher->dispatch(SecurityIdentityEvents::RETRIEVAL_POST, $eventPost);
 
         return $sids;
     }

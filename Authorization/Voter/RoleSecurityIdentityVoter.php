@@ -12,13 +12,13 @@
 namespace Sonatra\Component\Security\Authorization\Voter;
 
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * RoleSecurityIdentityVoter uses a SecurityIdentityRetrievalStrategy to
+ * RoleSecurityIdentityVoter uses a SecurityIdentityManager to
  * determine the roles granted to the user before voting.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -26,9 +26,9 @@ use Symfony\Component\Security\Core\Role\Role;
 class RoleSecurityIdentityVoter extends RoleVoter
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface
+     * @var SecurityIdentityManagerInterface
      */
-    private $sidRetrievalStrategy;
+    private $sim;
 
     /**
      * @var array
@@ -38,12 +38,12 @@ class RoleSecurityIdentityVoter extends RoleVoter
     /**
      * Constructor.
      *
-     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security identity retrieval strategy
-     * @param string                                     $prefix               The role prefix
+     * @param SecurityIdentityManagerInterface $sim    The security identity manager
+     * @param string                           $prefix The role prefix
      */
-    public function __construct(SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy, $prefix = 'ROLE_')
+    public function __construct(SecurityIdentityManagerInterface $sim, $prefix = 'ROLE_')
     {
-        $this->sidRetrievalStrategy = $sidRetrievalStrategy;
+        $this->sim = $sim;
         $this->cacheExec = array();
 
         parent::__construct($prefix);
@@ -54,7 +54,7 @@ class RoleSecurityIdentityVoter extends RoleVoter
      */
     protected function extractRoles(TokenInterface $token)
     {
-        $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
+        $sids = $this->sim->getSecurityIdentities($token);
         $id = sha1(implode('|', $sids));
 
         if (isset($this->cacheExec[$id])) {

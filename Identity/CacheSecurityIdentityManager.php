@@ -11,16 +11,15 @@
 
 namespace Sonatra\Component\Security\Identity;
 
-use Sonatra\Component\Security\IdentityRetrievalEvents;
-use Sonatra\Component\Security\Listener\EventStrategyIdentityInterface;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Strategy for retrieving security identities with execution cache.
+ * Manager to retrieving security identities with caching.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class CacheSecurityIdentityRetrievalStrategy extends SecurityIdentityRetrievalStrategy
+class CacheSecurityIdentityManager extends SecurityIdentityManager
 {
     /**
      * @var string|null
@@ -43,8 +42,12 @@ class CacheSecurityIdentityRetrievalStrategy extends SecurityIdentityRetrievalSt
     /**
      * {@inheritdoc}
      */
-    public function getSecurityIdentities(TokenInterface $token)
+    public function getSecurityIdentities(TokenInterface $token = null)
     {
+        if (null === $token) {
+            return array();
+        }
+
         $id = $this->buildId($token);
 
         if (isset($this->cacheExec[$id])) {
@@ -66,12 +69,12 @@ class CacheSecurityIdentityRetrievalStrategy extends SecurityIdentityRetrievalSt
         $id = spl_object_hash($token);
 
         if (null === $this->cacheIdName) {
-            $listeners = $this->dispatcher->getListeners(IdentityRetrievalEvents::ADD);
+            $listeners = $this->dispatcher->getListeners(SecurityIdentityEvents::RETRIEVAL_ADD);
 
             foreach ($listeners as $listener) {
                 $listener = is_array($listener) && count($listener) > 1 ? $listener[0] : $listener;
 
-                if ($listener instanceof EventStrategyIdentityInterface) {
+                if ($listener instanceof CacheSecurityIdentityListenerInterface) {
                     $this->cacheIdName .= '_'.$listener->getCacheId();
                 }
             }

@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Organizational;
 
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -28,9 +28,9 @@ class OrganizationalRole implements OrganizationalRoleInterface
     private $context;
 
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface
+     * @var SecurityIdentityManagerInterface
      */
-    private $sidRetrievalStrategy;
+    private $sim;
 
     /**
      * @var TokenStorageInterface
@@ -45,16 +45,16 @@ class OrganizationalRole implements OrganizationalRoleInterface
     /**
      * Constructor.
      *
-     * @param OrganizationalContextInterface             $context              The organizational context
-     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security retrieval strategy
-     * @param TokenStorageInterface                      $tokenStorage         The token storage
+     * @param OrganizationalContextInterface   $context      The organizational context
+     * @param SecurityIdentityManagerInterface $sim          The security identity manager
+     * @param TokenStorageInterface            $tokenStorage The token storage
      */
     public function __construct(OrganizationalContextInterface $context,
-                                SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy,
+                                SecurityIdentityManagerInterface $sim,
                                 TokenStorageInterface $tokenStorage)
     {
         $this->context = $context;
-        $this->sidRetrievalStrategy = $sidRetrievalStrategy;
+        $this->sim = $sim;
         $this->tokenStorage = $tokenStorage;
         $this->cacheExec = array();
     }
@@ -101,7 +101,7 @@ class OrganizationalRole implements OrganizationalRoleInterface
             return array();
         }
 
-        $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
+        $sids = $this->sim->getSecurityIdentities($token);
         $id = sha1(implode('|', $sids));
 
         if (isset($this->cacheExec[$id])) {

@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
 use Sonatra\Component\Security\Authorization\Voter\PermissionVoter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -31,9 +31,9 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     protected $permManager;
 
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     /**
      * @var TokenInterface
@@ -48,12 +48,12 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->permManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
-        $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->voter = new PermissionVoter(
             $this->permManager,
-            $this->sidStrategy
+            $this->sidManager
         );
     }
 
@@ -98,7 +98,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
         );
 
         if (null !== $permManagerResult) {
-            $this->sidStrategy->expects($this->once())
+            $this->sidManager->expects($this->once())
                 ->method('getSecurityIdentities')
                 ->with($this->token)
                 ->willReturn($sids);

@@ -12,11 +12,11 @@
 namespace Sonatra\Component\Security\Identity;
 
 /**
- * Interface for retrieving security identities from tokens with cache.
+ * Interface to retrieving security identities from tokens with caching.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface CacheSecurityIdentityRetrievalStrategyInterface extends SecurityIdentityRetrievalStrategyInterface
+interface CacheSecurityIdentityManagerInterface extends SecurityIdentityManagerInterface
 {
     /**
      * Invalidate the execution cache.

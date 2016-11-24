@@ -14,35 +14,35 @@ namespace Sonatra\Component\Security;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-final class IdentityRetrievalEvents
+final class SecurityIdentityEvents
 {
     /**
-     * The IdentityRetrievalEvents::PRE event occurs before the retrieval of
+     * The SecurityIdentityEvents::RETRIEVAL_PRE event occurs before the retrieval of
      * all security identities.
      *
      * @Event("Sonatra\Component\Security\Event\PreSecurityIdentityEvent")
      *
      * @var string
      */
-    const PRE = 'sonatra_security.security_identity_retrieval_strategy.pre';
+    const RETRIEVAL_PRE = 'sonatra_security.security_identity_retrieval.pre';
 
     /**
-     * The IdentityRetrievalEvents::ADD event occurs when the security
+     * The SecurityIdentityEvents::RETRIEVAL_ADD event occurs when the security
      * identities are adding.
      *
      * @Event("Sonatra\Component\Security\Event\AddSecurityIdentityEvent")
      *
      * @var string
      */
-    const ADD = 'sonatra_security.security_identity_retrieval_strategy.add';
+    const RETRIEVAL_ADD = 'sonatra_security.security_identity_retrieval.add';
 
     /**
-     * The IdentityRetrievalEvents::POST event occurs after the retrieval of
+     * The SecurityIdentityEvents::RETRIEVAL_POST event occurs after the retrieval of
      * all security identities.
      *
      * @Event("Sonatra\Component\Security\Event\PostSecurityIdentityEvent")
      *
      * @var string
      */
-    const POST = 'sonatra_security.security_identity_retrieval_strategy.post';
+    const RETRIEVAL_POST = 'sonatra_security.security_identity_retrieval.post';
 }

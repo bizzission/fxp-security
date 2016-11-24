@@ -11,14 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Fixtures\Listener;
 
-use Sonatra\Component\Security\IdentityRetrievalEvents;
-use Sonatra\Component\Security\Listener\EventStrategyIdentityInterface;
+use Sonatra\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class MockEventStrategyIdentity implements EventSubscriberInterface, EventStrategyIdentityInterface
+class MockCacheSecurityIdentitySubscriber implements EventSubscriberInterface, CacheSecurityIdentityListenerInterface
 {
     /**
      * {@inheritdoc}
@@ -26,7 +26,7 @@ class MockEventStrategyIdentity implements EventSubscriberInterface, EventStrate
     public static function getSubscribedEvents()
     {
         return array(
-            IdentityRetrievalEvents::ADD => array('onAddIdentity', 0),
+            SecurityIdentityEvents::RETRIEVAL_ADD => array('onAddIdentity', 0),
         );
     }
 

@@ -13,7 +13,7 @@ namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
 use Sonatra\Component\Security\Authorization\Voter\RoleSecurityIdentityVoter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -23,9 +23,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 class RoleSecurityIdentityVoterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sidStrategy;
+    protected $sidManager;
 
     /**
      * @var RoleSecurityIdentityVoter
@@ -34,8 +34,8 @@ class RoleSecurityIdentityVoterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->sidStrategy = $this->getMockBuilder(SecurityIdentityRetrievalStrategyInterface::class)->getMock();
-        $this->voter = new RoleSecurityIdentityVoter($this->sidStrategy, 'TEST_');
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
+        $this->voter = new RoleSecurityIdentityVoter($this->sidManager, 'TEST_');
     }
 
     public function getAccessResults()
@@ -62,7 +62,7 @@ class RoleSecurityIdentityVoterTest extends \PHPUnit_Framework_TestCase
             new RoleSecurityIdentity('TEST_ADMIN'),
         );
 
-        $this->sidStrategy->expects($this->atLeast(2))
+        $this->sidManager->expects($this->atLeast(2))
             ->method('getSecurityIdentities')
             ->willReturn($sids);
 

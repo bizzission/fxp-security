@@ -11,10 +11,11 @@
 
 namespace Sonatra\Component\Security\Listener;
 
+use Sonatra\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
-use Sonatra\Component\Security\IdentityRetrievalEvents;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
@@ -23,7 +24,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OrganizationStrategyIdentitySubscriber implements EventSubscriberInterface, EventStrategyIdentityInterface
+class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface, CacheSecurityIdentityListenerInterface
 {
     /**
      * @var RoleHierarchyInterface
@@ -54,7 +55,7 @@ class OrganizationStrategyIdentitySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            IdentityRetrievalEvents::ADD => array('addOrganizationSecurityIdentities', 0),
+            SecurityIdentityEvents::RETRIEVAL_ADD => array('addOrganizationSecurityIdentities', 0),
         );
     }
 

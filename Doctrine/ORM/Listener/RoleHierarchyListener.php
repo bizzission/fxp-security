@@ -18,8 +18,8 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Identity\CacheSecurityIdentityRetrievalStrategyInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
@@ -36,9 +36,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class RoleHierarchyListener implements EventSubscriber
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface
+     * @var SecurityIdentityManagerInterface
      */
-    protected $strategy;
+    protected $sim;
 
     /**
      * @var CacheItemPoolInterface|null
@@ -53,15 +53,15 @@ class RoleHierarchyListener implements EventSubscriber
     /**
      * Constructor.
      *
-     * @param SecurityIdentityRetrievalStrategyInterface $strategy The security identity retrieval strategy
-     * @param CacheItemPoolInterface|null                $cache    The cache
-     * @param OrganizationalContextInterface|null        $context  The organizational context
+     * @param SecurityIdentityManagerInterface    $sim     The security identity manager
+     * @param CacheItemPoolInterface|null         $cache   The cache
+     * @param OrganizationalContextInterface|null $context The organizational context
      */
-    public function __construct(SecurityIdentityRetrievalStrategyInterface $strategy,
+    public function __construct(SecurityIdentityManagerInterface $sim,
                                 CacheItemPoolInterface $cache = null,
                                 OrganizationalContextInterface $context = null)
     {
-        $this->strategy = $strategy;
+        $this->sim = $sim;
         $this->cache = $cache;
         $this->context = $context;
     }
@@ -111,8 +111,8 @@ class RoleHierarchyListener implements EventSubscriber
                 $this->cache->deleteItems($invalidates);
             }
 
-            if ($this->strategy instanceof CacheSecurityIdentityRetrievalStrategyInterface) {
-                $this->strategy->invalidateCache();
+            if ($this->sim instanceof CacheSecurityIdentityManagerInterface) {
+                $this->sim->invalidateCache();
             }
         }
     }

@@ -15,7 +15,7 @@ use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
 use Sonatra\Component\Security\ExpressionVariableEvents;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface;
@@ -28,9 +28,9 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 class ExpressionVariableStorage implements ExpressionVariableStorageInterface, EventSubscriberInterface
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface|null
+     * @var SecurityIdentityManagerInterface|null
      */
-    private $sidStrategy;
+    private $sim;
 
     /**
      * @var array<string, mixed>
@@ -40,13 +40,13 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * Constructor.
      *
-     * @param array<string, mixed>                            $variables   The expression variables
-     * @param SecurityIdentityRetrievalStrategyInterface|null $sidStrategy The security identity retrieval strategy
+     * @param array<string, mixed>                  $variables The expression variables
+     * @param SecurityIdentityManagerInterface|null $sim       The security identity manager
      */
     public function __construct(array $variables = array(),
-                                SecurityIdentityRetrievalStrategyInterface $sidStrategy = null)
+                                SecurityIdentityManagerInterface $sim = null)
     {
-        $this->sidStrategy = $sidStrategy;
+        $this->sim = $sim;
 
         foreach ($variables as $name => $value) {
             $this->add($name, $value);
@@ -132,8 +132,8 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
      */
     private function getAllRoles(TokenInterface $token)
     {
-        if (null !== $this->sidStrategy) {
-            $sids = $this->sidStrategy->getSecurityIdentities($token);
+        if (null !== $this->sim) {
+            $sids = $this->sim->getSecurityIdentities($token);
 
             return $this->filterRolesIdentities($sids);
         }

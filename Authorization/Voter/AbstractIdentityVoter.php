@@ -12,7 +12,7 @@
 namespace Sonatra\Component\Security\Authorization\Voter;
 
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityRetrievalStrategyInterface;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -24,9 +24,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 abstract class AbstractIdentityVoter extends Voter
 {
     /**
-     * @var SecurityIdentityRetrievalStrategyInterface
+     * @var SecurityIdentityManagerInterface
      */
-    protected $sidRetrievalStrategy;
+    protected $sim;
 
     /**
      * @var string
@@ -36,12 +36,12 @@ abstract class AbstractIdentityVoter extends Voter
     /**
      * Constructor.
      *
-     * @param SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy The security identity retrieval strategy
-     * @param string|null                                $prefix               The attribute prefix
+     * @param SecurityIdentityManagerInterface $sim    The security identity manager
+     * @param string|null                      $prefix The attribute prefix
      */
-    public function __construct(SecurityIdentityRetrievalStrategyInterface $sidRetrievalStrategy, $prefix = null)
+    public function __construct(SecurityIdentityManagerInterface $sim, $prefix = null)
     {
-        $this->sidRetrievalStrategy = $sidRetrievalStrategy;
+        $this->sim = $sim;
         $this->prefix = null === $prefix ? $this->getDefaultPrefix() : $prefix;
     }
 
@@ -58,7 +58,7 @@ abstract class AbstractIdentityVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $sids = $this->sidRetrievalStrategy->getSecurityIdentities($token);
+        $sids = $this->sim->getSecurityIdentities($token);
 
         foreach ($sids as $sid) {
             if ($this->isValidIdentity($attribute, $sid)) {
