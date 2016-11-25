@@ -60,7 +60,9 @@ class PermissionVoter extends Voter
             $subject = new FieldVote($subject[0], $subject[1]);
         }
 
-        return $this->permissionManager->isManaged($subject);
+        return null !== $subject
+            ? $this->permissionManager->isManaged($subject)
+            : true;
     }
 
     /**
@@ -78,13 +80,13 @@ class PermissionVoter extends Voter
     /**
      * Check if the subject is supported.
      *
-     * @param FieldVote|mixed $subject The subject
+     * @param FieldVote|mixed|null $subject The subject
      *
      * @return bool
      */
     protected function isSubjectSupported($subject)
     {
-        if (is_string($subject) || $subject instanceof FieldVote || is_object($subject)) {
+        if (null === $subject || is_string($subject) || $subject instanceof FieldVote || is_object($subject)) {
             return true;
         }
 
@@ -103,6 +105,6 @@ class PermissionVoter extends Voter
         $sids = $this->sim->getSecurityIdentities($token);
         $attribute = substr($attribute, 5);
 
-        return $this->permissionManager->isGranted($sids, $subject, $attribute);
+        return $this->permissionManager->isGranted($sids, $attribute, $subject);
     }
 }

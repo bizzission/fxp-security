@@ -13,6 +13,7 @@ namespace Sonatra\Component\Security\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Sonatra\Component\Security\Model\Traits\PermissionsTrait;
 
 /**
  * This is the domain class for the Role object.
@@ -21,6 +22,8 @@ use Doctrine\Common\Collections\Collection;
  */
 abstract class Role implements RoleHierarchicalInterface
 {
+    use PermissionsTrait;
+
     /**
      * @var int|string|null
      */

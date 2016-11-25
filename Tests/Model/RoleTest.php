@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Model;
 
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 
 /**
@@ -40,6 +41,21 @@ class RoleTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $role->getChildren());
         $this->assertCount(0, $role->getChildrenNames());
         $this->assertFalse($role->hasChild('CHILD'));
+    }
+
+    public function testModelPermissions()
+    {
+        $role = new MockRole('ROLE_USER');
+        $perm = new MockPermission();
+
+        $this->assertCount(0, $role->getPermissions());
+        $this->assertFalse($role->hasPermission($perm));
+
+        $role->addPermission($perm);
+        $this->assertTrue($role->hasPermission($perm));
+
+        $role->removePermission($perm);
+        $this->assertFalse($role->hasPermission($perm));
     }
 
     public function testClone()

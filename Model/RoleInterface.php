@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Model;
 
+use Sonatra\Component\Security\Model\Traits\PermissionsInterface;
 use Symfony\Component\Security\Core\Role\RoleInterface as BaseRoleInterface;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface as BaseRoleInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface RoleInterface extends BaseRoleInterface
+interface RoleInterface extends BaseRoleInterface, PermissionsInterface
 {
     /**
      * Get id.

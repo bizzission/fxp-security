@@ -100,25 +100,25 @@ interface PermissionManagerInterface
     /**
      * Determines whether access is granted.
      *
-     * @param SecurityIdentityInterface[]                      $sids        The security identities
-     * @param SubjectIdentityInterface|FieldVote|object|string $subject     The object or class name or field vote
-     * @param string|string[]                                  $permissions The permissions
+     * @param SecurityIdentityInterface[]                           $sids        The security identities
+     * @param string|string[]                                       $permissions The permissions
+     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject     The object or class name or field vote
      *
      * @return bool
      */
-    public function isGranted(array $sids, $subject, $permissions);
+    public function isGranted(array $sids, $permissions, $subject = null);
 
     /**
      * Determines whether access is granted.
      *
      * @param SecurityIdentityInterface[]            $sids        The security identities
+     * @param string|string[]                        $permissions The permissions
      * @param SubjectIdentityInterface|object|string $subject     The object or class name
      * @param string                                 $field       The field
-     * @param string|string[]                        $permissions The permissions
      *
      * @return bool
      */
-    public function isFieldGranted(array $sids, $subject, $field, $permissions);
+    public function isFieldGranted(array $sids, $permissions, $subject, $field);
 
     /**
      * Preload permissions of objects.
@@ -137,4 +137,11 @@ interface PermissionManagerInterface
      * @return self
      */
     public function resetPreloadPermissions(array $objects);
+
+    /**
+     * Clear all permission caches.
+     *
+     * @return self
+     */
+    public function clear();
 }

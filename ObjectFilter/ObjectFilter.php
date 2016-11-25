@@ -300,7 +300,8 @@ class ObjectFilter implements ObjectFilterInterface
      */
     protected function isIdentifier(FieldVote $fieldVote, $value)
     {
-        if ((string) $value === $fieldVote->getSubject()->getIdentifier()
+        if ((is_int($value) || is_string($value))
+                && (string) $value === $fieldVote->getSubject()->getIdentifier()
                 && in_array($fieldVote->getField(), array('id', 'subjectIdentifier'))) {
             return true;
         }

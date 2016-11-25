@@ -14,7 +14,9 @@ namespace Sonatra\Component\Security\Tests\Permission;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
+use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -22,13 +24,19 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var PermissionProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $provider;
+
+    /**
      * @var PermissionManager
      */
     protected $pm;
 
     protected function setUp()
     {
-        $this->pm = new PermissionManager();
+        $this->provider = $this->getMockBuilder(PermissionProviderInterface::class)->getMock();
+        $this->pm = new PermissionManager($this->provider);
     }
 
     public function testIsEnabled()
@@ -44,7 +52,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasConfig()
     {
-        $pm = new PermissionManager(array(
+        $pm = new PermissionManager($this->provider, array(
             new PermissionConfig(MockObject::class),
         ));
 
@@ -98,6 +106,20 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->pm->isManaged($object));
     }
 
+    public function testIsManagedWithNonExistentSubject()
+    {
+        $this->assertFalse($this->pm->isManaged('FooBar'));
+    }
+
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\UnexpectedTypeException
+     * @expectedExceptionMessage Expected argument of type "FieldVote|SubjectIdentityInterface|object|string", "NULL"
+     */
+    public function testIsManagedWithUnexpectedTypeException()
+    {
+        $this->assertFalse($this->pm->isManaged(null));
+    }
+
     public function testIsManagedWithNonManagedClass()
     {
         $this->assertFalse($this->pm->isManaged(MockObject::class));
@@ -118,10 +140,60 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $sids = array(
             new RoleSecurityIdentity('ROLE_USER'),
         );
-        $object = new \stdClass();
-        $permissions = 'view';
+        $object = MockObject::class;
+        $permission = 'view';
 
-        $this->assertTrue($this->pm->isGranted($sids, $object, $permissions));
+        $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
+    }
+
+    public function testIsGrantedWithNonExistentSubject()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = 'FooBar';
+        $permission = 'view';
+
+        $this->assertFalse($this->pm->isGranted($sids, $permission, $object));
+    }
+
+    public function testIsGrantedWithGlobalPermission()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = null;
+        $permission = 'foo';
+        $perm = new MockPermission();
+        $perm->setOperation('foo');
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array($perm));
+
+        $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
+        $this->pm->clear();
+    }
+
+    public function testIsGrantedWithGlobalPermissionWithoutGrant()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity('ROLE_USER__FOO'),
+        );
+        $object = null;
+        $permission = 'bar';
+        $perm = new MockPermission();
+        $perm->setOperation('baz');
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER', 'ROLE_USER__FOO'))
+            ->willReturn(array($perm));
+
+        $this->assertFalse($this->pm->isGranted($sids, $permission, $object));
+        $this->pm->clear();
     }
 
     public function testIsFieldGranted()
@@ -131,9 +203,9 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         );
         $object = new MockObject('foo');
         $field = 'name';
-        $permissions = 'view';
+        $permission = 'view';
 
-        $this->assertTrue($this->pm->isFieldGranted($sids, $object, $field, $permissions));
+        $this->assertTrue($this->pm->isFieldGranted($sids, $permission, $object, $field));
     }
 
     public function testPreloadPermissions()

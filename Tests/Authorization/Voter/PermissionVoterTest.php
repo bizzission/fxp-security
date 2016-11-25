@@ -59,20 +59,24 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
 
     public function getVoteAttributes()
     {
+        $class = MockObject::class;
         $object = new MockObject('foo');
         $fieldVote = new FieldVote($object, 'name');
         $arrayValid = array($object, 'name');
         $arrayInvalid = array($object);
 
         return array(
+            array(array(42), $class, VoterInterface::ACCESS_ABSTAIN),
             array(array(42), $object, VoterInterface::ACCESS_ABSTAIN),
             array(array(42), $fieldVote, VoterInterface::ACCESS_ABSTAIN),
             array(array(42), $arrayValid, VoterInterface::ACCESS_ABSTAIN),
             array(array(42), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
+            array(array('view'), $class, VoterInterface::ACCESS_ABSTAIN),
             array(array('view'), $object, VoterInterface::ACCESS_ABSTAIN),
             array(array('view'), $fieldVote, VoterInterface::ACCESS_ABSTAIN),
             array(array('view'), $arrayValid, VoterInterface::ACCESS_ABSTAIN),
             array(array('view'), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
+            array(array('perm_view'), $class, VoterInterface::ACCESS_GRANTED, true),
             array(array('perm_view'), $object, VoterInterface::ACCESS_GRANTED, true),
             array(array('perm_view'), $object, VoterInterface::ACCESS_DENIED, false),
             array(array('perm_view'), $fieldVote, VoterInterface::ACCESS_GRANTED, true),
@@ -80,6 +84,9 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
             array(array('perm_view'), $arrayValid, VoterInterface::ACCESS_GRANTED, true),
             array(array('perm_view'), $arrayValid, VoterInterface::ACCESS_DENIED, false),
             array(array('perm_view'), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
+            array(array('foo'), null, VoterInterface::ACCESS_ABSTAIN),
+            array(array('perm_foo'), null, VoterInterface::ACCESS_GRANTED, true),
+            array(array('perm_foo'), null, VoterInterface::ACCESS_DENIED, false),
         );
     }
 
@@ -103,7 +110,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
                 ->with($this->token)
                 ->willReturn($sids);
 
-            if ($subject instanceof FieldVote || is_object($subject)) {
+            if ($subject instanceof FieldVote || is_object($subject) || is_string($subject)) {
                 $this->permManager->expects($this->once())
                     ->method('isManaged')
                     ->with($subject)
@@ -119,7 +126,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
 
             $this->permManager->expects($this->once())
                 ->method('isGranted')
-                ->with($sids, $subject, substr($attributes[0], 5))
+                ->with($sids, substr($attributes[0], 5), $subject)
                 ->willReturn($permManagerResult);
         }
 
