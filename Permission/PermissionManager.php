@@ -15,7 +15,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Exception\UnexpectedTypeException;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
+use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
@@ -285,7 +285,7 @@ class PermissionManager implements PermissionManagerInterface
      */
     private function loadPermissions(array $sids)
     {
-        $roles = $this->getRoles($sids);
+        $roles = IdentityUtils::filterRolesIdentities($sids);
         $id = implode('|', $roles);
 
         if (!isset($this->cache[$id])) {
@@ -313,25 +313,5 @@ class PermissionManager implements PermissionManagerInterface
         return null !== $action
             ? $action
             : '_global';
-    }
-
-    /**
-     * Get the name of roles.
-     *
-     * @param SecurityIdentityInterface[] $sids The security identities
-     *
-     * @return string[]
-     */
-    private function getRoles(array $sids)
-    {
-        $roles = array();
-
-        foreach ($sids as $sid) {
-            if ($sid instanceof RoleSecurityIdentity && false === strpos($sid->getIdentifier(), 'IS_')) {
-                $roles[] = $sid->getIdentifier();
-            }
-        }
-
-        return $roles;
     }
 }

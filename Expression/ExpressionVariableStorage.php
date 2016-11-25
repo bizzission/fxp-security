@@ -13,8 +13,7 @@ namespace Sonatra\Component\Security\Expression;
 
 use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
 use Sonatra\Component\Security\ExpressionVariableEvents;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
+use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -135,31 +134,11 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
         if (null !== $this->sim) {
             $sids = $this->sim->getSecurityIdentities($token);
 
-            return $this->filterRolesIdentities($sids);
+            return IdentityUtils::filterRolesIdentities($sids);
         }
 
         return array_map(function (RoleInterface $role) {
             return $role->getRole();
         }, $token->getRoles());
-    }
-
-    /**
-     * Filter the role identities and convert to role instances.
-     *
-     * @param SecurityIdentityInterface[] $sids The security identities
-     *
-     * @return string[]
-     */
-    private function filterRolesIdentities(array $sids)
-    {
-        $roles = array();
-
-        foreach ($sids as $sid) {
-            if ($sid instanceof RoleSecurityIdentity && false === strpos($sid->getIdentifier(), 'IS_')) {
-                $roles[] = $sid->getIdentifier();
-            }
-        }
-
-        return $roles;
     }
 }
