@@ -34,5 +34,6 @@ class PermissionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('name', $perm->getField());
         $this->assertSame(array(PermissionContexts::ROLE), $perm->getContexts());
         $this->assertCount(0, $perm->getRoles());
+        $this->assertCount(0, $perm->getSharingEntries());
     }
 }

@@ -52,6 +52,11 @@ abstract class Permission implements PermissionInterface
     protected $roles;
 
     /**
+     * @var Collection|SharingInterface[]|null
+     */
+    protected $sharingEntries;
+
+    /**
      * {@inheritdoc}
      */
     public function getId()
@@ -137,5 +142,13 @@ abstract class Permission implements PermissionInterface
     public function getRoles()
     {
         return $this->roles ?: $this->roles = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSharingEntries()
+    {
+        return $this->sharingEntries ?: $this->sharingEntries = new ArrayCollection();
     }
 }
