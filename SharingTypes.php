@@ -17,7 +17,15 @@ namespace Sonatra\Component\Security;
 final class SharingTypes
 {
     /**
-     * The SharingTypes::TYPE_PUBLIC type defines that no record is filtered.
+     * The SharingTypes::TYPE_NONE type defines that no record is filtered and configured.
+     *
+     * @var string
+     */
+    const TYPE_NONE = 'none';
+
+    /**
+     * The SharingTypes::TYPE_PUBLIC type defines that no record is filtered, but records
+     * can be configured.
      *
      * @var string
      */
@@ -25,7 +33,7 @@ final class SharingTypes
 
     /**
      * The SharingTypes::TYPE_PRIVATE type defines that records are filtered,
-     * and only records with sharing entries are listed.
+     * and only records with sharing entries are listed with their configurations.
      *
      * @var string
      */

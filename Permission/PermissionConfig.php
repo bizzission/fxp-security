@@ -29,12 +29,12 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * @var string
      */
-    protected $sharingType = SharingTypes::TYPE_PUBLIC;
+    protected $sharingType;
 
     /**
      * @var string[]
      */
-    protected $fields = array();
+    protected $fields;
 
     /**
      * @var PropertyPathInterface|string|null
@@ -51,7 +51,7 @@ class PermissionConfig implements PermissionConfigInterface
      */
     public function __construct($type,
                                 array $fields = array(),
-                                $sharingType = SharingTypes::TYPE_PUBLIC,
+                                $sharingType = SharingTypes::TYPE_NONE,
                                 $master = null)
     {
         $this->type = $type;

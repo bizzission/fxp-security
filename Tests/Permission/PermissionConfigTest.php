@@ -27,6 +27,6 @@ class PermissionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(MockObject::class, $config->getType());
         $this->assertSame(array(), $config->getFields());
         $this->assertNull($config->getMaster());
-        $this->assertSame(SharingTypes::TYPE_PUBLIC, $config->getSharingType());
+        $this->assertSame(SharingTypes::TYPE_NONE, $config->getSharingType());
     }
 }
