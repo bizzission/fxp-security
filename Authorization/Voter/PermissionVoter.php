@@ -52,17 +52,7 @@ class PermissionVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!$this->isAttributeSupported($attribute) || !$this->isSubjectSupported($subject)) {
-            return false;
-        }
-
-        if (is_array($subject) && isset($subject[0]) && isset($subject[1])) {
-            $subject = new FieldVote($subject[0], $subject[1]);
-        }
-
-        return null !== $subject
-            ? $this->permissionManager->isManaged($subject)
-            : true;
+        return $this->isAttributeSupported($attribute) && $this->isSubjectSupported($subject);
     }
 
     /**
@@ -104,6 +94,10 @@ class PermissionVoter extends Voter
     {
         $sids = $this->sim->getSecurityIdentities($token);
         $attribute = substr($attribute, 5);
+
+        if (is_array($subject) && isset($subject[0]) && isset($subject[1])) {
+            $subject = new FieldVote($subject[0], $subject[1]);
+        }
 
         return $this->permissionManager->isGranted($sids, $attribute, $subject);
     }

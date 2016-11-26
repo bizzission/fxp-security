@@ -110,24 +110,17 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
                 ->with($this->token)
                 ->willReturn($sids);
 
-            if ($subject instanceof FieldVote || is_object($subject) || is_string($subject)) {
-                $this->permManager->expects($this->once())
-                    ->method('isManaged')
-                    ->with($subject)
-                    ->willReturn(true);
-            }
-
             if (is_array($subject) && isset($subject[0]) && isset($subject[1])) {
                 $this->permManager->expects($this->once())
-                    ->method('isManaged')
-                    ->with(new FieldVote($subject[0], $subject[1]))
-                    ->willReturn(true);
+                    ->method('isGranted')
+                    ->with($sids, substr($attributes[0], 5), new FieldVote($subject[0], $subject[1]))
+                    ->willReturn($permManagerResult);
+            } else {
+                $this->permManager->expects($this->once())
+                    ->method('isGranted')
+                    ->with($sids, substr($attributes[0], 5), $subject)
+                    ->willReturn($permManagerResult);
             }
-
-            $this->permManager->expects($this->once())
-                ->method('isGranted')
-                ->with($sids, substr($attributes[0], 5), $subject)
-                ->willReturn($permManagerResult);
         }
 
         $this->assertSame($result, $this->voter->vote($this->token, $subject, $attributes));
