@@ -11,18 +11,28 @@
 
 namespace Sonatra\Component\Security\Tests\Permission;
 
+use Sonatra\Component\Security\Event\CheckPermissionEvent;
+use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
+use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
+use Sonatra\Component\Security\PermissionEvents;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
 class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var EventDispatcher
+     */
+    protected $dispatcher;
+
     /**
      * @var PermissionProviderInterface|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -35,8 +45,9 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $this->dispatcher = new EventDispatcher();
         $this->provider = $this->getMockBuilder(PermissionProviderInterface::class)->getMock();
-        $this->pm = new PermissionManager($this->provider);
+        $this->pm = new PermissionManager($this->dispatcher, $this->provider);
     }
 
     public function testIsEnabled()
@@ -52,7 +63,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasConfig()
     {
-        $pm = new PermissionManager($this->provider, array(
+        $pm = new PermissionManager($this->dispatcher, $this->provider, array(
             new PermissionConfig(MockObject::class),
         ));
 
@@ -228,5 +239,72 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $pm = $this->pm->resetPreloadPermissions($objects);
 
         $this->assertSame($this->pm, $pm);
+    }
+
+    public function testEvents()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = MockObject::class;
+        $permission = 'view';
+        $perm = new MockPermission();
+        $perm->setOperation($permission);
+        $perm->setClass(MockObject::class);
+        $preLoad = false;
+        $postLoad = false;
+        $checkPerm = false;
+
+        $this->dispatcher->addListener(PermissionEvents::PRE_LOAD, function (PreLoadPermissionsEvent $event) use ($sids, &$preLoad) {
+            $preLoad = true;
+            $this->assertSame($sids, $event->getSecurityIdentities());
+        });
+
+        $this->dispatcher->addListener(PermissionEvents::POST_LOAD, function (PostLoadPermissionsEvent $event) use ($sids, &$postLoad) {
+            $postLoad = true;
+            $this->assertSame($sids, $event->getSecurityIdentities());
+        });
+
+        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm) {
+            $checkPerm = true;
+            $this->assertSame($sids, $event->getSecurityIdentities());
+        });
+
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array($perm));
+
+        $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
+        $this->assertTrue($preLoad);
+        $this->assertTrue($postLoad);
+        $this->assertTrue($checkPerm);
+    }
+
+    public function testOverrideGrantValueWithEvent()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = MockObject::class;
+        $permission = 'view';
+        $checkPerm = false;
+
+        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm) {
+            $checkPerm = true;
+            $event->setGranted(true);
+        });
+
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array());
+
+        $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
+        $this->assertTrue($checkPerm);
     }
 }

@@ -12,6 +12,9 @@
 namespace Sonatra\Component\Security\Permission;
 
 use Doctrine\Common\Util\ClassUtils;
+use Sonatra\Component\Security\Event\CheckPermissionEvent;
+use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
+use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Exception\UnexpectedTypeException;
@@ -19,6 +22,8 @@ use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
+use Sonatra\Component\Security\PermissionEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Permission manager.
@@ -27,6 +32,11 @@ use Sonatra\Component\Security\Identity\SubjectUtils;
  */
 class PermissionManager implements PermissionManagerInterface
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
     /**
      * @var PermissionProviderInterface
      */
@@ -50,11 +60,15 @@ class PermissionManager implements PermissionManagerInterface
     /**
      * Constructor.
      *
-     * @param PermissionProviderInterface $provider The permission provider
-     * @param PermissionConfigInterface[] $configs  The permission configs
+     * @param EventDispatcherInterface    $dispatcher The event dispatcher
+     * @param PermissionProviderInterface $provider   The permission provider
+     * @param PermissionConfigInterface[] $configs    The permission configs
      */
-    public function __construct(PermissionProviderInterface $provider, array $configs = array())
+    public function __construct(EventDispatcherInterface $dispatcher,
+                                PermissionProviderInterface $provider,
+                                array $configs = array())
     {
+        $this->dispatcher = $dispatcher;
         $this->provider = $provider;
         $this->configs = array();
 
@@ -253,6 +267,8 @@ class PermissionManager implements PermissionManagerInterface
     }
 
     /**
+     * Action to determine whether access is granted.
+     *
      * @param SecurityIdentityInterface[]   $sids        The security identities
      * @param string[]                      $permissions The required permissions
      * @param SubjectIdentityInterface|null $subject     The subject
@@ -265,15 +281,38 @@ class PermissionManager implements PermissionManagerInterface
         $id = $this->loadPermissions($sids);
 
         foreach ($permissions as $operation) {
-            $classAction = $this->getAction(null !== $subject ? $subject->getType() : null);
-            $fieldAction = $this->getAction($field);
-
-            if (!isset($this->cache[$id][$classAction][$fieldAction][$operation])) {
+            if (!$this->doIsGrantedPermission($id, $sids, $operation, $subject, $field)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    /**
+     * Action to determine whether access is granted for a specific operation.
+     *
+     * @param string                        $id        The cache id
+     * @param SecurityIdentityInterface[]   $sids      The security identities
+     * @param string                        $operation The operation
+     * @param SubjectIdentityInterface|null $subject   The subject
+     * @param string|null                   $field     The field of subject
+     *
+     * @return bool
+     */
+    private function doIsGrantedPermission($id, array $sids, $operation, $subject = null, $field = null)
+    {
+        $event = new CheckPermissionEvent($sids, $this->cache[$id], $operation, $subject, $field);
+        $this->dispatcher->dispatch(PermissionEvents::CHECK_PERMISSION, $event);
+
+        if (is_bool($event->isGranted())) {
+            return $event->isGranted();
+        }
+
+        $classAction = PermissionUtils::getMapAction(null !== $subject ? $subject->getType() : null);
+        $fieldAction = PermissionUtils::getMapAction($field);
+
+        return isset($this->cache[$id][$classAction][$fieldAction][$operation]);
     }
 
     /**
@@ -288,30 +327,23 @@ class PermissionManager implements PermissionManagerInterface
         $roles = IdentityUtils::filterRolesIdentities($sids);
         $id = implode('|', $roles);
 
-        if (!isset($this->cache[$id])) {
+        if (!array_key_exists($id, $this->cache)) {
+            $this->cache[$id] = array();
+            $preEvent = new PreLoadPermissionsEvent($sids, $roles);
+            $this->dispatcher->dispatch(PermissionEvents::PRE_LOAD, $preEvent);
             $perms = $this->provider->getPermissions($roles);
 
             foreach ($perms as $perm) {
-                $class = $this->getAction($perm->getClass());
-                $field = $this->getAction($perm->getField());
+                $class = PermissionUtils::getMapAction($perm->getClass());
+                $field = PermissionUtils::getMapAction($perm->getField());
                 $this->cache[$id][$class][$field][$perm->getOperation()] = true;
             }
+
+            $postEvent = new PostLoadPermissionsEvent($sids, $roles, $this->cache[$id]);
+            $this->dispatcher->dispatch(PermissionEvents::POST_LOAD, $postEvent);
+            $this->cache[$id] = $postEvent->getPermissionMap();
         }
 
         return $id;
-    }
-
-    /**
-     * Get the action.
-     *
-     * @param string|null $action The action
-     *
-     * @return string
-     */
-    private function getAction($action = null)
-    {
-        return null !== $action
-            ? $action
-            : '_global';
     }
 }
