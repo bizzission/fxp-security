@@ -125,7 +125,7 @@ interface PermissionManagerInterface
      *
      * @param object[] $objects The objects
      *
-     * @return \SplObjectStorage
+     * @return self
      */
     public function preloadPermissions(array $objects);
 

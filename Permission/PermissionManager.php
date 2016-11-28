@@ -195,7 +195,7 @@ class PermissionManager implements PermissionManagerInterface
      */
     public function preloadPermissions(array $objects)
     {
-        return new \SplObjectStorage();
+        return $this;
     }
 
     /**
