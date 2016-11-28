@@ -89,4 +89,24 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(array($config), $this->sm->getIdentityConfigs());
     }
+
+    public function testHasIdentityRoleable()
+    {
+        $this->assertFalse($this->sm->hasIdentityRoleable());
+
+        $config = new SharingIdentityConfig(MockRole::class, null, true);
+        $this->sm->addIdentityConfig($config);
+
+        $this->assertTrue($this->sm->hasIdentityRoleable());
+    }
+
+    public function testHasIdentityPermissible()
+    {
+        $this->assertFalse($this->sm->hasIdentityPermissible());
+
+        $config = new SharingIdentityConfig(MockRole::class, null, false, true);
+        $this->sm->addIdentityConfig($config);
+
+        $this->assertTrue($this->sm->hasIdentityPermissible());
+    }
 }

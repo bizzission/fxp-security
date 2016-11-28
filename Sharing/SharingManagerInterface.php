@@ -51,4 +51,18 @@ interface SharingManagerInterface
      * @return SharingIdentityConfigInterface[]
      */
     public function getIdentityConfigs();
+
+    /**
+     * Check if there is an identity config with the roleable option.
+     *
+     * @return bool
+     */
+    public function hasIdentityRoleable();
+
+    /**
+     * Check if there is an identity config with the permissible option.
+     *
+     * @return bool
+     */
+    public function hasIdentityPermissible();
 }

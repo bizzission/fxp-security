@@ -33,6 +33,16 @@ class SharingManager implements SharingManagerInterface
     protected $identityAliases = array();
 
     /**
+     * @var bool
+     */
+    protected $identityRoleable = false;
+
+    /**
+     * @var bool
+     */
+    protected $identityPermissible = false;
+
+    /**
      * Constructor.
      *
      * @param SharingIdentityConfigInterface[] $identityConfigs The sharing configs
@@ -55,6 +65,14 @@ class SharingManager implements SharingManagerInterface
 
         $this->identityConfigs[$config->getType()] = $config;
         $this->identityAliases[$config->getAlias()] = $config->getType();
+
+        if ($config->isRoleable()) {
+            $this->identityRoleable = true;
+        }
+
+        if ($config->isPermissible()) {
+            $this->identityPermissible = true;
+        }
     }
 
     /**
@@ -85,5 +103,21 @@ class SharingManager implements SharingManagerInterface
     public function getIdentityConfigs()
     {
         return array_values($this->identityConfigs);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasIdentityRoleable()
+    {
+        return $this->identityRoleable;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasIdentityPermissible()
+    {
+        return $this->identityPermissible;
     }
 }

@@ -20,9 +20,13 @@ use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Exception\UnexpectedTypeException;
 use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
+use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
 use Sonatra\Component\Security\PermissionEvents;
+use Sonatra\Component\Security\Sharing\SharingManagerInterface;
+use Sonatra\Component\Security\Sharing\SharingUtils;
+use Sonatra\Component\Security\SharingTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -43,6 +47,11 @@ class PermissionManager implements PermissionManagerInterface
     protected $provider;
 
     /**
+     * @var SharingManagerInterface|null
+     */
+    protected $sharingManager;
+
+    /**
      * @var array
      */
     protected $configs;
@@ -58,18 +67,36 @@ class PermissionManager implements PermissionManagerInterface
     protected $cache = array();
 
     /**
+     * @var array
+     */
+    protected $cacheRoleSharing = array();
+
+    /**
+     * @var array
+     */
+    protected $cacheSubjectType = array();
+
+    /**
+     * @var array
+     */
+    protected $cacheSubjectSharing = array();
+
+    /**
      * Constructor.
      *
-     * @param EventDispatcherInterface    $dispatcher The event dispatcher
-     * @param PermissionProviderInterface $provider   The permission provider
-     * @param PermissionConfigInterface[] $configs    The permission configs
+     * @param EventDispatcherInterface     $dispatcher     The event dispatcher
+     * @param PermissionProviderInterface  $provider       The permission provider
+     * @param SharingManagerInterface|null $sharingManager The sharing manager
+     * @param PermissionConfigInterface[]  $configs        The permission configs
      */
     public function __construct(EventDispatcherInterface $dispatcher,
                                 PermissionProviderInterface $provider,
+                                SharingManagerInterface $sharingManager = null,
                                 array $configs = array())
     {
         $this->dispatcher = $dispatcher;
         $this->provider = $provider;
+        $this->sharingManager = $sharingManager;
         $this->configs = array();
 
         foreach ($configs as $config) {
@@ -111,6 +138,7 @@ class PermissionManager implements PermissionManagerInterface
     public function addConfig(PermissionConfigInterface $config)
     {
         $this->configs[$config->getType()] = $config;
+        unset($this->cacheSubjectType[$config->getType()]);
     }
 
     /**
@@ -195,6 +223,37 @@ class PermissionManager implements PermissionManagerInterface
      */
     public function preloadPermissions(array $objects)
     {
+        $subjects = array();
+
+        foreach ($objects as $object) {
+            $subject = SubjectIdentity::fromObject($object);
+            $id = SubjectUtils::getCacheId($subject);
+
+            if ($this->hasConfig($subject->getType())
+                    && $this->hasSharingPermissions($subject)
+                    && !array_key_exists($id, $this->cacheSubjectSharing)) {
+                $subjects[$id] = $subject;
+                $this->cacheSubjectSharing[$id] = false;
+            }
+        }
+
+        $res = $this->provider->getSharingEntries(array_values($subjects));
+        $entries = array();
+
+        foreach ($res as $sharing) {
+            $id = SubjectUtils::getSharingCacheId($sharing);
+            $entries[$id] = $sharing;
+        }
+
+        foreach ($subjects as $id => $subject) {
+            if (isset($entries[$id])) {
+                $this->cacheSubjectSharing[$id] = array(
+                    'sharing' => $entries[$id],
+                    'operations' => SharingUtils::buildOperations($entries[$id]),
+                );
+            }
+        }
+
         return $this;
     }
 
@@ -203,6 +262,13 @@ class PermissionManager implements PermissionManagerInterface
      */
     public function resetPreloadPermissions(array $objects)
     {
+        foreach ($objects as $object) {
+            $subject = SubjectIdentity::fromObject($object);
+            $id = SubjectUtils::getCacheId($subject);
+            unset($this->cacheRoleSharing[$id]);
+            unset($this->cacheSubjectSharing[$id]);
+        }
+
         return $this;
     }
 
@@ -212,6 +278,8 @@ class PermissionManager implements PermissionManagerInterface
     public function clear()
     {
         $this->cache = array();
+        $this->cacheRoleSharing = array();
+        $this->cacheSubjectSharing = array();
 
         return $this;
     }
@@ -278,6 +346,10 @@ class PermissionManager implements PermissionManagerInterface
      */
     private function doIsGranted(array $sids, array $permissions, $subject = null, $field = null)
     {
+        if (null !== $subject) {
+            $this->preloadPermissions(array($subject));
+        }
+
         $id = $this->loadPermissions($sids);
 
         foreach ($permissions as $operation) {
@@ -312,7 +384,29 @@ class PermissionManager implements PermissionManagerInterface
         $classAction = PermissionUtils::getMapAction(null !== $subject ? $subject->getType() : null);
         $fieldAction = PermissionUtils::getMapAction($field);
 
-        return isset($this->cache[$id][$classAction][$fieldAction][$operation]);
+        return isset($this->cache[$id][$classAction][$fieldAction][$operation])
+            || $this->isSharingGranted($operation, $subject, $field);
+    }
+
+    /**
+     * Check if the access is granted by a sharing entry.
+     *
+     * @param string                        $operation The operation
+     * @param SubjectIdentityInterface|null $subject   The subject
+     * @param string|null                   $field     The field of subject
+     *
+     * @return bool
+     */
+    private function isSharingGranted($operation, $subject = null, $field = null)
+    {
+        if (null !== $subject && null === $field) {
+            $id = SubjectUtils::getCacheId($subject);
+
+            return isset($this->cacheSubjectSharing[$id]['operations'])
+                && in_array($operation, $this->cacheSubjectSharing[$id]['operations']);
+        }
+
+        return false;
     }
 
     /**
@@ -345,5 +439,39 @@ class PermissionManager implements PermissionManagerInterface
         }
 
         return $id;
+    }
+
+    /**
+     * Check if the subject has permissions defined in sharing entries.
+     *
+     * @param SubjectIdentityInterface $subject The subject
+     *
+     * @return bool
+     */
+    private function hasSharingPermissions(SubjectIdentityInterface $subject)
+    {
+        if (!array_key_exists($subject->getType(), $this->cacheSubjectType)) {
+            $hasSharingPermissions = false;
+
+            if ($this->hasSharingIdentityPermissible() && $this->isManaged($subject)) {
+                $config = $this->getConfig($subject->getType());
+                $hasSharingPermissions = SharingTypes::TYPE_NONE !== $config->getSharingType();
+            }
+
+            $this->cacheSubjectType[$subject->getType()] = $hasSharingPermissions;
+        }
+
+        return $this->cacheSubjectType[$subject->getType()];
+    }
+
+    /**
+     * Check if there is an identity config with the permissible option.
+     *
+     * @return bool
+     */
+    private function hasSharingIdentityPermissible()
+    {
+        return null === $this->sharingManager
+            || (null !== $this->sharingManager && $this->sharingManager->hasIdentityPermissible());
     }
 }

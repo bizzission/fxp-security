@@ -15,12 +15,15 @@ use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
+use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Sonatra\Component\Security\PermissionEvents;
+use Sonatra\Component\Security\SharingTypes;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -63,7 +66,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasConfig()
     {
-        $pm = new PermissionManager($this->dispatcher, $this->provider, array(
+        $pm = new PermissionManager($this->dispatcher, $this->provider, null, array(
             new PermissionConfig(MockObject::class),
         ));
 
@@ -219,21 +222,74 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->pm->isFieldGranted($sids, $permission, $object, $field));
     }
 
+    public function testIsGrantedWithSharingPermission()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = new MockObject('foo');
+        $permission = 'test';
+        $perm = new MockPermission();
+        $perm->setOperation('test');
+        $sharing = new MockSharing();
+        $sharing->setSubjectClass(MockObject::class);
+        $sharing->setSubjectId(42);
+        $sharing->getPermissions()->add($perm);
+
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array(SubjectIdentity::fromObject($object)))
+            ->willReturn(array($sharing));
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array());
+
+        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+
+        $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
+        $this->pm->clear();
+    }
+
     public function testPreloadPermissions()
     {
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array())
+            ->willReturn(array());
+
+        $pm = $this->pm->preloadPermissions(array());
+
+        $this->assertSame($this->pm, $pm);
+    }
+
+    public function testPreloadPermissionsWithSharing()
+    {
         $objects = array(
-            new \stdClass(),
+            new MockObject('foo'),
         );
+        $permission = new MockPermission();
+        $permission->setOperation('test');
+        $sharing = new MockSharing();
+        $sharing->setSubjectClass(MockObject::class);
+        $sharing->setSubjectId(42);
+        $sharing->getPermissions()->add($permission);
 
-        $res = $this->pm->preloadPermissions($objects);
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array(SubjectIdentity::fromObject($objects[0])))
+            ->willReturn(array($sharing));
 
-        $this->assertInstanceOf(\SplObjectStorage::class, $res);
+        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+
+        $this->pm->preloadPermissions($objects);
     }
 
     public function testResetPreloadPermissions()
     {
         $objects = array(
-            new \stdClass(),
+            new MockObject('foo'),
         );
 
         $pm = $this->pm->resetPreloadPermissions($objects);
@@ -277,6 +333,11 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->with(array('ROLE_USER'))
             ->willReturn(array($perm));
 
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array())
+            ->willReturn(array(new MockSharing()));
+
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
         $this->assertTrue($preLoad);
         $this->assertTrue($postLoad);
@@ -303,6 +364,11 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPermissions')
             ->with(array('ROLE_USER'))
             ->willReturn(array());
+
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array())
+            ->willReturn(array(new MockSharing()));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
         $this->assertTrue($checkPerm);

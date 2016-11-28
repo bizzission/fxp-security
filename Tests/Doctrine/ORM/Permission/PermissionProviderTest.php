@@ -16,6 +16,8 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Sonatra\Component\Security\Doctrine\ORM\Permission\PermissionProvider;
+use Sonatra\Component\Security\Identity\SubjectIdentity;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgOptionalRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgRequiredRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
@@ -29,7 +31,12 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $repo;
+    protected $permissionRepo;
+
+    /**
+     * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $sharingRepo;
 
     /**
      * @var QueryBuilder|\PHPUnit_Framework_MockObject_MockObject
@@ -43,7 +50,8 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->repo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
+        $this->permissionRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
+        $this->sharingRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
         $this->qb = $this->getMockBuilder(QueryBuilder::class)->disableOriginalConstructor()->getMock();
 
         $this->query = $this->getMockForAbstractClass(
@@ -68,7 +76,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
             new MockPermission(),
         );
 
-        $this->repo->expects($this->once())
+        $this->permissionRepo->expects($this->once())
             ->method('createQueryBuilder')
             ->with('p')
             ->willReturn($this->qb);
@@ -111,7 +119,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
             ->method('getResult')
             ->willReturn($result);
 
-        $provider = new PermissionProvider($this->repo, MockRole::class);
+        $provider = new PermissionProvider($this->permissionRepo, $this->sharingRepo, MockRole::class);
         $this->assertSame($result, $provider->getPermissions($roles));
     }
 
@@ -139,7 +147,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
             new MockPermission(),
         );
 
-        $this->repo->expects($this->once())
+        $this->permissionRepo->expects($this->once())
             ->method('createQueryBuilder')
             ->with('p')
             ->willReturn($this->qb);
@@ -202,7 +210,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
             ->method('getResult')
             ->willReturn($result);
 
-        $provider = new PermissionProvider($this->repo, $roleClass);
+        $provider = new PermissionProvider($this->permissionRepo, $this->sharingRepo, $roleClass);
         $this->assertSame($result, $provider->getPermissions($roles));
     }
 
@@ -222,10 +230,94 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPermissionsOptimizationWithEmptyRoles($roleClass)
     {
-        $this->repo->expects($this->never())
+        $this->permissionRepo->expects($this->never())
             ->method('createQueryBuilder');
 
-        $provider = new PermissionProvider($this->repo, $roleClass);
+        $provider = new PermissionProvider($this->permissionRepo, $this->sharingRepo, $roleClass);
         $this->assertSame(array(), $provider->getPermissions(array()));
+    }
+
+    public function testGetSharingEntries()
+    {
+        $subjects = array(
+            SubjectIdentity::fromObject(new MockObject('foo', 42)),
+            SubjectIdentity::fromObject(new MockObject('bar', 23)),
+        );
+        $result = array();
+
+        $this->sharingRepo->expects($this->once())
+            ->method('createQueryBuilder')
+            ->with('s')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(0))
+            ->method('addSelect')
+            ->with('p')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(1))
+            ->method('innerJoin')
+            ->with('s.permissions', 'p')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
+            ->method('where')
+            ->with('(s.subjectClass = :subject0_class AND s.subjectId = :subject0_id) OR (s.subjectClass = :subject1_class AND s.subjectId = :subject1_id)')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(3))
+            ->method('setParameter')
+            ->with('subject0_class', MockObject::class)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(4))
+            ->method('setParameter')
+            ->with('subject0_id', 42)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(5))
+            ->method('setParameter')
+            ->with('subject1_class', MockObject::class)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(6))
+            ->method('setParameter')
+            ->with('subject1_id', 23)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(7))
+            ->method('orderBy')
+            ->with('p.class', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(8))
+            ->method('addOrderBy')
+            ->with('p.field', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(9))
+            ->method('addOrderBy')
+            ->with('p.operation', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(10))
+            ->method('getQuery')
+            ->willReturn($this->query);
+
+        $this->query->expects($this->once())
+            ->method('getResult')
+            ->willReturn($result);
+
+        $provider = new PermissionProvider($this->permissionRepo, $this->sharingRepo, MockRole::class);
+        $this->assertSame($result, $provider->getSharingEntries($subjects));
+    }
+
+    public function testGetSharingEntriesWithEmptySubjects()
+    {
+        $this->sharingRepo->expects($this->never())
+            ->method('createQueryBuilder');
+
+        $provider = new PermissionProvider($this->permissionRepo, $this->sharingRepo, MockRole::class);
+        $this->assertSame(array(), $provider->getSharingEntries(array()));
     }
 }

@@ -13,6 +13,7 @@ namespace Sonatra\Component\Security\Doctrine\ORM\Permission;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 
@@ -26,7 +27,12 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * @var EntityRepository
      */
-    protected $repo;
+    protected $permissionRepo;
+
+    /**
+     * @var EntityRepository
+     */
+    protected $sharingRepo;
 
     /**
      * @var string
@@ -41,12 +47,16 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * Constructor.
      *
-     * @param EntityRepository $repository The permission repository
-     * @param string           $roleClass  The classname of role
+     * @param EntityRepository $permissionRepository The permission repository
+     * @param EntityRepository $sharingRepository    The sharing repository
+     * @param string           $roleClass            The classname of role
      */
-    public function __construct(EntityRepository $repository, $roleClass)
+    public function __construct(EntityRepository $permissionRepository,
+                                EntityRepository $sharingRepository,
+                                $roleClass)
     {
-        $this->repo = $repository;
+        $this->permissionRepo = $permissionRepository;
+        $this->sharingRepo = $sharingRepository;
         $this->roleClass = $roleClass;
     }
 
@@ -59,7 +69,7 @@ class PermissionProvider implements PermissionProviderInterface
             return array();
         }
 
-        $qb = $this->repo->createQueryBuilder('p')
+        $qb = $this->permissionRepo->createQueryBuilder('p')
             ->leftJoin('p.roles', 'r');
 
         $permissions = $this->addWhere($qb, $roles)
@@ -69,9 +79,34 @@ class PermissionProvider implements PermissionProviderInterface
             ->getQuery()
             ->getResult();
 
-        $this->repo->clear();
+        $this->permissionRepo->clear();
 
         return $permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSharingEntries(array $subjects)
+    {
+        if (empty($subjects)) {
+            return array();
+        }
+
+        $qb = $this->sharingRepo->createQueryBuilder('s')
+            ->addSelect('p')
+            ->innerJoin('s.permissions', 'p');
+
+        $sharingEntries = $this->addWhereForSharing($qb, $subjects)
+            ->orderBy('p.class', 'asc')
+            ->addOrderBy('p.field', 'asc')
+            ->addOrderBy('p.operation', 'asc')
+            ->getQuery()
+            ->getResult();
+
+        $this->permissionRepo->clear();
+
+        return $sharingEntries;
     }
 
     /**
@@ -139,6 +174,37 @@ class PermissionProvider implements PermissionProviderInterface
         foreach ($parameters as $name => $value) {
             $qb->setParameter($name, $value);
         }
+    }
+
+    /**
+     * Add where condition for role.
+     *
+     * @param QueryBuilder               $qb       The query builder
+     * @param SubjectIdentityInterface[] $subjects The subjects
+     *
+     * @return QueryBuilder
+     */
+    private function addWhereForSharing(QueryBuilder $qb, array $subjects)
+    {
+        $where = '';
+        $parameters = array();
+
+        foreach ($subjects as $i => $subject) {
+            $class = 'subject'.$i.'_class';
+            $id = 'subject'.$i.'_id';
+            $parameters[$class] = $subject->getType();
+            $parameters[$id] = $subject->getIdentifier();
+            $where .= '' === $where ? '' : ' OR ';
+            $where .= sprintf('(s.subjectClass = :%s AND s.subjectId = :%s)', $class, $id);
+        }
+
+        $qb->where($where);
+
+        foreach ($parameters as $key => $value) {
+            $qb->setParameter($key, $value);
+        }
+
+        return $qb;
     }
 
     /**
