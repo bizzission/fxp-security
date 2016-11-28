@@ -55,6 +55,11 @@ abstract class Sharing implements SharingInterface
     protected $enabled = true;
 
     /**
+     * @var string[]
+     */
+    protected $roles = array();
+
+    /**
      * @var \DateTime|null
      */
     protected $startedAt;
