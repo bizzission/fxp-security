@@ -77,20 +77,20 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     public function getIdentityClass();
 
     /**
-     * Set the id of identity.
+     * Set the unique name of identity.
      *
-     * @param int|string $id The id
+     * @param string $name The unique name
      *
      * @return self
      */
-    public function setIdentityId($id);
+    public function setIdentityName($name);
 
     /**
-     * Get the id of identity.
+     * Get the unique name of identity.
      *
-     * @return int|string
+     * @return string
      */
-    public function getIdentityId();
+    public function getIdentityName();
 
     /**
      * Define if the sharing entry is enabled.

@@ -47,7 +47,7 @@ abstract class Sharing implements SharingInterface
     /**
      * @var int|string|null
      */
-    protected $identityId;
+    protected $identityName;
 
     /**
      * @var bool
@@ -129,9 +129,9 @@ abstract class Sharing implements SharingInterface
     /**
      * {@inheritdoc}
      */
-    public function setIdentityId($id)
+    public function setIdentityName($name)
     {
-        $this->identityId = $id;
+        $this->identityName = $name;
 
         return $this;
     }
@@ -139,9 +139,9 @@ abstract class Sharing implements SharingInterface
     /**
      * {@inheritdoc}
      */
-    public function getIdentityId()
+    public function getIdentityName()
     {
-        return $this->identityId;
+        return $this->identityName;
     }
 
     /**

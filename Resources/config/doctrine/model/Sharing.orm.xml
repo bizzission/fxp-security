@@ -10,16 +10,18 @@
             <index name="subject_class_idx" columns="subject_class"/>
             <index name="subject_id_idx" columns="subject_id"/>
             <index name="identity_class_idx" columns="identity_class"/>
-            <index name="identity_id_idx" columns="identity_id"/>
+            <index name="identity_name_idx" columns="identity_name"/>
         </indexes>
 
         <unique-constraints>
-            <unique-constraint columns="subject_class,subject_id,identity_class,identity_id" name="unique_sharing_idx" />
+            <unique-constraint columns="subject_class,subject_id,identity_class,identity_name" name="unique_sharing_idx" />
         </unique-constraints>
 
         <field name="subjectClass" column="subject_class" type="string" length="255" />
 
         <field name="identityClass" column="identity_class" type="string" length="255" />
+
+        <field name="identityName" column="identity_name" type="string" length="36" />
 
         <field name="enabled" column="enabled" type="boolean" />
 

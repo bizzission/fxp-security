@@ -29,7 +29,7 @@ class SharingTest extends \PHPUnit_Framework_TestCase
         $sharing->setSubjectClass(MockObject::class);
         $sharing->setSubjectId(42);
         $sharing->setIdentityClass(MockRole::class);
-        $sharing->setIdentityId(23);
+        $sharing->setIdentityName(23);
         $sharing->setEnabled(true);
         $sharing->setStartedAt($startDate);
         $sharing->setEndedAt($endDate);
@@ -38,7 +38,7 @@ class SharingTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(MockObject::class, $sharing->getSubjectClass());
         $this->assertSame(42, $sharing->getSubjectId());
         $this->assertSame(MockRole::class, $sharing->getIdentityClass());
-        $this->assertSame(23, $sharing->getIdentityId());
+        $this->assertSame(23, $sharing->getIdentityName());
         $this->assertTrue($sharing->isEnabled());
         $this->assertSame($startDate, $sharing->getStartedAt());
         $this->assertSame($endDate, $sharing->getEndedAt());
