@@ -25,15 +25,16 @@ abstract class PermissionUtils
     /**
      * Get the action for the map of permissions.
      *
-     * @param string|null $action The action
+     * @param string|null $action  The action
+     * @param string      $default The default value
      *
      * @return string
      */
-    public static function getMapAction($action = null)
+    public static function getMapAction($action = null, $default = '_global')
     {
         return null !== $action
             ? $action
-            : '_global';
+            : $default;
     }
 
     /**
