@@ -11,6 +11,10 @@
 
 namespace Sonatra\Component\Security\Permission;
 
+use Sonatra\Component\Security\Exception\UnexpectedTypeException;
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+use Sonatra\Component\Security\Identity\SubjectUtils;
+
 /**
  * Permission utils.
  *
@@ -30,5 +34,32 @@ abstract class PermissionUtils
         return null !== $action
             ? $action
             : '_global';
+    }
+
+    /**
+     * Get the subject identity and field.
+     *
+     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject  The subject instance or classname
+     * @param bool                                                  $optional Check if the subject id optional
+     *
+     * @return array
+     */
+    public static function getSubjectAndField($subject, $optional = false)
+    {
+        if ($subject instanceof FieldVote) {
+            $field = $subject->getField();
+            $subject = $subject->getSubject();
+        } else {
+            if (null === $subject && !$optional) {
+                throw new UnexpectedTypeException($subject, 'FieldVote|SubjectIdentityInterface|object|string');
+            }
+
+            $field = null;
+            $subject = null !== $subject
+                ? SubjectUtils::getSubjectIdentity($subject)
+                : null;
+        }
+
+        return array($subject, $field);
     }
 }
