@@ -80,7 +80,8 @@ class SharingManager implements SharingManagerInterface
      */
     public function hasIdentityConfig($class)
     {
-        return isset($this->identityConfigs[ClassUtils::getRealClass($class)]);
+        return isset($this->identityConfigs[ClassUtils::getRealClass($class)])
+            || isset($this->identityAliases[$class]);
     }
 
     /**
@@ -88,7 +89,9 @@ class SharingManager implements SharingManagerInterface
      */
     public function getIdentityConfig($class)
     {
-        $class = ClassUtils::getRealClass($class);
+        $class = isset($this->identityAliases[$class])
+            ? $this->identityAliases[$class]
+            : ClassUtils::getRealClass($class);
 
         if (!$this->hasIdentityConfig($class)) {
             throw new SharingIdentityConfigNotFoundException($class);
