@@ -27,7 +27,7 @@ class MockUserRoleable implements UserInterface, RoleableInterface
      */
     public function getId()
     {
-        return null;
+        return 50;
     }
 
     /**

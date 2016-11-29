@@ -16,6 +16,7 @@ use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
+use Sonatra\Component\Security\Identity\UserSecurityIdentity;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
@@ -23,11 +24,15 @@ use Sonatra\Component\Security\PermissionEvents;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\SharingTypes;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -45,6 +50,11 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
     protected $provider;
 
     /**
+     * @var PropertyAccessor
+     */
+    protected $propertyAccessor;
+
+    /**
      * @var PermissionManager
      */
     protected $pm;
@@ -53,7 +63,12 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->dispatcher = new EventDispatcher();
         $this->provider = $this->getMockBuilder(PermissionProviderInterface::class)->getMock();
-        $this->pm = new PermissionManager($this->dispatcher, $this->provider);
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $this->pm = new PermissionManager(
+            $this->dispatcher,
+            $this->provider,
+            $this->propertyAccessor
+        );
     }
 
     public function testIsEnabled()
@@ -69,9 +84,15 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasConfig()
     {
-        $pm = new PermissionManager($this->dispatcher, $this->provider, null, array(
-            new PermissionConfig(MockObject::class),
-        ));
+        $pm = new PermissionManager(
+            $this->dispatcher,
+            $this->provider,
+            $this->propertyAccessor,
+            null,
+            array(
+                new PermissionConfig(MockObject::class),
+            )
+        );
 
         $this->assertTrue($pm->hasConfig(MockObject::class));
     }
@@ -193,6 +214,65 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->pm->clear();
     }
 
+    public function testIsGrantedWithGlobalPermissionAndMaster()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+            new UserSecurityIdentity('user.test'),
+        );
+        $org = new MockOrganization('foo');
+        $user = new MockUserRoleable();
+        $orgUser = new MockOrganizationUser($org, $user);
+        $permission = 'view';
+        $perm = new MockPermission();
+        $perm->setClass(MockOrganization::class);
+        $perm->setOperation('view');
+
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array(SubjectIdentity::fromObject($org)))
+            ->willReturn(array());
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array($perm));
+
+        $this->pm->addConfig(new PermissionConfig(MockOrganization::class, array(), SharingTypes::TYPE_PRIVATE));
+        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), SharingTypes::TYPE_PRIVATE, 'organization'));
+
+        $this->assertTrue($this->pm->isGranted($sids, $permission, $orgUser));
+        $this->pm->clear();
+    }
+
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The permission configuration of "Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser" class has a master relation, only object instance can be used
+     */
+    public function testIsGrantedWithGlobalPermissionAndMasterWithEmptyObjectOsSubject()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+            new UserSecurityIdentity('user.test'),
+        );
+        $object = new SubjectIdentity(MockOrganizationUser::class, 42);
+        $permission = 'view';
+        $perm = new MockPermission();
+        $perm->setClass(MockOrganization::class);
+        $perm->setOperation('view');
+
+        $this->provider->expects($this->never())
+            ->method('getSharingEntries');
+
+        $this->provider->expects($this->never())
+            ->method('getPermissions');
+
+        $this->pm->addConfig(new PermissionConfig(MockOrganization::class, array(), SharingTypes::TYPE_PRIVATE));
+        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), SharingTypes::TYPE_PRIVATE, 'organization'));
+
+        $this->pm->isGranted($sids, $permission, $object);
+    }
+
     public function testIsGrantedWithGlobalPermissionWithoutGrant()
     {
         $sids = array(
@@ -304,7 +384,12 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->method('hasIdentityRoleable')
             ->willReturn(true);
 
-        $this->pm = new PermissionManager($this->dispatcher, $this->provider, $sharingManager);
+        $this->pm = new PermissionManager(
+            $this->dispatcher,
+            $this->provider,
+            $this->propertyAccessor,
+            $sharingManager
+        );
         $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
@@ -378,7 +463,12 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->method('hasIdentityRoleable')
             ->willReturn(true);
 
-        $this->pm = new PermissionManager($this->dispatcher, $this->provider, $sharingManager);
+        $this->pm = new PermissionManager(
+            $this->dispatcher,
+            $this->provider,
+            $this->propertyAccessor,
+            $sharingManager
+        );
         $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
 
         $this->pm->preloadPermissions($objects);

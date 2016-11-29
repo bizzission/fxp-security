@@ -36,7 +36,7 @@ class OrganizationUserTest extends \PHPUnit_Framework_TestCase
 
         $orgUser = new MockOrganizationUser($org, $user);
 
-        $this->assertNull($orgUser->getId());
+        $this->assertSame(42, $orgUser->getId());
         $this->assertSame($org, $orgUser->getOrganization());
         $this->assertSame($user, $orgUser->getUser());
 

@@ -30,4 +30,17 @@ class MockOrganization extends Organization implements
     use RoleableTrait;
     use OrganizationRolesTrait;
     use OrganizationGroupsTrait;
+
+    /**
+     * Constructor.
+     *
+     * @param string $name The unique name
+     * @param int    $id   The id
+     */
+    public function __construct($name, $id = 23)
+    {
+        parent::__construct($name);
+
+        $this->id = $id;
+    }
 }

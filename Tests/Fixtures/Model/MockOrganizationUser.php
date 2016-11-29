@@ -11,11 +11,26 @@
 
 namespace Sonatra\Component\Security\Tests\Fixtures\Model;
 
+use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUser;
+use Sonatra\Component\Security\Model\UserInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
 class MockOrganizationUser extends OrganizationUser
 {
+    /**
+     * Constructor.
+     *
+     * @param OrganizationInterface $organization The organization
+     * @param UserInterface         $user         The user
+     * @param int                   $id           The id
+     */
+    public function __construct(OrganizationInterface $organization, UserInterface $user, $id = 42)
+    {
+        parent::__construct($organization, $user);
+
+        $this->id = $id;
+    }
 }

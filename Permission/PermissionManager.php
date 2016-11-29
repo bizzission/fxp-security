@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Permission;
 
 use Doctrine\Common\Util\ClassUtils;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
@@ -21,6 +22,7 @@ use Sonatra\Component\Security\Model\SharingInterface;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\Sharing\SharingUtils;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Permission manager.
@@ -29,6 +31,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class PermissionManager extends AbstractPermissionManager
 {
+    /**
+     * @var PropertyAccessorInterface
+     */
+    protected $propertyAccessor;
+
     /**
      * @var array
      */
@@ -42,18 +49,21 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * Constructor.
      *
-     * @param EventDispatcherInterface     $dispatcher     The event dispatcher
-     * @param PermissionProviderInterface  $provider       The permission provider
-     * @param SharingManagerInterface|null $sharingManager The sharing manager
-     * @param PermissionConfigInterface[]  $configs        The permission configs
+     * @param EventDispatcherInterface     $dispatcher       The event dispatcher
+     * @param PermissionProviderInterface  $provider         The permission provider
+     * @param PropertyAccessorInterface    $propertyAccessor The property accessor
+     * @param SharingManagerInterface|null $sharingManager   The sharing manager
+     * @param PermissionConfigInterface[]  $configs          The permission configs
      */
     public function __construct(EventDispatcherInterface $dispatcher,
                                 PermissionProviderInterface $provider,
+                                PropertyAccessorInterface $propertyAccessor,
                                 SharingManagerInterface $sharingManager = null,
                                 array $configs = array())
     {
         $this->dispatcher = $dispatcher;
         $this->provider = $provider;
+        $this->propertyAccessor = $propertyAccessor;
         $this->sharingManager = $sharingManager;
         $this->configs = array();
 
@@ -154,6 +164,7 @@ class PermissionManager extends AbstractPermissionManager
         try {
             /* @var SubjectIdentityInterface|null $subject */
             list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
+            $subject = $this->getMaster($subject);
             $permissions = (array) $permissions;
 
             if (null !== $subject && !$this->doIsManaged($subject, $field)) {
@@ -312,5 +323,38 @@ class PermissionManager extends AbstractPermissionManager
     {
         return null !== $this->sharingManager
             && $this->sharingManager->hasIdentityRoleable();
+    }
+
+    /**
+     * Get the master subject.
+     *
+     * @param SubjectIdentityInterface|object|string|null $subject The subject instance or classname
+     *
+     * @return SubjectIdentityInterface|null
+     */
+    private function getMaster($subject)
+    {
+        if (null !== $subject) {
+            $subject = SubjectUtils::getSubjectIdentity($subject);
+
+            if ($this->hasConfig($subject->getType())) {
+                $config = $this->getConfig($subject->getType());
+
+                if (null !== $config->getMaster()) {
+                    if (!is_object($subject->getObject())) {
+                        $msg = 'The permission configuration of "%s" class has a master relation, only object instance can be used';
+                        throw new InvalidArgumentException(sprintf($msg, $subject->getType()));
+                    }
+
+                    $value = $this->propertyAccessor->getValue($subject->getObject(), $config->getMaster());
+
+                    if (is_object($value)) {
+                        $subject = SubjectIdentity::fromObject($value);
+                    }
+                }
+            }
+        }
+
+        return $subject;
     }
 }
