@@ -17,6 +17,7 @@ use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
+use Sonatra\Component\Security\Model\SharingInterface;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\Sharing\SharingUtils;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -37,11 +38,6 @@ class PermissionManager extends AbstractPermissionManager
      * @var bool
      */
     protected $enabled = true;
-
-    /**
-     * @var array
-     */
-    protected $cacheRoleSharing = array();
 
     /**
      * Constructor.
@@ -191,17 +187,26 @@ class PermissionManager extends AbstractPermissionManager
 
         foreach ($res as $sharing) {
             $id = SubjectUtils::getSharingCacheId($sharing);
-            $entries[$id] = $sharing;
+            $entries[$id][] = $sharing;
         }
 
         foreach ($subjects as $id => $subject) {
             if (isset($entries[$id])) {
-                $this->cacheSubjectSharing[$id] = array(
-                    'sharing' => $entries[$id],
-                    'operations' => SharingUtils::buildOperations($entries[$id]),
-                );
+                foreach ($entries[$id] as $entrySharing) {
+                    $operations = isset($this->cacheSubjectSharing[$id]['operations'])
+                        ? $this->cacheSubjectSharing[$id]['operations']
+                        : array();
+
+                    $this->cacheSubjectSharing[$id]['sharings'][] = $entrySharing;
+                    $this->cacheSubjectSharing[$id]['operations'] = array_unique(array_merge(
+                        $operations,
+                        SharingUtils::buildOperations($entrySharing)
+                    ));
+                }
             }
         }
+
+        $this->preloadPermissionsOfSharingRoles($objects);
 
         return $this;
     }
@@ -214,6 +219,7 @@ class PermissionManager extends AbstractPermissionManager
         foreach ($objects as $object) {
             $subject = SubjectIdentity::fromObject($object);
             $id = SubjectUtils::getCacheId($subject);
+            unset($this->cacheSharing[$id]);
             unset($this->cacheRoleSharing[$id]);
             unset($this->cacheSubjectSharing[$id]);
         }
@@ -227,6 +233,7 @@ class PermissionManager extends AbstractPermissionManager
     public function clear()
     {
         $this->cache = array();
+        $this->cacheSharing = array();
         $this->cacheRoleSharing = array();
         $this->cacheSubjectSharing = array();
 
@@ -257,5 +264,53 @@ class PermissionManager extends AbstractPermissionManager
         }
 
         return $subjects;
+    }
+
+    /**
+     * Preload permissions of sharing roles.
+     *
+     * @param object[] $objects The objects
+     */
+    private function preloadPermissionsOfSharingRoles(array $objects)
+    {
+        if (!$this->hasSharingIdentityRoleable()) {
+            return;
+        }
+
+        $subjects = array();
+
+        foreach ($objects as $object) {
+            $subject = SubjectIdentity::fromObject($object);
+            $id = SubjectUtils::getCacheId($subject);
+            $subjects[$id] = $subject;
+        }
+
+        foreach ($subjects as $id => $subject) {
+            if (!isset($this->cacheRoleSharing[$id])
+                    && isset($this->cacheSubjectSharing[$id]['sharings'])) {
+                /* @var SharingInterface[] $sharings */
+                $sharings = $this->cacheSubjectSharing[$id]['sharings'];
+                $this->cacheRoleSharing[$id] = array();
+
+                foreach ($sharings as $sharing) {
+                    foreach ($sharing->getRoles() as $role) {
+                        $this->cacheRoleSharing[$id][] = $role;
+                    }
+                }
+
+                $this->cacheRoleSharing[$id] = array_unique($this->cacheRoleSharing[$id]);
+            }
+        }
+    }
+
+    /**
+     * Check if there is an identity config with the roleable option.
+     *
+     * @return bool
+     */
+    private function hasSharingIdentityRoleable()
+    {
+        return null !== $this->sharingManager
+            && $this->sharingManager->hasIdentityRoleable();
     }
 }

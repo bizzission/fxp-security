@@ -18,6 +18,7 @@ use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
+use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\PermissionEvents;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\SharingTypes;
@@ -49,6 +50,16 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      * @var array
      */
     protected $cache = array();
+
+    /**
+     * @var array
+     */
+    protected $cacheSharing = array();
+
+    /**
+     * @var array
+     */
+    protected $cacheRoleSharing = array();
 
     /**
      * @var array
@@ -95,8 +106,11 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     protected function doIsGranted(array $sids, array $permissions, $subject = null, $field = null)
     {
+        $sharingId = null;
+
         if (null !== $subject) {
             $this->preloadPermissions(array($subject));
+            $this->loadSharingPermissions(array($subject));
         }
 
         $id = $this->loadPermissions($sids);
@@ -153,11 +167,13 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
             return $event->isGranted();
         }
 
+        $sharingId = null !== $subject ? SubjectUtils::getCacheId($subject) : null;
         $classAction = PermissionUtils::getMapAction(null !== $subject ? $subject->getType() : null);
         $fieldAction = PermissionUtils::getMapAction($field);
 
         return isset($this->cache[$id][$classAction][$fieldAction][$operation])
-        || $this->isSharingGranted($operation, $subject, $field);
+            || isset($this->cacheSharing[$sharingId][$classAction][$fieldAction][$operation])
+            || $this->isSharingGranted($operation, $subject, $field);
     }
 
     /**
@@ -214,6 +230,66 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     }
 
     /**
+     * Load the permissions of sharing roles.
+     *
+     * @param SubjectIdentityInterface[] $subjects The subjects
+     */
+    private function loadSharingPermissions(array $subjects)
+    {
+        $roles = array();
+        $idSubjects = array();
+
+        foreach ($subjects as $subject) {
+            $subjectId = SubjectUtils::getCacheId($subject);
+            $idSubjects[$subjectId] = $subject;
+
+            if (!array_key_exists($subjectId, $this->cacheSharing)
+                    && isset($this->cacheRoleSharing[$subjectId])) {
+                $roles = array_merge($roles, $this->cacheRoleSharing[$subjectId]);
+                $this->cacheSharing[$subjectId] = array();
+            }
+        }
+
+        $roles = array_unique($roles);
+
+        if (!empty($roles)) {
+            $this->doLoadSharingPermissions($idSubjects, $roles);
+        }
+    }
+
+    /**
+     * Action to load the permissions of sharing roles.
+     *
+     * @param array    $idSubjects The map of subject id and subject
+     * @param string[] $roles      The roles
+     */
+    private function doLoadSharingPermissions(array $idSubjects, array $roles)
+    {
+        /* @var RoleInterface[] $mapRoles */
+        $mapRoles = array();
+        $cRoles = $this->provider->getPermissionRoles($roles);
+
+        foreach ($cRoles as $role) {
+            $mapRoles[$role->getRole()] = $role;
+        }
+
+        /* @var SubjectIdentityInterface $subject */
+        foreach ($idSubjects as $id => $subject) {
+            foreach ($this->cacheRoleSharing[$id] as $role) {
+                if (isset($mapRoles[$role])) {
+                    $cRole = $mapRoles[$role];
+
+                    foreach ($cRole->getPermissions() as $perm) {
+                        $class = $subject->getType();
+                        $field = PermissionUtils::getMapAction($perm->getField());
+                        $this->cacheSharing[$id][$class][$field][$perm->getOperation()] = true;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Check if there is an identity config with the permissible option.
      *
      * @return bool
@@ -221,6 +297,6 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     private function hasSharingIdentityPermissible()
     {
         return null === $this->sharingManager
-        || (null !== $this->sharingManager && $this->sharingManager->hasIdentityPermissible());
+            || (null !== $this->sharingManager && $this->sharingManager->hasIdentityPermissible());
     }
 }

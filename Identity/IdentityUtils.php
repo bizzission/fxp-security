@@ -37,4 +37,17 @@ abstract class IdentityUtils
 
         return $roles;
     }
+
+    /**
+     * Check if the security identity is valid.
+     *
+     * @param SecurityIdentityInterface $sid The security identity
+     *
+     * @return bool
+     */
+    public static function isValid(SecurityIdentityInterface $sid)
+    {
+        return !$sid instanceof RoleSecurityIdentity
+            || ($sid instanceof RoleSecurityIdentity && false === strpos($sid->getIdentifier(), 'IS_'));
+    }
 }

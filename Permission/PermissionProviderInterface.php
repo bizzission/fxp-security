@@ -11,8 +11,10 @@
 
 namespace Sonatra\Component\Security\Permission;
 
+use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Model\PermissionInterface;
+use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\Model\SharingInterface;
 
 /**
@@ -32,11 +34,21 @@ interface PermissionProviderInterface
     public function getPermissions(array $roles);
 
     /**
+     * Get the roles with permissions.
+     *
+     * @param string[] $roles The roles
+     *
+     * @return RoleInterface[]
+     */
+    public function getPermissionRoles(array $roles);
+
+    /**
      * Get all permissions of subjects.
      *
-     * @param SubjectIdentityInterface[] $subjects The subjects
+     * @param SubjectIdentityInterface[]       $subjects The subjects
+     * @param SecurityIdentityInterface[]|null $sids     The security identities to filter the sharing entries
      *
      * @return SharingInterface[]
      */
-    public function getSharingEntries(array $subjects);
+    public function getSharingEntries(array $subjects, $sids = null);
 }

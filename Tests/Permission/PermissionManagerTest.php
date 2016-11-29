@@ -20,10 +20,13 @@ use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Sonatra\Component\Security\PermissionEvents;
+use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\SharingTypes;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -252,6 +255,62 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->pm->clear();
     }
 
+    public function testIsGrantedWithSharingPermissionAndRole()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+        );
+        $object = new MockObject('foo');
+        $permission = 'test';
+        $perm = new MockPermission();
+        $perm->setOperation('test');
+        $sharing = new MockSharing();
+        $sharing->setSubjectClass(MockObject::class);
+        $sharing->setSubjectId(42);
+        $sharing->getPermissions()->add($perm);
+        $sharing2 = new MockSharing();
+        $sharing2->setSubjectClass(MockObject::class);
+        $sharing2->setSubjectId(42);
+        $sharing2->setIdentityClass(MockUserRoleable::class);
+        $sharing2->setIdentityName('user.test');
+        $sharing2->setRoles(array('ROLE_FOO'));
+        $rolePerm = new MockPermission();
+        $rolePerm->setOperation('baz');
+        $roleUser = new MockRole('ROLE_FOO');
+        $roleUser->getPermissions()->add($rolePerm);
+
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array(SubjectIdentity::fromObject($object)))
+            ->willReturn(array($sharing, $sharing2));
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array());
+
+        $this->provider->expects($this->once())
+            ->method('getPermissionRoles')
+            ->with(array('ROLE_FOO'))
+            ->willReturn(array($roleUser));
+
+        /* @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject $sharingManager */
+        $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
+        $sharingManager->expects($this->once())
+            ->method('hasIdentityPermissible')
+            ->willReturn(true);
+
+        $sharingManager->expects($this->once())
+            ->method('hasIdentityRoleable')
+            ->willReturn(true);
+
+        $this->pm = new PermissionManager($this->dispatcher, $this->provider, $sharingManager);
+        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+
+        $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
+        $this->pm->clear();
+    }
+
     public function testPreloadPermissions()
     {
         $this->provider->expects($this->once())
@@ -281,6 +340,45 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->with(array(SubjectIdentity::fromObject($objects[0])))
             ->willReturn(array($sharing));
 
+        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+
+        $this->pm->preloadPermissions($objects);
+    }
+
+    public function testPreloadPermissionsWithSharingPermissionsAndRoles()
+    {
+        $objects = array(
+            new MockObject('foo'),
+        );
+        $permission = new MockPermission();
+        $permission->setOperation('test');
+        $sharing = new MockSharing();
+        $sharing->setSubjectClass(MockObject::class);
+        $sharing->setSubjectId(42);
+        $sharing->getPermissions()->add($permission);
+        $sharing2 = new MockSharing();
+        $sharing2->setSubjectClass(MockObject::class);
+        $sharing2->setSubjectId(42);
+        $sharing2->setIdentityClass(MockUserRoleable::class);
+        $sharing2->setIdentityName('user.test');
+        $sharing2->setRoles(array('ROLE_FOO'));
+
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array(SubjectIdentity::fromObject($objects[0])))
+            ->willReturn(array($sharing, $sharing2));
+
+        /* @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject $sharingManager */
+        $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
+        $sharingManager->expects($this->once())
+            ->method('hasIdentityPermissible')
+            ->willReturn(true);
+
+        $sharingManager->expects($this->once())
+            ->method('hasIdentityRoleable')
+            ->willReturn(true);
+
+        $this->pm = new PermissionManager($this->dispatcher, $this->provider, $sharingManager);
         $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
 
         $this->pm->preloadPermissions($objects);
