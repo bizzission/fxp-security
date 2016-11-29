@@ -12,7 +12,6 @@
 namespace Sonatra\Component\Security\Tests\Permission;
 
 use Sonatra\Component\Security\Permission\PermissionConfig;
-use Sonatra\Component\Security\SharingTypes;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 
 /**
@@ -27,6 +26,5 @@ class PermissionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(MockObject::class, $config->getType());
         $this->assertSame(array(), $config->getFields());
         $this->assertNull($config->getMaster());
-        $this->assertSame(SharingTypes::TYPE_NONE, $config->getSharingType());
     }
 }

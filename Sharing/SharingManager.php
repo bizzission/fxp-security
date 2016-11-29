@@ -14,6 +14,9 @@ namespace Sonatra\Component\Security\Sharing;
 use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Exception\AlreadyConfigurationAliasExistingException;
 use Sonatra\Component\Security\Exception\SharingIdentityConfigNotFoundException;
+use Sonatra\Component\Security\Exception\SharingSubjectConfigNotFoundException;
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+use Sonatra\Component\Security\SharingVisibilities;
 
 /**
  * Sharing manager.
@@ -22,6 +25,11 @@ use Sonatra\Component\Security\Exception\SharingIdentityConfigNotFoundException;
  */
 class SharingManager implements SharingManagerInterface
 {
+    /**
+     * @var array
+     */
+    protected $subjectConfigs = array();
+
     /**
      * @var array
      */
@@ -43,15 +51,85 @@ class SharingManager implements SharingManagerInterface
     protected $identityPermissible = false;
 
     /**
+     * @var array
+     */
+    protected $cacheSubjectVisibilities = array();
+
+    /**
      * Constructor.
      *
-     * @param SharingIdentityConfigInterface[] $identityConfigs The sharing configs
+     * @param SharingSubjectConfigInterface[]  $subjectConfigs  The subject configs
+     * @param SharingIdentityConfigInterface[] $identityConfigs The identity configs
      */
-    public function __construct(array $identityConfigs = array())
+    public function __construct(array $subjectConfigs = array(), array $identityConfigs = array())
     {
+        foreach ($subjectConfigs as $config) {
+            $this->addSubjectConfig($config);
+        }
+
         foreach ($identityConfigs as $config) {
             $this->addIdentityConfig($config);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSubjectConfig(SharingSubjectConfigInterface $config)
+    {
+        $this->subjectConfigs[$config->getType()] = $config;
+        unset($this->cacheSubjectVisibilities[$config->getType()]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasSubjectConfig($class)
+    {
+        return isset($this->subjectConfigs[ClassUtils::getRealClass($class)]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubjectConfig($class)
+    {
+        $class = ClassUtils::getRealClass($class);
+
+        if (!$this->hasSubjectConfig($class)) {
+            throw new SharingSubjectConfigNotFoundException($class);
+        }
+
+        return $this->subjectConfigs[$class];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubjectConfigs()
+    {
+        return array_values($this->subjectConfigs);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasSharingVisibility(SubjectIdentityInterface $subject)
+    {
+        $type = $subject->getType();
+
+        if (!array_key_exists($type, $this->cacheSubjectVisibilities)) {
+            $sharingVisibility = false;
+
+            if ($this->hasSubjectConfig($type)) {
+                $config = $this->getSubjectConfig($type);
+                $sharingVisibility = SharingVisibilities::TYPE_NONE !== $config->getVisibility();
+            }
+
+            $this->cacheSubjectVisibilities[$type] = $sharingVisibility;
+        }
+
+        return $this->cacheSubjectVisibilities[$type];
     }
 
     /**

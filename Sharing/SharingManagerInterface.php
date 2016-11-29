@@ -11,6 +11,8 @@
 
 namespace Sonatra\Component\Security\Sharing;
 
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+
 /**
  * Sharing manager Interface.
  *
@@ -18,6 +20,49 @@ namespace Sonatra\Component\Security\Sharing;
  */
 interface SharingManagerInterface
 {
+    /**
+     * Add the sharing subject config.
+     *
+     * @param SharingSubjectConfigInterface $config The sharing subject config
+     *
+     * @return self
+     */
+    public function addSubjectConfig(SharingSubjectConfigInterface $config);
+
+    /**
+     * Check if the sharing subject config is present.
+     *
+     * @param string $class The class name of sharing subject
+     *
+     * @return bool
+     */
+    public function hasSubjectConfig($class);
+
+    /**
+     * Get the sharing subject config.
+     *
+     * @param string $class The class name of sharing subject
+     *
+     * @return SharingSubjectConfigInterface
+     */
+    public function getSubjectConfig($class);
+
+    /**
+     * Get the sharing subject configs.
+     *
+     * @return SharingSubjectConfigInterface[]
+     */
+    public function getSubjectConfigs();
+
+    /**
+     * Check if the subject has sharing visibility.
+     *
+     * @param SubjectIdentityInterface $subject The subject
+     *
+     * @return bool
+     */
+    public function hasSharingVisibility(SubjectIdentityInterface $subject);
+
     /**
      * Add the sharing identity config.
      *

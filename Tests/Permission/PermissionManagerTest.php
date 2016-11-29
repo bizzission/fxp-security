@@ -22,7 +22,6 @@ use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Sonatra\Component\Security\PermissionEvents;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\SharingTypes;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
@@ -230,7 +229,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->provider->expects($this->once())
             ->method('getSharingEntries')
-            ->with(array(SubjectIdentity::fromObject($org)))
+            ->with(array())
             ->willReturn(array());
 
         $this->provider->expects($this->once())
@@ -238,8 +237,8 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->with(array('ROLE_USER'))
             ->willReturn(array($perm));
 
-        $this->pm->addConfig(new PermissionConfig(MockOrganization::class, array(), SharingTypes::TYPE_PRIVATE));
-        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), SharingTypes::TYPE_PRIVATE, 'organization'));
+        $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
+        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), 'organization'));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $orgUser));
         $this->pm->clear();
@@ -267,8 +266,8 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->provider->expects($this->never())
             ->method('getPermissions');
 
-        $this->pm->addConfig(new PermissionConfig(MockOrganization::class, array(), SharingTypes::TYPE_PRIVATE));
-        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), SharingTypes::TYPE_PRIVATE, 'organization'));
+        $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
+        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), 'organization'));
 
         $this->pm->isGranted($sids, $permission, $object);
     }
@@ -329,7 +328,27 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->with(array('ROLE_USER'))
             ->willReturn(array());
 
-        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+        /* @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject $sharingManager */
+        $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
+        $sharingManager->expects($this->once())
+            ->method('hasIdentityPermissible')
+            ->willReturn(true);
+
+        $sharingManager->expects($this->once())
+            ->method('hasSharingVisibility')
+            ->willReturn(true);
+
+        $sharingManager->expects($this->once())
+            ->method('hasIdentityRoleable')
+            ->willReturn(false);
+
+        $this->pm = new PermissionManager(
+            $this->dispatcher,
+            $this->provider,
+            $this->propertyAccessor,
+            $sharingManager
+        );
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
         $this->pm->clear();
@@ -381,6 +400,10 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
 
         $sharingManager->expects($this->once())
+            ->method('hasSharingVisibility')
+            ->willReturn(true);
+
+        $sharingManager->expects($this->once())
             ->method('hasIdentityRoleable')
             ->willReturn(true);
 
@@ -390,7 +413,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             $this->propertyAccessor,
             $sharingManager
         );
-        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
         $this->pm->clear();
@@ -420,12 +443,28 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $sharing->setSubjectId(42);
         $sharing->getPermissions()->add($permission);
 
+        /* @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject $sharingManager */
+        $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
+        $sharingManager->expects($this->once())
+            ->method('hasIdentityPermissible')
+            ->willReturn(true);
+
+        $sharingManager->expects($this->once())
+            ->method('hasSharingVisibility')
+            ->willReturn(true);
+
         $this->provider->expects($this->once())
             ->method('getSharingEntries')
             ->with(array(SubjectIdentity::fromObject($objects[0])))
             ->willReturn(array($sharing));
 
-        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+        $this->pm = new PermissionManager(
+            $this->dispatcher,
+            $this->provider,
+            $this->propertyAccessor,
+            $sharingManager
+        );
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
 
         $this->pm->preloadPermissions($objects);
     }
@@ -460,6 +499,10 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
 
         $sharingManager->expects($this->once())
+            ->method('hasSharingVisibility')
+            ->willReturn(true);
+
+        $sharingManager->expects($this->once())
             ->method('hasIdentityRoleable')
             ->willReturn(true);
 
@@ -469,7 +512,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             $this->propertyAccessor,
             $sharingManager
         );
-        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), SharingTypes::TYPE_PRIVATE));
+        $this->pm->addConfig(new PermissionConfig(MockObject::class));
 
         $this->pm->preloadPermissions($objects);
     }

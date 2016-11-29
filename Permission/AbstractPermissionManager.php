@@ -21,7 +21,6 @@ use Sonatra\Component\Security\Identity\SubjectUtils;
 use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\PermissionEvents;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\SharingTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -60,11 +59,6 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      * @var array
      */
     protected $cacheRoleSharing = array();
-
-    /**
-     * @var array
-     */
-    protected $cacheSubjectType = array();
 
     /**
      * @var array
@@ -123,26 +117,17 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     }
 
     /**
-     * Check if the subject has permissions defined in sharing entries.
+     * Check if the subject has a sharing visibility and identity permissible.
      *
      * @param SubjectIdentityInterface $subject The subject
      *
      * @return bool
      */
-    protected function hasSharingPermissions(SubjectIdentityInterface $subject)
+    protected function hasSharingVisibilityWithPermissions(SubjectIdentityInterface $subject)
     {
-        if (!array_key_exists($subject->getType(), $this->cacheSubjectType)) {
-            $hasSharingPermissions = false;
-
-            if ($this->hasSharingIdentityPermissible() && $this->isManaged($subject)) {
-                $config = $this->getConfig($subject->getType());
-                $hasSharingPermissions = SharingTypes::TYPE_NONE !== $config->getSharingType();
-            }
-
-            $this->cacheSubjectType[$subject->getType()] = $hasSharingPermissions;
-        }
-
-        return $this->cacheSubjectType[$subject->getType()];
+        return null !== $this->sharingManager
+            && $this->sharingManager->hasIdentityPermissible()
+            && $this->sharingManager->hasSharingVisibility($subject);
     }
 
     /**
@@ -285,16 +270,5 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
                 }
             }
         }
-    }
-
-    /**
-     * Check if there is an identity config with the permissible option.
-     *
-     * @return bool
-     */
-    private function hasSharingIdentityPermissible()
-    {
-        return null === $this->sharingManager
-            || (null !== $this->sharingManager && $this->sharingManager->hasIdentityPermissible());
     }
 }

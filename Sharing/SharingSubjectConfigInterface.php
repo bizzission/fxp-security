@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Permission;
-
-use Symfony\Component\PropertyAccess\PropertyPathInterface;
+namespace Sonatra\Component\Security\Sharing;
 
 /**
- * Permission config Interface.
+ * Sharing subject config Interface.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface PermissionConfigInterface
+interface SharingSubjectConfigInterface
 {
     /**
      * Get the type. Typically, this is the PHP class name.
@@ -28,16 +26,9 @@ interface PermissionConfigInterface
     public function getType();
 
     /**
-     * Get the available fields.
+     * Get the sharing visibility.
      *
-     * @return string[]
+     * @return string
      */
-    public function getFields();
-
-    /**
-     * Get the master relation of permission.
-     *
-     * @return PropertyPathInterface|string|null
-     */
-    public function getMaster();
+    public function getVisibility();
 }

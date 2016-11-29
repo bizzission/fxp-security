@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\Permission;
 
-use Sonatra\Component\Security\SharingTypes;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
 
 /**
@@ -27,11 +26,6 @@ class PermissionConfig implements PermissionConfigInterface
     protected $type;
 
     /**
-     * @var string
-     */
-    protected $sharingType;
-
-    /**
      * @var string[]
      */
     protected $fields;
@@ -44,19 +38,16 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * Constructor.
      *
-     * @param string   $type        The type, typically, this is the PHP class name
-     * @param string[] $fields      The fields
-     * @param string   $sharingType The sharing type
-     * @param null     $master      The property path of master
+     * @param string   $type   The type, typically, this is the PHP class name
+     * @param string[] $fields The fields
+     * @param null     $master The property path of master
      */
     public function __construct($type,
                                 array $fields = array(),
-                                $sharingType = SharingTypes::TYPE_NONE,
                                 $master = null)
     {
         $this->type = $type;
         $this->fields = $fields;
-        $this->sharingType = $sharingType;
         $this->master = $master;
     }
 
@@ -66,14 +57,6 @@ class PermissionConfig implements PermissionConfigInterface
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSharingType()
-    {
-        return $this->sharingType;
     }
 
     /**

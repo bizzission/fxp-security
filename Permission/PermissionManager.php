@@ -106,7 +106,6 @@ class PermissionManager extends AbstractPermissionManager
     public function addConfig(PermissionConfigInterface $config)
     {
         $this->configs[$config->getType()] = $config;
-        unset($this->cacheSubjectType[$config->getType()]);
     }
 
     /**
@@ -267,7 +266,7 @@ class PermissionManager extends AbstractPermissionManager
             $id = SubjectUtils::getCacheId($subject);
 
             if ($this->hasConfig($subject->getType())
-                    && $this->hasSharingPermissions($subject)
+                    && $this->hasSharingVisibilityWithPermissions($subject)
                     && !array_key_exists($id, $this->cacheSubjectSharing)) {
                 $subjects[$id] = $subject;
                 $this->cacheSubjectSharing[$id] = false;
