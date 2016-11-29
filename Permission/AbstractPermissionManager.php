@@ -106,8 +106,6 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     protected function doIsGranted(array $sids, array $permissions, $subject = null, $field = null)
     {
-        $sharingId = null;
-
         if (null !== $subject) {
             $this->preloadPermissions(array($subject));
             $this->loadSharingPermissions(array($subject));
