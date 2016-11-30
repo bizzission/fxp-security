@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Doctrine\ORM\Provider;
 
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Sonatra\Component\Security\Exception\InvalidArgumentException;
@@ -119,7 +120,8 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
             ->leftJoin('s.permissions', 'p');
 
         $sharingEntries = $this->addWhereForSharing($qb, $subjects, $sids)
-            ->andWhere('s.enabled = TRUE')
+            ->andWhere('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= :now) AND (s.endedAt IS NULL OR s.endedAt >= :now)')
+            ->setParameter('now', new \DateTime('now', new \DateTimeZone('UTC')), Type::DATETIME)
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')
