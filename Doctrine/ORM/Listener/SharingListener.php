@@ -15,7 +15,6 @@ use Doctrine\ORM\Events;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\Exception\SecurityException;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 
 /**
  * Doctrine ORM listener for sharing filter.
@@ -48,10 +47,8 @@ class SharingListener implements EventSubscriber
 
     /**
      * On flush action.
-     *
-     * @param OnFlushEventArgs $args The event
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush()
     {
         // do nothing, this listener allows to inject the required dependencies in Doctrine ORM Sharing SQL Filter
     }
