@@ -220,13 +220,7 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
             return;
         }
 
-        $subjects = array();
-
-        foreach ($objects as $object) {
-            $subject = SubjectIdentity::fromObject($object);
-            $id = SharingUtils::getCacheId($subject);
-            $subjects[$id] = $subject;
-        }
+        $subjects = $this->buildMapSubject($objects);
 
         foreach ($subjects as $id => $subject) {
             if (!isset($this->cacheRoleSharing[$id])
@@ -244,6 +238,26 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
                 $this->cacheRoleSharing[$id] = array_unique($this->cacheRoleSharing[$id]);
             }
         }
+    }
+
+    /**
+     * Build the map of subjects with cache ids.
+     *
+     * @param object[] $objects The objects
+     *
+     * @return array The map of cache id and subject
+     */
+    private function buildMapSubject(array $objects)
+    {
+        $subjects = array();
+
+        foreach ($objects as $object) {
+            $subject = SubjectIdentity::fromObject($object);
+            $id = SharingUtils::getCacheId($subject);
+            $subjects[$id] = $subject;
+        }
+
+        return $subjects;
     }
 
     /**
