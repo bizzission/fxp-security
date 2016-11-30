@@ -110,4 +110,47 @@ interface SharingManagerInterface
      * @return bool
      */
     public function hasIdentityPermissible();
+
+    /**
+     * Check if the access is granted by a sharing entry.
+     *
+     * @param string                        $operation The operation
+     * @param SubjectIdentityInterface|null $subject   The subject
+     * @param string|null                   $field     The field of subject
+     *
+     * @return bool
+     */
+    public function isGranted($operation, $subject = null, $field = null);
+
+    /**
+     * Preload permissions of objects.
+     *
+     * @param object[] $objects The objects
+     *
+     * @return self
+     */
+    public function preloadPermissions(array $objects);
+
+    /**
+     * Preload the permissions of sharing roles.
+     *
+     * @param SubjectIdentityInterface[] $subjects The subjects
+     */
+    public function preloadRolePermissions(array $subjects);
+
+    /**
+     * Reset the preload permissions of objects.
+     *
+     * @param object[] $objects The objects
+     *
+     * @return self
+     */
+    public function resetPreloadPermissions(array $objects);
+
+    /**
+     * Clear all permission caches.
+     *
+     * @return self
+     */
+    public function clear();
 }

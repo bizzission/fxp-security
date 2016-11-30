@@ -9,35 +9,35 @@
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Permission;
+namespace Sonatra\Component\Security\Doctrine\ORM\Provider;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
-use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
+use Sonatra\Component\Security\Sharing\SharingProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * The Doctrine Orm Permission Provider.
+ * The Doctrine Orm Sharing Provider.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionProvider implements PermissionProviderInterface
+class SharingProvider extends AbstractProvider implements SharingProviderInterface
 {
     /**
      * @var EntityRepository
      */
-    protected $permissionRepo;
+    protected $sharingRepo;
 
     /**
-     * @var EntityRepository
+     * @var SharingManagerInterface
      */
-    protected $roleRepo;
+    protected $sharingManager;
 
     /**
      * @var SecurityIdentityManagerInterface
@@ -50,73 +50,33 @@ class PermissionProvider implements PermissionProviderInterface
     protected $tokenStorage;
 
     /**
-     * @var EntityRepository|null
-     */
-    protected $sharingRepo;
-
-    /**
-     * @var SharingManagerInterface|null
-     */
-    protected $sharingManager;
-
-    /**
-     * @var string
-     */
-    protected $roleClass;
-
-    /**
-     * @var bool|null
-     */
-    protected $isOrganizational;
-
-    /**
      * Constructor.
      *
-     * @param EntityRepository                 $permissionRepository The permission repository
-     * @param EntityRepository                 $roleRepository       The role repository
-     * @param SecurityIdentityManagerInterface $sidManager           The security identity manager
-     * @param TokenStorageInterface            $tokenStorage         The token storage
-     * @param EntityRepository|null            $sharingRepository    The sharing repository
-     * @param SharingManagerInterface|null     $sharingManager       The sharing manager
+     * @param EntityRepository                 $roleRepository    The role repository
+     * @param EntityRepository                 $sharingRepository The sharing repository
+     * @param SecurityIdentityManagerInterface $sidManager        The security identity manager
+     * @param TokenStorageInterface            $tokenStorage      The token storage
      */
-    public function __construct(EntityRepository $permissionRepository,
-                                EntityRepository $roleRepository,
+    public function __construct(EntityRepository $roleRepository,
+                                EntityRepository $sharingRepository,
                                 SecurityIdentityManagerInterface $sidManager,
-                                TokenStorageInterface $tokenStorage,
-                                EntityRepository $sharingRepository = null,
-                                SharingManagerInterface $sharingManager = null)
+                                TokenStorageInterface $tokenStorage)
     {
-        $this->permissionRepo = $permissionRepository;
-        $this->roleRepo = $roleRepository;
+        parent::__construct($roleRepository);
+
+        $this->sharingRepo = $sharingRepository;
         $this->sidManager = $sidManager;
         $this->tokenStorage = $tokenStorage;
-        $this->sharingRepo = $sharingRepository;
-        $this->sharingManager = $sharingManager;
-        $this->roleClass = $this->roleRepo->getClassName();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPermissions(array $roles)
+    public function setSharingManager(SharingManagerInterface $sharingManager)
     {
-        if (empty($roles)) {
-            return array();
-        }
+        $this->sharingManager = $sharingManager;
 
-        $qb = $this->permissionRepo->createQueryBuilder('p')
-            ->leftJoin('p.roles', 'r');
-
-        $permissions = $this->addWhere($qb, $roles)
-            ->orderBy('p.class', 'asc')
-            ->addOrderBy('p.field', 'asc')
-            ->addOrderBy('p.operation', 'asc')
-            ->getQuery()
-            ->getResult();
-
-        $this->permissionRepo->clear();
-
-        return $permissions;
+        return $this;
     }
 
     /**
@@ -139,7 +99,7 @@ class PermissionProvider implements PermissionProviderInterface
             ->getQuery()
             ->getResult();
 
-        $this->permissionRepo->clear();
+        $this->roleRepo->clear();
 
         return $pRoles;
     }
@@ -166,76 +126,9 @@ class PermissionProvider implements PermissionProviderInterface
             ->getQuery()
             ->getResult();
 
-        $this->permissionRepo->clear();
+        $this->sharingRepo->clear();
 
         return $sharingEntries;
-    }
-
-    /**
-     * Add the where conditions.
-     *
-     * @param QueryBuilder $qb    The query builder
-     * @param string[]     $roles The roles
-     *
-     * @return QueryBuilder
-     */
-    private function addWhere(QueryBuilder $qb, array $roles)
-    {
-        if ($this->isOrganizational()) {
-            $this->addWhereForOrganizationalRole($qb, $roles);
-        } else {
-            $this->addWhereForRole($qb, $roles);
-        }
-
-        return $qb;
-    }
-
-    /**
-     * Add where condition for role.
-     *
-     * @param QueryBuilder $qb    The query builder
-     * @param string[]     $roles The roles
-     */
-    private function addWhereForRole(QueryBuilder $qb, array $roles)
-    {
-        $fRoles = $this->getRoles($roles);
-        $qb
-            ->where('UPPER(r.name) IN (:roles)')
-            ->setParameter('roles', $fRoles['roles']);
-    }
-
-    /**
-     * Add where condition for organizational role.
-     *
-     * @param QueryBuilder $qb    The query builder
-     * @param string[]     $roles The roles
-     */
-    private function addWhereForOrganizationalRole(QueryBuilder $qb, array $roles)
-    {
-        $fRoles = $this->getRoles($roles);
-        $where = '';
-        $parameters = array();
-
-        if (!empty($fRoles['roles'])) {
-            $where .= '(UPPER(r.name) in (:roles) AND r.organization = NULL)';
-            $parameters['roles'] = $fRoles['roles'];
-        }
-
-        if (!empty($fRoles['org_roles'])) {
-            foreach ($fRoles['org_roles'] as $org => $orgRoles) {
-                $orgName = str_replace(array('.', '-'), '_', $org);
-                $where .= '' === $where ? '' : ' OR ';
-                $where .= sprintf('(UPPER(r.name) IN (:%s) AND LOWER(o.name) = :%s)', $orgName.'_roles', $orgName.'_name');
-                $parameters[$orgName.'_roles'] = $orgRoles;
-                $parameters[$orgName.'_name'] = $org;
-            }
-        }
-
-        $qb->where($where);
-
-        foreach ($parameters as $name => $value) {
-            $qb->setParameter($name, $value);
-        }
     }
 
     /**
@@ -317,6 +210,10 @@ class PermissionProvider implements PermissionProviderInterface
     {
         $groupSids = array();
 
+        if (null === $this->sharingManager) {
+            throw new InvalidArgumentException('The "setSharingManager()" must be called before');
+        }
+
         foreach ($sids as $sid) {
             if (IdentityUtils::isValid($sid)) {
                 $type = $this->sharingManager->getIdentityConfig($sid->getType())->getType();
@@ -328,49 +225,6 @@ class PermissionProvider implements PermissionProviderInterface
     }
 
     /**
-     * Get the roles and organization roles.
-     *
-     * @param string[] $roles The roles
-     *
-     * @return array
-     */
-    private function getRoles(array $roles)
-    {
-        $fRoles = array(
-            'roles' => array(),
-            'org_roles' => array(),
-        );
-
-        foreach ($roles as $role) {
-            if (false !== ($pos = strrpos($role, '__'))) {
-                $org = strtolower(substr($role, $pos + 2));
-                $fRoles['org_roles'][$org][] = strtoupper(substr($role, 0, $pos));
-            } else {
-                $fRoles['roles'][] = strtoupper($role);
-            }
-        }
-
-        return $fRoles;
-    }
-
-    /**
-     * Check if the role is an organizational role.
-     *
-     * @return bool
-     */
-    private function isOrganizational()
-    {
-        if (null === $this->isOrganizational) {
-            $ref = new \ReflectionClass($this->roleClass);
-            $interfaces = $ref->getInterfaceNames();
-
-            $this->isOrganizational = in_array(OrganizationalInterface::class, $interfaces);
-        }
-
-        return $this->isOrganizational;
-    }
-
-    /**
      * Get the security identities.
      *
      * @param SecurityIdentityInterface[]|null $sids The security identities to filter the sharing entries
@@ -379,7 +233,7 @@ class PermissionProvider implements PermissionProviderInterface
      */
     private function getSecurityIdentities($sids = null)
     {
-        if (null === $sids && null !== $this->sharingManager) {
+        if (null === $sids) {
             $sids = $this->sidManager->getSecurityIdentities($this->tokenStorage->getToken());
         }
 

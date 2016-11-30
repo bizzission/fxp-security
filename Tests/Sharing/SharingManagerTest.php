@@ -11,14 +11,19 @@
 
 namespace Sonatra\Component\Security\Tests\Sharing;
 
+use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Sharing\SharingIdentityConfig;
 use Sonatra\Component\Security\Sharing\SharingManager;
+use Sonatra\Component\Security\Sharing\SharingProviderInterface;
 use Sonatra\Component\Security\Sharing\SharingSubjectConfig;
 use Sonatra\Component\Security\SharingVisibilities;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -26,18 +31,27 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 class SharingManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var SharingProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $provider;
+
+    /**
      * @var SharingManager
      */
     protected $sm;
 
     protected function setUp()
     {
-        $this->sm = new SharingManager();
+        $this->provider = $this->getMockBuilder(SharingProviderInterface::class)->getMock();
+        $this->provider->expects($this->atLeastOnce())
+            ->method('setSharingManager');
+
+        $this->sm = new SharingManager($this->provider);
     }
 
     public function testHasSubjectConfig()
     {
-        $pm = new SharingManager(array(
+        $pm = new SharingManager($this->provider, array(
             new SharingSubjectConfig(MockObject::class),
         ));
 
@@ -46,7 +60,7 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasIdentityConfig()
     {
-        $pm = new SharingManager(array(), array(
+        $pm = new SharingManager($this->provider, array(), array(
             new SharingIdentityConfig(MockRole::class),
         ));
 
@@ -201,5 +215,114 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
         $this->sm->addSubjectConfig(new SharingSubjectConfig(MockObject::class, $visibility));
 
         $this->assertSame($result, $this->sm->hasSharingVisibility($subject));
+    }
+
+    public function testResetPreloadPermissions()
+    {
+        $object = new MockObject('foo', 42);
+        $sm = $this->sm->resetPreloadPermissions(array($object));
+
+        $this->assertSame($sm, $this->sm);
+    }
+
+    public function testClear()
+    {
+        $sm = $this->sm->clear();
+
+        $this->assertSame($sm, $this->sm);
+    }
+
+    public function testIsGranted()
+    {
+        $operation = 'view';
+        $field = null;
+        $object = new MockObject('foo', 42);
+        $subject = SubjectIdentity::fromObject($object);
+
+        $perm = new MockPermission();
+        $perm->setOperation('view');
+        $sharing = new MockSharing();
+        $sharing->setSubjectClass(MockObject::class);
+        $sharing->setSubjectId(42);
+        $sharing->setIdentityClass(MockRole::class);
+        $sharing->setIdentityName('ROLE_USER');
+        $sharing->getPermissions()->add($perm);
+
+        $sharing2 = new MockSharing();
+        $sharing2->setSubjectClass(MockObject::class);
+        $sharing2->setSubjectId(42);
+        $sharing2->setIdentityClass(MockUserRoleable::class);
+        $sharing2->setIdentityName('user.test');
+        $sharing2->setRoles(array('ROLE_TEST'));
+
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array(SubjectIdentity::fromObject($object)))
+            ->willReturn(array($sharing, $sharing2));
+
+        $roleTest = new MockRole('ROLE_TEST');
+        $perm2 = new MockPermission();
+        $perm2->setOperation('test');
+        $roleTest->addPermission($perm2);
+
+        $this->provider->expects($this->once())
+            ->method('getPermissionRoles')
+            ->with(array('ROLE_TEST'))
+            ->willReturn(array($roleTest));
+
+        $sConfig = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
+        $this->sm->addSubjectConfig($sConfig);
+
+        $iConfig = new SharingIdentityConfig(MockRole::class, 'role', false, true);
+        $this->sm->addIdentityConfig($iConfig);
+        $iConfig2 = new SharingIdentityConfig(MockUserRoleable::class, 'user', true);
+        $this->sm->addIdentityConfig($iConfig2);
+
+        $this->sm->preloadPermissions(array($object));
+        $this->sm->preloadRolePermissions(array($subject));
+
+        $this->assertTrue($this->sm->isGranted($operation, $subject, $field));
+    }
+
+    public function testIsGrantedWithField()
+    {
+        $operation = 'view';
+        $field = 'name';
+        $object = new MockObject('foo', 42);
+        $subject = SubjectIdentity::fromObject($object);
+
+        $this->assertFalse($this->sm->isGranted($operation, $subject, $field));
+    }
+
+    public function testIsGrantedWithoutIdentityConfigRoleable()
+    {
+        $operation = 'view';
+        $field = null;
+        $object = new MockObject('foo', 42);
+        $subject = SubjectIdentity::fromObject($object);
+
+        $perm = new MockPermission();
+        $perm->setOperation('view');
+        $sharing = new MockSharing();
+        $sharing->setSubjectClass(MockObject::class);
+        $sharing->setSubjectId(42);
+        $sharing->setIdentityClass(MockRole::class);
+        $sharing->setIdentityName('ROLE_USER');
+        $sharing->getPermissions()->add($perm);
+
+        $this->provider->expects($this->once())
+            ->method('getSharingEntries')
+            ->with(array(SubjectIdentity::fromObject($object)))
+            ->willReturn(array($sharing));
+
+        $sConfig = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
+        $this->sm->addSubjectConfig($sConfig);
+
+        $iConfig = new SharingIdentityConfig(MockRole::class, 'role', false, true);
+        $this->sm->addIdentityConfig($iConfig);
+
+        $this->sm->preloadPermissions(array($object));
+
+        $this->assertTrue($this->sm->isGranted($operation, $subject, $field));
     }
 }

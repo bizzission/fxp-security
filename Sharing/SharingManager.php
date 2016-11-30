@@ -11,194 +11,270 @@
 
 namespace Sonatra\Component\Security\Sharing;
 
-use Doctrine\Common\Util\ClassUtils;
-use Sonatra\Component\Security\Exception\AlreadyConfigurationAliasExistingException;
-use Sonatra\Component\Security\Exception\SharingIdentityConfigNotFoundException;
-use Sonatra\Component\Security\Exception\SharingSubjectConfigNotFoundException;
+use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\SharingVisibilities;
+use Sonatra\Component\Security\Model\RoleInterface;
+use Sonatra\Component\Security\Model\SharingInterface;
+use Sonatra\Component\Security\Permission\PermissionUtils;
 
 /**
  * Sharing manager.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingManager implements SharingManagerInterface
+class SharingManager extends AbstractSharingManager implements SharingManagerInterface
 {
     /**
      * @var array
      */
-    protected $subjectConfigs = array();
+    protected $cacheSharing = array();
 
     /**
      * @var array
      */
-    protected $identityConfigs = array();
+    protected $cacheRoleSharing = array();
 
     /**
      * @var array
      */
-    protected $identityAliases = array();
+    protected $cacheSubjectSharing = array();
 
     /**
-     * @var bool
+     * {@inheritdoc}
      */
-    protected $identityRoleable = false;
-
-    /**
-     * @var bool
-     */
-    protected $identityPermissible = false;
-
-    /**
-     * @var array
-     */
-    protected $cacheSubjectVisibilities = array();
-
-    /**
-     * Constructor.
-     *
-     * @param SharingSubjectConfigInterface[]  $subjectConfigs  The subject configs
-     * @param SharingIdentityConfigInterface[] $identityConfigs The identity configs
-     */
-    public function __construct(array $subjectConfigs = array(), array $identityConfigs = array())
+    public function isGranted($operation, $subject = null, $field = null)
     {
-        foreach ($subjectConfigs as $config) {
-            $this->addSubjectConfig($config);
-        }
+        $this->preloadPermissions(array($subject));
+        $this->preloadRolePermissions(array($subject));
 
-        foreach ($identityConfigs as $config) {
-            $this->addIdentityConfig($config);
-        }
+        $sharingId = null !== $subject ? SharingUtils::getCacheId($subject) : null;
+        $classAction = PermissionUtils::getMapAction($subject instanceof SubjectIdentityInterface ? $subject->getType() : null);
+        $fieldAction = PermissionUtils::getMapAction($field);
+
+        return isset($this->cacheSharing[$sharingId][$classAction][$fieldAction][$operation])
+            || $this->isSharingGranted($operation, $subject, $field);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addSubjectConfig(SharingSubjectConfigInterface $config)
+    public function preloadPermissions(array $objects)
     {
-        $this->subjectConfigs[$config->getType()] = $config;
-        unset($this->cacheSubjectVisibilities[$config->getType()]);
-    }
+        $subjects = $this->buildSubjects($objects);
+        $entries = $this->buildSharingEntries($subjects);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasSubjectConfig($class)
-    {
-        return isset($this->subjectConfigs[ClassUtils::getRealClass($class)]);
-    }
+        foreach ($subjects as $id => $subject) {
+            if (isset($entries[$id])) {
+                foreach ($entries[$id] as $entrySharing) {
+                    $operations = isset($this->cacheSubjectSharing[$id]['operations'])
+                        ? $this->cacheSubjectSharing[$id]['operations']
+                        : array();
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubjectConfig($class)
-    {
-        $class = ClassUtils::getRealClass($class);
-
-        if (!$this->hasSubjectConfig($class)) {
-            throw new SharingSubjectConfigNotFoundException($class);
-        }
-
-        return $this->subjectConfigs[$class];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubjectConfigs()
-    {
-        return array_values($this->subjectConfigs);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasSharingVisibility(SubjectIdentityInterface $subject)
-    {
-        $type = $subject->getType();
-
-        if (!array_key_exists($type, $this->cacheSubjectVisibilities)) {
-            $sharingVisibility = false;
-
-            if ($this->hasSubjectConfig($type)) {
-                $config = $this->getSubjectConfig($type);
-                $sharingVisibility = SharingVisibilities::TYPE_NONE !== $config->getVisibility();
+                    $this->cacheSubjectSharing[$id]['sharings'][] = $entrySharing;
+                    $this->cacheSubjectSharing[$id]['operations'] = array_unique(array_merge(
+                        $operations,
+                        SharingUtils::buildOperations($entrySharing)
+                    ));
+                }
             }
-
-            $this->cacheSubjectVisibilities[$type] = $sharingVisibility;
         }
 
-        return $this->cacheSubjectVisibilities[$type];
+        $this->preloadPermissionsOfSharingRoles($objects);
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addIdentityConfig(SharingIdentityConfigInterface $config)
+    public function preloadRolePermissions(array $subjects)
     {
-        if (isset($this->identityAliases[$config->getAlias()])) {
-            throw new AlreadyConfigurationAliasExistingException($config->getAlias(), $config->getType());
+        $roles = array();
+        $idSubjects = array();
+
+        foreach ($subjects as $subject) {
+            $subjectId = SharingUtils::getCacheId($subject);
+            $idSubjects[$subjectId] = $subject;
+
+            if (!array_key_exists($subjectId, $this->cacheSharing)
+                    && isset($this->cacheRoleSharing[$subjectId])) {
+                $roles = array_merge($roles, $this->cacheRoleSharing[$subjectId]);
+                $this->cacheSharing[$subjectId] = array();
+            }
         }
 
-        $this->identityConfigs[$config->getType()] = $config;
-        $this->identityAliases[$config->getAlias()] = $config->getType();
+        $roles = array_unique($roles);
 
-        if ($config->isRoleable()) {
-            $this->identityRoleable = true;
-        }
-
-        if ($config->isPermissible()) {
-            $this->identityPermissible = true;
+        if (!empty($roles)) {
+            $this->doLoadSharingPermissions($idSubjects, $roles);
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasIdentityConfig($class)
+    public function resetPreloadPermissions(array $objects)
     {
-        return isset($this->identityConfigs[ClassUtils::getRealClass($class)])
-            || isset($this->identityAliases[$class]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentityConfig($class)
-    {
-        $class = isset($this->identityAliases[$class])
-            ? $this->identityAliases[$class]
-            : ClassUtils::getRealClass($class);
-
-        if (!$this->hasIdentityConfig($class)) {
-            throw new SharingIdentityConfigNotFoundException($class);
+        foreach ($objects as $object) {
+            $subject = SubjectIdentity::fromObject($object);
+            $id = SharingUtils::getCacheId($subject);
+            unset($this->cacheSharing[$id]);
+            unset($this->cacheRoleSharing[$id]);
+            unset($this->cacheSubjectSharing[$id]);
         }
 
-        return $this->identityConfigs[$class];
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getIdentityConfigs()
+    public function clear()
     {
-        return array_values($this->identityConfigs);
+        $this->cacheSharing = array();
+        $this->cacheRoleSharing = array();
+        $this->cacheSubjectSharing = array();
+
+        return $this;
     }
 
     /**
-     * {@inheritdoc}
+     * Check if the access is granted by a sharing entry.
+     *
+     * @param string                        $operation The operation
+     * @param SubjectIdentityInterface|null $subject   The subject
+     * @param string|null                   $field     The field of subject
+     *
+     * @return bool
      */
-    public function hasIdentityRoleable()
+    private function isSharingGranted($operation, $subject = null, $field = null)
     {
-        return $this->identityRoleable;
+        if (null !== $subject && null === $field) {
+            $id = SharingUtils::getCacheId($subject);
+
+            return isset($this->cacheSubjectSharing[$id]['operations'])
+            && in_array($operation, $this->cacheSubjectSharing[$id]['operations']);
+        }
+
+        return false;
     }
 
     /**
-     * {@inheritdoc}
+     * Convert the objects into subject identities.
+     *
+     * @param object[] $objects The objects
+     *
+     * @return SubjectIdentityInterface[]
      */
-    public function hasIdentityPermissible()
+    private function buildSubjects(array $objects)
     {
-        return $this->identityPermissible;
+        $subjects = array();
+
+        foreach ($objects as $object) {
+            $subject = SubjectIdentity::fromObject($object);
+            $id = SharingUtils::getCacheId($subject);
+
+            if ($this->hasSubjectConfig($subject->getType())
+                    && $this->hasIdentityPermissible()
+                    && $this->hasSharingVisibility($subject)
+                    && !array_key_exists($id, $this->cacheSubjectSharing)) {
+                $subjects[$id] = $subject;
+                $this->cacheSubjectSharing[$id] = false;
+            }
+        }
+
+        return $subjects;
+    }
+
+    /**
+     * Build the sharing entries with the subject identities.
+     *
+     * @param SubjectIdentityInterface[] $subjects The subjects
+     *
+     * @return array The map of cache id and sharing instance
+     */
+    private function buildSharingEntries(array $subjects)
+    {
+        $entries = array();
+
+        if (!empty($subjects)) {
+            $res = $this->provider->getSharingEntries(array_values($subjects));
+
+            foreach ($res as $sharing) {
+                $id = SharingUtils::getSharingCacheId($sharing);
+                $entries[$id][] = $sharing;
+            }
+        }
+
+        return $entries;
+    }
+
+    /**
+     * Preload permissions of sharing roles.
+     *
+     * @param object[] $objects The objects
+     */
+    private function preloadPermissionsOfSharingRoles(array $objects)
+    {
+        if (!$this->hasIdentityRoleable()) {
+            return;
+        }
+
+        $subjects = array();
+
+        foreach ($objects as $object) {
+            $subject = SubjectIdentity::fromObject($object);
+            $id = SharingUtils::getCacheId($subject);
+            $subjects[$id] = $subject;
+        }
+
+        foreach ($subjects as $id => $subject) {
+            if (!isset($this->cacheRoleSharing[$id])
+                    && isset($this->cacheSubjectSharing[$id]['sharings'])) {
+                /* @var SharingInterface[] $sharings */
+                $sharings = $this->cacheSubjectSharing[$id]['sharings'];
+                $this->cacheRoleSharing[$id] = array();
+
+                foreach ($sharings as $sharing) {
+                    foreach ($sharing->getRoles() as $role) {
+                        $this->cacheRoleSharing[$id][] = $role;
+                    }
+                }
+
+                $this->cacheRoleSharing[$id] = array_unique($this->cacheRoleSharing[$id]);
+            }
+        }
+    }
+
+    /**
+     * Action to load the permissions of sharing roles.
+     *
+     * @param array    $idSubjects The map of subject id and subject
+     * @param string[] $roles      The roles
+     */
+    private function doLoadSharingPermissions(array $idSubjects, array $roles)
+    {
+        /* @var RoleInterface[] $mapRoles */
+        $mapRoles = array();
+        $cRoles = $this->provider->getPermissionRoles($roles);
+
+        foreach ($cRoles as $role) {
+            $mapRoles[$role->getRole()] = $role;
+        }
+
+        /* @var SubjectIdentityInterface $subject */
+        foreach ($idSubjects as $id => $subject) {
+            foreach ($this->cacheRoleSharing[$id] as $role) {
+                if (isset($mapRoles[$role])) {
+                    $cRole = $mapRoles[$role];
+
+                    foreach ($cRole->getPermissions() as $perm) {
+                        $class = $subject->getType();
+                        $field = PermissionUtils::getMapAction($perm->getField());
+                        $this->cacheSharing[$id][$class][$field][$perm->getOperation()] = true;
+                    }
+                }
+            }
+        }
     }
 }
