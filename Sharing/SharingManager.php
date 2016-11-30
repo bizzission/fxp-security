@@ -225,17 +225,7 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
         foreach ($subjects as $id => $subject) {
             if (!isset($this->cacheRoleSharing[$id])
                     && isset($this->cacheSubjectSharing[$id]['sharings'])) {
-                /* @var SharingInterface[] $sharings */
-                $sharings = $this->cacheSubjectSharing[$id]['sharings'];
-                $this->cacheRoleSharing[$id] = array();
-
-                foreach ($sharings as $sharing) {
-                    foreach ($sharing->getRoles() as $role) {
-                        $this->cacheRoleSharing[$id][] = $role;
-                    }
-                }
-
-                $this->cacheRoleSharing[$id] = array_unique($this->cacheRoleSharing[$id]);
+                $this->buildCacheRoleSharing($this->cacheSubjectSharing[$id]['sharings'], $id);
             }
         }
     }
@@ -258,6 +248,25 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
         }
 
         return $subjects;
+    }
+
+    /**
+     * Build the cache role sharing.
+     *
+     * @param SharingInterface[] $sharings The sharing instances
+     * @param string             $id       The cache id
+     */
+    private function buildCacheRoleSharing(array $sharings, $id)
+    {
+        $this->cacheRoleSharing[$id] = array();
+
+        foreach ($sharings as $sharing) {
+            foreach ($sharing->getRoles() as $role) {
+                $this->cacheRoleSharing[$id][] = $role;
+            }
+        }
+
+        $this->cacheRoleSharing[$id] = array_unique($this->cacheRoleSharing[$id]);
     }
 
     /**
