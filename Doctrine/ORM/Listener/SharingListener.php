@@ -12,9 +12,13 @@
 namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\Events;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\Exception\SecurityException;
 use Doctrine\Common\EventSubscriber;
+use Sonatra\Component\Security\Sharing\SharingManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Doctrine ORM listener for sharing filter.
@@ -27,6 +31,26 @@ class SharingListener implements EventSubscriber
      * @var PermissionManagerInterface|null
      */
     protected $permissionManager;
+
+    /**
+     * @var SharingManagerInterface|null
+     */
+    protected $sharingManager;
+
+    /**
+     * @var SecurityIdentityManagerInterface|null
+     */
+    protected $sidManager;
+
+    /**
+     * @var TokenStorageInterface|null
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var EventDispatcherInterface|null
+     */
+    protected $dispatcher;
 
     /**
      * @var bool
@@ -80,6 +104,110 @@ class SharingListener implements EventSubscriber
     }
 
     /**
+     * Set the sharing manager.
+     *
+     * @param SharingManagerInterface $sharingManager The sharing manager
+     *
+     * @return self
+     */
+    public function setSharingManager(SharingManagerInterface $sharingManager)
+    {
+        $this->sharingManager = $sharingManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the sharing manager.
+     *
+     * @return SharingManagerInterface
+     */
+    public function getSharingManager()
+    {
+        $this->init();
+
+        return $this->sharingManager;
+    }
+
+    /**
+     * Set the security identity manager.
+     *
+     * @param SecurityIdentityManagerInterface $sidManager The security identity manager
+     *
+     * @return self
+     */
+    public function setSecurityIdentityManager(SecurityIdentityManagerInterface $sidManager)
+    {
+        $this->sidManager = $sidManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the security identity manager.
+     *
+     * @return SecurityIdentityManagerInterface
+     */
+    public function getSecurityIdentityManager()
+    {
+        $this->init();
+
+        return $this->sidManager;
+    }
+
+    /**
+     * Set the token storage.
+     *
+     * @param TokenStorageInterface $tokenStorage The token storage
+     *
+     * @return self
+     */
+    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+
+        return $this;
+    }
+
+    /**
+     * Get the token storage.
+     *
+     * @return TokenStorageInterface
+     */
+    public function getTokenStorage()
+    {
+        $this->init();
+
+        return $this->tokenStorage;
+    }
+
+    /**
+     * Set the event dispatcher.
+     *
+     * @param EventDispatcherInterface $dispatcher The event dispatcher
+     *
+     * @return self
+     */
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+
+        return $this;
+    }
+
+    /**
+     * Get the event dispatcher.
+     *
+     * @return EventDispatcherInterface
+     */
+    public function getEventDispatcher()
+    {
+        $this->init();
+
+        return $this->dispatcher;
+    }
+
+    /**
      * Init listener.
      */
     protected function init()
@@ -89,6 +217,14 @@ class SharingListener implements EventSubscriber
 
             if (null === $this->permissionManager) {
                 throw new SecurityException(sprintf($msg, 'setPermissionManager'));
+            } elseif (null === $this->sharingManager) {
+                throw new SecurityException(sprintf($msg, 'setSharingManager'));
+            } elseif (null === $this->sidManager) {
+                throw new SecurityException(sprintf($msg, 'setSecurityIdentityManager'));
+            } elseif (null === $this->tokenStorage) {
+                throw new SecurityException(sprintf($msg, 'setTokenStorage'));
+            } elseif (null === $this->dispatcher) {
+                throw new SecurityException(sprintf($msg, 'setEventDispatcher'));
             }
 
             $this->initialized = true;
