@@ -47,11 +47,10 @@ class PermissionValidator extends ConstraintValidator
 
     /**
      * {@inheritdoc}
-     *
-     * @param Constraint|Permission $constraint The constraint
      */
     public function validate($value, Constraint $constraint)
     {
+        /* @var Permission $constraint */
         $class = $this->propertyAccessor->getValue($value, $constraint->propertyClass);
         $field = $this->propertyAccessor->getValue($value, $constraint->propertyField);
 
