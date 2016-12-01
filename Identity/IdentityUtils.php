@@ -19,7 +19,7 @@ namespace Sonatra\Component\Security\Identity;
 abstract class IdentityUtils
 {
     /**
-     * Filter the role identities and convert to role instances.
+     * Filter the role identities and convert to strings.
      *
      * @param SecurityIdentityInterface[] $sids The security identities
      *
