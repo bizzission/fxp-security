@@ -27,8 +27,9 @@ Features include:
 - Security Identity Manager to retrieving security identities from tokens (current user,
   all roles, all groups and organization)
 - AuthorizationChecker to check the permissions for objects
-- Permission Manager retrieve and manipulate the permissions with her operations
-- Sharing Manager retrieve and manipulate the sharing entry with her permissions and roles
+- Permission Manager to retrieve the permissions with her operations
+- Sharing Manager to retrieve the sharing entry with her permissions and roles
+- Symfony validators of permission and sharing model
 - Permission Voter to use the Symfony Authorization Checker
 - Define a role for various host with direct injection in token (regex compatible)
 - Execution cache system and PSR-6 Caching Implementation for the permissions getter
