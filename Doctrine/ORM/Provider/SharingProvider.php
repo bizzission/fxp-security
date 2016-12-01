@@ -114,6 +114,8 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
             return array();
         }
 
+        $now = new \DateTime('now');
+        $now->setTimezone(new \DateTimeZone('UTC'));
         $sids = $this->getSecurityIdentities($sids);
         $qb = $this->sharingRepo->createQueryBuilder('s')
             ->addSelect('p')
@@ -121,7 +123,7 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
 
         $sharingEntries = $this->addWhereForSharing($qb, $subjects, $sids)
             ->andWhere('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= :now) AND (s.endedAt IS NULL OR s.endedAt >= :now)')
-            ->setParameter('now', new \DateTime('now', new \DateTimeZone('UTC')), Type::DATETIME)
+            ->setParameter('now', $now, Type::DATETIME)
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')
