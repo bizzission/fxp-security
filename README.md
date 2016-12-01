@@ -20,20 +20,23 @@ Features include:
 - Define the organization with her roles in Doctrine (optional)
 - Define the organization user with her roles and groups in Doctrine (optional)
 - Defined the permissions on the roles in Doctrine
-- Merge the permissions of roles children of associated roles with user, role, group, organization, and token
+- Defined the permissions on the sharing entry in Doctrine
+- Defined the roles on the sharing entry in Doctrine
+- Share each records by user, role, groups or organization and defined her permissions and roles
+- Merge the permissions of roles children of associated roles with user, role, group, organization, sharing entry, and token
 - Security Identity Manager to retrieving security identities from tokens (current user,
   all roles, all groups and organization)
 - AuthorizationChecker to check the permissions for objects
 - Permission Manager retrieve and manipulate the permissions with her operations
+- Sharing Manager retrieve and manipulate the sharing entry with her permissions and roles
 - Permission Voter to use the Symfony Authorization Checker
 - Define a role for various host with direct injection in token (regex compatible)
 - Execution cache system and PSR-6 Caching Implementation for the permissions getter
 - Execution cache and PSR-6 Caching Implementation for the determination of all roles in
   hierarchy (with user, group, role, organization, organization user, token)
-- Share each records by user, role, groups or organization and defined her permissions
-- Doctrine ORM Filter for filtering  the records in query defined by the sharing rules
-- Doctrine Listener for empty the record field value for all query type
-- Doctrine Listener for keep the old value in the record field value if the user has not the permission of action
+- Doctrine ORM Filter to filtering the records in query defined by the sharing rules
+- Doctrine Listener to empty the record field value for all query type
+- Doctrine Listener to keep the old value in the record field value if the user has not the permission of action
 - Organization with users and roles
 - Authorization expression voter with injectable custom variables (to build custom expression functions with dependencies)
 - `is_basic_auth` expression language function
