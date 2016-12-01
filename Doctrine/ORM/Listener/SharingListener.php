@@ -28,27 +28,27 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class SharingListener implements EventSubscriber
 {
     /**
-     * @var PermissionManagerInterface|null
+     * @var PermissionManagerInterface
      */
     protected $permissionManager;
 
     /**
-     * @var SharingManagerInterface|null
+     * @var SharingManagerInterface
      */
     protected $sharingManager;
 
     /**
-     * @var SecurityIdentityManagerInterface|null
+     * @var SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
     /**
-     * @var TokenStorageInterface|null
+     * @var TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var EventDispatcherInterface|null
+     * @var EventDispatcherInterface
      */
     protected $dispatcher;
 
