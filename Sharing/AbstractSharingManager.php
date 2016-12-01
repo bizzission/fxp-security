@@ -127,14 +127,22 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function hasSharingVisibility(SubjectIdentityInterface $subject)
     {
+        return SharingVisibilities::TYPE_NONE !== $this->getSharingVisibility($subject);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSharingVisibility(SubjectIdentityInterface $subject)
+    {
         $type = $subject->getType();
 
         if (!array_key_exists($type, $this->cacheSubjectVisibilities)) {
-            $sharingVisibility = false;
+            $sharingVisibility = SharingVisibilities::TYPE_NONE;
 
             if ($this->hasSubjectConfig($type)) {
                 $config = $this->getSubjectConfig($type);
-                $sharingVisibility = SharingVisibilities::TYPE_NONE !== $config->getVisibility();
+                $sharingVisibility = $config->getVisibility();
             }
 
             $this->cacheSubjectVisibilities[$type] = $sharingVisibility;

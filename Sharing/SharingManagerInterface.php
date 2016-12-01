@@ -55,13 +55,22 @@ interface SharingManagerInterface
     public function getSubjectConfigs();
 
     /**
-     * Check if the subject has sharing visibility.
+     * Check if the subject has sharing visibility of subject identity.
      *
      * @param SubjectIdentityInterface $subject The subject
      *
      * @return bool
      */
     public function hasSharingVisibility(SubjectIdentityInterface $subject);
+
+    /**
+     * Get the sharing visibility of subject identity.
+     *
+     * @param SubjectIdentityInterface $subject The subject
+     *
+     * @return string
+     */
+    public function getSharingVisibility(SubjectIdentityInterface $subject);
 
     /**
      * Add the sharing identity config.
