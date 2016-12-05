@@ -14,7 +14,7 @@
 
             <trans-unit id="permission_3">
                 <source>permission.class.invalid</source>
-                <target>The class "%class%" does not exist</target>
+                <target>This class does not exist</target>
             </trans-unit>
 
             <trans-unit id="permission_4">
@@ -29,7 +29,27 @@
 
             <trans-unit id="permission_6">
                 <source>permission.field.invalid</source>
-                <target>The field "%field%" does not exist</target>
+                <target>This field does not exist</target>
+            </trans-unit>
+
+            <trans-unit id="sharing_1">
+                <source>sharing.class.invalid</source>
+                <target>This class does not exist</target>
+            </trans-unit>
+
+            <trans-unit id="sharing_2">
+                <source>sharing.class.not_managed</source>
+                <target>This class is not managed by the sharing manager</target>
+            </trans-unit>
+
+            <trans-unit id="sharing_3">
+                <source>sharing.class.identity_not_roleable</source>
+                <target>Any roles can be added for this identity</target>
+            </trans-unit>
+
+            <trans-unit id="sharing_4">
+                <source>sharing.class.identity_not_permissible</source>
+                <target>Any permissions can be added for this identity</target>
             </trans-unit>
         </body>
     </file>
