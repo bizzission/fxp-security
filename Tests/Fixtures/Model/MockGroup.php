@@ -19,20 +19,38 @@ use Sonatra\Component\Security\Model\GroupInterface;
 class MockGroup implements GroupInterface
 {
     /**
+     * @var int|null
+     */
+    protected $id;
+
+    /**
      * @var string
      */
     protected $name;
 
+    /**
+     * @var array
+     */
     protected $roles = array();
 
     /**
      * Constructor.
      *
      * @param string $name The group name
+     * @param int    $id   The id
      */
-    public function __construct($name)
+    public function __construct($name, $id = 23)
     {
         $this->name = $name;
+        $this->id = $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
