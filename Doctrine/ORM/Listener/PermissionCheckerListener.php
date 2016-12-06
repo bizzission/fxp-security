@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class PermissionCheckerListener extends AbstractPermissionListener
 {
     /**
-     * @var AuthorizationCheckerInterface|null
+     * @var AuthorizationCheckerInterface
      */
     protected $authChecker;
 

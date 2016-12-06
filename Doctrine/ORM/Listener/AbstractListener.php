@@ -24,12 +24,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 abstract class AbstractListener implements EventSubscriber
 {
     /**
-     * @var TokenStorageInterface|null
+     * @var TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var PermissionManagerInterface|null
+     * @var PermissionManagerInterface
      */
     protected $permissionManager;
 

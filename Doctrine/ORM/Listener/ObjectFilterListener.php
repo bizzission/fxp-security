@@ -26,7 +26,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 class ObjectFilterListener extends AbstractPermissionListener
 {
     /**
-     * @var ObjectFilterInterface|null
+     * @var ObjectFilterInterface
      */
     protected $objectFilter;
 
