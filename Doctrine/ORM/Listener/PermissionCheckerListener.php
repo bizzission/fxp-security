@@ -53,7 +53,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
     {
         $token = $this->getTokenStorage()->getToken();
 
-        if (!$this->permissionManager->isEnabled()
+        if (!$this->getPermissionManager()->isEnabled()
                 || null === $token || $token instanceof ConsoleToken) {
             return;
         }
@@ -64,7 +64,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
         $deleteEntities = $uow->getScheduledEntityDeletions();
 
         $this->postResetPermissions = array_merge($createEntities, $updateEntities, $deleteEntities);
-        $this->permissionManager->preloadPermissions($this->postResetPermissions);
+        $this->getPermissionManager()->preloadPermissions($this->postResetPermissions);
 
         $this->checkAllScheduledByAction($createEntities, 'create');
         $this->checkAllScheduledByAction($updateEntities, 'edit');

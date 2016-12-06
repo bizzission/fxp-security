@@ -53,7 +53,7 @@ class ObjectFilterListener extends AbstractPermissionListener
     {
         $token = $this->getTokenStorage()->getToken();
 
-        if (!$this->permissionManager->isEnabled()
+        if (!$this->getPermissionManager()->isEnabled()
                 || null === $token || $token instanceof ConsoleToken) {
             return;
         }
@@ -73,7 +73,7 @@ class ObjectFilterListener extends AbstractPermissionListener
     {
         $token = $this->getTokenStorage()->getToken();
 
-        if (!$this->permissionManager->isEnabled()
+        if (!$this->getPermissionManager()->isEnabled()
                 || null === $token || $token instanceof ConsoleToken) {
             return;
         }
