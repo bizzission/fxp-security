@@ -12,20 +12,19 @@
 namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use Sonatra\Component\Security\Doctrine\ORM\Listener\PermissionCheckerListener;
 use Sonatra\Component\Security\Token\ConsoleToken;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener;
-use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
+class PermissionCheckerListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -33,14 +32,14 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
     protected $tokenStorage;
 
     /**
+     * @var AuthorizationCheckerInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $authChecker;
+
+    /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $permissionManager;
-
-    /**
-     * @var ObjectFilterInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $objectFilter;
 
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -53,36 +52,36 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
     protected $uow;
 
     /**
-     * @var ObjectFilterListener
+     * @var PermissionCheckerListener
      */
     protected $listener;
 
     protected function setUp()
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
+        $this->authChecker = $this->getMockBuilder(AuthorizationCheckerInterface::class)->getMock();
         $this->permissionManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
-        $this->objectFilter = $this->getMockBuilder(ObjectFilterInterface::class)->getMock();
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->uow = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
-        $this->listener = new ObjectFilterListener();
+        $this->listener = new PermissionCheckerListener();
 
         $this->em->expects($this->any())
             ->method('getUnitOfWork')
             ->willReturn($this->uow);
 
         $this->listener->setTokenStorage($this->tokenStorage);
+        $this->listener->setAuthorizationChecker($this->authChecker);
         $this->listener->setPermissionManager($this->permissionManager);
-        $this->listener->setObjectFilter($this->objectFilter);
 
-        $this->assertCount(3, $this->listener->getSubscribedEvents());
+        $this->assertCount(2, $this->listener->getSubscribedEvents());
     }
 
     public function getInvalidInitMethods()
     {
         return array(
             array('setTokenStorage', array()),
-            array('setPermissionManager', array('tokenStorage')),
-            array('setObjectFilter', array('tokenStorage', 'permissionManager')),
+            array('setAuthorizationChecker', array('tokenStorage')),
+            array('setPermissionManager', array('tokenStorage', 'authChecker')),
         );
     }
 
@@ -96,27 +95,27 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidInit($method, array $setters)
     {
-        $msg = sprintf('The "%s()" method must be called before the init of the "Sonatra\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener" class', $method);
+        $msg = sprintf('The "%s()" method must be called before the init of the "Sonatra\Component\Security\Doctrine\ORM\Listener\PermissionCheckerListener" class', $method);
         $this->expectExceptionMessage($msg);
 
-        $listener = new ObjectFilterListener();
+        $listener = new PermissionCheckerListener();
 
         if (in_array('tokenStorage', $setters)) {
             $listener->setTokenStorage($this->tokenStorage);
+        }
+
+        if (in_array('authChecker', $setters)) {
+            $listener->setAuthorizationChecker($this->authChecker);
         }
 
         if (in_array('permissionManager', $setters)) {
             $listener->setPermissionManager($this->permissionManager);
         }
 
-        if (in_array('objectFilter', $setters)) {
-            $listener->setObjectFilter($this->objectFilter);
-        }
+        /* @var OnFlushEventArgs $args */
+        $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
-        /* @var LifecycleEventArgs $args */
-        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
-
-        $listener->postLoad($args);
+        $listener->onFlush($args);
     }
 
     public function testPostFlush()
@@ -126,83 +125,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->with(array());
 
         $this->listener->postFlush();
-    }
-
-    public function testPostLoadWithDisabledPermissionManager()
-    {
-        /* @var LifecycleEventArgs $args */
-        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
-        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-
-        $this->tokenStorage->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token);
-
-        $this->permissionManager->expects($this->once())
-            ->method('isEnabled')
-            ->willReturn(false);
-
-        $this->objectFilter->expects($this->never())
-            ->method('filter');
-
-        $this->listener->postLoad($args);
-    }
-
-    public function testPostLoadWithEmptyToken()
-    {
-        /* @var LifecycleEventArgs $args */
-        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
-
-        $this->tokenStorage->expects($this->once())
-            ->method('getToken')
-            ->willReturn(null);
-
-        $this->objectFilter->expects($this->never())
-            ->method('filter');
-
-        $this->listener->postLoad($args);
-    }
-
-    public function testPostLoadWithConsoleToken()
-    {
-        /* @var LifecycleEventArgs $args */
-        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
-        $token = $this->getMockBuilder(ConsoleToken::class)->disableOriginalConstructor()->getMock();
-
-        $this->tokenStorage->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token);
-
-        $this->objectFilter->expects($this->never())
-            ->method('filter');
-
-        $this->listener->postLoad($args);
-    }
-
-    public function testPostLoad()
-    {
-        /* @var LifecycleEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
-        $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
-        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $entity = new \stdClass();
-
-        $this->tokenStorage->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token);
-
-        $this->permissionManager->expects($this->once())
-            ->method('isEnabled')
-            ->willReturn(true);
-
-        $args->expects($this->once())
-            ->method('getEntity')
-            ->willReturn($entity);
-
-        $this->objectFilter->expects($this->once())
-            ->method('filter')
-            ->with($entity);
-
-        $this->listener->postLoad($args);
     }
 
     public function testOnFlushWithDisabledPermissionManager()
@@ -219,9 +141,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('isEnabled')
             ->willReturn(false);
 
-        $this->objectFilter->expects($this->never())
-            ->method('filter');
-
         $this->listener->onFlush($args);
     }
 
@@ -233,9 +152,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
             ->willReturn(null);
-
-        $this->objectFilter->expects($this->never())
-            ->method('filter');
 
         $this->listener->onFlush($args);
     }
@@ -250,13 +166,14 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getToken')
             ->willReturn($token);
 
-        $this->objectFilter->expects($this->never())
-            ->method('filter');
-
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithCreateEntity()
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\AccessDeniedException
+     * @expectedExceptionMessage Insufficient privilege to create the entity
+     */
+    public function testOnFLushWithInsufficientPrivilegeToCreateEntity()
     {
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
@@ -275,9 +192,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
-
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
             ->willReturn(array($object));
@@ -290,13 +204,23 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getScheduledEntityDeletions')
             ->willReturn(array());
 
-        $this->objectFilter->expects($this->once())
-            ->method('restore');
+        $this->permissionManager->expects($this->once())
+            ->method('preloadPermissions')
+            ->with(array($object));
+
+        $this->authChecker->expects($this->once())
+            ->method('isGranted')
+            ->with('perm_create', $object)
+            ->willReturn(false);
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithUpdateEntity()
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\AccessDeniedException
+     * @expectedExceptionMessage Insufficient privilege to edit the entity
+     */
+    public function testOnFLushWithInsufficientPrivilegeToUpdateEntity()
     {
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
@@ -315,9 +239,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
-
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
             ->willReturn(array());
@@ -330,13 +251,23 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getScheduledEntityDeletions')
             ->willReturn(array());
 
-        $this->objectFilter->expects($this->once())
-            ->method('restore');
+        $this->permissionManager->expects($this->once())
+            ->method('preloadPermissions')
+            ->with(array($object));
+
+        $this->authChecker->expects($this->once())
+            ->method('isGranted')
+            ->with('perm_edit', $object)
+            ->willReturn(false);
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithDeleteEntity()
+    /**
+     * @expectedException \Sonatra\Component\Security\Exception\AccessDeniedException
+     * @expectedExceptionMessage Insufficient privilege to delete the entity
+     */
+    public function testOnFLushWithInsufficientPrivilegeToDeleteEntity()
     {
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
@@ -355,9 +286,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
-
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
             ->willReturn(array());
@@ -369,6 +297,15 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
             ->willReturn(array($object));
+
+        $this->permissionManager->expects($this->once())
+            ->method('preloadPermissions')
+            ->with(array($object));
+
+        $this->authChecker->expects($this->once())
+            ->method('isGranted')
+            ->with('perm_delete', $object)
+            ->willReturn(false);
 
         $this->listener->onFlush($args);
     }
@@ -391,9 +328,6 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
-
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
             ->willReturn(array());
@@ -406,8 +340,9 @@ class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getScheduledEntityDeletions')
             ->willReturn(array());
 
-        $this->objectFilter->expects($this->once())
-            ->method('commit');
+        $this->permissionManager->expects($this->once())
+            ->method('preloadPermissions')
+            ->with(array());
 
         $this->listener->onFlush($args);
     }

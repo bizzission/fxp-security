@@ -12,23 +12,22 @@
 namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\Events;
-use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Sonatra\Component\Security\Token\ConsoleToken;
 use Sonatra\Component\Security\Exception\AccessDeniedException;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * This class listens to all database activity and automatically adds constraints as permissions.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ObjectFilterListener extends AbstractPermissionListener
+class PermissionCheckerListener extends AbstractPermissionListener
 {
     /**
-     * @var ObjectFilterInterface|null
+     * @var AuthorizationCheckerInterface|null
      */
-    protected $objectFilter;
+    protected $authChecker;
 
     /**
      * Specifies the list of listened events.
@@ -38,28 +37,9 @@ class ObjectFilterListener extends AbstractPermissionListener
     public function getSubscribedEvents()
     {
         return array(
-            Events::postLoad,
             Events::onFlush,
             Events::postFlush,
         );
-    }
-
-    /**
-     * This method is executed after every load that doctrine performs.
-     *
-     * @param LifecycleEventArgs $args
-     */
-    public function postLoad(LifecycleEventArgs $args)
-    {
-        $token = $this->getTokenStorage()->getToken();
-
-        if (!$this->permissionManager->isEnabled()
-                || null === $token || $token instanceof ConsoleToken) {
-            return;
-        }
-
-        $object = $args->getEntity();
-        $this->getObjectFilter()->filter($object);
     }
 
     /**
@@ -79,39 +59,42 @@ class ObjectFilterListener extends AbstractPermissionListener
         }
 
         $uow = $args->getEntityManager()->getUnitOfWork();
-        $this->getObjectFilter()->beginTransaction();
+        $createEntities = $uow->getScheduledEntityInsertions();
+        $updateEntities = $uow->getScheduledEntityUpdates();
+        $deleteEntities = $uow->getScheduledEntityDeletions();
 
-        $this->checkAllScheduledByAction($uow->getScheduledEntityInsertions(), 'create');
-        $this->checkAllScheduledByAction($uow->getScheduledEntityUpdates(), 'edit');
-        $this->checkAllScheduledByAction($uow->getScheduledEntityDeletions(), 'delete');
+        $this->postResetPermissions = array_merge($createEntities, $updateEntities, $deleteEntities);
+        $this->permissionManager->preloadPermissions($this->postResetPermissions);
 
-        $this->getObjectFilter()->commit();
+        $this->checkAllScheduledByAction($createEntities, 'create');
+        $this->checkAllScheduledByAction($updateEntities, 'edit');
+        $this->checkAllScheduledByAction($deleteEntities, 'delete');
     }
 
     /**
-     * Set the object filter.
+     * Set the authorization checker.
      *
-     * @param ObjectFilterInterface $objectFilter The object filter
+     * @param AuthorizationCheckerInterface $authorizationChecker The authorization checker
      *
      * @return self
      */
-    public function setObjectFilter(ObjectFilterInterface $objectFilter)
+    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker)
     {
-        $this->objectFilter = $objectFilter;
+        $this->authChecker = $authorizationChecker;
 
         return $this;
     }
 
     /**
-     * Get the Object Filter.
+     * Gets security authorization checker.
      *
-     * @return ObjectFilterInterface
+     * @return AuthorizationCheckerInterface
      */
-    protected function getObjectFilter()
+    protected function getAuthorizationChecker()
     {
         $this->init();
 
-        return $this->objectFilter;
+        return $this->authChecker;
     }
 
     /**
@@ -123,10 +106,8 @@ class ObjectFilterListener extends AbstractPermissionListener
     protected function checkAllScheduledByAction(array $objects, $action)
     {
         foreach ($objects as $object) {
-            $this->postResetPermissions[] = $object;
-
-            if ('delete' !== $action) {
-                $this->getObjectFilter()->restore($object);
+            if (!$this->getAuthorizationChecker()->isGranted('perm_'.$action, $object)) {
+                throw new AccessDeniedException('Insufficient privilege to '.$action.' the entity');
             }
         }
     }
@@ -138,8 +119,8 @@ class ObjectFilterListener extends AbstractPermissionListener
     {
         return array(
             'tokenStorage' => 'setTokenStorage',
+            'authChecker' => 'setAuthorizationChecker',
             'permissionManager' => 'setPermissionManager',
-            'objectFilter' => 'setObjectFilter',
         );
     }
 }

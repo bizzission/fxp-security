@@ -92,7 +92,7 @@ class SharingListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidInit($method, array $setters)
     {
-        $msg = sprintf('The "%s()" method must be called before the init of the doctrine orm sharing listener', $method);
+        $msg = sprintf('The "%s()" method must be called before the init of the "Sonatra\Component\Security\Doctrine\ORM\Listener\SharingListener" class', $method);
         $this->expectExceptionMessage($msg);
 
         $listener = new SharingListener();

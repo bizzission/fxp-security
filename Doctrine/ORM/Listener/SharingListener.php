@@ -13,25 +13,16 @@ namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\Events;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
-use Sonatra\Component\Security\Exception\SecurityException;
-use Doctrine\Common\EventSubscriber;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Doctrine ORM listener for sharing filter.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingListener implements EventSubscriber
+class SharingListener extends AbstractListener
 {
-    /**
-     * @var PermissionManagerInterface
-     */
-    protected $permissionManager;
-
     /**
      * @var SharingManagerInterface
      */
@@ -43,19 +34,9 @@ class SharingListener implements EventSubscriber
     protected $sidManager;
 
     /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-
-    /**
      * @var EventDispatcherInterface
      */
     protected $dispatcher;
-
-    /**
-     * @var bool
-     */
-    protected $initialized = false;
 
     /**
      * Specifies the list of listened events.
@@ -75,32 +56,6 @@ class SharingListener implements EventSubscriber
     public function onFlush()
     {
         // do nothing, this listener allows to inject the required dependencies in Doctrine ORM Sharing SQL Filter
-    }
-
-    /**
-     * Set the permission manager.
-     *
-     * @param PermissionManagerInterface $permissionManager The permission manager
-     *
-     * @return self
-     */
-    public function setPermissionManager(PermissionManagerInterface $permissionManager)
-    {
-        $this->permissionManager = $permissionManager;
-
-        return $this;
-    }
-
-    /**
-     * Get the Permission Manager.
-     *
-     * @return PermissionManagerInterface
-     */
-    public function getPermissionManager()
-    {
-        $this->init();
-
-        return $this->permissionManager;
     }
 
     /**
@@ -156,32 +111,6 @@ class SharingListener implements EventSubscriber
     }
 
     /**
-     * Set the token storage.
-     *
-     * @param TokenStorageInterface $tokenStorage The token storage
-     *
-     * @return self
-     */
-    public function setTokenStorage(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
-
-        return $this;
-    }
-
-    /**
-     * Get the token storage.
-     *
-     * @return TokenStorageInterface
-     */
-    public function getTokenStorage()
-    {
-        $this->init();
-
-        return $this->tokenStorage;
-    }
-
-    /**
      * Set the event dispatcher.
      *
      * @param EventDispatcherInterface $dispatcher The event dispatcher
@@ -208,26 +137,16 @@ class SharingListener implements EventSubscriber
     }
 
     /**
-     * Init listener.
+     * {@inheritdoc}
      */
-    protected function init()
+    protected function getInitProperties()
     {
-        if (!$this->initialized) {
-            $msg = 'The "%s()" method must be called before the init of the doctrine orm sharing listener';
-
-            if (null === $this->permissionManager) {
-                throw new SecurityException(sprintf($msg, 'setPermissionManager'));
-            } elseif (null === $this->sharingManager) {
-                throw new SecurityException(sprintf($msg, 'setSharingManager'));
-            } elseif (null === $this->sidManager) {
-                throw new SecurityException(sprintf($msg, 'setSecurityIdentityManager'));
-            } elseif (null === $this->tokenStorage) {
-                throw new SecurityException(sprintf($msg, 'setTokenStorage'));
-            } elseif (null === $this->dispatcher) {
-                throw new SecurityException(sprintf($msg, 'setEventDispatcher'));
-            }
-
-            $this->initialized = true;
-        }
+        return array(
+            'permissionManager' => 'setPermissionManager',
+            'sharingManager' => 'setSharingManager',
+            'sidManager' => 'setSecurityIdentityManager',
+            'tokenStorage' => 'setTokenStorage',
+            'dispatcher' => 'setEventDispatcher',
+        );
     }
 }
