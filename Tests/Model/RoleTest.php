@@ -25,7 +25,7 @@ class RoleTest extends \PHPUnit_Framework_TestCase
         $nameAdmin = 'ROLE_ADMIN';
         $role = new MockRole($nameUser);
 
-        $this->assertNull($role->getId());
+        $this->assertSame(23, $role->getId());
         $this->assertSame($nameUser, $role->getRole());
         $this->assertSame($nameUser, $role->getName());
 
