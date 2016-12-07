@@ -24,39 +24,39 @@ class DisablePermissionSubscriberTest extends \PHPUnit_Framework_TestCase
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $aclManager;
+    protected $permManager;
 
     protected function setUp()
     {
-        $this->aclManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
+        $this->permManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
     }
 
-    public function testDisableAcl()
+    public function testDisable()
     {
-        $listener = new DisablePermissionSubscriber($this->aclManager);
+        $listener = new DisablePermissionSubscriber($this->permManager);
         $this->assertCount(4, $listener->getSubscribedEvents());
 
         /* @var AbstractEditableSecurityEvent|\PHPUnit_Framework_MockObject_MockObject $event */
         $event = $this->getMockForAbstractClass(AbstractEditableSecurityEvent::class);
 
-        $this->aclManager->expects($this->once())
+        $this->permManager->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
 
-        $this->aclManager->expects($this->once())
+        $this->permManager->expects($this->once())
             ->method('disable');
 
         $listener->disablePermissionManager($event);
     }
 
-    public function testEnableAcl()
+    public function testEnable()
     {
-        $listener = new DisablePermissionSubscriber($this->aclManager);
+        $listener = new DisablePermissionSubscriber($this->permManager);
         $this->assertCount(4, $listener->getSubscribedEvents());
 
         $event = new PostReachableRoleEvent(array(), true);
 
-        $this->aclManager->expects($this->once())
+        $this->permManager->expects($this->once())
             ->method('enable');
 
         $listener->enablePermissionManager($event);
