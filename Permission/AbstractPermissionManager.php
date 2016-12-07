@@ -73,19 +73,9 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function enable()
+    public function setEnabled($enabled)
     {
-        $this->enabled = true;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function disable()
-    {
-        $this->enabled = false;
+        $this->enabled = (bool) $enabled;
 
         return $this;
     }

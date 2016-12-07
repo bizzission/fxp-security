@@ -44,7 +44,8 @@ class DisablePermissionSubscriberTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
 
         $this->permManager->expects($this->once())
-            ->method('disable');
+            ->method('setEnabled')
+            ->with(false);
 
         $listener->disablePermissionManager($event);
     }
@@ -57,7 +58,8 @@ class DisablePermissionSubscriberTest extends \PHPUnit_Framework_TestCase
         $event = new PostReachableRoleEvent(array(), true);
 
         $this->permManager->expects($this->once())
-            ->method('enable');
+            ->method('setEnabled')
+            ->with(true);
 
         $listener->enablePermissionManager($event);
     }

@@ -36,20 +36,13 @@ interface PermissionManagerInterface
     public function isEnabled();
 
     /**
-     * Enables the permission manager (the asked authorizations will be accepted
-     * depending on the permissions).
+     * Define if the permission manager is enable or not.
+     *
+     * @param bool $enabled The value
      *
      * @return self
      */
-    public function enable();
-
-    /**
-     * Disables the permission manager (the asked authorizations will be always
-     * accepted).
-     *
-     * @return self
-     */
-    public function disable();
+    public function setEnabled($enabled);
 
     /**
      * Add the permission config.

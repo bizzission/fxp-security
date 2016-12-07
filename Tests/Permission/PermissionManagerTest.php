@@ -72,10 +72,10 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->pm->isEnabled());
 
-        $this->pm->disable();
+        $this->pm->setEnabled(false);
         $this->assertFalse($this->pm->isEnabled());
 
-        $this->pm->enable();
+        $this->pm->setEnabled(true);
         $this->assertTrue($this->pm->isEnabled());
     }
 
