@@ -21,6 +21,24 @@ use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 interface SharingManagerInterface
 {
     /**
+     * Check if sharing manager is enabled.
+     *
+     * If the sharing manager is disabled, all sharing visibilities are the value NONE.
+     *
+     * @return bool
+     */
+    public function isEnabled();
+
+    /**
+     * Define if the sharing manager is enable or not.
+     *
+     * @param bool $enabled The value
+     *
+     * @return self
+     */
+    public function setEnabled($enabled);
+
+    /**
      * Add the sharing subject config.
      *
      * @param SharingSubjectConfigInterface $config The sharing subject config

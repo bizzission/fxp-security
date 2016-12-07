@@ -49,6 +49,17 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
         $this->sm = new SharingManager($this->provider);
     }
 
+    public function testIsEnabled()
+    {
+        $this->assertTrue($this->sm->isEnabled());
+
+        $this->sm->setEnabled(false);
+        $this->assertFalse($this->sm->isEnabled());
+
+        $this->sm->setEnabled(true);
+        $this->assertTrue($this->sm->isEnabled());
+    }
+
     public function testHasSubjectConfig()
     {
         $pm = new SharingManager($this->provider, array(

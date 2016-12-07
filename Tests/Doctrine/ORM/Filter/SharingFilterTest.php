@@ -179,6 +179,10 @@ class SharingFilterTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->tokenStorage);
 
         $this->sharingManager->expects($this->once())
+            ->method('isEnabled')
+            ->willReturn(true);
+
+        $this->sharingManager->expects($this->once())
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(true);

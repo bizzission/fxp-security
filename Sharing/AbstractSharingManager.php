@@ -56,6 +56,11 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     protected $identityPermissible = false;
 
     /**
+     * @var bool
+     */
+    protected $enabled = true;
+
+    /**
      * @var array
      */
     protected $cacheSubjectVisibilities = array();
@@ -81,6 +86,24 @@ abstract class AbstractSharingManager implements SharingManagerInterface
         foreach ($identityConfigs as $config) {
             $this->addIdentityConfig($config);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = (bool) $enabled;
+
+        return $this;
     }
 
     /**

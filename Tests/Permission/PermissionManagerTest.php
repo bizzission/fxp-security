@@ -79,6 +79,24 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->pm->isEnabled());
     }
 
+    public function testSetEnabledWithSharingManager()
+    {
+        $sm = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
+
+        $this->pm = new PermissionManager(
+            $this->dispatcher,
+            $this->provider,
+            $this->propertyAccessor,
+            $sm
+        );
+
+        $sm->expects($this->once())
+            ->method('setEnabled')
+            ->with(false);
+
+        $this->pm->setEnabled(false);
+    }
+
     public function testHasConfig()
     {
         $pm = new PermissionManager(

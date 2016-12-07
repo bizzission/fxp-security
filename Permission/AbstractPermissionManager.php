@@ -77,6 +77,10 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     {
         $this->enabled = (bool) $enabled;
 
+        if (null !== $this->sharingManager) {
+            $this->sharingManager->setEnabled($enabled);
+        }
+
         return $this;
     }
 

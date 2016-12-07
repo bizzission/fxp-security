@@ -51,7 +51,7 @@ class SharingFilter extends SQLFilter
         $subject = SubjectUtils::getSubjectIdentity($targetEntity->getName());
         $filter = '';
 
-        if ($sm->hasSharingVisibility($subject)) {
+        if ($sm->isEnabled() && $sm->hasSharingVisibility($subject)) {
             $visibility = $sm->getSharingVisibility($subject);
             $sids = $this->buildSecurityIdentities();
             $event = new GetFilterEvent($pm, $sm, $subject, $visibility, $sids, $targetEntity, $targetTableAlias);
