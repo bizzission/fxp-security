@@ -180,4 +180,15 @@ interface SharingManagerInterface
      * @return self
      */
     public function clear();
+
+    /**
+     * Rename the identity of sharing.
+     *
+     * @param string $type    The identity type. Typically the PHP class name
+     * @param string $oldName The old identity name
+     * @param string $newName The new identity name
+     *
+     * @return self
+     */
+    public function renameIdentity($type, $oldName, $newName);
 }

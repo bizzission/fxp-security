@@ -336,4 +336,14 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->sm->isGranted($operation, $subject, $field));
     }
+
+    public function testRenameIdentity()
+    {
+        $this->provider->expects($this->once())
+            ->method('renameIdentity')
+            ->with(MockRole::class, 'ROLE_FOO', 'ROLE_BAR')
+            ->willReturn('QUERY');
+
+        $this->sm->renameIdentity(MockRole::class, 'ROLE_FOO', 'ROLE_BAR');
+    }
 }

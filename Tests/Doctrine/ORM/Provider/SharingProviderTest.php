@@ -26,6 +26,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgOptionalRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgRequiredRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -87,6 +88,7 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
             true,
             array(
                 'getResult',
+                'execute',
             )
         );
     }
@@ -510,15 +512,73 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
             ->with('s.permissions', 'p')
             ->willReturn($this->qb);
 
-        $provider = $this->createProvider(MockRole::class, false);
+        $provider = $this->createProvider(MockRole::class, MockSharing::class, false);
         $provider->getSharingEntries($subjects, $sids);
     }
 
-    protected function createProvider($roleClass = MockRole::class, $addManager = true)
+    public function testRenameIdentity()
     {
-        $this->roleRepo->expects($this->once())
+        $this->sharingRepo->expects($this->once())
+            ->method('createQueryBuilder')
+            ->with('s')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(0))
+            ->method('update')
+            ->with(MockSharing::class, 's')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(1))
+            ->method('set')
+            ->with('s.identityName', ':newName')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
+            ->method('where')
+            ->with('s.identityClass = :type')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(3))
+            ->method('andWhere')
+            ->with('s.identityName = :oldName')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(4))
+            ->method('setParameter')
+            ->with('type', MockRole::class)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(5))
+            ->method('setParameter')
+            ->with('oldName', 'ROLE_FOO')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(6))
+            ->method('setParameter')
+            ->with('newName', 'ROLE_BAR')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(7))
+            ->method('getQuery')
+            ->willReturn($this->query);
+
+        $this->query->expects($this->once())
+            ->method('execute')
+            ->willReturn('RESULT');
+
+        $provider = $this->createProvider();
+        $provider->renameIdentity(MockRole::class, 'ROLE_FOO', 'ROLE_BAR');
+    }
+
+    protected function createProvider($roleClass = MockRole::class, $sharingClass = MockSharing::class, $addManager = true)
+    {
+        $this->roleRepo->expects($this->any())
             ->method('getClassName')
             ->willReturn($roleClass);
+
+        $this->sharingRepo->expects($this->any())
+            ->method('getClassName')
+            ->willReturn($sharingClass);
 
         $provider = new SharingProvider(
             $this->roleRepo,

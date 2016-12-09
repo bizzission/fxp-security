@@ -136,6 +136,25 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function renameIdentity($type, $oldName, $newName)
+    {
+        $this->sharingRepo->createQueryBuilder('s')
+            ->update($this->sharingRepo->getClassName(), 's')
+            ->set('s.identityName', ':newName')
+            ->where('s.identityClass = :type')
+            ->andWhere('s.identityName = :oldName')
+            ->setParameter('type', $type)
+            ->setParameter('oldName', $oldName)
+            ->setParameter('newName', $newName)
+            ->getQuery()
+            ->execute();
+
+        return $this;
+    }
+
+    /**
      * Add where condition for sharing.
      *
      * @param QueryBuilder                $qb       The query builder

@@ -50,4 +50,15 @@ interface SharingProviderInterface
      * @return SharingInterface[]
      */
     public function getSharingEntries(array $subjects, $sids = null);
+
+    /**
+     * Rename the identity of sharing.
+     *
+     * @param string $type    The identity type. Typically the PHP class name
+     * @param string $oldName The old identity name
+     * @param string $newName The new identity name
+     *
+     * @return self
+     */
+    public function renameIdentity($type, $oldName, $newName);
 }

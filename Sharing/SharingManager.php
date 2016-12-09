@@ -139,6 +139,16 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function renameIdentity($type, $oldName, $newName)
+    {
+        $this->provider->renameIdentity($type, $oldName, $newName);
+
+        return $this;
+    }
+
+    /**
      * Check if the access is granted by a sharing entry.
      *
      * @param string                        $operation The operation
