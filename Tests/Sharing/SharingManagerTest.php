@@ -346,4 +346,14 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->sm->renameIdentity(MockRole::class, 'ROLE_FOO', 'ROLE_BAR');
     }
+
+    public function testDeleteIdentity()
+    {
+        $this->provider->expects($this->once())
+            ->method('deleteIdentity')
+            ->with(MockRole::class, 'ROLE_FOO')
+            ->willReturn('QUERY');
+
+        $this->sm->deleteIdentity(MockRole::class, 'ROLE_FOO');
+    }
 }

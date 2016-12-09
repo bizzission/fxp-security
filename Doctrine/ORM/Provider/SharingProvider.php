@@ -155,6 +155,23 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function deleteIdentity($type, $name)
+    {
+        $this->sharingRepo->createQueryBuilder('s')
+            ->delete($this->sharingRepo->getClassName(), 's')
+            ->where('s.identityClass = :type')
+            ->andWhere('s.identityName = :name')
+            ->setParameter('type', $type)
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->execute();
+
+        return $this;
+    }
+
+    /**
      * Add where condition for sharing.
      *
      * @param QueryBuilder                $qb       The query builder

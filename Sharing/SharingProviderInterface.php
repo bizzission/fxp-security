@@ -61,4 +61,14 @@ interface SharingProviderInterface
      * @return self
      */
     public function renameIdentity($type, $oldName, $newName);
+
+    /**
+     * Delete the identity of sharing.
+     *
+     * @param string $type    The identity type. Typically the PHP class name
+     * @param string $name The identity name
+     *
+     * @return self
+     */
+    public function deleteIdentity($type, $name);
 }

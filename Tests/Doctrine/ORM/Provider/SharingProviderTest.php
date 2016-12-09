@@ -570,6 +570,50 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
         $provider->renameIdentity(MockRole::class, 'ROLE_FOO', 'ROLE_BAR');
     }
 
+    public function testDeleteIdentity()
+    {
+        $this->sharingRepo->expects($this->once())
+            ->method('createQueryBuilder')
+            ->with('s')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(0))
+            ->method('delete')
+            ->with(MockSharing::class, 's')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(1))
+            ->method('where')
+            ->with('s.identityClass = :type')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
+            ->method('andWhere')
+            ->with('s.identityName = :name')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(3))
+            ->method('setParameter')
+            ->with('type', MockRole::class)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(4))
+            ->method('setParameter')
+            ->with('name', 'ROLE_FOO')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(5))
+            ->method('getQuery')
+            ->willReturn($this->query);
+
+        $this->query->expects($this->once())
+            ->method('execute')
+            ->willReturn('RESULT');
+
+        $provider = $this->createProvider();
+        $provider->deleteIdentity(MockRole::class, 'ROLE_FOO');
+    }
+
     protected function createProvider($roleClass = MockRole::class, $sharingClass = MockSharing::class, $addManager = true)
     {
         $this->roleRepo->expects($this->any())
