@@ -71,4 +71,13 @@ interface SharingProviderInterface
      * @return self
      */
     public function deleteIdentity($type, $name);
+
+    /**
+     * Delete the sharing entry with ids.
+     *
+     * @param array $ids The sharing ids
+     *
+     * @return self
+     */
+    public function deletes(array $ids);
 }

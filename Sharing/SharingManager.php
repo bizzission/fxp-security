@@ -159,6 +159,16 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function deletes(array $ids)
+    {
+        $this->provider->deletes($ids);
+
+        return $this;
+    }
+
+    /**
      * Check if the access is granted by a sharing entry.
      *
      * @param string                        $operation The operation

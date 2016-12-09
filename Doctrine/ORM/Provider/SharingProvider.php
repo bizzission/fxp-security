@@ -172,6 +172,23 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function deletes(array $ids)
+    {
+        if (!empty($ids)) {
+            $this->sharingRepo->createQueryBuilder('s')
+                ->delete($this->sharingRepo->getClassName(), 's')
+                ->where('s.id IN (:ids)')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+        }
+
+        return $this;
+    }
+
+    /**
      * Add where condition for sharing.
      *
      * @param QueryBuilder                $qb       The query builder

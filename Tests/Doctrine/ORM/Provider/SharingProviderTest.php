@@ -614,6 +614,42 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
         $provider->deleteIdentity(MockRole::class, 'ROLE_FOO');
     }
 
+    public function testDeletes()
+    {
+        $ids = array(42, 50);
+
+        $this->sharingRepo->expects($this->once())
+            ->method('createQueryBuilder')
+            ->with('s')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(0))
+            ->method('delete')
+            ->with(MockSharing::class, 's')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(1))
+            ->method('where')
+            ->with('s.id IN (:ids)')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
+            ->method('setParameter')
+            ->with('ids', $ids)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(3))
+            ->method('getQuery')
+            ->willReturn($this->query);
+
+        $this->query->expects($this->once())
+            ->method('execute')
+            ->willReturn('RESULT');
+
+        $provider = $this->createProvider();
+        $provider->deletes($ids);
+    }
+
     protected function createProvider($roleClass = MockRole::class, $sharingClass = MockSharing::class, $addManager = true)
     {
         $this->roleRepo->expects($this->any())
