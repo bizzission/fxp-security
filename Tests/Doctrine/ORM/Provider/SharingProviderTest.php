@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Provider;
 
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -315,7 +314,7 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->qb->expects($this->at(8))
             ->method('setParameter')
-            ->with('now', new \DateTime(), Type::DATETIME)
+            ->with('now')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(9))
@@ -354,6 +353,9 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(), $provider->getSharingEntries(array()));
     }
 
+    /**
+     * @group bug
+     */
     public function testGetPermissionRolesWithSecurityIdentities()
     {
         $sids = array(
@@ -448,7 +450,7 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->qb->expects($this->at(13))
             ->method('setParameter')
-            ->with('now', new \DateTime(), Type::DATETIME)
+            ->with('now')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(14))
