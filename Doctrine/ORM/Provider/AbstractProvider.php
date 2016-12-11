@@ -111,7 +111,7 @@ abstract class AbstractProvider
         $parameters = array();
 
         if (!empty($fRoles['roles'])) {
-            $where .= '(UPPER(r.name) in (:roles) AND r.organization = NULL)';
+            $where .= '(UPPER(r.name) in (:roles) AND r.organization IS NULL)';
             $parameters['roles'] = $fRoles['roles'];
         }
 

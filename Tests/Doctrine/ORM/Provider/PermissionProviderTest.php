@@ -157,7 +157,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->qb->expects($this->at(1))
             ->method('where')
-            ->with('(UPPER(r.name) in (:roles) AND r.organization = NULL) OR (UPPER(r.name) IN (:foo_roles) AND LOWER(o.name) = :foo_name) OR (UPPER(r.name) IN (:baz_roles) AND LOWER(o.name) = :baz_name)')
+            ->with('(UPPER(r.name) in (:roles) AND r.organization IS NULL) OR (UPPER(r.name) IN (:foo_roles) AND LOWER(o.name) = :foo_name) OR (UPPER(r.name) IN (:baz_roles) AND LOWER(o.name) = :baz_name)')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(2))
