@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class CacheSecurityIdentityManager extends SecurityIdentityManager
+class CacheSecurityIdentityManager extends SecurityIdentityManager implements CacheSecurityIdentityManagerInterface
 {
     /**
      * @var string|null
