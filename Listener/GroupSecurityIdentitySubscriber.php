@@ -13,6 +13,7 @@ namespace Sonatra\Component\Security\Listener;
 
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
+use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -42,7 +43,10 @@ class GroupSecurityIdentitySubscriber implements EventSubscriberInterface
     {
         try {
             $sids = $event->getSecurityIdentities();
-            $sids = array_merge($sids, GroupSecurityIdentity::fromToken($event->getToken()));
+            $sids = IdentityUtils::merge(
+                $sids,
+                GroupSecurityIdentity::fromToken($event->getToken())
+            );
             $event->setSecurityIdentities($sids);
         } catch (\InvalidArgumentException $e) {
             // ignore

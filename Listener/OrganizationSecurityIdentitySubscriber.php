@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Listener;
 
 use Sonatra\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
+use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
@@ -80,8 +81,11 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
     {
         try {
             $sids = $event->getSecurityIdentities();
-            $sids = array_merge($sids, OrganizationSecurityIdentity::fromToken($event->getToken(),
-                $this->context, $this->roleHierarchy));
+            $sids = IdentityUtils::merge(
+                $sids,
+                OrganizationSecurityIdentity::fromToken($event->getToken(),
+                    $this->context, $this->roleHierarchy)
+            );
             $event->setSecurityIdentities($sids);
         } catch (\InvalidArgumentException $e) {
             // ignore

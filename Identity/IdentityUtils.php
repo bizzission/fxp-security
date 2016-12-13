@@ -19,6 +19,34 @@ namespace Sonatra\Component\Security\Identity;
 abstract class IdentityUtils
 {
     /**
+     * Merge the security identities.
+     *
+     * @param SecurityIdentityInterface[] $sids    The security identities
+     * @param SecurityIdentityInterface[] $newSids The new security identities
+     *
+     * @return SecurityIdentityInterface[]
+     */
+    public static function merge(array $sids, array $newSids)
+    {
+        $existingSids = array();
+
+        foreach ($sids as $sid) {
+            $existingSids[] = $sid->getType().'::'.$sid->getIdentifier();
+        }
+
+        foreach ($newSids as $sid) {
+            $key = $sid->getType().'::'.$sid->getIdentifier();
+
+            if (!in_array($key, $existingSids)) {
+                $sids[] = $sid;
+                $existingSids[] = $key;
+            }
+        }
+
+        return $sids;
+    }
+
+    /**
      * Filter the role identities and convert to strings.
      *
      * @param SecurityIdentityInterface[] $sids The security identities
