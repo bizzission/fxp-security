@@ -148,10 +148,10 @@ abstract class AbstractProvider
 
         foreach ($roles as $role) {
             if (false !== ($pos = strrpos($role, '__'))) {
-                $org = strtolower(substr($role, $pos + 2));
-                $fRoles['org_roles'][$org][] = strtoupper(substr($role, 0, $pos));
+                $org = substr($role, $pos + 2);
+                $fRoles['org_roles'][$org][] = substr($role, 0, $pos);
             } else {
-                $fRoles['roles'][] = strtoupper($role);
+                $fRoles['roles'][] = $role;
             }
         }
 

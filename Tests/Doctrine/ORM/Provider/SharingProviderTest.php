@@ -171,8 +171,8 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
     {
         $roles = array(
             'ROLE_USER',
-            'ROLE_USER__FOO',
-            'ROLE_ADMIN__BAZ',
+            'ROLE_USER__foo',
+            'ROLE_ADMIN__baz',
         );
         $result = array(
             new MockRole('ROLE_USER'),

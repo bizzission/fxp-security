@@ -115,8 +115,8 @@ class OrganizationalRoleTest extends \PHPUnit_Framework_TestCase
         $sid = array(
             new RoleSecurityIdentity('ROLE_USER'),
             new RoleSecurityIdentity('ROLE_ADMIN'),
-            new RoleSecurityIdentity('ROLE_USER__FOO'),
-            new RoleSecurityIdentity('ROLE_ADMIN__FOO'),
+            new RoleSecurityIdentity('ROLE_USER__foo'),
+            new RoleSecurityIdentity('ROLE_ADMIN__foo'),
         );
 
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();

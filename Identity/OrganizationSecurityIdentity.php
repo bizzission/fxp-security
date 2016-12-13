@@ -168,7 +168,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
 
         if ($user instanceof RoleableInterface && $user instanceof OrganizationUserInterface) {
             $org = $user->getOrganization();
-            $roles = self::buildOrganizationUserRoles($roles, $user, strtoupper($org->getName()));
+            $roles = self::buildOrganizationUserRoles($roles, $user, $org->getName());
             $roles = self::buildOrganizationRoles($roles, $org);
 
             if ($roleHierarchy instanceof RoleHierarchyInterface) {

@@ -135,7 +135,7 @@ class OrganizationalRole implements OrganizationalRoleInterface
                 $suffix = $org->getName();
             }
 
-            $role .= '__'.strtoupper($suffix);
+            $role .= '__'.$suffix;
         }
 
         return $role;

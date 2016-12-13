@@ -130,7 +130,7 @@ class OrganizationSecurityIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sids[1]);
         $this->assertSame('GROUP_ORG_USER_TEST', $sids[1]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[2]);
-        $this->assertSame('ROLE_ORG_USER_TEST__FOO', $sids[2]->getIdentifier());
+        $this->assertSame('ROLE_ORG_USER_TEST__foo', $sids[2]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[3]);
         $this->assertSame('ROLE_ORG_TEST', $sids[3]->getIdentifier());
     }
@@ -188,7 +188,7 @@ class OrganizationSecurityIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sids[1]);
         $this->assertSame('GROUP_ORG_USER_TEST', $sids[1]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[2]);
-        $this->assertSame('ROLE_ORG_USER_TEST__FOO', $sids[2]->getIdentifier());
+        $this->assertSame('ROLE_ORG_USER_TEST__foo', $sids[2]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[3]);
         $this->assertSame('ROLE_ORG_TEST', $sids[3]->getIdentifier());
     }
