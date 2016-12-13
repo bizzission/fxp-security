@@ -20,9 +20,11 @@
 
         <field name="subjectClass" column="subject_class" type="string" length="255" />
 
+        <field name="subjectId" column="subject_id" type="string" length="36" />
+
         <field name="identityClass" column="identity_class" type="string" length="255" />
 
-        <field name="identityName" column="identity_name" type="string" length="36" />
+        <field name="identityName" column="identity_name" type="string" length="255" />
 
         <field name="enabled" column="enabled" type="boolean" />
 
