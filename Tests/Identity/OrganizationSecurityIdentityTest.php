@@ -193,6 +193,46 @@ class OrganizationSecurityIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('ROLE_ORG_TEST', $sids[3]->getIdentifier());
     }
 
+    public function testFormTokenWithUserOrganizationalContext()
+    {
+        $user = new MockUserOrganizationUsersGroupable();
+        $org = new MockOrganization($user->getUsername());
+        $org->setUser($user);
+
+        $org->addRole('ROLE_ORG_TEST');
+
+        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
+        $token->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user);
+
+        /* @var OrganizationalContextInterface|\PHPUnit_Framework_MockObject_MockObject $context */
+        $context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
+        $context->expects($this->once())
+            ->method('getCurrentOrganization')
+            ->willReturn($org);
+        $context->expects($this->once())
+            ->method('getCurrentOrganizationUser')
+            ->willReturn(null);
+
+        /* @var RoleHierarchyInterface|\PHPUnit_Framework_MockObject_MockObject $roleHierarchy */
+        $roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
+        $roleHierarchy->expects($this->once())
+            ->method('getReachableRoles')
+            ->willReturnCallback(function ($value) {
+                return $value;
+            });
+
+        $sids = OrganizationSecurityIdentity::fromToken($token, $context, $roleHierarchy);
+
+        $this->assertCount(2, $sids);
+        $this->assertInstanceOf(OrganizationSecurityIdentity::class, $sids[0]);
+        $this->assertSame('user.test', $sids[0]->getIdentifier());
+        $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[1]);
+        $this->assertSame('ROLE_ORG_TEST', $sids[1]->getIdentifier());
+    }
+
     public function testFormTokenWithInvalidInterface()
     {
         /* @var AdvancedUserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
