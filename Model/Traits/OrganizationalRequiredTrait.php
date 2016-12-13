@@ -16,7 +16,7 @@ use Sonatra\Component\Security\Model\OrganizationInterface;
 /**
  * Trait to indicate that the model is linked with a required organization.
  *
- * @author François Pluchino <francois.pluchino@helloguest.com>
+ * @author François Pluchino <francois.pluchino@sonatra.com>
  */
 trait OrganizationalRequiredTrait
 {

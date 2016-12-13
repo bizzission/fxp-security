@@ -14,7 +14,7 @@ namespace Sonatra\Component\Security\Model\Traits;
 /**
  * Trait to indicate that the model is linked with an optional organization.
  *
- * @author François Pluchino <francois.pluchino@helloguest.com>
+ * @author François Pluchino <francois.pluchino@sonatra.com>
  */
 trait OrganizationalOptionalTrait
 {
