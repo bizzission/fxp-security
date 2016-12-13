@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Sharing;
 
+use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Model\RoleInterface;
@@ -116,11 +117,15 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
     public function resetPreloadPermissions(array $objects)
     {
         foreach ($objects as $object) {
-            $subject = SubjectIdentity::fromObject($object);
-            $id = SharingUtils::getCacheId($subject);
-            unset($this->cacheSharing[$id]);
-            unset($this->cacheRoleSharing[$id]);
-            unset($this->cacheSubjectSharing[$id]);
+            try {
+                $subject = SubjectIdentity::fromObject($object);
+                $id = SharingUtils::getCacheId($subject);
+                unset($this->cacheSharing[$id]);
+                unset($this->cacheRoleSharing[$id]);
+                unset($this->cacheSubjectSharing[$id]);
+            } catch (InvalidSubjectIdentityException $e) {
+                // do nothing
+            }
         }
 
         return $this;
