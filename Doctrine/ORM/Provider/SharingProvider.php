@@ -53,17 +53,19 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
     /**
      * Constructor.
      *
-     * @param EntityRepository                 $roleRepository    The role repository
-     * @param EntityRepository                 $sharingRepository The sharing repository
-     * @param SecurityIdentityManagerInterface $sidManager        The security identity manager
-     * @param TokenStorageInterface            $tokenStorage      The token storage
+     * @param EntityRepository                 $roleRepository           The role repository
+     * @param EntityRepository                 $sharingRepository        The sharing repository
+     * @param SecurityIdentityManagerInterface $sidManager               The security identity manager
+     * @param TokenStorageInterface            $tokenStorage             The token storage
+     * @param bool                             $mergeOrganizationalRoles Check if the organizational roles must be included with system roles
      */
     public function __construct(EntityRepository $roleRepository,
                                 EntityRepository $sharingRepository,
                                 SecurityIdentityManagerInterface $sidManager,
-                                TokenStorageInterface $tokenStorage)
+                                TokenStorageInterface $tokenStorage,
+                                $mergeOrganizationalRoles = true)
     {
-        parent::__construct($roleRepository);
+        parent::__construct($roleRepository, $mergeOrganizationalRoles);
 
         $this->sharingRepo = $sharingRepository;
         $this->sidManager = $sidManager;

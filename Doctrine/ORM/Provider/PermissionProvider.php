@@ -29,13 +29,15 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
     /**
      * Constructor.
      *
-     * @param EntityRepository $roleRepository       The role repository
-     * @param EntityRepository $permissionRepository The permission repository
+     * @param EntityRepository $roleRepository           The role repository
+     * @param EntityRepository $permissionRepository     The permission repository
+     * @param bool             $mergeOrganizationalRoles Check if the organizational roles must be included with system roles
      */
     public function __construct(EntityRepository $roleRepository,
-                                EntityRepository $permissionRepository)
+                                EntityRepository $permissionRepository,
+                                $mergeOrganizationalRoles = true)
     {
-        parent::__construct($roleRepository);
+        parent::__construct($roleRepository, $mergeOrganizationalRoles);
 
         $this->permissionRepo = $permissionRepository;
     }

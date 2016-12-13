@@ -38,14 +38,21 @@ abstract class AbstractProvider
     protected $isOrganizational;
 
     /**
+     * @var bool
+     */
+    protected $mergeOrganizationalRoles;
+
+    /**
      * Constructor.
      *
-     * @param EntityRepository $roleRepository The role repository
+     * @param EntityRepository $roleRepository           The role repository
+     * @param bool             $mergeOrganizationalRoles Check if the organizational roles must be included with system roles
      */
-    public function __construct(EntityRepository $roleRepository)
+    public function __construct(EntityRepository $roleRepository, $mergeOrganizationalRoles = true)
     {
         $this->roleRepo = $roleRepository;
         $this->roleClass = $this->roleRepo->getClassName();
+        $this->mergeOrganizationalRoles = $mergeOrganizationalRoles;
     }
 
     /**
@@ -112,10 +119,12 @@ abstract class AbstractProvider
 
         if (!empty($fRoles['roles'])) {
             $where .= '(UPPER(r.name) in (:roles) AND r.organization IS NULL)';
-            $parameters['roles'] = $fRoles['roles'];
+            $parameters['roles'] = $this->mergeOrganizationalRoles($fRoles['roles'], $fRoles['org_roles']);
         }
 
         if (!empty($fRoles['org_roles'])) {
+            $qb->leftJoin('r.organization', 'o');
+
             foreach ($fRoles['org_roles'] as $org => $orgRoles) {
                 $orgName = str_replace(array('.', '-'), '_', $org);
                 $where .= '' === $where ? '' : ' OR ';
@@ -130,6 +139,27 @@ abstract class AbstractProvider
         foreach ($parameters as $name => $value) {
             $qb->setParameter($name, $value);
         }
+    }
+
+    /**
+     * Merge the organization user roles with the system roles.
+     *
+     * @param string[] $roles    The roles
+     * @param array    $orgRoles The organization user roles by organization name
+     *
+     * @return string[]
+     */
+    private function mergeOrganizationalRoles(array $roles, array $orgRoles)
+    {
+        if ($this->mergeOrganizationalRoles && !empty($orgRoles)) {
+            foreach ($orgRoles as $oRoles) {
+                $roles = array_merge($roles, $oRoles);
+            }
+
+            $roles = array_values(array_unique($roles));
+        }
+
+        return $roles;
     }
 
     /**

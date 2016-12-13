@@ -156,51 +156,56 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(1))
+            ->method('leftJoin')
+            ->with('r.organization', 'o')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
             ->method('where')
             ->with('(UPPER(r.name) in (:roles) AND r.organization IS NULL) OR (UPPER(r.name) IN (:foo_roles) AND LOWER(o.name) = :foo_name) OR (UPPER(r.name) IN (:baz_roles) AND LOWER(o.name) = :baz_name)')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(2))
-            ->method('setParameter')
-            ->with('roles', array('ROLE_USER'))
-            ->willReturn($this->qb);
-
         $this->qb->expects($this->at(3))
             ->method('setParameter')
-            ->with('foo_roles', array('ROLE_USER'))
+            ->with('roles', array('ROLE_USER', 'ROLE_ADMIN'))
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(4))
             ->method('setParameter')
-            ->with('foo_name', 'foo')
+            ->with('foo_roles', array('ROLE_USER'))
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(5))
             ->method('setParameter')
-            ->with('baz_roles', array('ROLE_ADMIN'))
+            ->with('foo_name', 'foo')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(6))
             ->method('setParameter')
-            ->with('baz_name', 'baz')
+            ->with('baz_roles', array('ROLE_ADMIN'))
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(7))
+            ->method('setParameter')
+            ->with('baz_name', 'baz')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(8))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(8))
+        $this->qb->expects($this->at(9))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(9))
+        $this->qb->expects($this->at(10))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(10))
+        $this->qb->expects($this->at(11))
             ->method('getQuery')
             ->willReturn($this->query);
 
