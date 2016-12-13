@@ -51,6 +51,10 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
+        $this->permManager->expects($this->any())
+            ->method('isEnabled')
+            ->willReturn(true);
+
         $this->voter = new PermissionVoter(
             $this->permManager,
             $this->sidManager

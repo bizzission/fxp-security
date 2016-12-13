@@ -99,6 +99,7 @@ class PermissionVoter extends Voter
             $subject = new FieldVote($subject[0], $subject[1]);
         }
 
-        return $this->permissionManager->isGranted($sids, $attribute, $subject);
+        return !$this->permissionManager->isEnabled()
+            || $this->permissionManager->isGranted($sids, $attribute, $subject);
     }
 }
