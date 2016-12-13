@@ -17,10 +17,14 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Sonatra\Component\Security\Doctrine\DoctrineUtils;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
+use Sonatra\Component\Security\Model\Traits\OwnerableInterface;
+use Sonatra\Component\Security\Model\Traits\OwnerableOptionalInterface;
+use Sonatra\Component\Security\Model\UserInterface;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\SharingFilterEvents;
 use Sonatra\Component\Security\SharingVisibilities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Sharing filter subscriber of Doctrine ORM SQL Filter to filter
@@ -41,15 +45,24 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
     protected $meta;
 
     /**
+     * @var TokenStorageInterface|null
+     */
+    protected $tokenStorage;
+
+    /**
      * Constructor.
      *
      * @param EntityManagerInterface $em           The entity manager
      * @param string                 $sharingClass The classname of sharing model
+     * @param TokenStorageInterface  $tokenStorage The token storage
      */
-    public function __construct(EntityManagerInterface $em, $sharingClass)
+    public function __construct(EntityManagerInterface $em,
+                                $sharingClass,
+                                TokenStorageInterface $tokenStorage = null)
     {
         $this->em = $em;
         $this->meta = $em->getClassMetadata($sharingClass);
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -75,6 +88,22 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $filter = $this->buildSharingFilter($event);
+        $filter = $this->buildOwnerFilter($event, $filter);
+
+        $event->setFilter($filter);
+    }
+
+    /**
+     * Build the query filter with sharing entries.
+     *
+     * @param GetFilterEvent $event The event
+     *
+     * @return string
+     */
+    private function buildSharingFilter(GetFilterEvent $event)
+    {
+        $sids = $event->getSecurityIdentities();
         $connection = $this->em->getConnection();
         $classname = $connection->quote($event->getTargetEntity()->getName());
         $tableAlias = $event->getTargetTableAlias();
@@ -97,7 +126,87 @@ GROUP BY
     s.{$this->meta->getColumnName('subjectId')})
 SELECTCLAUSE;
 
-        $event->setFilter($filter);
+        return $filter;
+    }
+
+    /**
+     * Build the query filter with owner.
+     *
+     * @param GetFilterEvent $event  The event
+     * @param string         $filter The previous filter
+     *
+     * @return string
+     */
+    private function buildOwnerFilter(GetFilterEvent $event, $filter)
+    {
+        $class = $event->getTargetEntity()->getName();
+        $interfaces = class_implements($class);
+
+        if (in_array(OwnerableInterface::class, $interfaces)) {
+            $filter = $this->buildRequiredOwnerFilter($event, $filter);
+        } elseif (in_array(OwnerableOptionalInterface::class, $interfaces)) {
+            $filter = $this->buildOptionalOwnerFilter($event, $filter);
+        }
+
+        return $filter;
+    }
+
+    /**
+     * Build the query filter with required owner.
+     *
+     * @param GetFilterEvent $event  The event
+     * @param string         $filter The previous filter
+     *
+     * @return string
+     */
+    private function buildRequiredOwnerFilter(GetFilterEvent $event, $filter)
+    {
+        $connection = $this->em->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        $tableAlias = $event->getTargetTableAlias();
+        $identifier = DoctrineUtils::castIdentifier($event->getTargetEntity(), $connection);
+        $ownerId = $this->getCurrentUserId();
+        $ownerColumn = $this->getAssociationColumnName($event->getTargetEntity(), 'owner');
+        $ownerFilter = null !== $ownerId
+            ? "{$tableAlias}.{$ownerColumn}{$identifier} = {$connection->quote($ownerId)}"
+            : "{$platform->getIsNullExpression($tableAlias.'.'.$ownerColumn)}";
+
+        $filter = <<<SELECTCLAUSE
+{$ownerFilter}
+    OR
+({$filter})
+SELECTCLAUSE;
+
+        return $filter;
+    }
+
+    /**
+     * Build the query filter with optional owner.
+     *
+     * @param GetFilterEvent $event  The event
+     * @param string         $filter The previous filter
+     *
+     * @return string
+     */
+    private function buildOptionalOwnerFilter(GetFilterEvent $event, $filter)
+    {
+        $connection = $this->em->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        $tableAlias = $event->getTargetTableAlias();
+        $identifier = DoctrineUtils::castIdentifier($event->getTargetEntity(), $connection);
+        $ownerId = $this->getCurrentUserId();
+        $ownerColumn = $this->getAssociationColumnName($event->getTargetEntity(), 'owner');
+        $ownerFilter = null !== $ownerId
+            ? "{$tableAlias}.{$ownerColumn}{$identifier} = {$connection->quote($ownerId)} OR "
+            : '';
+
+        $filter = <<<SELECTCLAUSE
+{$ownerFilter}{$platform->getIsNullExpression($tableAlias.'.'.$ownerColumn)}
+    OR
+({$filter})
+SELECTCLAUSE;
+
+        return $filter;
     }
 
     /**
@@ -161,5 +270,40 @@ SELECTCLAUSE;
         $format = $now->format($connection->getDatabasePlatform()->getDateTimeFormatString());
 
         return $connection->quote($format);
+    }
+
+    /**
+     * Get the current user id.
+     *
+     * @return string|int|null
+     */
+    private function getCurrentUserId()
+    {
+        $id = null;
+
+        if (null !== $this->tokenStorage && null !== $this->tokenStorage->getToken()) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            if ($user instanceof UserInterface) {
+                $id = $user->getId();
+            }
+        }
+
+        return $id;
+    }
+
+    /**
+     * Get the column name of association field name.
+     *
+     * @param ClassMetadata $meta      The class metadata
+     * @param string        $fieldName The field name
+     *
+     * @return string
+     */
+    private function getAssociationColumnName(ClassMetadata $meta, $fieldName)
+    {
+        $mapping = $meta->getAssociationMapping($fieldName);
+
+        return current($mapping['joinColumnFieldNames']);
     }
 }
