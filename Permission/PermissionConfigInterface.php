@@ -28,9 +28,43 @@ interface PermissionConfigInterface
     public function getType();
 
     /**
-     * Get the available fields.
+     * Check if the operation is defined.
+     *
+     * @param string $operation The operation name
+     *
+     * @return bool
+     */
+    public function hasOperation($operation);
+
+    /**
+     * Get the available operations for this type.
      *
      * @return string[]
+     */
+    public function getOperations();
+
+    /**
+     * Check if the field configuration exists.
+     *
+     * @param string $field The field name
+     *
+     * @return bool
+     */
+    public function hasField($field);
+
+    /**
+     * Get the field configuration.
+     *
+     * @param string $field The field name
+     *
+     * @return PermissionFieldConfigInterface|null
+     */
+    public function getField($field);
+
+    /**
+     * Get the available fields.
+     *
+     * @return PermissionFieldConfigInterface[]
      */
     public function getFields();
 
@@ -40,4 +74,17 @@ interface PermissionConfigInterface
      * @return PropertyPathInterface|string|null
      */
     public function getMaster();
+
+    /**
+     * Get the map of the permission of master type with the field permission of this type.
+     *
+     * Example: [
+     *     'view' => 'read',
+     *     'create' => 'edit',
+     *     'update' => 'edit',
+     * ]
+     *
+     * @return array
+     */
+    public function getMasterFieldMappingPermissions();
 }

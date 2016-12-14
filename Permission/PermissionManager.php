@@ -109,7 +109,7 @@ class PermissionManager extends AbstractPermissionManager
             } else {
                 $config = $this->getConfig($subject->getType());
 
-                return in_array($field, $config->getFields());
+                return $config->hasField($field);
             }
         }
 
@@ -194,6 +194,8 @@ class PermissionManager extends AbstractPermissionManager
             $this->dispatcher->dispatch(PermissionEvents::PRE_LOAD, $preEvent);
             $perms = $this->provider->getPermissions($roles);
 
+            $this->buildSystemPermissions($id);
+
             foreach ($perms as $perm) {
                 $class = PermissionUtils::getMapAction($perm->getClass());
                 $field = PermissionUtils::getMapAction($perm->getField());
@@ -206,6 +208,27 @@ class PermissionManager extends AbstractPermissionManager
         }
 
         return $id;
+    }
+
+    /**
+     * Build the system permissions.
+     *
+     * @param string $id The cache id
+     */
+    private function buildSystemPermissions($id)
+    {
+        foreach ($this->configs as $config) {
+            foreach ($config->getOperations() as $operation) {
+                $field = $field = PermissionUtils::getMapAction(null);
+                $this->cache[$id][$config->getType()][$field][$operation] = true;
+            }
+
+            foreach ($config->getFields() as $fieldConfig) {
+                foreach ($fieldConfig->getOperations() as $operation) {
+                    $this->cache[$id][$config->getType()][$fieldConfig->getField()][$operation] = true;
+                }
+            }
+        }
     }
 
     /**

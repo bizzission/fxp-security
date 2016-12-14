@@ -14,7 +14,7 @@ namespace Sonatra\Component\Security\Permission;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
 
 /**
- * Permission config Interface.
+ * Permission config.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
@@ -28,7 +28,12 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * @var string[]
      */
-    protected $fields;
+    protected $operations;
+
+    /**
+     * @var PermissionFieldConfigInterface[]
+     */
+    protected $fields = array();
 
     /**
      * @var PropertyPathInterface|string|null
@@ -36,19 +41,33 @@ class PermissionConfig implements PermissionConfigInterface
     protected $master;
 
     /**
+     * @var array
+     */
+    protected $masterFieldMappingPermissions;
+
+    /**
      * Constructor.
      *
-     * @param string   $type   The type, typically, this is the PHP class name
-     * @param string[] $fields The fields
-     * @param null     $master The property path of master
+     * @param string                            $type                          The type, typically, this is the PHP class name
+     * @param string[]                          $operations                    The permission operations of this type
+     * @param PermissionFieldConfigInterface[]  $fields                        The field configurations
+     * @param PropertyPathInterface|string|null $master                        The property path of master
+     * @param array[]                           $masterFieldMappingPermissions The map of field permission of this type with the permission of master type
      */
     public function __construct($type,
+                                array $operations = array(),
                                 array $fields = array(),
-                                $master = null)
+                                $master = null,
+                                $masterFieldMappingPermissions = array())
     {
         $this->type = $type;
-        $this->fields = $fields;
+        $this->operations = array_values($operations);
         $this->master = $master;
+        $this->masterFieldMappingPermissions = $masterFieldMappingPermissions;
+
+        foreach ($fields as $field) {
+            $this->addField($field);
+        }
     }
 
     /**
@@ -57,6 +76,40 @@ class PermissionConfig implements PermissionConfigInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasOperation($operation)
+    {
+        return in_array($operation, $this->operations);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOperations()
+    {
+        return $this->operations;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasField($field)
+    {
+        return isset($this->fields[$field]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getField($field)
+    {
+        return isset($this->fields[$field])
+            ? $this->fields[$field]
+            : null;
     }
 
     /**
@@ -73,5 +126,27 @@ class PermissionConfig implements PermissionConfigInterface
     public function getMaster()
     {
         return $this->master;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMasterFieldMappingPermissions()
+    {
+        return $this->masterFieldMappingPermissions;
+    }
+
+    /**
+     * Add the permission field configuration.
+     *
+     * @param PermissionFieldConfigInterface $fieldConfig The permission field configuration
+     *
+     * @return self
+     */
+    private function addField(PermissionFieldConfigInterface $fieldConfig)
+    {
+        $this->fields[$fieldConfig->getField()] = $fieldConfig;
+
+        return $this;
     }
 }

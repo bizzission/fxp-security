@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Tests\Permission;
 
 use Sonatra\Component\Security\Permission\PermissionConfig;
+use Sonatra\Component\Security\Permission\PermissionFieldConfig;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 
 /**
@@ -21,10 +22,33 @@ class PermissionConfigTest extends \PHPUnit_Framework_TestCase
 {
     public function testPermissionConfigByDefault()
     {
-        $config = new PermissionConfig(MockObject::class);
+        $operations = array('create', 'view', 'update', 'delete');
+        $config = new PermissionConfig(MockObject::class, $operations);
 
         $this->assertSame(MockObject::class, $config->getType());
         $this->assertSame(array(), $config->getFields());
         $this->assertNull($config->getMaster());
+    }
+
+    public function testPermissionConfig()
+    {
+        $operations = array('create', 'view', 'update', 'delete');
+        $fields = array(
+            'name' => new PermissionFieldConfig('name'),
+        );
+        $master = 'foo';
+        $config = new PermissionConfig(MockObject::class, $operations, array_values($fields), $master);
+
+        $this->assertSame(MockObject::class, $config->getType());
+
+        $this->assertSame($fields, $config->getFields());
+        $this->assertSame($fields['name'], $config->getField('name'));
+        $this->assertNull($config->getField('foo'));
+
+        $this->assertSame($master, $config->getMaster());
+
+        $this->assertSame($operations, $config->getOperations());
+        $this->assertTrue($config->hasOperation('view'));
+        $this->assertFalse($config->hasOperation('foo'));
     }
 }

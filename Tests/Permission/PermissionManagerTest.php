@@ -18,6 +18,7 @@ use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\UserSecurityIdentity;
 use Sonatra\Component\Security\Permission\PermissionConfig;
+use Sonatra\Component\Security\Permission\PermissionFieldConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Sonatra\Component\Security\PermissionEvents;
@@ -180,7 +181,9 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsFieldManaged()
     {
-        $this->pm->addConfig(new PermissionConfig(MockObject::class, array('name')));
+        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), array(
+            new PermissionFieldConfig('name'),
+        )));
 
         $object = new MockObject('foo');
         $field = 'name';
@@ -249,7 +252,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(array($perm));
 
         $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
-        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), 'organization'));
+        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), array(), 'organization'));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $orgUser));
         $this->pm->clear();
@@ -275,7 +278,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->method('getPermissions');
 
         $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
-        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), 'organization'));
+        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), array(), 'organization'));
 
         $this->pm->isGranted($sids, $permission, $object);
     }
@@ -345,6 +348,54 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->pm->addConfig(new PermissionConfig(MockObject::class));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
+        $this->pm->clear();
+    }
+
+    public function testIsGrantedWithSystemPermission()
+    {
+        $sids = array(
+            new RoleSecurityIdentity('ROLE_USER'),
+            new UserSecurityIdentity('user.test'),
+        );
+        $org = new MockOrganization('foo');
+        $user = new MockUserRoleable();
+        $orgUser = new MockOrganizationUser($org, $user);
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array());
+
+        $this->pm->addConfig(new PermissionConfig(
+            MockOrganization::class,
+            array(
+                'view',
+                'create',
+                'update',
+            ),
+            array(
+                new PermissionFieldConfig('name', array('read')),
+            )
+        ));
+        $this->pm->addConfig(new PermissionConfig(
+            MockOrganizationUser::class,
+            array(),
+            array(
+                new PermissionFieldConfig('organization', array('edit')),
+            ),
+            'organization',
+            array(
+                'create' => 'edit',
+                'update' => 'edit',
+            )
+        ));
+
+        $this->assertTrue($this->pm->isGranted($sids, 'view', $org));
+        $this->assertTrue($this->pm->isGranted($sids, 'view', $orgUser));
+        $this->assertTrue($this->pm->isFieldGranted($sids, 'read', $org, 'name'));
+        $this->assertFalse($this->pm->isFieldGranted($sids, 'edit', $org, 'name'));
+        $this->assertFalse($this->pm->isFieldGranted($sids, 'read', $orgUser, 'organization'));
+        $this->assertTrue($this->pm->isFieldGranted($sids, 'edit', $orgUser, 'organization'));
         $this->pm->clear();
     }
 

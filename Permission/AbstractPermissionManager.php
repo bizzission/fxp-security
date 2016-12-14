@@ -26,7 +26,7 @@ use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 abstract class AbstractPermissionManager implements PermissionManagerInterface
 {
     /**
-     * @var array
+     * @var array|PermissionConfigInterface[]
      */
     protected $configs;
 
@@ -147,8 +147,8 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         try {
             /* @var SubjectIdentityInterface|null $subject */
             list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
-            $subject = $this->getMaster($subject);
-            $permissions = (array) $permissions;
+            list($permissions, $subject, $field) = $this->getMasterPermissions((array) $permissions,
+                $subject, $field);
 
             if (null !== $subject && !$this->doIsManaged($subject, $field)) {
                 return true;
@@ -206,6 +206,54 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Get the master subject and permissions.
+     *
+     * @param string[]                      $permissions The permissions
+     * @param SubjectIdentityInterface|null $subject     The subject identity
+     * @param string|null                   $field       The field name
+     *
+     * @return array
+     */
+    private function getMasterPermissions(array $permissions, $subject, $field)
+    {
+        $master = $this->getMaster($subject);
+
+        if (null !== $subject && null !== $master && $subject !== $master) {
+            if (null !== $field) {
+                $permissions = $this->buildMasterFieldPermissions($subject, $permissions);
+            }
+
+            $subject = $master;
+            $field = null;
+        }
+
+        return array($permissions, $subject, $field);
+    }
+
+    /**
+     * Build the master permissions.
+     *
+     * @param SubjectIdentityInterface $subject     The subject identity
+     * @param string[]                 $permissions The permissions
+     *
+     * @return string[]
+     */
+    private function buildMasterFieldPermissions(SubjectIdentityInterface $subject, array $permissions)
+    {
+        if ($this->hasConfig($subject->getType())) {
+            $map = $this->getConfig($subject->getType())->getMasterFieldMappingPermissions();
+
+            foreach ($permissions as &$permission) {
+                if (false !== $key = array_search($permission, $map)) {
+                    $permission = $key;
+                }
+            }
+        }
+
+        return $permissions;
     }
 
     /**
