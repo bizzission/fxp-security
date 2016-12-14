@@ -67,7 +67,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
         $this->getPermissionManager()->preloadPermissions($this->postResetPermissions);
 
         $this->checkAllScheduledByAction($createEntities, 'create');
-        $this->checkAllScheduledByAction($updateEntities, 'edit');
+        $this->checkAllScheduledByAction($updateEntities, 'update');
         $this->checkAllScheduledByAction($deleteEntities, 'delete');
     }
 

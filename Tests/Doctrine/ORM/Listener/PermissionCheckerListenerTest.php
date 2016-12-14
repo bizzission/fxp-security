@@ -218,7 +218,7 @@ class PermissionCheckerListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Sonatra\Component\Security\Exception\AccessDeniedException
-     * @expectedExceptionMessage Insufficient privilege to edit the entity
+     * @expectedExceptionMessage Insufficient privilege to update the entity
      */
     public function testOnFLushWithInsufficientPrivilegeToUpdateEntity()
     {
@@ -257,7 +257,7 @@ class PermissionCheckerListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
-            ->with('perm_edit', $object)
+            ->with('perm_update', $object)
             ->willReturn(false);
 
         $this->listener->onFlush($args);

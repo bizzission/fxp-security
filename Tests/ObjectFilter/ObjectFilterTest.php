@@ -284,7 +284,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
 
         $this->ac->expects($this->at(0))
             ->method('isGranted')
-            ->with('perm_view', $fv)
+            ->with('perm_read', $fv)
             ->willReturn($allowView);
 
         if ($allowView) {
