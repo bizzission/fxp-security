@@ -17,6 +17,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
+use Sonatra\Component\Cache\Adapter\AdapterInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
@@ -105,10 +106,10 @@ class RoleHierarchyListener implements EventSubscriber
     protected function flushCache(array $invalidates)
     {
         if (count($invalidates) > 0) {
-            if (null !== $this->cache && null === $this->context) {
-                $this->cache->clear();
+            if ($this->cache instanceof AdapterInterface && null !== $this->context) {
+                $this->cache->clearByPrefixes($invalidates);
             } elseif (null !== $this->cache) {
-                $this->cache->deleteItems($invalidates);
+                $this->cache->clear();
             }
 
             if ($this->sim instanceof CacheSecurityIdentityManagerInterface) {

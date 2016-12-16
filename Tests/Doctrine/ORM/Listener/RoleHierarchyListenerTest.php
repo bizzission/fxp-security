@@ -17,7 +17,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
-use Psr\Cache\CacheItemPoolInterface;
+use Sonatra\Component\Cache\Adapter\AdapterInterface;
 use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
@@ -39,7 +39,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
     protected $sidManager;
 
     /**
-     * @var CacheItemPoolInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $cache;
 
@@ -66,7 +66,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->sidManager = $this->getMockBuilder(CacheSecurityIdentityManagerInterface::class)->getMock();
-        $this->cache = $this->getMockBuilder(CacheItemPoolInterface::class)->getMock();
+        $this->cache = $this->getMockBuilder(AdapterInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->uow = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
@@ -79,6 +79,9 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->listener->getSubscribedEvents());
     }
 
+    /**
+     * @group fxp
+     */
     public function testOnFLushWithUserObject()
     {
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
@@ -103,7 +106,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($changeSet);
 
         $this->cache->expects($this->once())
-            ->method('deleteItems')
+            ->method('clearByPrefixes')
             ->with(array('user__'));
 
         $this->sidManager->expects($this->once())
@@ -134,7 +137,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('clear');
 
         $this->cache->expects($this->never())
-            ->method('deleteItems');
+            ->method('clearByPrefixes');
 
         $this->sidManager->expects($this->never())
             ->method('invalidateCache');
@@ -166,7 +169,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($changeSet);
 
         $this->cache->expects($this->once())
-            ->method('deleteItems')
+            ->method('clearByPrefixes')
             ->with(array('user__'));
 
         $this->sidManager->expects($this->once())
@@ -199,7 +202,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($changeSet);
 
         $this->cache->expects($this->once())
-            ->method('deleteItems')
+            ->method('clearByPrefixes')
             ->with(array('user__'));
 
         $this->sidManager->expects($this->once())
@@ -241,7 +244,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($changeSet);
 
         $this->cache->expects($this->once())
-            ->method('deleteItems')
+            ->method('clearByPrefixes')
             ->with(array('42__'));
 
         $this->sidManager->expects($this->once())
@@ -289,7 +292,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->allScheduledCollections(array($persistCollection));
 
         $this->cache->expects($this->once())
-            ->method('deleteItems')
+            ->method('clearByPrefixes')
             ->with(array('user__'));
 
         $this->sidManager->expects($this->once())
@@ -325,7 +328,7 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('clear');
 
         $this->cache->expects($this->never())
-            ->method('deleteItems');
+            ->method('clearByPrefixes');
 
         $this->sidManager->expects($this->never())
             ->method('invalidateCache');
