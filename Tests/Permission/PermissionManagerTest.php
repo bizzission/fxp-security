@@ -258,12 +258,11 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->pm->clear();
     }
 
-    /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The permission configuration of "Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser" class has a master relation, only object instance can be used
-     */
-    public function testIsGrantedWithGlobalPermissionAndMasterWithEmptyObjectOsSubject()
+    public function testIsGrantedWithGlobalPermissionAndMasterWithEmptyObjectOfSubject()
     {
+        $permConfigOrg = new PermissionConfig(MockOrganization::class);
+        $permConfigOrgUser = new PermissionConfig(MockOrganizationUser::class, array(), array(), 'organization');
+
         $sids = array(
             new RoleSecurityIdentity('ROLE_USER'),
             new UserSecurityIdentity('user.test'),
@@ -274,13 +273,21 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $perm->setClass(MockOrganization::class);
         $perm->setOperation('view');
 
-        $this->provider->expects($this->never())
-            ->method('getPermissions');
+        $this->provider->expects($this->once())
+            ->method('getMasterClass')
+            ->with($permConfigOrgUser)
+            ->willReturn(MockOrganization::class);
 
-        $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
-        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), array(), 'organization'));
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_USER'))
+            ->willReturn(array($perm));
 
-        $this->pm->isGranted($sids, $permission, $object);
+        $this->pm->addConfig($permConfigOrg);
+        $this->pm->addConfig($permConfigOrgUser);
+
+        $res = $this->pm->isGranted($sids, $permission, $object);
+        $this->assertTrue($res);
     }
 
     public function testIsGrantedWithGlobalPermissionWithoutGrant()

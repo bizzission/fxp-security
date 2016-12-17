@@ -14,7 +14,6 @@ namespace Sonatra\Component\Security\Permission;
 use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
-use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
@@ -81,15 +80,14 @@ class PermissionManager extends AbstractPermissionManager
                 $config = $this->getConfig($subject->getType());
 
                 if (null !== $config->getMaster()) {
-                    if (!is_object($subject->getObject())) {
-                        $msg = 'The permission configuration of "%s" class has a master relation, only object instance can be used';
-                        throw new InvalidArgumentException(sprintf($msg, $subject->getType()));
-                    }
+                    if (is_object($subject->getObject())) {
+                        $value = $this->propertyAccessor->getValue($subject->getObject(), $config->getMaster());
 
-                    $value = $this->propertyAccessor->getValue($subject->getObject(), $config->getMaster());
-
-                    if (is_object($value)) {
-                        $subject = SubjectIdentity::fromObject($value);
+                        if (is_object($value)) {
+                            $subject = SubjectIdentity::fromObject($value);
+                        }
+                    } else {
+                        $subject = SubjectIdentity::fromClassname($this->provider->getMasterClass($config));
                     }
                 }
             }

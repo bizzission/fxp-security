@@ -28,4 +28,13 @@ interface PermissionProviderInterface
      * @return PermissionInterface[]
      */
     public function getPermissions(array $roles);
+
+    /**
+     * Get the class name of association field.
+     *
+     * @param PermissionConfigInterface $config The permission config
+     *
+     * @return string|null
+     */
+    public function getMasterClass(PermissionConfigInterface $config);
 }

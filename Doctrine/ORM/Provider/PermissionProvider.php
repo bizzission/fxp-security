@@ -11,7 +11,11 @@
 
 namespace Sonatra\Component\Security\Doctrine\ORM\Provider;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
+use Sonatra\Component\Security\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Permission\PermissionConfigInterface;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 
 /**
@@ -27,19 +31,27 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
     protected $permissionRepo;
 
     /**
+     * @var ManagerRegistry
+     */
+    protected $registry;
+
+    /**
      * Constructor.
      *
      * @param EntityRepository $roleRepository           The role repository
      * @param EntityRepository $permissionRepository     The permission repository
+     * @param ManagerRegistry  $registry                 The doctrine registry
      * @param bool             $mergeOrganizationalRoles Check if the organizational roles must be included with system roles
      */
     public function __construct(EntityRepository $roleRepository,
                                 EntityRepository $permissionRepository,
+                                ManagerRegistry $registry,
                                 $mergeOrganizationalRoles = true)
     {
         parent::__construct($roleRepository, $mergeOrganizationalRoles);
 
         $this->permissionRepo = $permissionRepository;
+        $this->registry = $registry;
     }
 
     /**
@@ -64,5 +76,39 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
         $this->permissionRepo->clear();
 
         return $permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMasterClass(PermissionConfigInterface $config)
+    {
+        $type = $config->getType();
+        $om = $this->registry->getManagerForClass($type);
+        $this->validateMaster($config, $om);
+        $meta = $om->getClassMetadata($type);
+
+        return $meta->getAssociationTargetClass($config->getMaster());
+    }
+
+    /**
+     * Validate the master config.
+     *
+     * @param PermissionConfigInterface $config The permission config
+     * @param ObjectManager             $om     The doctrine object manager
+     */
+    private function validateMaster(PermissionConfigInterface $config, $om)
+    {
+        if (null === $om) {
+            $msg = 'The doctrine object manager is not found for the class "%s"';
+
+            throw new InvalidArgumentException(sprintf($msg, $config->getType()));
+        }
+
+        if (null === $config->getMaster()) {
+            $msg = 'The permission master association is not configured for the class "%s"';
+
+            throw new InvalidArgumentException(sprintf($msg, $config->getType()));
+        }
     }
 }

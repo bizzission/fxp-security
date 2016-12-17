@@ -11,11 +11,18 @@
 
 namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Provider;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Sonatra\Component\Security\Doctrine\ORM\Provider\PermissionProvider;
+use Sonatra\Component\Security\Permission\PermissionConfigInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgOptionalRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgRequiredRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
@@ -37,6 +44,11 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
     protected $roleRepo;
 
     /**
+     * @var ManagerRegistry|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $registry;
+
+    /**
      * @var QueryBuilder|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $qb;
@@ -50,6 +62,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
     {
         $this->permissionRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
         $this->roleRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
+        $this->registry = $this->getMockBuilder(ManagerRegistry::class)->disableOriginalConstructor()->getMock();
         $this->qb = $this->getMockBuilder(QueryBuilder::class)->disableOriginalConstructor()->getMock();
 
         $this->query = $this->getMockForAbstractClass(
@@ -240,6 +253,85 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(), $provider->getPermissions(array()));
     }
 
+    public function testGetMasterClass()
+    {
+        $om = $this->getMockBuilder(ObjectManager::class)->getMock();
+
+        /* @var PermissionConfigInterface|\PHPUnit_Framework_MockObject_MockObject $permConfig */
+        $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
+
+        $permConfig->expects($this->once())
+            ->method('getType')
+            ->willReturn(MockOrganizationUser::class);
+
+        $permConfig->expects($this->atLeast(2))
+            ->method('getMaster')
+            ->willReturn('organization');
+
+        $this->registry->expects($this->once())
+            ->method('getManagerForClass')
+            ->willReturn($om);
+
+        $meta = $this->getMockBuilder(ClassMetadata::class)->getMock();
+
+        $meta->expects($this->once())
+            ->method('getAssociationTargetClass')
+            ->with('organization')
+            ->willReturn(MockOrganization::class);
+
+        $om->expects($this->once())
+            ->method('getClassMetadata')
+            ->with(MockOrganizationUser::class)
+            ->willReturn($meta);
+
+        $provider = $this->createProvider();
+        $this->assertSame(MockOrganization::class, $provider->getMasterClass($permConfig));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The doctrine object manager is not found for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockObject"
+     */
+    public function testGetMasterClassWithoutObjectManagerForClass()
+    {
+        /* @var PermissionConfigInterface|\PHPUnit_Framework_MockObject_MockObject $permConfig */
+        $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
+
+        $permConfig->expects($this->atLeast(2))
+            ->method('getType')
+            ->willReturn(MockObject::class);
+
+        $provider = $this->createProvider();
+        $provider->getMasterClass($permConfig);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The permission master association is not configured for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockObject"
+     */
+    public function testGetMasterClassWithoutMaster()
+    {
+        $om = $this->getMockBuilder(ObjectManager::class)->getMock();
+
+        /* @var PermissionConfigInterface|\PHPUnit_Framework_MockObject_MockObject $permConfig */
+        $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
+
+        $permConfig->expects($this->atLeast(2))
+            ->method('getType')
+            ->willReturn(MockObject::class);
+
+        $permConfig->expects($this->once())
+            ->method('getMaster')
+            ->willReturn(null);
+
+        $this->registry->expects($this->once())
+            ->method('getManagerForClass')
+            ->willReturn($om);
+
+        $provider = $this->createProvider();
+        $provider->getMasterClass($permConfig);
+    }
+
     protected function createProvider($roleClass = MockRole::class)
     {
         $this->roleRepo->expects($this->once())
@@ -248,7 +340,8 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
 
         return new PermissionProvider(
             $this->roleRepo,
-            $this->permissionRepo
+            $this->permissionRepo,
+            $this->registry
         );
     }
 }
