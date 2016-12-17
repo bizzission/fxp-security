@@ -95,7 +95,7 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
      * Validate the master config.
      *
      * @param PermissionConfigInterface $config The permission config
-     * @param ObjectManager             $om     The doctrine object manager
+     * @param ObjectManager|null        $om     The doctrine object manager
      */
     private function validateMaster(PermissionConfigInterface $config, $om)
     {
