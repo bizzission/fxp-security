@@ -22,10 +22,7 @@ use Sonatra\Component\Security\Model\Traits\RoleableTrait;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class MockOrganization extends Organization implements
-    RoleableInterface,
-    OrganizationRolesInterface,
-    OrganizationGroupsInterface
+class MockOrganization extends Organization implements RoleableInterface, OrganizationRolesInterface, OrganizationGroupsInterface
 {
     use RoleableTrait;
     use OrganizationRolesTrait;
