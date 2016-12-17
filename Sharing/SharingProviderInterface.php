@@ -65,7 +65,7 @@ interface SharingProviderInterface
     /**
      * Delete the identity of sharing.
      *
-     * @param string $type    The identity type. Typically the PHP class name
+     * @param string $type The identity type. Typically the PHP class name
      * @param string $name The identity name
      *
      * @return self
