@@ -28,7 +28,7 @@ class ConsoleTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('key', $token->getKey());
 
         $tokenSerialized = $token->serialize();
-        $this->assertTrue(is_string($tokenSerialized));
+        $this->assertInternalType('string', $tokenSerialized);
 
         $token2 = new ConsoleToken('', '');
         $token2->unserialize($tokenSerialized);
