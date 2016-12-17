@@ -70,7 +70,6 @@ class DoctrineUtilsTest extends \PHPUnit_Framework_TestCase
             array(Type::FLOAT, 0),
             array(Type::BINARY, null),
             array(Type::BLOB, null),
-
         );
     }
 
