@@ -79,9 +79,6 @@ class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->listener->getSubscribedEvents());
     }
 
-    /**
-     * @group fxp
-     */
     public function testOnFLushWithUserObject()
     {
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
