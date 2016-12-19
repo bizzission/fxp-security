@@ -15,7 +15,6 @@ use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -27,11 +26,11 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
     /**
      * Creates a role security identity from a RoleInterface.
      *
-     * @param RoleInterface $role The role
+     * @param Role $role The role
      *
      * @return self
      */
-    public static function fromAccount(RoleInterface $role)
+    public static function fromAccount(Role $role)
     {
         return new self($role->getRole());
     }
@@ -54,7 +53,7 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
             $roles = $user->getRoles();
 
             foreach ($roles as $role) {
-                $role = $role instanceof RoleInterface ? $role : new Role($role);
+                $role = $role instanceof Role ? $role : new Role($role);
                 $sids[] = self::fromAccount($role);
             }
 

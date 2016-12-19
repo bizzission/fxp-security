@@ -16,7 +16,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Sonatra\Component\Security\Model\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -66,8 +66,8 @@ class RoleSecurityIdentityTest extends \PHPUnit_Framework_TestCase
 
     public function testFromAccount()
     {
-        /* @var RoleInterface|\PHPUnit_Framework_MockObject_MockObject $role */
-        $role = $this->getMockBuilder(RoleInterface::class)->getMock();
+        /* @var Role|\PHPUnit_Framework_MockObject_MockObject $role */
+        $role = $this->getMockBuilder(Role::class)->disableOriginalConstructor()->getMock();
         $role->expects($this->once())
             ->method('getRole')
             ->willReturn('ROLE_TEST');
@@ -81,8 +81,8 @@ class RoleSecurityIdentityTest extends \PHPUnit_Framework_TestCase
 
     public function testFormToken()
     {
-        /* @var RoleInterface|\PHPUnit_Framework_MockObject_MockObject $role */
-        $role = $this->getMockBuilder(RoleInterface::class)->getMock();
+        /* @var Role|\PHPUnit_Framework_MockObject_MockObject $role */
+        $role = $this->getMockBuilder(Role::class)->disableOriginalConstructor()->getMock();
         $role->expects($this->once())
             ->method('getRole')
             ->willReturn('ROLE_TEST');

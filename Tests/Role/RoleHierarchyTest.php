@@ -219,7 +219,7 @@ class RoleHierarchyTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Sonatra\Component\Security\Exception\SecurityException
-     * @expectedExceptionMessage The Role class must be an instance of "Symfony\Component\Security\Core\Role\RoleInterface"
+     * @expectedExceptionMessage The Role class must be an instance of "Symfony\Component\Security\Core\Role\Role"
      */
     public function testInvalidRoleClassName()
     {

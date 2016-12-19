@@ -12,14 +12,15 @@
 namespace Sonatra\Component\Security\Model;
 
 use Sonatra\Component\Security\Model\Traits\PermissionsInterface;
-use Symfony\Component\Security\Core\Role\RoleInterface as BaseRoleInterface;
 
 /**
  * Interface for role.
  *
+ * The class must extends the `Symfony\Component\Security\Core\Role\Role` class.
+ *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-interface RoleInterface extends BaseRoleInterface, PermissionsInterface
+interface RoleInterface extends PermissionsInterface
 {
     /**
      * Get id.
@@ -43,6 +44,18 @@ interface RoleInterface extends BaseRoleInterface, PermissionsInterface
      * @return string the role name
      */
     public function getName();
+
+    /**
+     * Gets the role.
+     *
+     * This method returns a string representation whenever possible.
+     *
+     * When the role cannot be represented with sufficient precision by a
+     * string, it should return null.
+     *
+     * @return string|null A string representation of the role, or null
+     */
+    public function getRole();
 
     /**
      * @return string

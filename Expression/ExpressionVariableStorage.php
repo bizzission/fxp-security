@@ -17,7 +17,7 @@ use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Variable storage of expression.
@@ -137,7 +137,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
             return IdentityUtils::filterRolesIdentities($sids);
         }
 
-        return array_map(function (RoleInterface $role) {
+        return array_map(function (Role $role) {
             return $role->getRole();
         }, $token->getRoles());
     }

@@ -14,13 +14,14 @@ namespace Sonatra\Component\Security\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sonatra\Component\Security\Model\Traits\PermissionsTrait;
+use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
  * This is the domain class for the Role object.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-abstract class Role implements RoleHierarchicalInterface
+abstract class Role extends BaseRole implements RoleHierarchicalInterface
 {
     use PermissionsTrait;
 
@@ -51,6 +52,8 @@ abstract class Role implements RoleHierarchicalInterface
      */
     public function __construct($name)
     {
+        parent::__construct(null);
+
         $this->name = $name;
     }
 

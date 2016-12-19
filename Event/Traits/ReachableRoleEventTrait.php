@@ -19,14 +19,14 @@ namespace Sonatra\Component\Security\Event\Traits;
 trait ReachableRoleEventTrait
 {
     /**
-     * @var \Symfony\Component\Security\Core\Role\RoleInterface[]
+     * @var \Symfony\Component\Security\Core\Role\Role[]
      */
     protected $reachableRoles;
 
     /**
      * Set reachable roles.
      *
-     * @param \Symfony\Component\Security\Core\Role\RoleInterface[] $reachableRoles
+     * @param \Symfony\Component\Security\Core\Role\Role[] $reachableRoles
      */
     public function setReachableRoles(array $reachableRoles)
     {
@@ -36,7 +36,7 @@ trait ReachableRoleEventTrait
     /**
      * Get reachable roles.
      *
-     * @return \Symfony\Component\Security\Core\Role\RoleInterface[]
+     * @return \Symfony\Component\Security\Core\Role\Role[]
      */
     public function getReachableRoles()
     {
