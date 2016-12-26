@@ -117,6 +117,14 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getConfigs()
+    {
+        return $this->configs;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isManaged($subject)
     {
         try {

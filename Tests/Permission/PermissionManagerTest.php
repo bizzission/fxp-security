@@ -145,6 +145,17 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->pm->getConfig(MockObject::class);
     }
 
+    public function testGetConfigs()
+    {
+        $expected = array(
+            MockObject::class => new PermissionConfig(MockObject::class),
+        );
+
+        $this->pm->addConfig($expected[MockObject::class]);
+
+        $this->assertSame($expected, $this->pm->getConfigs());
+    }
+
     public function testIsManaged()
     {
         $this->pm->addConfig(new PermissionConfig(MockObject::class));

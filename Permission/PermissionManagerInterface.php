@@ -72,6 +72,13 @@ interface PermissionManagerInterface
     public function getConfig($class);
 
     /**
+     * Get the configurations of permissions.
+     *
+     * @return PermissionConfigInterface[]
+     */
+    public function getConfigs();
+
+    /**
      * Check if the subject is managed.
      *
      * @param SubjectIdentityInterface|FieldVote|object|string $subject The object or class name
