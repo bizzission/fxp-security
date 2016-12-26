@@ -217,7 +217,7 @@ class PermissionManager extends AbstractPermissionManager
     {
         foreach ($this->configs as $config) {
             foreach ($config->getOperations() as $operation) {
-                $field = $field = PermissionUtils::getMapAction(null);
+                $field = PermissionUtils::getMapAction(null);
                 $this->cache[$id][$config->getType()][$field][$operation] = true;
             }
 
