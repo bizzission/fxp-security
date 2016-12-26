@@ -17,6 +17,8 @@ use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\UserSecurityIdentity;
+use Sonatra\Component\Security\Model\PermissionChecking;
+use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionFieldConfig;
 use Sonatra\Component\Security\Permission\PermissionManager;
@@ -27,6 +29,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -415,6 +418,60 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->pm->isFieldGranted($sids, 'read', $orgUser, 'organization'));
         $this->assertTrue($this->pm->isFieldGranted($sids, 'edit', $orgUser, 'organization'));
         $this->pm->clear();
+    }
+
+    public function testGetRolePermissions()
+    {
+        $role = new MockRole('ROLE_TEST');
+        $subject = null;
+        $permission = new MockPermission();
+        $permission->setOperation('test');
+        $permissions = array(
+            $permission,
+        );
+        $expected = array(
+            new PermissionChecking($permissions[0], false),
+        );
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_TEST'))
+            ->willReturn(array());
+
+        $this->provider->expects($this->once())
+            ->method('getPermissionsBySubject')
+            ->with($subject)
+            ->willReturn($permissions);
+
+        $res = $this->pm->getRolePermissions($role, $subject);
+
+        $this->assertEquals($expected, $res);
+    }
+
+    public function testGetFieldRolePermissions()
+    {
+        $role = new MockRole('ROLE_TEST');
+        $subject = MockObject::class;
+        $field = 'name';
+        $permission = new MockPermission();
+        $permission->setOperation('test');
+        $permission->setClass($subject);
+        $permission->setField($field);
+        $permissions = array(
+            $permission,
+        );
+        $expected = array(
+            new PermissionChecking($permissions[0], true),
+        );
+
+        $this->provider->expects($this->once())
+            ->method('getPermissionsBySubject')
+            ->with(new FieldVote($subject, $field))
+            ->willReturn($permissions);
+
+        $res = $this->pm->getRoleFieldPermissions($role, $subject, $field);
+
+        $this->assertEquals($expected, $res);
     }
 
     public function testPreloadPermissions()

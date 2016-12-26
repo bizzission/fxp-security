@@ -16,6 +16,8 @@ use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+use Sonatra\Component\Security\Model\PermissionChecking;
+use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 
 /**
@@ -181,6 +183,22 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getRolePermissions(RoleInterface $role, $subject = null)
+    {
+        return $this->doGetRolePermissions($role, $subject);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoleFieldPermissions(RoleInterface $role, $subject, $field)
+    {
+        return $this->getRolePermissions($role, new FieldVote($subject, $field));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function preloadPermissions(array $objects)
     {
         if (null !== $this->sharingManager) {
@@ -294,4 +312,14 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      * @return bool
      */
     abstract protected function doIsGranted(array $sids, array $permissions, $subject = null, $field = null);
+
+    /**
+     * Action to retrieve the permissions of role and subject.
+     *
+     * @param RoleInterface                                         $role    The role
+     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject The object or class name or field vote
+     *
+     * @return PermissionChecking[]
+     */
+    abstract protected function doGetRolePermissions(RoleInterface $role, $subject = null);
 }

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Permission;
 
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Model\PermissionInterface;
 
 /**
@@ -28,6 +29,15 @@ interface PermissionProviderInterface
      * @return PermissionInterface[]
      */
     public function getPermissions(array $roles);
+
+    /**
+     * Get the permissions by subject.
+     *
+     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject The subject instance or classname
+     *
+     * @return PermissionInterface[]
+     */
+    public function getPermissionsBySubject($subject = null);
 
     /**
      * Get the class name of association field.

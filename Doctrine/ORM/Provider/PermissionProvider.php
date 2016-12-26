@@ -14,9 +14,12 @@ namespace Sonatra\Component\Security\Doctrine\ORM\Provider;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Sonatra\Component\Security\Exception\InvalidArgumentException;
+use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Permission\PermissionConfigInterface;
 use Sonatra\Component\Security\Permission\PermissionProviderInterface;
+use Sonatra\Component\Security\Permission\PermissionUtils;
 
 /**
  * The Doctrine Orm Permission Provider.
@@ -81,6 +84,27 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
     /**
      * {@inheritdoc}
      */
+    public function getPermissionsBySubject($subject = null)
+    {
+        /* @var SubjectIdentityInterface|null $subject */
+        list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
+
+        $qb = $this->permissionRepo->createQueryBuilder('p')
+            ->orderBy('p.class', 'asc')
+            ->addOrderBy('p.field', 'asc')
+            ->addOrderBy('p.operation', 'asc');
+
+        $this->addWhereOptionalField($qb, 'class', null !== $subject ? $subject->getType() : null);
+        $this->addWhereOptionalField($qb, 'field', $field);
+        $permissions = $qb->getQuery()->getResult();
+        $this->permissionRepo->clear();
+
+        return $permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMasterClass(PermissionConfigInterface $config)
     {
         $type = $config->getType();
@@ -109,6 +133,22 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
             $msg = 'The permission master association is not configured for the class "%s"';
 
             throw new InvalidArgumentException(sprintf($msg, $config->getType()));
+        }
+    }
+
+    /**
+     * Add the optional field condition.
+     *
+     * @param QueryBuilder $qb    The query builder
+     * @param string       $field The field name
+     * @param mixed|null   $value The value
+     */
+    private function addWhereOptionalField(QueryBuilder $qb, $field, $value)
+    {
+        if (null === $value) {
+            $qb->andWhere('p.'.$field.' IS NULL');
+        } else {
+            $qb->andWhere('p.'.$field.' = :'.$field)->setParameter($field, $value);
         }
     }
 }

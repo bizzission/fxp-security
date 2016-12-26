@@ -15,10 +15,13 @@ use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Identity\IdentityUtils;
+use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
+use Sonatra\Component\Security\Model\PermissionChecking;
+use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\PermissionEvents;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -133,6 +136,24 @@ class PermissionManager extends AbstractPermissionManager
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function doGetRolePermissions(RoleInterface $role, $subject = null)
+    {
+        $permissions = array();
+        $sid = new RoleSecurityIdentity($role->getName());
+
+        foreach ($this->provider->getPermissionsBySubject($subject) as $permission) {
+            $permissions[] = new PermissionChecking(
+                $permission,
+                $this->isGranted(array($sid), array($permission->getOperation()), $subject)
+            );
+        }
+
+        return $permissions;
     }
 
     /**

@@ -14,6 +14,8 @@ namespace Sonatra\Component\Security\Permission;
 use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+use Sonatra\Component\Security\Model\PermissionChecking;
+use Sonatra\Component\Security\Model\RoleInterface;
 
 /**
  * Permission manager Interface.
@@ -119,6 +121,27 @@ interface PermissionManagerInterface
      * @return bool
      */
     public function isFieldGranted(array $sids, $permissions, $subject, $field);
+
+    /**
+     * Get the permissions of the role and subject.
+     *
+     * @param RoleInterface                                         $role    The role
+     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject The object or class name or field vote
+     *
+     * @return PermissionChecking[]
+     */
+    public function getRolePermissions(RoleInterface $role, $subject = null);
+
+    /**
+     * Get the permissions of the role and subject field.
+     *
+     * @param RoleInterface                          $role    The role
+     * @param SubjectIdentityInterface|object|string $subject The object or class name
+     * @param string                                 $field   The field
+     *
+     * @return PermissionChecking[]
+     */
+    public function getRoleFieldPermissions(RoleInterface $role, $subject, $field);
 
     /**
      * Preload permissions of objects.
