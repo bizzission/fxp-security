@@ -11,11 +11,11 @@
 
 namespace Sonatra\Component\Security\Firewall;
 
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
  * Inject the host role in existing token role.

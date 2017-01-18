@@ -18,7 +18,6 @@ use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Cache\Adapter\AdapterInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
@@ -26,6 +25,7 @@ use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**

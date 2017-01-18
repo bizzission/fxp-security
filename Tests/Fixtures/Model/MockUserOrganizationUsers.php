@@ -13,8 +13,8 @@ namespace Sonatra\Component\Security\Tests\Fixtures\Model;
 
 use Sonatra\Component\Security\Model\Traits\OrganizationalOptionalInterface;
 use Sonatra\Component\Security\Model\Traits\OrganizationalOptionalTrait;
-use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersTrait;
 use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
+use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>

@@ -15,10 +15,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
-use Sonatra\Component\Security\Token\ConsoleToken;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
+use Sonatra\Component\Security\Token\ConsoleToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 

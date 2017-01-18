@@ -12,13 +12,13 @@
 namespace Sonatra\Component\Security\Identity;
 
 use Sonatra\Component\Security\Model\GroupInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
 use Sonatra\Component\Security\Model\UserInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;

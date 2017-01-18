@@ -11,8 +11,8 @@
 
 namespace Sonatra\Component\Security\Doctrine\ORM\ObjectFilter;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterVoterInterface;
 
 /**

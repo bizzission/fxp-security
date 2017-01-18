@@ -11,10 +11,10 @@
 
 namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
-use Doctrine\ORM\Events;
-use Sonatra\Component\Security\Token\ConsoleToken;
-use Sonatra\Component\Security\Exception\AccessDeniedException;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
+use Sonatra\Component\Security\Exception\AccessDeniedException;
+use Sonatra\Component\Security\Token\ConsoleToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**

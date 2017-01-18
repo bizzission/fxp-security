@@ -18,13 +18,13 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Security\Event\PostReachableRoleEvent;
 use Sonatra\Component\Security\Event\PreReachableRoleEvent;
+use Sonatra\Component\Security\Exception\SecurityException;
 use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\ReachableRoleEvents;
-use Symfony\Component\Security\Core\Role\RoleHierarchy as BaseRoleHierarchy;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sonatra\Component\Security\Exception\SecurityException;
+use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\Role\RoleHierarchy as BaseRoleHierarchy;
 
 /**
  * RoleHierarchy defines a role hierarchy.

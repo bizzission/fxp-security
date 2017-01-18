@@ -11,10 +11,10 @@
 
 namespace Sonatra\Component\Security\Tests\Listener;
 
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Listener\OrganizationSecurityIdentitySubscriber;
 use Sonatra\Component\Security\Model\OrganizationInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 

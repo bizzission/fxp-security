@@ -11,9 +11,9 @@
 
 namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
 
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
-use Sonatra\Component\Security\Exception\SecurityException;
 use Doctrine\Common\EventSubscriber;
+use Sonatra\Component\Security\Exception\SecurityException;
+use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**

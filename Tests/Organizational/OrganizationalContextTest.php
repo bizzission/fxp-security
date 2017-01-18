@@ -11,10 +11,10 @@
 
 namespace Sonatra\Component\Security\Tests\Organizational;
 
-use Sonatra\Component\Security\Organizational\OrganizationalContext;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\UserInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContext;
 use Sonatra\Component\Security\OrganizationalTypes;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsers;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

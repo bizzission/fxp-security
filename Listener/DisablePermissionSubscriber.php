@@ -13,9 +13,9 @@ namespace Sonatra\Component\Security\Listener;
 
 use Sonatra\Component\Security\Event\AbstractEditableSecurityEvent;
 use Sonatra\Component\Security\Event\AbstractSecurityEvent;
-use Sonatra\Component\Security\SecurityIdentityEvents;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\ReachableRoleEvents;
+use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

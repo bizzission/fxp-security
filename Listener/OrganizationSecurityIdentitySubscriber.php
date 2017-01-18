@@ -11,11 +11,11 @@
 
 namespace Sonatra\Component\Security\Listener;
 
+use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
 use Sonatra\Component\Security\Identity\IdentityUtils;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;

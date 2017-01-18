@@ -18,15 +18,15 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
 use Sonatra\Component\Cache\Adapter\AdapterInterface;
-use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
+use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\UserInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>

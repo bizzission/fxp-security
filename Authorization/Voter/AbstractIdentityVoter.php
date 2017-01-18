@@ -13,8 +13,8 @@ namespace Sonatra\Component\Security\Authorization\Voter;
 
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
  * AbstractIdentityVoter to determine the identities granted on current user defined in token.

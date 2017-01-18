@@ -12,8 +12,8 @@
 namespace Sonatra\Component\Security\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query\Filter\SQLFilter;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\SharingListener;
 use Sonatra\Component\Security\Exception\RuntimeException;
