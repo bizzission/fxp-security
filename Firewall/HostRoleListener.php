@@ -11,65 +11,16 @@
 
 namespace Sonatra\Component\Security\Firewall;
 
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
- * Inject the host role in existing token role.
+ * Inject the host role in security identity manager.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class HostRoleListener implements ListenerInterface
+class HostRoleListener extends AbstractRoleListener
 {
-    /**
-     * @var SecurityIdentityManagerInterface
-     */
-    protected $sidManager;
-
-    /**
-     * @var array
-     */
-    protected $config;
-
-    /**
-     * @var bool
-     */
-    protected $enabled = true;
-
-    /**
-     * Constructor.
-     *
-     * @param SecurityIdentityManagerInterface $sidManager The security identity manager
-     * @param array                            $config     The config
-     */
-    public function __construct(SecurityIdentityManagerInterface $sidManager, array $config)
-    {
-        $this->sidManager = $sidManager;
-        $this->config = $config;
-    }
-
-    /**
-     * Set if the listener is enabled.
-     *
-     * @param bool $enabled The value
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = (bool) $enabled;
-    }
-
-    /**
-     * Check if the listener is enabled.
-     *
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
     /**
      * Handles anonymous authentication.
      *

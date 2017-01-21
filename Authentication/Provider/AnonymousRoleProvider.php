@@ -12,10 +12,10 @@
 namespace Sonatra\Component\Security\Authentication\Provider;
 
 /**
- * Provider for host role.
+ * Provider for anonymous role.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class HostRoleProvider extends AbstractRoleProvider
+class AnonymousRoleProvider extends AbstractRoleProvider
 {
 }
