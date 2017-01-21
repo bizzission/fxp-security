@@ -49,13 +49,28 @@ class HostRoleListener extends AbstractRoleListener
         $hostRole = null;
         $hostname = $event->getRequest()->getHttpHost();
 
-        foreach ($this->config as $host => $role) {
-            if (preg_match('/'.$host.'/', $hostname)) {
+        foreach ($this->config as $hostPattern => $role) {
+            if ($this->isValid($hostPattern, $hostname)) {
                 $hostRole = new Role($role);
                 break;
             }
         }
 
         return $hostRole;
+    }
+
+    /**
+     * Check if the hostname matching with the host pattern.
+     *
+     * @param string $pattern  The shell pattern or regex pattern starting and ending with a slash
+     * @param string $hostname The host name
+     *
+     * @return bool
+     */
+    private function isValid($pattern, $hostname)
+    {
+        return 0 === strpos($pattern, '/') && (1 + strrpos($pattern, '/')) === strlen($pattern)
+            ? (bool) preg_match($pattern, $hostname)
+            : fnmatch($pattern, $hostname);
     }
 }

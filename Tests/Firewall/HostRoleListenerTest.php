@@ -52,9 +52,10 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->config = array(
-            'foo.bar.tld' => 'ROLE_HOST',
-            '.*.baz.tld' => 'ROLE_HOST_BAZ',
-            '.*.foo.*' => 'ROLE_HOST_FOO',
+            '/foo.bar.tld/' => 'ROLE_HOST',
+            '/.*.baz.tld/' => 'ROLE_HOST_BAZ',
+            '/.*.foo.*/' => 'ROLE_HOST_FOO',
+            '*.bar' => 'ROLE_HOST_BAR',
         );
         $this->request = $this->getMockBuilder(Request::class)->getMock();
         $this->event = $this->getMockBuilder(GetResponseEvent::class)->disableOriginalConstructor()->getMock();
@@ -136,6 +137,7 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
             array('b.foo.com', 'ROLE_HOST_FOO'),
             array('a.foo.org', 'ROLE_HOST_FOO'),
             array('b.foo.org', 'ROLE_HOST_FOO'),
+            array('www.example.bar', 'ROLE_HOST_BAR'),
         );
     }
 
