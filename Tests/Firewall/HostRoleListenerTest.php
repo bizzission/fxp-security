@@ -12,12 +12,11 @@
 namespace Sonatra\Component\Security\Tests\Firewall;
 
 use Sonatra\Component\Security\Firewall\HostRoleListener;
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -25,19 +24,14 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $tokenStorage;
+    protected $sidManager;
 
     /**
      * @var array
      */
     protected $config;
-
-    /**
-     * @var ListenerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $anonymousListener;
 
     /**
      * @var Request|\PHPUnit_Framework_MockObject_MockObject
@@ -56,20 +50,19 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
+        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->config = array(
             'foo.bar.tld' => 'ROLE_HOST',
             '.*.baz.tld' => 'ROLE_HOST_BAZ',
             '.*.foo.*' => 'ROLE_HOST_FOO',
         );
-        $this->anonymousListener = $this->getMockBuilder(ListenerInterface::class)->getMock();
         $this->request = $this->getMockBuilder(Request::class)->getMock();
         $this->event = $this->getMockBuilder(GetResponseEvent::class)->disableOriginalConstructor()->getMock();
         $this->event->expects($this->any())
             ->method('getRequest')
             ->willReturn($this->request);
 
-        $this->listener = new HostRoleListener($this->tokenStorage, $this->config, $this->anonymousListener);
+        $this->listener = new HostRoleListener($this->sidManager, $this->config);
     }
 
     public function testBasic()
@@ -81,6 +74,9 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleWithDisabledListener()
     {
+        $this->sidManager->expects($this->never())
+            ->method('addSpecialRole');
+
         $this->listener->setEnabled(false);
         $this->listener->handle($this->event);
     }
@@ -91,6 +87,9 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getHttpHost')
             ->willReturn('no.host-role.tld');
 
+        $this->sidManager->expects($this->never())
+            ->method('addSpecialRole');
+
         $this->listener->handle($this->event);
     }
 
@@ -100,16 +99,9 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getHttpHost')
             ->willReturn('foo.bar.tld');
 
-        $this->tokenStorage->expects($this->at(0))
-            ->method('getToken')
-            ->willReturn(null);
-
-        $this->anonymousListener->expects($this->once())
-            ->method('handle');
-
-        $this->tokenStorage->expects($this->at(1))
-            ->method('getToken')
-            ->willReturn(null);
+        $this->sidManager->expects($this->once())
+            ->method('addSpecialRole')
+            ->with(new Role('ROLE_HOST'));
 
         $this->listener->handle($this->event);
     }
@@ -124,19 +116,9 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getHttpHost')
             ->willReturn('foo.bar.tld');
 
-        $this->tokenStorage->expects($this->at(0))
-            ->method('getToken')
-            ->willReturn(null);
-
-        $this->anonymousListener->expects($this->once())
-            ->method('handle');
-
-        $this->tokenStorage->expects($this->at(1))
-            ->method('getToken')
-            ->willReturn($token);
-
-        $this->tokenStorage->expects($this->once())
-            ->method('setToken');
+        $this->sidManager->expects($this->once())
+            ->method('addSpecialRole')
+            ->with(new Role('ROLE_HOST'));
 
         $this->listener->handle($this->event);
 
@@ -173,32 +155,12 @@ class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getHttpHost')
             ->willReturn($host);
 
-        $this->tokenStorage->expects($this->at(0))
-            ->method('getToken')
-            ->willReturn(null);
-
-        $this->anonymousListener->expects($this->once())
-            ->method('handle');
-
-        $this->tokenStorage->expects($this->at(1))
-            ->method('getToken')
-            ->willReturn($token);
-
-        $this->tokenStorage->expects($this->once())
-            ->method('setToken');
+        $this->sidManager->expects($this->once())
+            ->method('addSpecialRole')
+            ->with(new Role($validRole));
 
         $this->listener->handle($this->event);
 
-        $this->assertCount(2, $token->getRoles());
-
-        $roles = array();
-
-        /* @var Role $role */
-        foreach ($token->getRoles() as $role) {
-            $roles[] = $role->getRole();
-        }
-
-        $this->assertTrue(in_array('ROLE_FOO', $roles));
-        $this->assertTrue(in_array($validRole, $roles));
+        $this->assertCount(1, $token->getRoles());
     }
 }

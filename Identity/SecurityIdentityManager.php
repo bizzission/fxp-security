@@ -46,6 +46,11 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
     protected $authenticationTrustResolver;
 
     /**
+     * @var Role[]
+     */
+    protected $roles = array();
+
+    /**
      * Constructor.
      *
      * @param EventDispatcherInterface             $dispatcher                  The event dispatcher
@@ -59,6 +64,18 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
         $this->dispatcher = $dispatcher;
         $this->roleHierarchy = $roleHierarchy;
         $this->authenticationTrustResolver = $authenticationTrustResolver;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSpecialRole(Role $role)
+    {
+        if (!isset($this->roles[$role->getRole()])) {
+            $this->roles[$role->getRole()] = $role;
+        }
+
+        return $this;
     }
 
     /**
@@ -144,6 +161,8 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      */
     protected function addSpecialRoles(TokenInterface $token, array $sids)
     {
+        $sids = $this->injectSpecialRoles($sids);
+
         if ($this->authenticationTrustResolver->isFullFledged($token)) {
             $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_FULLY);
             $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
@@ -156,5 +175,45 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
         }
 
         return $sids;
+    }
+
+    /**
+     * Inject the special roles.
+     *
+     * @param SecurityIdentityInterface[] $sids The security identities
+     *
+     * @return SecurityIdentityInterface[]
+     */
+    private function injectSpecialRoles(array $sids)
+    {
+        $roles = $this->getRoleNames($sids);
+
+        foreach ($this->roles as $role) {
+            if (!in_array($role->getRole(), $roles)) {
+                $sids[] = RoleSecurityIdentity::fromAccount($role);
+            }
+        }
+
+        return $sids;
+    }
+
+    /**
+     * Get the role names of security identities.
+     *
+     * @param SecurityIdentityInterface[] $sids The security identities
+     *
+     * @return string[]
+     */
+    private function getRoleNames(array $sids)
+    {
+        $roles = array();
+
+        foreach ($sids as $sid) {
+            if ($sid instanceof RoleSecurityIdentity) {
+                $roles[] = $sid->getIdentifier();
+            }
+        }
+
+        return $roles;
     }
 }

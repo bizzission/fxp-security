@@ -65,9 +65,9 @@ class SecurityIdentityManagerTest extends \PHPUnit_Framework_TestCase
     public function getAuthenticationTrustResolverStatus()
     {
         return array(
-            array('isFullFledged', 6),
-            array('isRememberMe', 5),
-            array('isAnonymous', 4),
+            array('isFullFledged', 7),
+            array('isRememberMe', 6),
+            array('isAnonymous', 5),
         );
     }
 
@@ -148,6 +148,8 @@ class SecurityIdentityManagerTest extends \PHPUnit_Framework_TestCase
             ->method($trustMethod)
             ->with($token)
             ->willReturn(true);
+
+        $this->sidManager->addSpecialRole(new Role('ROLE_BAZ'));
 
         $this->sidManager->getSecurityIdentities($token);
 

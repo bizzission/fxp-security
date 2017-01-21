@@ -11,9 +11,8 @@
 
 namespace Sonatra\Component\Security\Firewall;
 
+use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
@@ -25,19 +24,14 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 class HostRoleListener implements ListenerInterface
 {
     /**
-     * @var TokenStorageInterface
+     * @var SecurityIdentityManagerInterface
      */
-    protected $tokenStorage;
+    protected $sidManager;
 
     /**
      * @var array
      */
     protected $config;
-
-    /**
-     * @var ListenerInterface
-     */
-    protected $anonymousListener;
 
     /**
      * @var bool
@@ -47,17 +41,13 @@ class HostRoleListener implements ListenerInterface
     /**
      * Constructor.
      *
-     * @param TokenStorageInterface $tokenStorage      The token storage
-     * @param array                 $config            The config
-     * @param ListenerInterface     $anonymousListener The anonymous listener
+     * @param SecurityIdentityManagerInterface $sidManager The security identity manager
+     * @param array                            $config     The config
      */
-    public function __construct(TokenStorageInterface $tokenStorage,
-                                array $config,
-                                ListenerInterface $anonymousListener)
+    public function __construct(SecurityIdentityManagerInterface $sidManager, array $config)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->sidManager = $sidManager;
         $this->config = $config;
-        $this->anonymousListener = $anonymousListener;
     }
 
     /**
@@ -87,20 +77,12 @@ class HostRoleListener implements ListenerInterface
      */
     public function handle(GetResponseEvent $event)
     {
-        if (!$this->enabled) {
-            return;
-        }
+        if ($this->isEnabled()) {
+            $hostRole = $this->getHostRole($event);
 
-        $hostRole = $this->getHostRole($event);
-
-        if (null === $hostRole) {
-            return;
-        }
-
-        $token = $this->getToken($event);
-
-        if (null !== $token) {
-            $this->injectHostRole($token, $hostRole);
+            if (null !== $hostRole) {
+                $this->sidManager->addSpecialRole($hostRole);
+            }
         }
     }
 
@@ -124,58 +106,5 @@ class HostRoleListener implements ListenerInterface
         }
 
         return $hostRole;
-    }
-
-    /**
-     * Get the token.
-     *
-     * @param GetResponseEvent $event The response event
-     *
-     * @return null|TokenInterface
-     */
-    protected function getToken(GetResponseEvent $event)
-    {
-        $token = $this->tokenStorage->getToken();
-
-        // add anonymous token
-        if (null === $token) {
-            $this->anonymousListener->handle($event);
-            $token = $this->tokenStorage->getToken();
-        }
-
-        return $token;
-    }
-
-    /**
-     * Add the host role in existing token.
-     *
-     * @param TokenInterface $token    The token
-     * @param Role           $hostRole The host role
-     */
-    private function injectHostRole(TokenInterface $token, Role $hostRole)
-    {
-        $tRoles = $token->getRoles();
-        $alreadyInclude = false;
-
-        foreach ($tRoles as $role) {
-            if ($hostRole->getRole() === $role->getRole()) {
-                $alreadyInclude = true;
-                break;
-            }
-        }
-
-        if (!$alreadyInclude) {
-            $tRoles[] = $hostRole;
-
-            $ref = new \ReflectionClass($token);
-            $prop = $ref->getParentClass()->getProperty('roles');
-            $prop->setAccessible(true);
-            $prop->setValue($token, $tRoles);
-            $prop = $ref->getParentClass()->getProperty('authenticated');
-            $prop->setAccessible(true);
-            $prop->setValue($token, true);
-        }
-
-        $this->tokenStorage->setToken($token);
     }
 }
