@@ -132,7 +132,7 @@ abstract class Role extends BaseRole implements RoleHierarchicalInterface
 
         /* @var RoleInterface $parent */
         foreach ($this->getParents() as $parent) {
-            $names[] = $parent->getRole();
+            $names[] = $parent->getName();
         }
 
         return $names;
@@ -185,7 +185,7 @@ abstract class Role extends BaseRole implements RoleHierarchicalInterface
 
         /* @var RoleInterface $child */
         foreach ($this->getChildren() as $child) {
-            $names[] = $child->getRole();
+            $names[] = $child->getName();
         }
 
         return $names;
