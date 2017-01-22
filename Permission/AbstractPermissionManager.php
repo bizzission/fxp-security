@@ -164,7 +164,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
                 return true;
             }
 
-            return $this->doIsGranted($sids, $permissions, $subject, $field);
+            return $this->doIsGranted($sids, $this->getRealPermissions($permissions, $subject, $field), $subject, $field);
         } catch (InvalidSubjectIdentityException $e) {
             // do nothing
         }
@@ -232,6 +232,32 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Get the real permissions.
+     *
+     * @param string[]                      $permissions The permissions
+     * @param SubjectIdentityInterface|null $subject     The subject identity
+     * @param string|null                   $field       The field name
+     *
+     * @return string[]
+     */
+    private function getRealPermissions(array $permissions, $subject = null, $field = null)
+    {
+        if (null !== $subject && $this->hasConfig($subject->getType())) {
+            $config = $this->getConfig($subject->getType());
+
+            if (null !== $field && $config->hasField($field)) {
+                $config = $config->getField($field);
+            }
+
+            foreach ($permissions as $key => &$permission) {
+                $permission = $config->getMappingPermission($permission);
+            }
+        }
+
+        return $permissions;
     }
 
     /**

@@ -31,6 +31,11 @@ class PermissionConfig implements PermissionConfigInterface
     protected $operations;
 
     /**
+     * @var string[]
+     */
+    protected $mappingPermissions;
+
+    /**
      * @var PermissionFieldConfigInterface[]
      */
     protected $fields = array();
@@ -50,18 +55,21 @@ class PermissionConfig implements PermissionConfigInterface
      *
      * @param string                            $type                          The type, typically, this is the PHP class name
      * @param string[]                          $operations                    The permission operations of this type
+     * @param string[]                          $mappingPermissions            The map of alias permission and real permission
      * @param PermissionFieldConfigInterface[]  $fields                        The field configurations
      * @param PropertyPathInterface|string|null $master                        The property path of master
      * @param array[]                           $masterFieldMappingPermissions The map of field permission of this type with the permission of master type
      */
     public function __construct($type,
                                 array $operations = array(),
+                                array $mappingPermissions = array(),
                                 array $fields = array(),
                                 $master = null,
                                 $masterFieldMappingPermissions = array())
     {
         $this->type = $type;
         $this->operations = array_values($operations);
+        $this->mappingPermissions = $mappingPermissions;
         $this->master = $master;
         $this->masterFieldMappingPermissions = $masterFieldMappingPermissions;
 
@@ -83,7 +91,7 @@ class PermissionConfig implements PermissionConfigInterface
      */
     public function hasOperation($operation)
     {
-        return in_array($operation, $this->operations);
+        return in_array($this->getMappingPermission($operation), $this->operations);
     }
 
     /**
@@ -134,6 +142,24 @@ class PermissionConfig implements PermissionConfigInterface
     public function getMasterFieldMappingPermissions()
     {
         return $this->masterFieldMappingPermissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappingPermission($aliasPermission)
+    {
+        return isset($this->mappingPermissions[$aliasPermission])
+            ? $this->mappingPermissions[$aliasPermission]
+            : $aliasPermission;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappingPermissions()
+    {
+        return $this->mappingPermissions;
     }
 
     /**

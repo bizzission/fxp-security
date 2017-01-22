@@ -87,4 +87,25 @@ interface PermissionConfigInterface
      * @return array
      */
     public function getMasterFieldMappingPermissions();
+
+    /**
+     * Get the real permission associated with the alias permission.
+     *
+     * Example: [
+     *     'create' => 'invite',
+     *     'delete' => 'revoke',
+     * ]
+     *
+     * @param string $aliasPermission The operation or alias of operation
+     *
+     * @return string
+     */
+    public function getMappingPermission($aliasPermission);
+
+    /**
+     * Get the map of alias permission and real permission.
+     *
+     * @return string[]
+     */
+    public function getMappingPermissions();
 }

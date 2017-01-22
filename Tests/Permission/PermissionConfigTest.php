@@ -32,12 +32,16 @@ class PermissionConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testPermissionConfig()
     {
-        $operations = array('create', 'view', 'update', 'delete');
+        $operations = array('invite', 'view', 'update', 'revoke');
+        $alias = array(
+            'create' => 'invite',
+            'delete' => 'revoke',
+        );
         $fields = array(
             'name' => new PermissionFieldConfig('name'),
         );
         $master = 'foo';
-        $config = new PermissionConfig(MockObject::class, $operations, array_values($fields), $master);
+        $config = new PermissionConfig(MockObject::class, $operations, $alias, array_values($fields), $master);
 
         $this->assertSame(MockObject::class, $config->getType());
 
@@ -50,5 +54,7 @@ class PermissionConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($operations, $config->getOperations());
         $this->assertTrue($config->hasOperation('view'));
         $this->assertFalse($config->hasOperation('foo'));
+        $this->assertSame($alias, $config->getMappingPermissions());
+        $this->assertTrue($config->hasOperation('create'));
     }
 }

@@ -195,7 +195,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsFieldManaged()
     {
-        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), array(
+        $this->pm->addConfig(new PermissionConfig(MockObject::class, array(), array(), array(
             new PermissionFieldConfig('name'),
         )));
 
@@ -266,7 +266,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(array($perm));
 
         $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
-        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), array(), 'organization'));
+        $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, array(), array(), array(), 'organization'));
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $orgUser));
         $this->pm->clear();
@@ -275,7 +275,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
     public function testIsGrantedWithGlobalPermissionAndMasterWithEmptyObjectOfSubject()
     {
         $permConfigOrg = new PermissionConfig(MockOrganization::class);
-        $permConfigOrgUser = new PermissionConfig(MockOrganizationUser::class, array(), array(), 'organization');
+        $permConfigOrgUser = new PermissionConfig(MockOrganizationUser::class, array(), array(), array(), 'organization');
 
         $sids = array(
             new RoleSecurityIdentity('ROLE_USER'),
@@ -394,12 +394,14 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
                 'create',
                 'update',
             ),
+            array(),
             array(
                 new PermissionFieldConfig('name', array('read')),
             )
         ));
         $this->pm->addConfig(new PermissionConfig(
             MockOrganizationUser::class,
+            array(),
             array(),
             array(
                 new PermissionFieldConfig('organization', array('edit')),

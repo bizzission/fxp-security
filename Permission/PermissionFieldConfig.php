@@ -29,16 +29,24 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     protected $operations;
 
     /**
+     * @var string[]
+     */
+    protected $mappingPermissions;
+
+    /**
      * Constructor.
      *
-     * @param string   $field      The field name
-     * @param string[] $operations The permission operations of this field
+     * @param string   $field              The field name
+     * @param string[] $operations         The permission operations of this field
+     * @param string[] $mappingPermissions The map of alias permission and real permission
      */
     public function __construct($field,
-                                array $operations = array())
+                                array $operations = array(),
+                                array $mappingPermissions = array())
     {
         $this->field = $field;
         $this->operations = array_values($operations);
+        $this->mappingPermissions = $mappingPermissions;
     }
 
     /**
@@ -54,7 +62,7 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
      */
     public function hasOperation($operation)
     {
-        return in_array($operation, $this->operations);
+        return in_array($this->getMappingPermission($operation), $this->operations);
     }
 
     /**
@@ -63,5 +71,23 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     public function getOperations()
     {
         return $this->operations;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappingPermission($aliasPermission)
+    {
+        return isset($this->mappingPermissions[$aliasPermission])
+            ? $this->mappingPermissions[$aliasPermission]
+            : $aliasPermission;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMappingPermissions()
+    {
+        return $this->mappingPermissions;
     }
 }
