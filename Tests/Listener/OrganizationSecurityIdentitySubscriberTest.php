@@ -75,9 +75,26 @@ class OrganizationSecurityIdentitySubscriberTest extends \PHPUnit_Framework_Test
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = array();
-
         $event = new AddSecurityIdentityEvent($token, $sids);
 
         $this->listener->addOrganizationSecurityIdentities($event);
+
+        $this->assertSame($sids, $event->getSecurityIdentities());
+    }
+
+    public function testAddOrganizationSecurityIdentitiesWithInvalidArgument()
+    {
+        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
+        $sids = array();
+        $event = new AddSecurityIdentityEvent($token, $sids);
+
+        $token->expects($this->once())
+            ->method('getUser')
+            ->willThrowException(new \InvalidArgumentException('Test'));
+
+        $this->listener->addOrganizationSecurityIdentities($event);
+
+        $this->assertSame($sids, $event->getSecurityIdentities());
     }
 }
