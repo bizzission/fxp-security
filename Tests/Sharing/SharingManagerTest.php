@@ -127,11 +127,13 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetIdentityConfig()
     {
-        $config = new SharingIdentityConfig(MockRole::class);
+        $config = new SharingIdentityConfig(MockRole::class, 'role');
         $this->sm->addIdentityConfig($config);
 
         $this->assertTrue($this->sm->hasIdentityConfig(MockRole::class));
         $this->assertSame($config, $this->sm->getIdentityConfig(MockRole::class));
+        $this->assertTrue($this->sm->hasIdentityConfig('role'));
+        $this->assertSame($config, $this->sm->getIdentityConfig('role'));
     }
 
     /**
