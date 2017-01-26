@@ -11,12 +11,17 @@
 
 namespace Sonatra\Component\Security\Tests\Organizational;
 
+use Sonatra\Component\Security\Event\SetCurrentOrganizationEvent;
+use Sonatra\Component\Security\Event\SetCurrentOrganizationUserEvent;
+use Sonatra\Component\Security\Event\SetOrganizationalOptionalFilterTypeEvent;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\UserInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContext;
+use Sonatra\Component\Security\OrganizationalContextEvents;
 use Sonatra\Component\Security\OrganizationalTypes;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsers;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -36,6 +41,11 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
     protected $token;
 
     /**
+     * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $dispatcher;
+
+    /**
      * @var OrganizationalContext
      */
     protected $context;
@@ -44,7 +54,8 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $this->context = new OrganizationalContext($this->tokenStorage);
+        $this->dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
+        $this->context = new OrganizationalContext($this->tokenStorage, $this->dispatcher);
 
         $this->tokenStorage->expects($this->any())
             ->method('getToken')
@@ -53,6 +64,10 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
 
     public function testSetDisabledCurrentOrganization()
     {
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent(false));
+
         $this->context->setCurrentOrganization(false);
 
         $this->assertNull($this->context->getCurrentOrganization());
@@ -63,6 +78,10 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
         /* @var OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org));
+
         $this->context->setCurrentOrganization($org);
         $this->assertSame($org, $this->context->getCurrentOrganization());
     }
@@ -72,6 +91,9 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
         /* @var OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $user = $this->getMockBuilder(MockUserOrganizationUsers::class)->getMock();
+
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
 
         $this->token->expects($this->once())
             ->method('getUser')
@@ -88,6 +110,9 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
     {
         $user = $this->getMockBuilder(MockUserOrganizationUsers::class)->getMock();
 
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
+
         $this->token->expects($this->once())
             ->method('getUser')
             ->willReturn($user);
@@ -103,6 +128,9 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
     {
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
+
         $this->token->expects($this->once())
             ->method('getUser')
             ->willReturn($user);
@@ -112,6 +140,9 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
 
     public function testGetCurrentOrganizationWithoutSetterAndWithoutTokenUser()
     {
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
+
         $this->token->expects($this->once())
             ->method('getUser')
             ->willReturn(null);
@@ -127,6 +158,14 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
         /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
+
+        $this->dispatcher->expects($this->at(0))
+            ->method('dispatch')
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org));
+
+        $this->dispatcher->expects($this->at(1))
+            ->method('dispatch')
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER, new SetCurrentOrganizationUserEvent($orgUser));
 
         $this->token->expects($this->once())
             ->method('getUser')
@@ -160,6 +199,14 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
         /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
+        $this->dispatcher->expects($this->at(0))
+            ->method('dispatch')
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org));
+
+        $this->dispatcher->expects($this->at(1))
+            ->method('dispatch')
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER, new SetCurrentOrganizationUserEvent($orgUser));
+
         $this->token->expects($this->once())
             ->method('getUser')
             ->willReturn($user);
@@ -190,6 +237,12 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame(OrganizationalTypes::OPTIONAL_FILTER_WITH_ORG, $this->context->getOptionalFilterType());
         $this->assertFalse($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
+
+        $this->dispatcher->expects($this->at(0))
+            ->method('dispatch')
+            ->with(OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
+                new SetOrganizationalOptionalFilterTypeEvent(OrganizationalTypes::OPTIONAL_FILTER_ALL)
+            );
 
         $this->context->setOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL);
 
@@ -224,6 +277,9 @@ class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
         $tokenStorage->expects($this->once())
             ->method('getToken')
             ->willReturn(null);
+
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
 
         $context = new OrganizationalContext($tokenStorage);
         $context->setCurrentOrganizationUser(null);

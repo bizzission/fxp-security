@@ -11,12 +11,17 @@
 
 namespace Sonatra\Component\Security\Organizational;
 
+use Sonatra\Component\Security\Event\SetCurrentOrganizationEvent;
+use Sonatra\Component\Security\Event\SetCurrentOrganizationUserEvent;
+use Sonatra\Component\Security\Event\SetOrganizationalOptionalFilterTypeEvent;
 use Sonatra\Component\Security\Exception\RuntimeException;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
 use Sonatra\Component\Security\Model\UserInterface;
+use Sonatra\Component\Security\OrganizationalContextEvents;
 use Sonatra\Component\Security\OrganizationalTypes;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -38,6 +43,11 @@ class OrganizationalContext implements OrganizationalContextInterface
     protected $tokenStorage;
 
     /**
+     * @var EventDispatcherInterface|null
+     */
+    protected $dispatcher;
+
+    /**
      * @var OrganizationInterface|false|null
      */
     protected $organization;
@@ -48,11 +58,15 @@ class OrganizationalContext implements OrganizationalContextInterface
     protected $organizationUser;
 
     /**
-     * @param TokenStorageInterface $tokenStorage The token storage
+     * Constructor.
+     *
+     * @param TokenStorageInterface         $tokenStorage The token storage
+     * @param EventDispatcherInterface|null $dispatcher   The event dispatcher
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(TokenStorageInterface $tokenStorage, EventDispatcherInterface $dispatcher = null)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -63,6 +77,12 @@ class OrganizationalContext implements OrganizationalContextInterface
         $this->getToken('organization');
 
         if (null === $organization || false === $organization || $organization instanceof OrganizationInterface) {
+            $this->dispatch(
+                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION,
+                SetCurrentOrganizationEvent::class,
+                $organization,
+                $this->organization
+            );
             $this->organization = $organization;
         }
     }
@@ -100,6 +120,12 @@ class OrganizationalContext implements OrganizationalContextInterface
 
         if ($user instanceof UserInterface && $organizationUser instanceof OrganizationUserInterface
                 && $user->getUsername() === $organizationUser->getUser()->getUsername()) {
+            $this->dispatch(
+                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER,
+                SetCurrentOrganizationUserEvent::class,
+                $organizationUser,
+                $this->organizationUser
+            );
             $this->organizationUser = $organizationUser;
             $org = $organizationUser->getOrganization();
         }
@@ -129,6 +155,12 @@ class OrganizationalContext implements OrganizationalContextInterface
      */
     public function setOptionalFilterType($type)
     {
+        $this->dispatch(
+            OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
+            SetOrganizationalOptionalFilterTypeEvent::class,
+            $type,
+            $this->optionalFilterType
+        );
         $this->optionalFilterType = $type;
     }
 
@@ -166,5 +198,20 @@ class OrganizationalContext implements OrganizationalContextInterface
         }
 
         return $token;
+    }
+
+    /**
+     * Dispatch the event.
+     *
+     * @param string                   $eventName  The event name
+     * @param string                   $eventClass The class name of event
+     * @param object|false|string|null $subject    The event subject
+     * @param object|false|string|null $oldSubject The old event subject
+     */
+    protected function dispatch($eventName, $eventClass, $subject, $oldSubject)
+    {
+        if (null !== $this->dispatcher && $oldSubject !== $subject) {
+            $this->dispatcher->dispatch($eventName, new $eventClass($subject));
+        }
     }
 }
