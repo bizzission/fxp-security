@@ -30,5 +30,6 @@ class OwnerableOptionalTraitTest extends \PHPUnit_Framework_TestCase
         $ownerable->setOwner($user);
 
         $this->assertSame($user, $ownerable->getOwner());
+        $this->assertSame(50, $ownerable->getOwnerId());
     }
 }
