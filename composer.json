@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "symfony/dependency-injection": "~3.1",
+        "sonatra/doctrine-extensions": "~1.0@dev",
         "sonatra/cache": "~1.0@dev",
         "doctrine/orm": "~2.5"
     },

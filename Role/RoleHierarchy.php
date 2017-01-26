@@ -12,10 +12,9 @@
 namespace Sonatra\Component\Security\Role;
 
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Sonatra\Component\DoctrineExtensions\Util\SqlFilterUtil;
 use Sonatra\Component\Security\Event\PostReachableRoleEvent;
 use Sonatra\Component\Security\Event\PreReachableRoleEvent;
 use Sonatra\Component\Security\Exception\SecurityException;
@@ -241,7 +240,8 @@ class RoleHierarchy extends BaseRoleHierarchy
         $om = $this->registry->getManagerForClass($this->roleClassname);
         $repo = $om->getRepository($this->roleClassname);
 
-        $filters = $this->disableFilters($om);
+        $filters = SqlFilterUtil::findFilters($om, array(), true);
+        SqlFilterUtil::disableFilters($om, $filters);
 
         if (count($roleNames) > 0) {
             $recordRoles = $repo->findBy(array('name' => $roleNames));
@@ -252,7 +252,7 @@ class RoleHierarchy extends BaseRoleHierarchy
             $reachableRoles = array_merge($reachableRoles, $this->getReachableRoles($eRole->getChildren()->toArray()));
         }
 
-        $this->enableFilters($om, $filters);
+        SqlFilterUtil::enableFilters($om, $filters);
 
         return $reachableRoles;
     }
@@ -281,44 +281,5 @@ class RoleHierarchy extends BaseRoleHierarchy
         }
 
         return $finalRoles;
-    }
-
-    /**
-     * Disable and get the orm filters.
-     *
-     * @param ObjectManager|null $om The object manager
-     *
-     * @return string[]
-     */
-    private function disableFilters($om)
-    {
-        $filters = array();
-
-        if (interface_exists('Doctrine\ORM\EntityManagerInterface')
-                && $om instanceof EntityManagerInterface) {
-            $filters = array_keys($om->getFilters()->getEnabledFilters());
-
-            foreach ($filters as $name) {
-                $om->getFilters()->disable($name);
-            }
-        }
-
-        return $filters;
-    }
-
-    /**
-     * Enable the orm filters.
-     *
-     * @param ObjectManager|null $om      The object manager
-     * @param string[]           $filters The filter names
-     */
-    private function enableFilters($om, array $filters)
-    {
-        if (count($filters) > 0 && interface_exists('Doctrine\ORM\EntityManagerInterface')
-                && $om instanceof EntityManagerInterface) {
-            foreach ($filters as $name) {
-                $om->getFilters()->enable($name);
-            }
-        }
     }
 }
