@@ -77,13 +77,14 @@ class OrganizationalContext implements OrganizationalContextInterface
         $this->getToken('organization');
 
         if (null === $organization || false === $organization || $organization instanceof OrganizationInterface) {
+            $old = $this->organization;
+            $this->organization = $organization;
             $this->dispatch(
                 OrganizationalContextEvents::SET_CURRENT_ORGANIZATION,
                 SetCurrentOrganizationEvent::class,
                 $organization,
-                $this->organization
+                $old
             );
-            $this->organization = $organization;
         }
     }
 
@@ -120,14 +121,15 @@ class OrganizationalContext implements OrganizationalContextInterface
 
         if ($user instanceof UserInterface && $organizationUser instanceof OrganizationUserInterface
                 && $user->getUsername() === $organizationUser->getUser()->getUsername()) {
+            $old = $this->organizationUser;
+            $this->organizationUser = $organizationUser;
+            $org = $organizationUser->getOrganization();
             $this->dispatch(
                 OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER,
                 SetCurrentOrganizationUserEvent::class,
                 $organizationUser,
-                $this->organizationUser
+                $old
             );
-            $this->organizationUser = $organizationUser;
-            $org = $organizationUser->getOrganization();
         }
         $this->setCurrentOrganization($org);
     }
@@ -155,13 +157,14 @@ class OrganizationalContext implements OrganizationalContextInterface
      */
     public function setOptionalFilterType($type)
     {
+        $old = $this->optionalFilterType;
+        $this->optionalFilterType = $type;
         $this->dispatch(
             OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
             SetOrganizationalOptionalFilterTypeEvent::class,
             $type,
-            $this->optionalFilterType
+            $old
         );
-        $this->optionalFilterType = $type;
     }
 
     /**
