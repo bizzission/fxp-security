@@ -22,9 +22,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class CacheSecurityIdentityManager extends SecurityIdentityManager implements CacheSecurityIdentityManagerInterface
 {
     /**
-     * @var string|null
+     * @var CacheSecurityIdentityListenerInterface[]|null
      */
-    private $cacheIdName;
+    private $cacheIdentityListeners;
 
     /**
      * @var array
@@ -67,19 +67,35 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
     protected function buildId(TokenInterface $token)
     {
         $id = spl_object_hash($token);
+        $listeners = $this->getCacheIdentityListeners();
 
-        if (null === $this->cacheIdName) {
+        foreach ($listeners as $listener) {
+            $id .= '_'.$listener->getCacheId();
+        }
+
+        return $id;
+    }
+
+    /**
+     * Get the cache security identity listeners.
+     *
+     * @return CacheSecurityIdentityListenerInterface[]
+     */
+    protected function getCacheIdentityListeners()
+    {
+        if (null === $this->cacheIdentityListeners) {
+            $this->cacheIdentityListeners = array();
             $listeners = $this->dispatcher->getListeners(SecurityIdentityEvents::RETRIEVAL_ADD);
 
             foreach ($listeners as $listener) {
                 $listener = is_array($listener) && count($listener) > 1 ? $listener[0] : $listener;
 
                 if ($listener instanceof CacheSecurityIdentityListenerInterface) {
-                    $this->cacheIdName .= '_'.$listener->getCacheId();
+                    $this->cacheIdentityListeners[] = $listener;
                 }
             }
         }
 
-        return $id.$this->cacheIdName;
+        return $this->cacheIdentityListeners;
     }
 }
