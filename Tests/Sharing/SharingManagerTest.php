@@ -238,6 +238,13 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($sm, $this->sm);
     }
 
+    public function testResetPreloadPermissionsWithInvalidSubjectIdentity()
+    {
+        $sm = $this->sm->resetPreloadPermissions(array(42));
+
+        $this->assertSame($sm, $this->sm);
+    }
+
     public function testClear()
     {
         $sm = $this->sm->clear();
