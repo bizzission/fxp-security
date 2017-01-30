@@ -13,6 +13,7 @@ namespace Sonatra\Component\Security\Tests\Doctrine;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDOPgSql\Driver;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Sonatra\Component\Security\Doctrine\DoctrineUtils;
@@ -132,10 +133,6 @@ class DoctrineUtilsTest extends \PHPUnit_Framework_TestCase
                 'getGuidTypeDeclarationSQL',
             )
         );
-        $dbPlatform->expects($this->any())
-            ->method('getName')
-            ->willReturn('postgresql');
-
         $dbPlatform->expects($this->once())
             ->method('getGuidTypeDeclarationSQL')
             ->with(array('id'))
@@ -146,6 +143,9 @@ class DoctrineUtilsTest extends \PHPUnit_Framework_TestCase
         $conn->expects($this->atLeastOnce())
             ->method('getDatabasePlatform')
             ->willReturn($dbPlatform);
+        $conn->expects($this->any())
+            ->method('getDriver')
+            ->willReturn($this->getMockBuilder(Driver::class)->disableOriginalConstructor()->getMock());
 
         $this->assertSame('::UUID', DoctrineUtils::castIdentifier($targetClass, $conn));
         DoctrineUtils::clearCaches();

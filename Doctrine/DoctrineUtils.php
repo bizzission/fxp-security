@@ -13,6 +13,7 @@ namespace Sonatra\Component\Security\Doctrine;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDOPgSql\Driver as PgSqlDriver;
 use Doctrine\DBAL\Types\BigIntType;
 use Doctrine\DBAL\Types\DecimalType;
 use Doctrine\DBAL\Types\FloatType;
@@ -105,7 +106,7 @@ abstract class DoctrineUtils
         if (!isset(self::$cacheCastIdentifiers[$targetEntity->getName()])) {
             $cast = '';
 
-            if ('postgresql' === $connection->getDatabasePlatform()->getName()) {
+            if ($connection->getDriver() instanceof PgSqlDriver) {
                 $type = self::getIdentifierType($targetEntity);
                 $cast = '::'.$type->getSQLDeclaration($targetEntity->getIdentifierFieldNames(),
                                                       $connection->getDatabasePlatform());
