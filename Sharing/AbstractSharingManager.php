@@ -16,7 +16,9 @@ use Sonatra\Component\Security\Exception\AlreadyConfigurationAliasExistingExcept
 use Sonatra\Component\Security\Exception\SharingIdentityConfigNotFoundException;
 use Sonatra\Component\Security\Exception\SharingSubjectConfigNotFoundException;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
+use Sonatra\Component\Security\SharingEvents;
 use Sonatra\Component\Security\SharingVisibilities;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Abstract sharing manager.
@@ -29,6 +31,11 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      * @var SharingProviderInterface
      */
     protected $provider;
+
+    /**
+     * @var EventDispatcherInterface|null
+     */
+    protected $dispatcher;
 
     /**
      * @var array
@@ -89,6 +96,16 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     }
 
     /**
+     * Set the event dispatcher.
+     *
+     * @param EventDispatcherInterface $dispatcher The event dispatcher
+     */
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function isEnabled()
@@ -102,6 +119,11 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     public function setEnabled($enabled)
     {
         $this->enabled = (bool) $enabled;
+
+        if (null !== $this->dispatcher) {
+            $name = $this->enabled ? SharingEvents::ENABLED : SharingEvents::DISABLED;
+            $this->dispatcher->dispatch($name);
+        }
 
         return $this;
     }

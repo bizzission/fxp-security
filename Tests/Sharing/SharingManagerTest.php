@@ -17,6 +17,7 @@ use Sonatra\Component\Security\Sharing\SharingIdentityConfig;
 use Sonatra\Component\Security\Sharing\SharingManager;
 use Sonatra\Component\Security\Sharing\SharingProviderInterface;
 use Sonatra\Component\Security\Sharing\SharingSubjectConfig;
+use Sonatra\Component\Security\SharingEvents;
 use Sonatra\Component\Security\SharingVisibilities;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -24,6 +25,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -36,6 +38,11 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
     protected $provider;
 
     /**
+     * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $dispatcher;
+
+    /**
      * @var SharingManager
      */
     protected $sm;
@@ -43,14 +50,25 @@ class SharingManagerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->provider = $this->getMockBuilder(SharingProviderInterface::class)->getMock();
+        $this->dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
+
         $this->provider->expects($this->atLeastOnce())
             ->method('setSharingManager');
 
         $this->sm = new SharingManager($this->provider);
+        $this->sm->setEventDispatcher($this->dispatcher);
     }
 
     public function testIsEnabled()
     {
+        $this->dispatcher->expects($this->at(0))
+            ->method('dispatch')
+            ->with(SharingEvents::DISABLED);
+
+        $this->dispatcher->expects($this->at(1))
+            ->method('dispatch')
+            ->with(SharingEvents::ENABLED);
+
         $this->assertTrue($this->sm->isEnabled());
 
         $this->sm->setEnabled(false);
