@@ -174,11 +174,7 @@ abstract class DoctrineUtils
      */
     private static function isNumberType(Type $type)
     {
-        return $type instanceof IntegerType
-            || $type instanceof SmallIntType
-            || $type instanceof BigIntType
-            || $type instanceof DecimalType
-            || $type instanceof FloatType;
+        return $type instanceof IntegerType || $type instanceof SmallIntType || $type instanceof BigIntType || $type instanceof DecimalType || $type instanceof FloatType;
     }
 
     /**

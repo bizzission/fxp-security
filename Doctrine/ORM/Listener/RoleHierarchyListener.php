@@ -148,8 +148,7 @@ class RoleHierarchyListener implements EventSubscriber
     {
         if ($this->isCacheableObject($object)) {
             return $this->invalidateCacheableObject($uow, $object);
-        } elseif ($object instanceof PersistentCollection
-                && $this->isRequireAssociation($object->getMapping())) {
+        } elseif ($object instanceof PersistentCollection && $this->isRequireAssociation($object->getMapping())) {
             return $this->getPrefix($object->getOwner());
         }
 
@@ -191,10 +190,7 @@ class RoleHierarchyListener implements EventSubscriber
      */
     protected function isCacheableObject($object)
     {
-        return $object instanceof UserInterface
-            || $object instanceof RoleHierarchicalInterface
-            || $object instanceof GroupInterface
-            || $object instanceof OrganizationUserInterface;
+        return $object instanceof UserInterface || $object instanceof RoleHierarchicalInterface || $object instanceof GroupInterface || $object instanceof OrganizationUserInterface;
     }
 
     /**
