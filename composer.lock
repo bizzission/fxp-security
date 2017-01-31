@@ -1746,12 +1746,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonatra/sonatra-doctrine-extensions.git",
-                "reference": "a8e4351a8b61db036d4e72b4c877471f932c0dbb"
+                "reference": "91978038a96220800b8b2e3c95947e73e01b4e9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonatra/sonatra-doctrine-extensions/zipball/a8e4351a8b61db036d4e72b4c877471f932c0dbb",
-                "reference": "a8e4351a8b61db036d4e72b4c877471f932c0dbb",
+                "url": "https://api.github.com/repos/sonatra/sonatra-doctrine-extensions/zipball/91978038a96220800b8b2e3c95947e73e01b4e9b",
+                "reference": "91978038a96220800b8b2e3c95947e73e01b4e9b",
                 "shasum": ""
             },
             "require": {
@@ -1800,7 +1800,7 @@
                 "unique entity",
                 "validator"
             ],
-            "time": "2017-01-26 19:03:34"
+            "time": "2017-01-30 15:50:57"
         },
         {
             "name": "symfony/console",
