@@ -101,7 +101,7 @@ SELECTCLAUSE;
     private function addWhereSecurityIdentitiesForSharing(GetFilterEvent $event, ClassMetadata $meta)
     {
         $where = '';
-        $mapSids = $event->getRealParameter('map_security_identities');
+        $mapSids = (array) $event->getRealParameter('map_security_identities');
         $connection = $event->getConnection();
 
         foreach ($mapSids as $type => $stringIds) {
