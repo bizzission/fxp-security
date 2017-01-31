@@ -33,7 +33,7 @@ final class SharingFilterEvents
      *
      * @return string
      */
-    final public static function getName($eventName, $visibility)
+    public static function getName($eventName, $visibility)
     {
         return $eventName.'.'.$visibility;
     }
