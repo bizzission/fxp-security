@@ -11,123 +11,114 @@
 
 namespace Sonatra\Component\Security\Doctrine\ORM\Filter;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Query\Filter\SQLFilter;
+use Sonatra\Component\DoctrineExtensions\Filter\AbstractFilter;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\SharingListener;
-use Sonatra\Component\Security\Exception\RuntimeException;
-use Sonatra\Component\Security\Identity\IdentityUtils;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
+use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\SharingFilterEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Sharing filter.
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingFilter extends SQLFilter
+class SharingFilter extends AbstractFilter
 {
     /**
-     * @var SharingListener|null
+     * @var SharingManagerInterface|null
      */
-    protected $listener;
+    protected $sm;
 
     /**
-     * @var EntityManagerInterface|null
+     * @var EventDispatcherInterface|null
      */
-    protected $em;
+    protected $dispatcher;
+
+    /**
+     * @var string|null
+     */
+    protected $sharingClass;
+
+    /**
+     * Set the sharing manager.
+     *
+     * @param SharingManagerInterface $sharingManager The sharing manager
+     *
+     * @return self
+     */
+    public function setSharingManager(SharingManagerInterface $sharingManager)
+    {
+        $this->sm = $sharingManager;
+
+        return $this;
+    }
+
+    /**
+     * Set the event dispatcher.
+     *
+     * @param EventDispatcherInterface $dispatcher The event dispatcher
+     *
+     * @return self
+     */
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+
+        return $this;
+    }
+
+    /**
+     * Set the class name of the sharing model.
+     *
+     * @param string $class The class name of sharing model
+     *
+     * @return self
+     */
+    public function setSharingClass($class)
+    {
+        $this->sharingClass = $class;
+
+        return $this;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    protected function supports(ClassMetadata $targetEntity)
     {
-        $listener = $this->getListener();
-        $pm = $listener->getPermissionManager();
-        $sm = $listener->getSharingManager();
-        $dispatcher = $listener->getEventDispatcher();
         $subject = SubjectUtils::getSubjectIdentity($targetEntity->getName());
-        $filter = '';
 
-        if ($sm->isEnabled() && $sm->hasSharingVisibility($subject)) {
-            $visibility = $sm->getSharingVisibility($subject);
-            $sids = $this->buildSecurityIdentities();
-            $event = new GetFilterEvent($pm, $sm, $subject, $visibility, $sids, $targetEntity, $targetTableAlias);
-            $dispatcher->dispatch(SharingFilterEvents::DOCTRINE_ORM_FILTER, $event);
-            $filter = $event->getFilter();
-        }
-
-        return $filter;
+        return $this->hasParameter('has_security_identities')
+            && $this->hasParameter('map_security_identities')
+            && $this->hasParameter('user_id')
+            && $this->hasParameter('sharing_manager_enabled')
+            && $this->getRealParameter('sharing_manager_enabled')
+            && null !== $this->dispatcher
+            && null !== $this->sm
+            && null !== $this->sharingClass
+            && $this->sm->hasSharingVisibility($subject);
     }
 
     /**
-     * Get the Doctrine ORM Sharing Listener.
-     *
-     * @return SharingListener
-     *
-     * @throws RuntimeException
+     * {@inheritdoc}
      */
-    protected function getListener()
+    public function doAddFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
     {
-        if (null === $this->listener) {
-            $em = $this->getEntityManager();
-            $evm = $em->getEventManager();
+        $name = SharingFilterEvents::getName(
+            SharingFilterEvents::DOCTRINE_ORM_FILTER,
+            $this->sm->getSharingVisibility(SubjectUtils::getSubjectIdentity($targetEntity->getName()))
+        );
+        $event = new GetFilterEvent(
+            $this,
+            $this->getEntityManager(),
+            $targetEntity,
+            $targetTableAlias,
+            $this->sharingClass
+        );
+        $this->dispatcher->dispatch($name, $event);
 
-            foreach ($evm->getListeners() as $listeners) {
-                foreach ($listeners as $listener) {
-                    if ($listener instanceof SharingListener) {
-                        $this->listener = $listener;
-                        break 2;
-                    }
-                }
-            }
-
-            if (null === $this->listener) {
-                $msg = 'The listener "Sonatra\Component\Security\Doctrine\ORM\SharingListener" was not added to the Doctrine ORM Event Manager';
-                throw new RuntimeException($msg);
-            }
-        }
-
-        return $this->listener;
-    }
-
-    /**
-     * Get the entity manager in parent class.
-     *
-     * @return EntityManagerInterface
-     */
-    protected function getEntityManager()
-    {
-        if (null === $this->em) {
-            $refl = new \ReflectionProperty(SQLFilter::class, 'em');
-            $refl->setAccessible(true);
-            $this->em = $refl->getValue($this);
-        }
-
-        return $this->em;
-    }
-
-    /**
-     * Build the security identities.
-     *
-     * @return SecurityIdentityInterface[]
-     */
-    private function buildSecurityIdentities()
-    {
-        $listener = $this->getListener();
-        $sim = $listener->getSecurityIdentityManager();
-        $ts = $listener->getTokenStorage();
-        $tSids = $sim->getSecurityIdentities($ts->getToken());
-        $sids = array();
-
-        foreach ($tSids as $sid) {
-            if (IdentityUtils::isValid($sid)) {
-                $sids[] = $sid;
-            }
-        }
-
-        return $sids;
+        return $event->getFilterConstraint();
     }
 }

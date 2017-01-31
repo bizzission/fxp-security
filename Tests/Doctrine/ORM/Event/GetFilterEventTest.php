@@ -11,17 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Event;
 
+use Doctrine\DBAL\Driver\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query\Filter\SQLFilter;
+use Doctrine\ORM\Query\FilterCollection;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Identity\UserSecurityIdentity;
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\SharingVisibilities;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Sonatra\Component\Security\Model\Sharing;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -29,39 +25,24 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class GetFilterEventTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $permissionManager;
+    protected $entityManager;
 
     /**
-     * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var Connection|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $sharingManager;
-
-    /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $sidManager;
-
-    /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var SubjectIdentityInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $subject;
-
-    /**
-     * @var SecurityIdentityInterface[]
-     */
-    protected $sids;
+    protected $connection;
 
     /**
      * @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $targetEntity;
+
+    /**
+     * @var SQLFilter|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $filter;
 
     /**
      * @var GetFilterEvent
@@ -70,46 +51,58 @@ class GetFilterEventTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->permissionManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
-        $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
-        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
-        $this->subject = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
+        $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
+        $this->connection = $this->getMockBuilder(Connection::class)->getMock();
         $this->targetEntity = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
-        $this->sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new UserSecurityIdentity('user.test'),
-        );
+        $this->filter = $this->getMockForAbstractClass(SQLFilter::class, array($this->entityManager));
+
+        $this->entityManager->expects($this->any())
+            ->method('getFilters')
+            ->willReturn(new FilterCollection($this->entityManager));
+
+        $this->entityManager->expects($this->any())
+            ->method('getConnection')
+            ->willReturn($this->connection);
+
+        $this->connection->expects($this->any())
+            ->method('quote')
+            ->willReturnCallback(function ($v) {
+                return '\''.$v.'\'';
+            });
 
         $this->event = new GetFilterEvent(
-            $this->permissionManager,
-            $this->sharingManager,
-            $this->subject,
-            SharingVisibilities::TYPE_PRIVATE,
-            $this->sids,
+            $this->filter,
+            $this->entityManager,
             $this->targetEntity,
-            't0'
+            't0',
+            Sharing::class
         );
     }
 
     public function testGetters()
     {
-        $this->assertSame($this->permissionManager, $this->event->getPermissionManager());
-        $this->assertSame($this->sharingManager, $this->event->getSharingManager());
-        $this->assertSame($this->subject, $this->event->getSubject());
-        $this->assertSame($this->sids, $this->event->getSecurityIdentities());
+        $this->assertSame($this->entityManager, $this->event->getEntityManager());
+        $this->assertSame($this->entityManager->getConnection(), $this->event->getConnection());
+        $this->assertSame($this->entityManager->getClassMetadata(Sharing::class), $this->event->getClassMetadata(Sharing::class));
+        $this->assertSame($this->entityManager->getClassMetadata(Sharing::class), $this->event->getSharingClassMetadata());
         $this->assertSame($this->targetEntity, $this->event->getTargetEntity());
         $this->assertSame('t0', $this->event->getTargetTableAlias());
-        $this->assertSame(SharingVisibilities::TYPE_PRIVATE, $this->event->getSharingVisibility());
-        $this->assertSame('', $this->event->getFilter());
     }
 
-    public function testSetFilter()
+    public function testSetParameter()
     {
-        $this->assertSame('', $this->event->getFilter());
+        $this->assertFalse($this->event->hasParameter('foo'));
+        $this->event->setParameter('foo', true, 'boolean');
+        $this->assertSame('\'1\'', $this->event->getParameter('foo'));
+        $this->assertSame(true, $this->event->getRealParameter('foo'));
+    }
 
-        $this->event->setFilter('TEST_FILTER');
+    public function testSetFilterConstraint()
+    {
+        $this->assertSame('', $this->event->getFilterConstraint());
 
-        $this->assertSame('TEST_FILTER', $this->event->getFilter());
+        $this->event->setFilterConstraint('TEST_FILTER');
+
+        $this->assertSame('TEST_FILTER', $this->event->getFilterConstraint());
     }
 }

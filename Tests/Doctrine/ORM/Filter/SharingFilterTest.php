@@ -12,25 +12,20 @@
 namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Filter;
 
 use Doctrine\Common\EventManager;
-use Doctrine\Common\EventSubscriber;
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query\FilterCollection;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Sonatra\Component\Security\Doctrine\ORM\Filter\SharingFilter;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\SharingListener;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Identity\UserSecurityIdentity;
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
+use Sonatra\Component\Security\Model\Sharing;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\SharingFilterEvents;
 use Sonatra\Component\Security\SharingVisibilities;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -48,44 +43,24 @@ class SharingFilterTest extends \PHPUnit_Framework_TestCase
     protected $eventManager;
 
     /**
-     * @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $targetClass;
-
-    /**
-     * @var SharingListener|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $sharingListener;
-
-    /**
-     * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $permissionManager;
-
-    /**
      * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $sharingManager;
 
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $sidManager;
-
-    /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $token;
-
-    /**
      * @var EventDispatcher
      */
     protected $eventDispatcher;
+
+    /**
+     * @var string
+     */
+    protected $sharingClass;
+
+    /**
+     * @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $targetEntity;
 
     /**
      * @var SharingFilter
@@ -96,23 +71,10 @@ class SharingFilterTest extends \PHPUnit_Framework_TestCase
     {
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->eventManager = new EventManager();
-        $this->filter = new SharingFilter($this->em);
-        $this->sharingListener = $this->getMockBuilder(SharingListener::class)->getMock();
-        $this->permissionManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
         $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
-        $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
-        $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $this->eventDispatcher = new EventDispatcher();
-
-        $this->eventManager->addEventListener(Events::postLoad, $this->getMockBuilder(EventSubscriber::class)->getMock());
-        $this->eventManager->addEventListener(Events::postLoad, $this->sharingListener);
-
-        $this->em->expects($this->any())
-            ->method('getEventManager')
-            ->willReturn($this->eventManager);
-
-        $this->targetClass = $this->getMockForAbstractClass(
+        $this->sharingClass = Sharing::class;
+        $this->targetEntity = $this->getMockForAbstractClass(
             ClassMetadata::class,
             array(),
             '',
@@ -123,64 +85,58 @@ class SharingFilterTest extends \PHPUnit_Framework_TestCase
                 'getName',
             )
         );
+        $this->filter = new SharingFilter($this->em);
 
-        $this->targetClass->expects($this->any())
+        $connection = $this->getMockBuilder(Connection::class)->getMock();
+
+        $this->em->expects($this->any())
+            ->method('getEventManager')
+            ->willReturn($this->eventManager);
+
+        $this->em->expects($this->any())
+            ->method('getFilters')
+            ->willReturn(new FilterCollection($this->em));
+
+        $this->em->expects($this->any())
+            ->method('getConnection')
+            ->willReturn($connection);
+
+        $connection->expects($this->any())
+            ->method('quote')
+            ->willReturnCallback(function ($v) {
+                return '\''.$v.'\'';
+            });
+
+        $this->targetEntity->expects($this->any())
             ->method('getName')
             ->willReturn(MockObject::class);
-
-        $this->tokenStorage->expects($this->any())
-            ->method('getToken')
-            ->willReturn($this->token);
     }
 
-    /**
-     * @expectedException \Sonatra\Component\Security\Exception\RuntimeException
-     * @expectedExceptionMessage The listener "Sonatra\Component\Security\Doctrine\ORM\SharingListener" was not added to the Doctrine ORM Event Manager
-     */
-    public function testAddFilterConstraintWithoutListener()
+    public function testAddFilterConstraintWithoutSupports()
     {
-        /* @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject $em */
-        $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
-        $evm = new EventManager();
+        $this->eventDispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
+        $this->eventDispatcher->expects($this->never())
+            ->method('dispatch');
 
-        $em->expects($this->any())
-            ->method('getEventManager')
-            ->willReturn($evm);
-
-        $filter = new SharingFilter($em);
-        $filter->addFilterConstraint($this->targetClass, 't');
+        $this->filter->addFilterConstraint($this->targetEntity, 't');
     }
 
     public function testAddFilterConstraint()
     {
-        $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new UserSecurityIdentity('user.test'),
+        $this->filter->setSharingManager($this->sharingManager);
+        $this->filter->setSharingClass($this->sharingClass);
+        $this->filter->setEventDispatcher($this->eventDispatcher);
+        $this->filter->setParameter('has_security_identities', true, 'boolean');
+        $this->filter->setParameter('map_security_identities', array(), 'array');
+        $this->filter->setParameter('user_id', 42, 'integer');
+        $this->filter->setParameter('sharing_manager_enabled', true, 'boolean');
+
+        $this->eventDispatcher->addListener(
+            SharingFilterEvents::getName(SharingFilterEvents::DOCTRINE_ORM_FILTER, SharingVisibilities::TYPE_PRIVATE),
+            function (GetFilterEvent $event) use (&$eventAction) {
+                $event->setFilterConstraint('FILTER_TEST');
+            }
         );
-
-        $this->sharingListener->expects($this->once())
-            ->method('getPermissionManager')
-            ->willReturn($this->permissionManager);
-
-        $this->sharingListener->expects($this->once())
-            ->method('getSharingManager')
-            ->willReturn($this->sharingManager);
-
-        $this->sharingListener->expects($this->once())
-            ->method('getEventDispatcher')
-            ->willReturn($this->eventDispatcher);
-
-        $this->sharingListener->expects($this->once())
-            ->method('getSecurityIdentityManager')
-            ->willReturn($this->sidManager);
-
-        $this->sharingListener->expects($this->once())
-            ->method('getTokenStorage')
-            ->willReturn($this->tokenStorage);
-
-        $this->sharingManager->expects($this->once())
-            ->method('isEnabled')
-            ->willReturn(true);
 
         $this->sharingManager->expects($this->once())
             ->method('hasSharingVisibility')
@@ -192,18 +148,6 @@ class SharingFilterTest extends \PHPUnit_Framework_TestCase
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(SharingVisibilities::TYPE_PRIVATE);
 
-        $this->sidManager->expects($this->once())
-            ->method('getSecurityIdentities')
-            ->with($this->token)
-            ->willReturn($sids);
-
-        $eventAction = false;
-
-        $this->eventDispatcher->addListener(SharingFilterEvents::DOCTRINE_ORM_FILTER, function (GetFilterEvent $event) use (&$eventAction) {
-            $eventAction = true;
-            $event->setFilter('FILTER_TEST');
-        });
-
-        $this->assertSame('FILTER_TEST', $this->filter->addFilterConstraint($this->targetClass, 't'));
+        $this->assertSame('FILTER_TEST', $this->filter->addFilterConstraint($this->targetEntity, 't'));
     }
 }

@@ -24,4 +24,17 @@ final class SharingFilterEvents
      * @var string
      */
     const DOCTRINE_ORM_FILTER = 'sonatra_security.sharing.doctrine_orm.filter';
+
+    /**
+     * Build the event of sharing filter with visibility.
+     *
+     * @param string $eventName  The sharing filter event name
+     * @param string $visibility The sharing visibility
+     *
+     * @return string
+     */
+    final public static function getName($eventName, $visibility)
+    {
+        return $eventName.'.'.$visibility;
+    }
 }

@@ -35,7 +35,7 @@ Features include:
 - Execution cache system and PSR-6 Caching Implementation for the permissions getter
 - Execution cache and PSR-6 Caching Implementation for the determination of all roles in
   hierarchy (with user, group, role, organization, organization user, token)
-- Doctrine ORM Filter to filtering the records in query defined by the sharing rules
+- Doctrine ORM Filter to filtering the records in query defined by the sharing rules (compatible with doctrine caches)
 - Doctrine Listener to empty the record field value for all query type
 - Doctrine Listener to keep the old value in the record field value if the user has not the permission of action
 - Organization with users and roles
