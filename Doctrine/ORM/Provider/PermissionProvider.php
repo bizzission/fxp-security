@@ -76,8 +76,6 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
             ->getQuery()
             ->getResult();
 
-        $this->permissionRepo->clear();
-
         return $permissions;
     }
 
@@ -97,7 +95,6 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
         $this->addWhereOptionalField($qb, 'class', null !== $subject ? $subject->getType() : null);
         $this->addWhereOptionalField($qb, 'field', $field);
         $permissions = $qb->getQuery()->getResult();
-        $this->permissionRepo->clear();
 
         return $permissions;
     }
