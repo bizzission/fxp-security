@@ -7,8 +7,11 @@ Sonatra Security
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/sonatra/sonatra-security/master.svg)](https://scrutinizer-ci.com/g/sonatra/sonatra-security?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/6951c069-4ec4-4cfa-a3b9-281085553fdb.svg)](https://insight.sensiolabs.com/projects/6951c069-4ec4-4cfa-a3b9-281085553fdb)
 
-The Sonatra Security Component is a Role-Based Access Control Level 2 with advanced permissions
-and sharing rules.
+The Sonatra Security Component is a Extended Role-Based Access Control (E-RBAC) including the management of roles,
+role hierarchy, groups, and permissions with a granularity ranging from global permission to permission for
+each field of each object. With the sharing rules, it's possible to define users, groups, roles or permissions
+for each record of an object. In this way, a user can get more permissions due to the context defined by the
+sharing rule.
 
 Features include:
 
