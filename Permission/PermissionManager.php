@@ -144,7 +144,7 @@ class PermissionManager extends AbstractPermissionManager
     protected function doGetRolePermissions(RoleInterface $role, $subject = null)
     {
         $permissions = array();
-        $sid = new RoleSecurityIdentity($role->getName());
+        $sid = new RoleSecurityIdentity($role->getRole());
 
         foreach ($this->provider->getPermissionsBySubject($subject) as $permission) {
             $permissions[] = new PermissionChecking(
