@@ -11,6 +11,8 @@
 
 namespace Sonatra\Component\Security\Tests\Model\Traits;
 
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUserRoleableGroupable;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRoleable;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 
@@ -19,6 +21,9 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
  */
 class RoleableTraitTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @group bug
+     */
     public function testModel()
     {
         $roleable = new MockRoleable();
@@ -28,10 +33,12 @@ class RoleableTraitTest extends \PHPUnit_Framework_TestCase
         $roleable->setRoles(array(
             'ROLE_TEST',
             'ROLE_USER',
+            'ROLE_ORGANIZATION_USER',
         ));
 
         $this->assertTrue($roleable->hasRole('ROLE_TEST'));
         $this->assertFalse($roleable->hasRole('ROLE_USER')); // Skip the ROLE_USER role
+        $this->assertFalse($roleable->hasRole('ROLE_ORGANIZATION_USER')); // Skip the ROLE_ORGANIZATION_USER role
 
         $this->assertEquals(array('ROLE_TEST'), $roleable->getRoles());
 
@@ -50,6 +57,23 @@ class RoleableTraitTest extends \PHPUnit_Framework_TestCase
         $validRoles = array(
             'ROLE_TEST',
             'ROLE_USER',
+        );
+        $this->assertEquals($validRoles, $roleable->getRoles());
+    }
+
+    public function testOrganizationUserModel()
+    {
+        $org = new MockOrganization('foo');
+        $user = new MockUserRoleable();
+        $roleable = new MockOrganizationUserRoleableGroupable($org, $user);
+
+        $this->assertEquals(array('ROLE_ORGANIZATION_USER'), $roleable->getRoles());
+
+        $roleable->addRole('ROLE_TEST');
+
+        $validRoles = array(
+            'ROLE_TEST',
+            'ROLE_ORGANIZATION_USER',
         );
         $this->assertEquals($validRoles, $roleable->getRoles());
     }

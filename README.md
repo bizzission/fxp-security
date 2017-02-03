@@ -44,7 +44,6 @@ Features include:
 - Organization with users and roles
 - Authorization expression voter with injectable custom variables (to build custom expression functions with dependencies)
 - `is_basic_auth` expression language function
-- `has_org_role` expression language function
 - `is_granted` expression language function
 
 Documentation

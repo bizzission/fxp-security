@@ -25,10 +25,7 @@ use Sonatra\Component\Security\Permission\PermissionConfigInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgOptionalRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgRequiredRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -39,11 +36,6 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
      * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $permissionRepo;
-
-    /**
-     * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $roleRepo;
 
     /**
      * @var ManagerRegistry|\PHPUnit_Framework_MockObject_MockObject
@@ -63,7 +55,6 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->permissionRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
-        $this->roleRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
         $this->registry = $this->getMockBuilder(ManagerRegistry::class)->disableOriginalConstructor()->getMock();
         $this->qb = $this->getMockBuilder(QueryBuilder::class)->disableOriginalConstructor()->getMock();
 
@@ -136,122 +127,12 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($result, $provider->getPermissions($roles));
     }
 
-    public function getOrganizationalRoleTypes()
-    {
-        return array(
-            array(MockOrgRequiredRole::class),
-            array(MockOrgOptionalRole::class),
-        );
-    }
-
-    /**
-     * @dataProvider getOrganizationalRoleTypes
-     *
-     * @param string $roleClass The classname of role
-     */
-    public function testGetPermissionsWithOrganizationalRole($roleClass)
-    {
-        $roles = array(
-            'ROLE_USER',
-            'ROLE_USER__foo',
-            'ROLE_ADMIN__baz',
-        );
-        $result = array(
-            new MockPermission(),
-        );
-
-        $this->permissionRepo->expects($this->once())
-            ->method('createQueryBuilder')
-            ->with('p')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(0))
-            ->method('leftJoin')
-            ->with('p.roles', 'r')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(1))
-            ->method('leftJoin')
-            ->with('r.organization', 'o')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(2))
-            ->method('where')
-            ->with('(UPPER(r.name) in (:roles) AND r.organization IS NULL) OR (UPPER(r.name) IN (:foo_roles) AND LOWER(o.name) = :foo_name) OR (UPPER(r.name) IN (:baz_roles) AND LOWER(o.name) = :baz_name)')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(3))
-            ->method('setParameter')
-            ->with('roles', array('ROLE_USER', 'ROLE_ADMIN'))
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(4))
-            ->method('setParameter')
-            ->with('foo_roles', array('ROLE_USER'))
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(5))
-            ->method('setParameter')
-            ->with('foo_name', 'foo')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(6))
-            ->method('setParameter')
-            ->with('baz_roles', array('ROLE_ADMIN'))
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(7))
-            ->method('setParameter')
-            ->with('baz_name', 'baz')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(8))
-            ->method('orderBy')
-            ->with('p.class', 'asc')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(9))
-            ->method('addOrderBy')
-            ->with('p.field', 'asc')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(10))
-            ->method('addOrderBy')
-            ->with('p.operation', 'asc')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(11))
-            ->method('getQuery')
-            ->willReturn($this->query);
-
-        $this->query->expects($this->once())
-            ->method('getResult')
-            ->willReturn($result);
-
-        $provider = $this->createProvider($roleClass);
-        $this->assertSame($result, $provider->getPermissions($roles));
-    }
-
-    public function getOptimizationRoleTypes()
-    {
-        return array(
-            array(MockRole::class),
-            array(MockOrgRequiredRole::class),
-            array(MockOrgOptionalRole::class),
-        );
-    }
-
-    /**
-     * @dataProvider getOptimizationRoleTypes
-     *
-     * @param string $roleClass The classname of role
-     */
-    public function testGetPermissionsOptimizationWithEmptyRoles($roleClass)
+    public function testGetPermissionsOptimizationWithEmptyRoles()
     {
         $this->permissionRepo->expects($this->never())
             ->method('createQueryBuilder');
 
-        $provider = $this->createProvider($roleClass);
+        $provider = $this->createProvider();
         $this->assertSame(array(), $provider->getPermissions(array()));
     }
 
@@ -446,14 +327,9 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $res);
     }
 
-    protected function createProvider($roleClass = MockRole::class)
+    protected function createProvider()
     {
-        $this->roleRepo->expects($this->once())
-            ->method('getClassName')
-            ->willReturn($roleClass);
-
         return new PermissionProvider(
-            $this->roleRepo,
             $this->permissionRepo,
             $this->registry
         );

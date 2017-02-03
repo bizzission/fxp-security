@@ -28,8 +28,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingProvider extends AbstractProvider implements SharingProviderInterface
+class SharingProvider implements SharingProviderInterface
 {
+    /**
+     * @var EntityRepository
+     */
+    protected $roleRepo;
+
     /**
      * @var EntityRepository
      */
@@ -53,20 +58,17 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
     /**
      * Constructor.
      *
-     * @param EntityRepository                 $roleRepository           The role repository
-     * @param EntityRepository                 $sharingRepository        The sharing repository
-     * @param SecurityIdentityManagerInterface $sidManager               The security identity manager
-     * @param TokenStorageInterface            $tokenStorage             The token storage
-     * @param bool                             $mergeOrganizationalRoles Check if the organizational roles must be included with system roles
+     * @param EntityRepository                 $roleRepository    The role repository
+     * @param EntityRepository                 $sharingRepository The sharing repository
+     * @param SecurityIdentityManagerInterface $sidManager        The security identity manager
+     * @param TokenStorageInterface            $tokenStorage      The token storage
      */
     public function __construct(EntityRepository $roleRepository,
                                 EntityRepository $sharingRepository,
                                 SecurityIdentityManagerInterface $sidManager,
-                                TokenStorageInterface $tokenStorage,
-                                $mergeOrganizationalRoles = true)
+                                TokenStorageInterface $tokenStorage)
     {
-        parent::__construct($roleRepository, $mergeOrganizationalRoles);
-
+        $this->roleRepo = $roleRepository;
         $this->sharingRepo = $sharingRepository;
         $this->sidManager = $sidManager;
         $this->tokenStorage = $tokenStorage;
@@ -95,7 +97,9 @@ class SharingProvider extends AbstractProvider implements SharingProviderInterfa
             ->addSelect('p')
             ->leftJoin('r.permissions', 'p');
 
-        $pRoles = $this->addWhere($qb, $roles)
+        $pRoles = $qb
+            ->where('UPPER(r.name) IN (:roles)')
+            ->setParameter('roles', $roles)
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')

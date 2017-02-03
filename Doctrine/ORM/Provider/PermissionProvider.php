@@ -26,7 +26,7 @@ use Sonatra\Component\Security\Permission\PermissionUtils;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionProvider extends AbstractProvider implements PermissionProviderInterface
+class PermissionProvider implements PermissionProviderInterface
 {
     /**
      * @var EntityRepository
@@ -41,18 +41,12 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
     /**
      * Constructor.
      *
-     * @param EntityRepository $roleRepository           The role repository
-     * @param EntityRepository $permissionRepository     The permission repository
-     * @param ManagerRegistry  $registry                 The doctrine registry
-     * @param bool             $mergeOrganizationalRoles Check if the organizational roles must be included with system roles
+     * @param EntityRepository $permissionRepository The permission repository
+     * @param ManagerRegistry  $registry             The doctrine registry
      */
-    public function __construct(EntityRepository $roleRepository,
-                                EntityRepository $permissionRepository,
-                                ManagerRegistry $registry,
-                                $mergeOrganizationalRoles = true)
+    public function __construct(EntityRepository $permissionRepository,
+                                ManagerRegistry $registry)
     {
-        parent::__construct($roleRepository, $mergeOrganizationalRoles);
-
         $this->permissionRepo = $permissionRepository;
         $this->registry = $registry;
     }
@@ -69,7 +63,9 @@ class PermissionProvider extends AbstractProvider implements PermissionProviderI
         $qb = $this->permissionRepo->createQueryBuilder('p')
             ->leftJoin('p.roles', 'r');
 
-        $permissions = $this->addWhere($qb, $roles)
+        $permissions = $qb
+            ->where('UPPER(r.name) IN (:roles)')
+            ->setParameter('roles', $roles)
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')

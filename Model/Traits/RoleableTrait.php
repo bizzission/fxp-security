@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Model\Traits;
 
+use Sonatra\Component\Security\Model\OrganizationUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -54,7 +55,7 @@ trait RoleableTrait
     {
         $role = strtoupper($role);
 
-        if (!in_array($role, $this->roles, true) && $role !== 'ROLE_USER') {
+        if (!in_array($role, $this->roles, true) && !in_array($role, array('ROLE_USER', 'ROLE_ORGANIZATION_USER'))) {
             $this->roles[] = $role;
         }
 
@@ -84,6 +85,10 @@ trait RoleableTrait
         // we need to make sure to have at least one role
         if ($this instanceof UserInterface && !in_array('ROLE_USER', $roles, true)) {
             $roles[] = 'ROLE_USER';
+        }
+
+        if ($this instanceof OrganizationUserInterface && !in_array('ROLE_ORGANIZATION_USER', $roles, true)) {
+            $roles[] = 'ROLE_ORGANIZATION_USER';
         }
 
         return $roles;

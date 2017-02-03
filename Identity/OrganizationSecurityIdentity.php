@@ -194,7 +194,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
 
         if ($user instanceof RoleableInterface && $user instanceof OrganizationUserInterface) {
             $org = $user->getOrganization();
-            $roles = self::buildOrganizationUserRoles($roles, $user, $org->getName());
+            $roles = self::buildOrganizationUserRoles($roles, $user);
             $roles = self::buildOrganizationRoles($roles, $org);
 
             if ($roleHierarchy instanceof RoleHierarchyInterface) {
@@ -210,15 +210,14 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      *
      * @param Role[]            $roles The roles
      * @param RoleableInterface $user  The organization user
-     * @param string            $orgId The organization id
      *
      * @return Role[]
      */
-    private static function buildOrganizationUserRoles(array $roles, RoleableInterface $user, $orgId)
+    private static function buildOrganizationUserRoles(array $roles, RoleableInterface $user)
     {
         foreach ($user->getRoles() as $role) {
             $roleName = $role instanceof Role ? $role->getRole() : $role;
-            $roles[] = new Role($roleName.'__'.$orgId);
+            $roles[] = new Role($roleName);
         }
 
         return $roles;
