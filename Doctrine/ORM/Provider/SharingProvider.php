@@ -11,7 +11,6 @@
 
 namespace Sonatra\Component\Security\Doctrine\ORM\Provider;
 
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Sonatra\Component\Security\Exception\InvalidArgumentException;
@@ -120,16 +119,13 @@ class SharingProvider implements SharingProviderInterface
             return array();
         }
 
-        $now = new \DateTime('now');
-        $now->setTimezone(new \DateTimeZone('UTC'));
         $sids = $this->getSecurityIdentities($sids);
         $qb = $this->sharingRepo->createQueryBuilder('s')
             ->addSelect('p')
             ->leftJoin('s.permissions', 'p');
 
         $sharingEntries = $this->addWhereForSharing($qb, $subjects, $sids)
-            ->andWhere('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= :now) AND (s.endedAt IS NULL OR s.endedAt >= :now)')
-            ->setParameter('now', $now, Type::DATETIME)
+            ->andWhere('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP)')
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')

@@ -211,30 +211,25 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->qb->expects($this->at(7))
             ->method('andWhere')
-            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= :now) AND (s.endedAt IS NULL OR s.endedAt >= :now)')
+            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP)')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(8))
-            ->method('setParameter')
-            ->with('now')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(9))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(10))
+        $this->qb->expects($this->at(9))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(11))
+        $this->qb->expects($this->at(10))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(12))
+        $this->qb->expects($this->at(11))
             ->method('getQuery')
             ->willReturn($this->query);
 
@@ -344,30 +339,25 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->qb->expects($this->at(12))
             ->method('andWhere')
-            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= :now) AND (s.endedAt IS NULL OR s.endedAt >= :now)')
+            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP)')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(13))
-            ->method('setParameter')
-            ->with('now')
-            ->willReturn($this->qb);
-
-        $this->qb->expects($this->at(14))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(15))
+        $this->qb->expects($this->at(14))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(16))
+        $this->qb->expects($this->at(15))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb);
 
-        $this->qb->expects($this->at(17))
+        $this->qb->expects($this->at(16))
             ->method('getQuery')
             ->willReturn($this->query);
 
