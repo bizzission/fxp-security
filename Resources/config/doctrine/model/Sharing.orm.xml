@@ -11,7 +11,6 @@
             <index name="subject_id_idx" columns="subject_id"/>
             <index name="identity_class_idx" columns="identity_class"/>
             <index name="identity_name_idx" columns="identity_name"/>
-            <index name="roles_idx" columns="roles"/>
         </indexes>
 
         <unique-constraints>

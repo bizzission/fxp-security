@@ -8,7 +8,6 @@
 
         <indexes>
             <index name="operation_idx" columns="operation"/>
-            <index name="contexts_idx" columns="contexts"/>
             <index name="class_idx" columns="class"/>
             <index name="field_idx" columns="field"/>
         </indexes>
