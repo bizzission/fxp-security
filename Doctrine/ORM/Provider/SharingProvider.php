@@ -125,7 +125,7 @@ class SharingProvider implements SharingProviderInterface
             ->leftJoin('s.permissions', 'p');
 
         $sharingEntries = $this->addWhereForSharing($qb, $subjects, $sids)
-            ->andWhere('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP)')
+            ->andWhere('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')

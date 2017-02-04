@@ -211,7 +211,7 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->qb->expects($this->at(7))
             ->method('andWhere')
-            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP)')
+            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(8))
@@ -339,7 +339,7 @@ class SharingProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->qb->expects($this->at(12))
             ->method('andWhere')
-            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP)')
+            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(13))
