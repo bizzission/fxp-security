@@ -11,6 +11,8 @@
 
 namespace Sonatra\Component\Security\Identity;
 
+use Sonatra\Component\Security\Organizational\OrganizationalUtil;
+
 /**
  * Identity utils.
  *
@@ -59,11 +61,11 @@ abstract class IdentityUtils
 
         foreach ($sids as $sid) {
             if ($sid instanceof RoleSecurityIdentity && false === strpos($sid->getIdentifier(), 'IS_')) {
-                $roles[] = $sid->getIdentifier();
+                $roles[] = OrganizationalUtil::format($sid->getIdentifier());
             }
         }
 
-        return $roles;
+        return array_values(array_unique($roles));
     }
 
     /**

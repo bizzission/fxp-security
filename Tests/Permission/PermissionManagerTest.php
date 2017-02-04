@@ -308,7 +308,8 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
     {
         $sids = array(
             new RoleSecurityIdentity('ROLE_USER'),
-            new RoleSecurityIdentity('ROLE_USER__FOO'),
+            new RoleSecurityIdentity('ROLE_USER__foo'),
+            new RoleSecurityIdentity('ROLE_ADMIN__foo'),
         );
         $object = null;
         $permission = 'bar';
@@ -317,7 +318,7 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->provider->expects($this->once())
             ->method('getPermissions')
-            ->with(array('ROLE_USER', 'ROLE_USER__FOO'))
+            ->with(array('ROLE_USER', 'ROLE_ADMIN'))
             ->willReturn(array($perm));
 
         $this->assertFalse($this->pm->isGranted($sids, $permission, $object));

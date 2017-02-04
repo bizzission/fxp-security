@@ -14,6 +14,7 @@ namespace Sonatra\Component\Security\Role;
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalUtil;
 
 /**
  * RoleHierarchy defines a role hierarchy.
@@ -58,5 +59,46 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
         }
 
         return $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function formatRoleName($role)
+    {
+        $list = parent::formatRoleName($role);
+        $list[0] = OrganizationalUtil::format($role->getRole());
+
+        return $list;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildRoleSuffix($role)
+    {
+        return null !== $role
+            ? OrganizationalUtil::getSuffix($role->getRole())
+            : '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function cleanRoleNames(array $roles)
+    {
+        foreach ($roles as &$role) {
+            $role = OrganizationalUtil::format($role);
+        }
+
+        return $roles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function formatCleanedRoleName($name)
+    {
+        return OrganizationalUtil::format($name);
     }
 }

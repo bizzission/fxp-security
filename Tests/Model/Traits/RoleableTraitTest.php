@@ -21,9 +21,6 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
  */
 class RoleableTraitTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group bug
-     */
     public function testModel()
     {
         $roleable = new MockRoleable();

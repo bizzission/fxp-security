@@ -128,13 +128,13 @@ class OrganizationSecurityIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(OrganizationSecurityIdentity::class, $sids[0]);
         $this->assertSame('foo', $sids[0]->getIdentifier());
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sids[1]);
-        $this->assertSame('GROUP_ORG_USER_TEST', $sids[1]->getIdentifier());
+        $this->assertSame('GROUP_ORG_USER_TEST__foo', $sids[1]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[2]);
-        $this->assertSame('ROLE_ORG_USER_TEST', $sids[2]->getIdentifier());
+        $this->assertSame('ROLE_ORG_USER_TEST__foo', $sids[2]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[3]);
-        $this->assertSame('ROLE_ORGANIZATION_USER', $sids[3]->getIdentifier());
+        $this->assertSame('ROLE_ORGANIZATION_USER__foo', $sids[3]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[4]);
-        $this->assertSame('ROLE_ORG_TEST', $sids[4]->getIdentifier());
+        $this->assertSame('ROLE_ORG_TEST__foo', $sids[4]->getIdentifier());
     }
 
     public function testFormTokenWithOrganizationalContext()
@@ -188,13 +188,13 @@ class OrganizationSecurityIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(OrganizationSecurityIdentity::class, $sids[0]);
         $this->assertSame('foo', $sids[0]->getIdentifier());
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sids[1]);
-        $this->assertSame('GROUP_ORG_USER_TEST', $sids[1]->getIdentifier());
+        $this->assertSame('GROUP_ORG_USER_TEST__foo', $sids[1]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[2]);
-        $this->assertSame('ROLE_ORG_USER_TEST', $sids[2]->getIdentifier());
+        $this->assertSame('ROLE_ORG_USER_TEST__foo', $sids[2]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[3]);
-        $this->assertSame('ROLE_ORGANIZATION_USER', $sids[3]->getIdentifier());
+        $this->assertSame('ROLE_ORGANIZATION_USER__foo', $sids[3]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[4]);
-        $this->assertSame('ROLE_ORG_TEST', $sids[4]->getIdentifier());
+        $this->assertSame('ROLE_ORG_TEST__foo', $sids[4]->getIdentifier());
     }
 
     public function testFormTokenWithUserOrganizationalContext()
@@ -234,7 +234,7 @@ class OrganizationSecurityIdentityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(OrganizationSecurityIdentity::class, $sids[0]);
         $this->assertSame('user.test', $sids[0]->getIdentifier());
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[1]);
-        $this->assertSame('ROLE_ORG_TEST', $sids[1]->getIdentifier());
+        $this->assertSame('ROLE_ORG_TEST__user.test', $sids[1]->getIdentifier());
     }
 
     public function testFormTokenWithInvalidInterface()

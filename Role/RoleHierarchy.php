@@ -99,6 +99,21 @@ class RoleHierarchy extends BaseRoleHierarchy
      */
     public function getReachableRoles(array $roles)
     {
+        return $this->doGetReachableRoles($roles);
+    }
+
+    /**
+     * Returns an array of all roles reachable by the given ones.
+     *
+     * @param Role[] $roles  An array of role instances
+     * @param string $suffix The role name suffix
+     *
+     * @return Role[] An array of role instances
+     *
+     * @throws SecurityException When the role class is not an instance of '\Symfony\Component\Security\Core\Role\Role'
+     */
+    public function doGetReachableRoles(array $roles, $suffix = '')
+    {
         if (0 === count($roles)) {
             return $roles;
         }
@@ -123,7 +138,7 @@ class RoleHierarchy extends BaseRoleHierarchy
             $isPermEnabled = $event->isPermissionEnabled();
         }
 
-        return $this->getAllRoles($reachableRoles, $roles, $id, $item, $isPermEnabled);
+        return $this->getAllRoles($reachableRoles, $roles, $id, $item, $isPermEnabled, $suffix);
     }
 
     /**
@@ -136,6 +151,56 @@ class RoleHierarchy extends BaseRoleHierarchy
     protected function getUniqueId(array $roleNames)
     {
         return sha1(implode('|', $roleNames));
+    }
+
+    /**
+     * Format the role name.
+     *
+     * @param Role|RoleInterface|string $role The role
+     *
+     * @return array The map of role name and role instance
+     */
+    protected function formatRoleName($role)
+    {
+        $name = $role instanceof Role ? $role->getRole() : (string) $role;
+
+        return array($name, new Role($name));
+    }
+
+    /**
+     * Build the suffix of role.
+     *
+     * @param Role|null $role The role
+     *
+     * @return string
+     */
+    protected function buildRoleSuffix($role)
+    {
+        return '';
+    }
+
+    /**
+     * Clean the role names.
+     *
+     * @param string[] $roles The role names
+     *
+     * @return string[]
+     */
+    protected function cleanRoleNames(array $roles)
+    {
+        return $roles;
+    }
+
+    /**
+     * Format the cleaned role name.
+     *
+     * @param string $name The role name
+     *
+     * @return string
+     */
+    protected function formatCleanedRoleName($name)
+    {
+        return $name;
     }
 
     /**
@@ -176,13 +241,14 @@ class RoleHierarchy extends BaseRoleHierarchy
      * @param string                  $id             The cache item id
      * @param CacheItemInterface|null $item           The cache item
      * @param bool                    $isPermEnabled  Check if the permission manager is enabled
+     * @param string                  $suffix         The role name suffix
      *
      * @return Role[]
      */
-    private function getAllRoles(array $reachableRoles, array $roles, $id, $item, $isPermEnabled)
+    private function getAllRoles(array $reachableRoles, array $roles, $id, $item, $isPermEnabled, $suffix = '')
     {
-        $reachableRoles = $this->findRecords($reachableRoles, array_keys($roles));
-        $reachableRoles = $this->getCleanedRoles($reachableRoles);
+        $reachableRoles = $this->findRecords($reachableRoles, $roles);
+        $reachableRoles = $this->getCleanedRoles($reachableRoles, $suffix);
 
         // insert in cache
         if (null !== $this->cache && $item instanceof CacheItemInterface) {
@@ -219,8 +285,8 @@ class RoleHierarchy extends BaseRoleHierarchy
                 throw new SecurityException(sprintf('The Role class must be an instance of "%s"', Role::class));
             }
 
-            $name = ($role instanceof Role) ? $role->getRole() : $role;
-            $nRoles[$name] = ($role instanceof Role) ? $role : new Role($name);
+            list($name, $role) = $this->formatRoleName($role);
+            $nRoles[$name] = $role;
         }
 
         return $nRoles;
@@ -229,12 +295,12 @@ class RoleHierarchy extends BaseRoleHierarchy
     /**
      * Find the roles in database.
      *
-     * @param Role[]   $reachableRoles The reachable roles
-     * @param string[] $roleNames      The role names
+     * @param Role[] $reachableRoles The reachable roles
+     * @param Role[] $roles          The map of role names and role instances
      *
      * @return Role[]
      */
-    private function findRecords(array $reachableRoles, array $roleNames)
+    private function findRecords(array $reachableRoles, array $roles)
     {
         $recordRoles = array();
         $om = $this->registry->getManagerForClass($this->roleClassname);
@@ -243,13 +309,14 @@ class RoleHierarchy extends BaseRoleHierarchy
         $filters = SqlFilterUtil::findFilters($om, array(), true);
         SqlFilterUtil::disableFilters($om, $filters);
 
-        if (count($roleNames) > 0) {
-            $recordRoles = $repo->findBy(array('name' => $roleNames));
+        if (count($roles) > 0) {
+            $recordRoles = $repo->findBy(array('name' => $this->cleanRoleNames(array_keys($roles))));
         }
 
         /* @var RoleHierarchicalInterface $eRole */
         foreach ($recordRoles as $eRole) {
-            $reachableRoles = array_merge($reachableRoles, $this->getReachableRoles($eRole->getChildren()->toArray()));
+            $suffix = $this->buildRoleSuffix(isset($roles[$eRole->getRole()]) ? $roles[$eRole->getRole()] : null);
+            $reachableRoles = array_merge($reachableRoles, $this->doGetReachableRoles($eRole->getChildren()->toArray(), $suffix));
         }
 
         SqlFilterUtil::enableFilters($om, $filters);
@@ -261,21 +328,22 @@ class RoleHierarchy extends BaseRoleHierarchy
      * Cleaning the double roles.
      *
      * @param Role[] $reachableRoles The reachable roles
+     * @param string $suffix         The role name suffix
      *
      * @return Role[]
      */
-    private function getCleanedRoles(array $reachableRoles)
+    private function getCleanedRoles(array $reachableRoles, $suffix = '')
     {
         $existingRoles = array();
         $finalRoles = array();
 
         foreach ($reachableRoles as $role) {
-            if (!in_array($role->getRole(), $existingRoles)) {
-                if (!($role instanceof Role) || $role instanceof RoleInterface) {
-                    $role = new Role($role->getRole());
-                }
+            $name = $this->formatCleanedRoleName($role->getRole());
 
-                $existingRoles[] = $role->getRole();
+            if (!in_array($name, $existingRoles)) {
+                $rSuffix = $name !== 'ROLE_USER' ? $suffix : '';
+                $role = new Role($role->getRole().$rSuffix);
+                $existingRoles[] = $name;
                 $finalRoles[] = $role;
             }
         }

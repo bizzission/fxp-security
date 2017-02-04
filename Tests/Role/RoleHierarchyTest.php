@@ -148,6 +148,14 @@ class RoleHierarchyTest extends \PHPUnit_Framework_TestCase
         $dbRole = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $dbRoleChildren = $this->getMockBuilder(Collection::class)->getMock();
 
+        $dbRole->expects($this->any())
+            ->method('getRole')
+            ->willReturn('ROLE_ADMIN');
+
+        $dbRole->expects($this->any())
+            ->method('getName')
+            ->willReturn('ROLE_ADMIN');
+
         $dbRole->expects($this->once())
             ->method('getChildren')
             ->willReturn($dbRoleChildren);

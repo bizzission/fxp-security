@@ -13,6 +13,7 @@ namespace Sonatra\Component\Security\Authorization\Voter;
 
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Sonatra\Component\Security\Organizational\OrganizationalUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -80,7 +81,7 @@ abstract class AbstractIdentityVoter extends Voter
     protected function isValidIdentity($attribute, SecurityIdentityInterface $sid)
     {
         return $this->getValidType() === $sid->getType()
-                && substr($attribute, strlen($this->prefix)) === $sid->getIdentifier();
+                && substr($attribute, strlen($this->prefix)) === OrganizationalUtil::format($sid->getIdentifier());
     }
 
     /**
