@@ -18,6 +18,8 @@ use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Model\PermissionChecking;
 use Sonatra\Component\Security\Model\RoleInterface;
+use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
+use Sonatra\Component\Security\PermissionContexts;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 
 /**
@@ -232,6 +234,26 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Build the permission contexts for the role.
+     *
+     * @param RoleInterface $role The role
+     *
+     * @return string[]|null
+     */
+    protected function buildContexts(RoleInterface $role)
+    {
+        $contexts = null;
+
+        if ($role instanceof OrganizationalInterface) {
+            $contexts = null !== $role->getOrganization()
+                ? array(PermissionContexts::ORGANIZATION_ROLE)
+                : array(PermissionContexts::ROLE);
+        }
+
+        return $contexts;
     }
 
     /**
