@@ -33,11 +33,12 @@ interface PermissionProviderInterface
     /**
      * Get the permissions by subject.
      *
-     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject The subject instance or classname
+     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject  The subject instance or classname
+     * @param string[]|string|null                                  $contexts The permission contexts
      *
      * @return PermissionInterface[]
      */
-    public function getPermissionsBySubject($subject = null);
+    public function getPermissionsBySubject($subject = null, $contexts = null);
 
     /**
      * Get the class name of association field.

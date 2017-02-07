@@ -22,6 +22,7 @@ use Sonatra\Component\Security\Doctrine\ORM\Provider\PermissionProvider;
 use Sonatra\Component\Security\Model\PermissionChecking;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionConfigInterface;
+use Sonatra\Component\Security\PermissionContexts;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
@@ -272,6 +273,91 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
 
         $provider = $this->createProvider();
         $res = $provider->getPermissionsBySubject($subject);
+
+        $this->assertSame($expected, $res);
+    }
+
+    public function testGetPermissionsBySubjectAndContexts()
+    {
+        $subject = new FieldVote(MockObject::class, 'name');
+        $expected = array(
+            new PermissionChecking(new MockPermission(), true),
+        );
+
+        $this->permissionRepo->expects($this->once())
+            ->method('createQueryBuilder')
+            ->with('p')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(0))
+            ->method('orderBy')
+            ->with('p.class', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(1))
+            ->method('addOrderBy')
+            ->with('p.field', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
+            ->method('addOrderBy')
+            ->with('p.operation', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(3))
+            ->method('setParameter')
+            ->with('context_role', '%"'.PermissionContexts::ROLE.'"%')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(4))
+            ->method('setParameter')
+            ->with('context_organization_role', '%"'.PermissionContexts::ORGANIZATION_ROLE.'"%')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(5))
+            ->method('setParameter')
+            ->with('context_sharing', '%"'.PermissionContexts::SHARING.'"%')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(6))
+            ->method('andWhere')
+            ->with('p.contexts IS NULL OR p.contexts LIKE :context_role OR p.contexts LIKE :context_organization_role OR p.contexts LIKE :context_sharing')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(7))
+            ->method('andWhere')
+            ->with('p.class = :class')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(8))
+            ->method('setParameter')
+            ->with('class', $subject->getSubject()->getType())
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(9))
+            ->method('andWhere')
+            ->with('p.field = :field')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(10))
+            ->method('setParameter')
+            ->with('field', $subject->getField())
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(11))
+            ->method('getQuery')
+            ->willReturn($this->query);
+
+        $this->query->expects($this->once())
+            ->method('getResult')
+            ->willReturn($expected);
+
+        $provider = $this->createProvider();
+        $res = $provider->getPermissionsBySubject($subject, array(
+            PermissionContexts::ROLE,
+            PermissionContexts::ORGANIZATION_ROLE,
+            PermissionContexts::SHARING,
+        ));
 
         $this->assertSame($expected, $res);
     }

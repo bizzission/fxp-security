@@ -28,6 +28,8 @@ use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgOptionalRole;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgRequiredRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
@@ -423,9 +425,22 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->pm->clear();
     }
 
-    public function testGetRolePermissions()
+    public function getRoles()
     {
-        $role = new MockRole('ROLE_TEST');
+        return array(
+            array(new MockRole('ROLE_TEST')),
+            array(new MockOrgOptionalRole('ROLE_TEST')),
+            array(new MockOrgRequiredRole('ROLE_TEST')),
+        );
+    }
+
+    /**
+     * @dataProvider getRoles
+     *
+     * @param MockRole $role
+     */
+    public function testGetRolePermissions(MockRole $role)
+    {
         $subject = null;
         $permission = new MockPermission();
         $permission->setOperation('test');

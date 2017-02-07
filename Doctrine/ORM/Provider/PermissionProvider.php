@@ -61,24 +61,20 @@ class PermissionProvider implements PermissionProviderInterface
         }
 
         $qb = $this->permissionRepo->createQueryBuilder('p')
-            ->leftJoin('p.roles', 'r');
-
-        $permissions = $qb
+            ->leftJoin('p.roles', 'r')
             ->where('UPPER(r.name) IN (:roles)')
             ->setParameter('roles', $roles)
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
-            ->addOrderBy('p.operation', 'asc')
-            ->getQuery()
-            ->getResult();
+            ->addOrderBy('p.operation', 'asc');
 
-        return $permissions;
+        return $qb->getQuery()->getResult();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPermissionsBySubject($subject = null)
+    public function getPermissionsBySubject($subject = null, $contexts = null)
     {
         /* @var SubjectIdentityInterface|null $subject */
         list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
@@ -88,11 +84,11 @@ class PermissionProvider implements PermissionProviderInterface
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc');
 
+        $this->addWhereContexts($qb, $contexts);
         $this->addWhereOptionalField($qb, 'class', null !== $subject ? $subject->getType() : null);
         $this->addWhereOptionalField($qb, 'field', $field);
-        $permissions = $qb->getQuery()->getResult();
 
-        return $permissions;
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -142,6 +138,28 @@ class PermissionProvider implements PermissionProviderInterface
             $qb->andWhere('p.'.$field.' IS NULL');
         } else {
             $qb->andWhere('p.'.$field.' = :'.$field)->setParameter($field, $value);
+        }
+    }
+
+    /**
+     * Add the permission contexts condition.
+     *
+     * @param QueryBuilder         $qb       The query builder
+     * @param string[]|string|null $contexts The contexts
+     */
+    private function addWhereContexts(QueryBuilder $qb, $contexts = null)
+    {
+        if (null !== $contexts) {
+            $contexts = (array) $contexts;
+            $where = 'p.contexts IS NULL';
+
+            foreach ($contexts as $context) {
+                $key = 'context_'.$context;
+                $where .= sprintf(' OR p.contexts LIKE :%s', $key);
+                $qb->setParameter($key, '%"'.$context.'"%');
+            }
+
+            $qb->andWhere($where);
         }
     }
 }

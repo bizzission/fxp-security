@@ -22,6 +22,8 @@ use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Identity\SubjectUtils;
 use Sonatra\Component\Security\Model\PermissionChecking;
 use Sonatra\Component\Security\Model\RoleInterface;
+use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
+use Sonatra\Component\Security\PermissionContexts;
 use Sonatra\Component\Security\PermissionEvents;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -145,8 +147,9 @@ class PermissionManager extends AbstractPermissionManager
     {
         $permissions = array();
         $sid = new RoleSecurityIdentity($role->getRole());
+        $contexts = $this->buildContexts($role);
 
-        foreach ($this->provider->getPermissionsBySubject($subject) as $permission) {
+        foreach ($this->provider->getPermissionsBySubject($subject, $contexts) as $permission) {
             $permissions[] = new PermissionChecking(
                 $permission,
                 $this->isGranted(array($sid), array($permission->getOperation()), $subject)
@@ -154,6 +157,26 @@ class PermissionManager extends AbstractPermissionManager
         }
 
         return $permissions;
+    }
+
+    /**
+     * Build the permission contexts for the role.
+     *
+     * @param RoleInterface $role The role
+     *
+     * @return string[]|null
+     */
+    private function buildContexts(RoleInterface $role)
+    {
+        $contexts = null;
+
+        if ($role instanceof OrganizationalInterface) {
+            $contexts = null !== $role->getOrganization()
+                ? array(PermissionContexts::ORGANIZATION_ROLE)
+                : array(PermissionContexts::ROLE);
+        }
+
+        return $contexts;
     }
 
     /**
