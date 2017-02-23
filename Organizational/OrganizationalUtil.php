@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Organizational;
 
+use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
 
 /**
@@ -30,9 +31,27 @@ abstract class OrganizationalUtil
      */
     public static function formatName($object, $name)
     {
-        return $object instanceof OrganizationalInterface && null !== $object->getOrganization() && false === strpos('__', $name)
-            ? $name.'__'.$object->getOrganization()->getName()
+        return $object instanceof OrganizationalInterface
+            ? static::formatNameWithOrg($name, $object->getOrganization())
             : $name;
+    }
+
+    /**
+     * Format the name with the organization name in suffix.
+     *
+     * @param string                     $name         The name
+     * @param OrganizationInterface|null $organization The organization
+     *
+     * @return string
+     */
+    public static function formatNameWithOrg($name, $organization = null)
+    {
+        if ($organization instanceof OrganizationInterface
+                && false === strpos('__', $name)) {
+            $name .= '__'.$organization->getName();
+        }
+
+        return $name;
     }
 
     /**
