@@ -28,7 +28,7 @@ class IsOrganizationProviderTest extends \PHPUnit_Framework_TestCase
 
         $orgContext->expects($this->once())
             ->method('isOrganization')
-            ->with($org)
+            ->with()
             ->willReturn(true);
 
         $expressionLanguage = new ExpressionLanguage(null, array(new IsOrganizationProvider()));
@@ -37,9 +37,9 @@ class IsOrganizationProviderTest extends \PHPUnit_Framework_TestCase
             'organizational_context' => $orgContext,
         );
 
-        $this->assertTrue($expressionLanguage->evaluate('is_organization(object)', $variables));
+        $this->assertTrue($expressionLanguage->evaluate('is_organization()', $variables));
 
-        $compiled = '$organizational_context && $organizational_context->isOrganization($object)';
-        $this->assertEquals($compiled, $expressionLanguage->compile('is_organization(object)', array('object')));
+        $compiled = '$organizational_context && $organizational_context->isOrganization()';
+        $this->assertEquals($compiled, $expressionLanguage->compile('is_organization()', array('object')));
     }
 }

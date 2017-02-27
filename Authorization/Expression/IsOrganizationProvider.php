@@ -27,10 +27,10 @@ class IsOrganizationProvider implements ExpressionFunctionProviderInterface
     public function getFunctions()
     {
         return array(
-            new ExpressionFunction('is_organization', function ($organization) {
-                return sprintf('$organizational_context && $organizational_context->isOrganization(%s)', $organization);
-            }, function (array $variables, $organization) {
-                return isset($variables['organizational_context']) && $variables['organizational_context']->isOrganization($organization);
+            new ExpressionFunction('is_organization', function () {
+                return '$organizational_context && $organizational_context->isOrganization()';
+            }, function (array $variables) {
+                return isset($variables['organizational_context']) && $variables['organizational_context']->isOrganization();
             }),
         );
     }
