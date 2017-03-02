@@ -56,6 +56,11 @@ class ObjectFilter implements ObjectFilterInterface
     private $dispatcher;
 
     /**
+     * @var string[]
+     */
+    private $excludedClasses = array();
+
+    /**
      * If the action filtering/restoring is in a transaction, then the action
      * will be executing on the commit.
      *
@@ -97,6 +102,16 @@ class ObjectFilter implements ObjectFilterInterface
         $this->pm = $pm;
         $this->ac = $ac;
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * Set the excluded classes.
+     *
+     * @param string[] $excludedClasses The excluded classes
+     */
+    public function setExcludedClasses(array $excludedClasses)
+    {
+        $this->excludedClasses = $excludedClasses;
     }
 
     /**
@@ -147,6 +162,10 @@ class ObjectFilter implements ObjectFilterInterface
     {
         if (!is_object($object)) {
             throw new UnexpectedTypeException($object, 'object');
+        }
+
+        if ($this->isExcludedClass($object)) {
+            return;
         }
 
         $id = spl_object_hash($object);
@@ -306,6 +325,24 @@ class ObjectFilter implements ObjectFilterInterface
                 && (string) $value === $fieldVote->getSubject()->getIdentifier()
                 && in_array($fieldVote->getField(), array('id', 'subjectIdentifier'))) {
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the object is an excluded class.
+     *
+     * @param object $object The object
+     *
+     * @return bool
+     */
+    protected function isExcludedClass($object)
+    {
+        foreach ($this->excludedClasses as $excludedClass) {
+            if ($object instanceof $excludedClass) {
+                return true;
+            }
         }
 
         return false;

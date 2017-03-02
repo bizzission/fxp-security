@@ -299,6 +299,31 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($validValue, $object->getName());
     }
 
+    public function testExcludedClasses()
+    {
+        $this->of->setExcludedClasses(array(
+            MockObject::class,
+        ));
+
+        $object = new MockObject('foo');
+
+        $this->uow->expects($this->never())
+            ->method('attach');
+
+        $this->ofe->expects($this->never())
+            ->method('filterValue');
+
+        $this->pm->expects($this->never())
+            ->method('preloadPermissions');
+
+        $this->ac->expects($this->never())
+            ->method('isGranted');
+
+        $this->of->filter($object);
+
+        $this->assertNotNull($object->getName());
+    }
+
     /**
      * Prepare the restore test.
      *
