@@ -105,8 +105,6 @@ class SharingProvider implements SharingProviderInterface
             ->getQuery()
             ->getResult();
 
-        $this->roleRepo->clear();
-
         return $pRoles;
     }
 
@@ -131,8 +129,6 @@ class SharingProvider implements SharingProviderInterface
             ->addOrderBy('p.operation', 'asc')
             ->getQuery()
             ->getResult();
-
-        $this->sharingRepo->clear();
 
         return $sharingEntries;
     }
