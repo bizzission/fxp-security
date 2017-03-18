@@ -99,9 +99,14 @@ class PermissionProvider implements PermissionProviderInterface
         $type = $config->getType();
         $om = $this->registry->getManagerForClass($type);
         $this->validateMaster($config, $om);
-        $meta = $om->getClassMetadata($type);
+        $masterClass = $type;
 
-        return $meta->getAssociationTargetClass($config->getMaster());
+        foreach (explode('.', $config->getMaster()) as $master) {
+            $meta = $om->getClassMetadata($masterClass);
+            $masterClass = $meta->getAssociationTargetClass($master);
+        }
+
+        return $masterClass;
     }
 
     /**
