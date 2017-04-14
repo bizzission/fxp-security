@@ -466,6 +466,73 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $res);
     }
 
+    /**
+     * @dataProvider getRoles
+     *
+     * @param MockRole $role
+     */
+    public function testGetRolePermissionsWithConfigPermissions(MockRole $role)
+    {
+        $subject = MockOrganizationUser::class;
+        $permission = new MockPermission();
+        $permission->setOperation('test');
+        $permissions = array(
+            $permission,
+        );
+        $expected = array(
+            new PermissionChecking($permissions[0], true, true),
+        );
+
+        $this->provider->expects($this->once())
+            ->method('getPermissions')
+            ->with(array('ROLE_TEST'))
+            ->willReturn(array());
+
+        $this->provider->expects($this->once())
+            ->method('getPermissionsBySubject')
+            ->with($subject)
+            ->willReturn($permissions);
+
+        $this->pm->addConfig(new PermissionConfig(
+            MockOrganizationUser::class,
+            array('test'),
+            array(),
+            array(
+                new PermissionFieldConfig('organization', array('edit')),
+            )
+        ));
+
+        $res = $this->pm->getRolePermissions($role, $subject);
+
+        $this->assertEquals($expected, $res);
+    }
+
+    /**
+     * @dataProvider getRoles
+     *
+     * @param MockRole $role
+     *
+     * @expectedException \Sonatra\Component\Security\Exception\PermissionNotFoundException
+     * @expectedExceptionMessage The permission "test" for "Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser" is not found ant it required by the permission configuration
+     */
+    public function testGetRolePermissionsWithRequiredConfigPermission(MockRole $role)
+    {
+        $subject = MockOrganizationUser::class;
+        $permissions = array();
+
+        $this->provider->expects($this->once())
+            ->method('getPermissionsBySubject')
+            ->with($subject)
+            ->willReturn($permissions);
+
+        $this->pm->addConfig(new PermissionConfig(
+            MockOrganizationUser::class,
+            array('test')
+        ));
+
+        $this->pm->getRolePermissions($role, $subject);
+    }
+
     public function testGetFieldRolePermissions()
     {
         $role = new MockRole('ROLE_TEST');

@@ -14,6 +14,7 @@ namespace Sonatra\Component\Security\Permission;
 use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
+use Sonatra\Component\Security\Exception\PermissionNotFoundException;
 use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
@@ -146,15 +147,40 @@ class PermissionManager extends AbstractPermissionManager
         $permissions = array();
         $sid = new RoleSecurityIdentity($role->getRole());
         $contexts = $this->buildContexts($role);
+        list($class, $field) = PermissionUtils::getClassAndField($subject, true);
 
         foreach ($this->provider->getPermissionsBySubject($subject, $contexts) as $permission) {
-            $permissions[] = new PermissionChecking(
+            $operation = $permission->getOperation();
+            $permissions[$operation] = new PermissionChecking(
                 $permission,
-                $this->isGranted(array($sid), array($permission->getOperation()), $subject)
+                $this->isGranted(array($sid), array($operation), $subject),
+                $this->isConfigPermission($operation, $class, $field)
             );
         }
 
-        return $permissions;
+        return $this->validateRolePermissions($permissions, $class, $field);
+    }
+
+    /**
+     * Validate the role permissions.
+     *
+     * @param PermissionChecking[] $permissions The permission checking
+     * @param string|null          $class       The class name
+     * @param string|null          $field       The field name
+     *
+     * @return PermissionChecking[]
+     */
+    private function validateRolePermissions(array $permissions, $class = null, $field = null)
+    {
+        $configOperations = $this->getConfigPermissionOperations($class, $field);
+
+        foreach ($configOperations as $configOperation) {
+            if (!isset($permissions[$configOperation])) {
+                throw new PermissionNotFoundException($configOperation, $class, $field);
+            }
+        }
+
+        return array_values($permissions);
     }
 
     /**
@@ -228,6 +254,63 @@ class PermissionManager extends AbstractPermissionManager
         }
 
         return $id;
+    }
+
+    /**
+     * Check if the permission operation is defined by the config.
+     *
+     * @param string      $operation The permission operation
+     * @param string|null $class     The class name
+     * @param string|null $field     The field
+     *
+     * @return bool
+     */
+    private function isConfigPermission($operation, $class = null, $field = null)
+    {
+        $map = $this->getMapConfigPermissions();
+        $class = PermissionUtils::getMapAction($class);
+        $field = PermissionUtils::getMapAction($field);
+
+        return isset($map[$class][$field][$operation]);
+    }
+
+    /**
+     * Get the config operations of the subject.
+     *
+     * @param string|null $class The class name
+     * @param string|null $field The field
+     *
+     * @return string[]
+     */
+    private function getConfigPermissionOperations($class = null, $field = null)
+    {
+        $map = $this->getMapConfigPermissions();
+        $class = PermissionUtils::getMapAction($class);
+        $field = PermissionUtils::getMapAction($field);
+        $operations = array();
+
+        if (isset($map[$class][$field])) {
+            $operations = array_keys($map[$class][$field]);
+        }
+
+        return $operations;
+    }
+
+    /**
+     * Get the map of the config permissions.
+     *
+     * @return array
+     */
+    private function getMapConfigPermissions()
+    {
+        $id = '_config';
+
+        if (!array_key_exists($id, $this->cache)) {
+            $this->cache[$id] = array();
+            $this->buildSystemPermissions($id);
+        }
+
+        return $this->cache[$id];
     }
 
     /**

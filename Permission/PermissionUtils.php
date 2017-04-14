@@ -63,4 +63,24 @@ abstract class PermissionUtils
 
         return array($subject, $field);
     }
+
+    /**
+     * Get the class and field.
+     *
+     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject  The subject instance or classname
+     * @param bool                                                  $optional Check if the subject id optional
+     *
+     * @return array
+     */
+    public static function getClassAndField($subject, $optional = false)
+    {
+        /* @var SubjectIdentityInterface|null $subject */
+        list($subject, $field) = static::getSubjectAndField($subject, $optional);
+
+        $class = null !== $subject
+            ? $subject->getType()
+            : null;
+
+        return array($class, $field);
+    }
 }
