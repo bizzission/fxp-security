@@ -21,9 +21,9 @@ class PermissionNotFoundException extends InvalidArgumentException implements Ex
     /**
      * Constructor.
      *
-     * @param string $operation  The permission operation
-     * @param string $class      The class name
-     * @param string $field|null The field name
+     * @param string      $operation The permission operation
+     * @param string      $class     The class name
+     * @param string|null $field     The field name
      */
     public function __construct($operation, $class, $field = null)
     {
