@@ -22,9 +22,10 @@ class PermissionCheckingTest extends \PHPUnit_Framework_TestCase
     public function testModel()
     {
         $perm = new MockPermission();
-        $permChecking = new PermissionChecking($perm, true);
+        $permChecking = new PermissionChecking($perm, true, true);
 
         $this->assertSame($perm, $permChecking->getPermission());
         $this->assertTrue($permChecking->isGranted());
+        $this->assertTrue($permChecking->isLocked());
     }
 }

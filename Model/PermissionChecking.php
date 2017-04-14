@@ -29,15 +29,22 @@ class PermissionChecking
     protected $granted;
 
     /**
+     * @var bool
+     */
+    protected $locked;
+
+    /**
      * Constructor.
      *
      * @param PermissionInterface $permission The permission
      * @param bool                $granted    Check if the permission is granted
+     * @param bool                $locked     Check if the permission is locked
      */
-    public function __construct(PermissionInterface $permission, $granted)
+    public function __construct(PermissionInterface $permission, $granted, $locked = false)
     {
         $this->permission = $permission;
         $this->granted = $granted;
+        $this->locked = $locked;
     }
 
     /**
@@ -58,5 +65,15 @@ class PermissionChecking
     public function isGranted()
     {
         return $this->granted;
+    }
+
+    /**
+     * Check if the permission is locked.
+     *
+     * @return bool
+     */
+    public function isLocked()
+    {
+        return $this->locked;
     }
 }
