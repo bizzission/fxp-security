@@ -12,6 +12,7 @@
 namespace Sonatra\Component\Security\Validator\Constraints;
 
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
+use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\Constraint;
@@ -66,7 +67,7 @@ class PermissionValidator extends ConstraintValidator
      */
     private function validateClass(Permission $constraint, $class)
     {
-        if (null !== $class) {
+        if (null !== $class && PermissionProviderInterface::CONFIG_CLASS !== $class) {
             if (!class_exists($class)) {
                 $this->context->buildViolation($constraint->invalidClassMessage)
                     ->atPath($constraint->propertyClass)
@@ -92,7 +93,7 @@ class PermissionValidator extends ConstraintValidator
      */
     private function validateField(Permission $constraint, $class, $field)
     {
-        if (null !== $field) {
+        if (null !== $field && PermissionProviderInterface::CONFIG_FIELD !== $field) {
             if (null === $class) {
                 $this->context->buildViolation($constraint->requiredClassMessage)
                     ->atPath($constraint->propertyClass)

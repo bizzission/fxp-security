@@ -19,9 +19,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Sonatra\Component\Security\Doctrine\ORM\Provider\PermissionProvider;
-use Sonatra\Component\Security\Model\PermissionChecking;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionConfigInterface;
+use Sonatra\Component\Security\Permission\PermissionProviderInterface;
 use Sonatra\Component\Security\PermissionContexts;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
@@ -220,7 +220,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
     {
         $subject = new FieldVote(MockObject::class, 'name');
         $expected = array(
-            new PermissionChecking(new MockPermission(), true),
+            new MockPermission(),
         );
 
         $this->permissionRepo->expects($this->once())
@@ -281,7 +281,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
     {
         $subject = new FieldVote(MockObject::class, 'name');
         $expected = array(
-            new PermissionChecking(new MockPermission(), true),
+            new MockPermission(),
         );
 
         $this->permissionRepo->expects($this->once())
@@ -366,7 +366,7 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
     {
         $subject = null;
         $expected = array(
-            new PermissionChecking(new MockPermission(), true),
+            new MockPermission(),
         );
 
         $this->permissionRepo->expects($this->once())
@@ -409,6 +409,56 @@ class PermissionProviderTest extends \PHPUnit_Framework_TestCase
 
         $provider = $this->createProvider();
         $res = $provider->getPermissionsBySubject($subject);
+
+        $this->assertSame($expected, $res);
+    }
+
+    public function testGetConfigPermissions()
+    {
+        $expected = array(
+            new MockPermission(),
+        );
+
+        $this->permissionRepo->expects($this->once())
+            ->method('createQueryBuilder')
+            ->with('p')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(0))
+            ->method('orderBy')
+            ->with('p.class', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(1))
+            ->method('addOrderBy')
+            ->with('p.field', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
+            ->method('addOrderBy')
+            ->with('p.operation', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(3))
+            ->method('andWhere')
+            ->with('p.class = :class')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(4))
+            ->method('setParameter')
+            ->with('class', PermissionProviderInterface::CONFIG_CLASS)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(5))
+            ->method('getQuery')
+            ->willReturn($this->query);
+
+        $this->query->expects($this->once())
+            ->method('getResult')
+            ->willReturn($expected);
+
+        $provider = $this->createProvider();
+        $res = $provider->getConfigPermissions();
 
         $this->assertSame($expected, $res);
     }

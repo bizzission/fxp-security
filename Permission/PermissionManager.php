@@ -51,6 +51,11 @@ class PermissionManager extends AbstractPermissionManager
     protected $propertyAccessor;
 
     /**
+     * @var array|null
+     */
+    protected $cacheConfigPermissions;
+
+    /**
      * Constructor.
      *
      * @param EventDispatcherInterface     $dispatcher       The event dispatcher
@@ -176,11 +181,58 @@ class PermissionManager extends AbstractPermissionManager
 
         foreach ($configOperations as $configOperation) {
             if (!isset($permissions[$configOperation])) {
+                if (null !== $sp = $this->getConfigPermission($configOperation, $field)) {
+                    $permissions[$sp->getPermission()->getOperation()] = $sp;
+                    continue;
+                }
+
                 throw new PermissionNotFoundException($configOperation, $class, $field);
             }
         }
 
         return array_values($permissions);
+    }
+
+    /**
+     * Get the config permission.
+     *
+     * @param string      $operation
+     * @param string|null $field
+     *
+     * @return PermissionChecking|null
+     */
+    private function getConfigPermission($operation, $field = null)
+    {
+        $sps = $this->getConfigPermissions();
+        $field = null !== $field ? PermissionProviderInterface::CONFIG_FIELD : null;
+        $fieldAction = PermissionUtils::getMapAction($field);
+
+        return isset($sps[PermissionProviderInterface::CONFIG_CLASS][$fieldAction][$operation])
+            ? $sps[PermissionProviderInterface::CONFIG_CLASS][$fieldAction][$operation]
+            : null;
+    }
+
+    /**
+     * Get the config permissions.
+     *
+     * @return array
+     */
+    private function getConfigPermissions()
+    {
+        if (null === $this->cacheConfigPermissions) {
+            $sps = $this->provider->getConfigPermissions();
+            $this->cacheConfigPermissions = array();
+
+            foreach ($sps as $sp) {
+                $classAction = PermissionUtils::getMapAction($sp->getClass());
+                $fieldAction = PermissionUtils::getMapAction($sp->getField());
+                $this->cacheConfigPermissions[$classAction][$fieldAction][$sp->getOperation()] = new PermissionChecking(
+                    $sp, true, true
+                );
+            }
+        }
+
+        return $this->cacheConfigPermissions;
     }
 
     /**

@@ -21,6 +21,10 @@ use Sonatra\Component\Security\Model\PermissionInterface;
  */
 interface PermissionProviderInterface
 {
+    const CONFIG_CLASS = '_config_class';
+
+    const CONFIG_FIELD = '_config_field';
+
     /**
      * Get all permissions of roles.
      *
@@ -39,6 +43,15 @@ interface PermissionProviderInterface
      * @return PermissionInterface[]
      */
     public function getPermissionsBySubject($subject = null, $contexts = null);
+
+    /**
+     * Get the config permissions.
+     *
+     * @param string[]|string|null $contexts The permission contexts
+     *
+     * @return PermissionInterface[]
+     */
+    public function getConfigPermissions($contexts = null);
 
     /**
      * Get the class name of association field.

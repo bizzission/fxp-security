@@ -24,6 +24,7 @@ Features include:
 - Define the organization user with her roles and groups in Doctrine (optional)
 - Defined the permissions on the roles in Doctrine
 - Defined the permissions on the sharing entry in Doctrine
+- Defined the permissions in the configuration (with global config permissions in Doctrine)
 - Defined the roles on the sharing entry in Doctrine
 - Share each records by user, role, groups or organization and defined her permissions and roles
 - Merge the permissions of roles children of associated roles with user, role, group, organization, sharing entry, and token

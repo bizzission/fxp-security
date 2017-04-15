@@ -94,6 +94,22 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function getConfigPermissions($contexts = null)
+    {
+        $qb = $this->permissionRepo->createQueryBuilder('p')
+            ->orderBy('p.class', 'asc')
+            ->addOrderBy('p.field', 'asc')
+            ->addOrderBy('p.operation', 'asc');
+
+        $this->addWhereContexts($qb, $contexts);
+        $this->addWhereOptionalField($qb, 'class', PermissionProviderInterface::CONFIG_CLASS);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMasterClass(PermissionConfigInterface $config)
     {
         $type = $config->getType();
