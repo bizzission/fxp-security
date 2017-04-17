@@ -239,7 +239,8 @@ class PermissionManager extends AbstractPermissionManager
             $config = $this->getConfig($class);
 
             if (null !== $config->getMaster()) {
-                $granted = $this->isGranted(array($sid), array($operation), $subject);
+                $realOperation = $config->getMappingPermission($operation);
+                $granted = $this->isGranted(array($sid), array($realOperation), $subject);
             }
         }
 
