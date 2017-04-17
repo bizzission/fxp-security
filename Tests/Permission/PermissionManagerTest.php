@@ -592,6 +592,51 @@ class PermissionManagerTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getRoles
      *
      * @param MockRole $role
+     */
+    public function testGetRolePermissionsWithFieldConfigPermissionAndMaster(MockRole $role)
+    {
+        $subject = new FieldVote(MockOrganizationUser::class, 'organization');
+        $permission = new MockPermission();
+        $permission->setOperation('test');
+        $permission->setClass(PermissionProviderInterface::CONFIG_CLASS);
+        $permission->setField(PermissionProviderInterface::CONFIG_FIELD);
+        $permissions = array(
+            $permission,
+        );
+        $expected = array(
+            new PermissionChecking($permissions[0], false, true),
+        );
+
+        $this->provider->expects($this->once())
+            ->method('getPermissionsBySubject')
+            ->with($subject)
+            ->willReturn(array());
+
+        $this->provider->expects($this->once())
+            ->method('getConfigPermissions')
+            ->with()
+            ->willReturn($permissions);
+
+        $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
+        $this->pm->addConfig(new PermissionConfig(
+            MockOrganizationUser::class,
+            array(),
+            array(),
+            array(
+                new PermissionFieldConfig('organization', array('test')),
+            ),
+            'organization'
+        ));
+
+        $res = $this->pm->getRolePermissions($role, $subject);
+
+        $this->assertEquals($expected, $res);
+    }
+
+    /**
+     * @dataProvider getRoles
+     *
+     * @param MockRole $role
      *
      * @expectedException \Sonatra\Component\Security\Exception\PermissionNotFoundException
      * @expectedExceptionMessage The permission "test" for "Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser" is not found ant it required by the permission configuration

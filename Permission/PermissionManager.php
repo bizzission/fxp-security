@@ -163,25 +163,27 @@ class PermissionManager extends AbstractPermissionManager
             );
         }
 
-        return $this->validateRolePermissions($permissions, $class, $field);
+        return $this->validateRolePermissions($sid, $permissions, $subject, $class, $field);
     }
 
     /**
      * Validate the role permissions.
      *
-     * @param PermissionChecking[] $permissions The permission checking
-     * @param string|null          $class       The class name
-     * @param string|null          $field       The field name
+     * @param RoleSecurityIdentity                                  $sid         The role security identity
+     * @param PermissionChecking[]                                  $permissions The permission checking
+     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject     The object or class name or field vote
+     * @param string|null                                           $class       The class name
+     * @param string|null                                           $field       The field name
      *
      * @return PermissionChecking[]
      */
-    private function validateRolePermissions(array $permissions, $class = null, $field = null)
+    private function validateRolePermissions(RoleSecurityIdentity $sid, array $permissions, $subject = null, $class = null, $field = null)
     {
         $configOperations = $this->getConfigPermissionOperations($class, $field);
 
         foreach ($configOperations as $configOperation) {
             if (!isset($permissions[$configOperation])) {
-                if (null !== $sp = $this->getConfigPermission($configOperation, $field)) {
+                if (null !== $sp = $this->getConfigPermission($sid, $configOperation, $subject, $class, $field)) {
                     $permissions[$sp->getPermission()->getOperation()] = $sp;
                     continue;
                 }
@@ -196,20 +198,52 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * Get the config permission.
      *
-     * @param string      $operation
-     * @param string|null $field
+     * @param RoleSecurityIdentity                                  $sid       The role security identity
+     * @param string                                                $operation The operation
+     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject   The object or class name or field vote
+     * @param string|null                                           $class     The class name
+     * @param string|null                                           $field     The field name
      *
      * @return PermissionChecking|null
      */
-    private function getConfigPermission($operation, $field = null)
+    private function getConfigPermission(RoleSecurityIdentity $sid, $operation, $subject = null, $class = null, $field = null)
     {
         $sps = $this->getConfigPermissions();
         $field = null !== $field ? PermissionProviderInterface::CONFIG_FIELD : null;
         $fieldAction = PermissionUtils::getMapAction($field);
+        $pc = null;
 
-        return isset($sps[PermissionProviderInterface::CONFIG_CLASS][$fieldAction][$operation])
-            ? $sps[PermissionProviderInterface::CONFIG_CLASS][$fieldAction][$operation]
-            : null;
+        if (isset($sps[PermissionProviderInterface::CONFIG_CLASS][$fieldAction][$operation])) {
+            $sp = $sps[PermissionProviderInterface::CONFIG_CLASS][$fieldAction][$operation];
+            $pc = new PermissionChecking($sp, $this->isConfigGranted($sid, $operation, $subject, $class), true);
+        }
+
+        return $pc;
+    }
+
+    /**
+     * Check if the config permission is granted.
+     *
+     * @param RoleSecurityIdentity                                  $sid       The role security identity
+     * @param string                                                $operation The operation
+     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject   The object or class name or field vote
+     * @param string|null                                           $class     The class name
+     *
+     * @return bool
+     */
+    private function isConfigGranted(RoleSecurityIdentity $sid, $operation, $subject = null, $class = null)
+    {
+        $granted = true;
+
+        if (null !== $class && $this->hasConfig($class)) {
+            $config = $this->getConfig($class);
+
+            if (null !== $config->getMaster()) {
+                $granted = $this->isGranted(array($sid), array($operation), $subject);
+            }
+        }
+
+        return $granted;
     }
 
     /**
@@ -226,9 +260,7 @@ class PermissionManager extends AbstractPermissionManager
             foreach ($sps as $sp) {
                 $classAction = PermissionUtils::getMapAction($sp->getClass());
                 $fieldAction = PermissionUtils::getMapAction($sp->getField());
-                $this->cacheConfigPermissions[$classAction][$fieldAction][$sp->getOperation()] = new PermissionChecking(
-                    $sp, true, true
-                );
+                $this->cacheConfigPermissions[$classAction][$fieldAction][$sp->getOperation()] = $sp;
             }
         }
 
