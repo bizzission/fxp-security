@@ -18,6 +18,7 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnitOfWork;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\SharingDeleteListener;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
@@ -28,7 +29,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingDeleteListenerTest extends \PHPUnit_Framework_TestCase
+class SharingDeleteListenerTest extends TestCase
 {
     /**
      * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject

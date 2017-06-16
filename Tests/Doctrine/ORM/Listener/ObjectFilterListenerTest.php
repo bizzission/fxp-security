@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
@@ -25,7 +26,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ObjectFilterListenerTest extends \PHPUnit_Framework_TestCase
+class ObjectFilterListenerTest extends TestCase
 {
     /**
      * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject

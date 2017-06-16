@@ -11,12 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Permission;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Permission\PermissionFieldConfig;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionFieldConfigTest extends \PHPUnit_Framework_TestCase
+class PermissionFieldConfigTest extends TestCase
 {
     public function testPermissionFieldConfigByDefault()
     {

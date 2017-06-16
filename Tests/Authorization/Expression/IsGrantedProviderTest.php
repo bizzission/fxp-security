@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Authorization\Expression;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Expression\IsGrantedProvider;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class IsGrantedProviderTest extends \PHPUnit_Framework_TestCase
+class IsGrantedProviderTest extends TestCase
 {
     public function testIsBasicAuth()
     {

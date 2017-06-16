@@ -11,12 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\PreCommitObjectFilterEvent;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PreCommitObjectFilterEventTest extends \PHPUnit_Framework_TestCase
+class PreCommitObjectFilterEventTest extends TestCase
 {
     public function testEvent()
     {

@@ -11,12 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PostCommitObjectFilterEventTest extends \PHPUnit_Framework_TestCase
+class PostCommitObjectFilterEventTest extends TestCase
 {
     public function testEvent()
     {

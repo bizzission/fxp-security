@@ -16,13 +16,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Sonatra\Component\Security\Model\Sharing;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class GetFilterEventTest extends \PHPUnit_Framework_TestCase
+class GetFilterEventTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject

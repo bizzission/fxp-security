@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Voter\PermissionVoter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
@@ -23,7 +24,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionVoterTest extends \PHPUnit_Framework_TestCase
+class PermissionVoterTest extends TestCase
 {
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject

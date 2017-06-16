@@ -11,12 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ObjectViewGrantedEventTest extends \PHPUnit_Framework_TestCase
+class ObjectViewGrantedEventTest extends TestCase
 {
     public function testEvent()
     {

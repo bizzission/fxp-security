@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Model\Traits;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObjectOwnerable;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OwnerableTraitTest extends \PHPUnit_Framework_TestCase
+class OwnerableTraitTest extends TestCase
 {
     public function testModel()
     {

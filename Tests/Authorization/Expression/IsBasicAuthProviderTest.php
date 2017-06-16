@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Authorization\Expression;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Expression\IsBasicAuthProvider;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class IsBasicAuthProviderTest extends \PHPUnit_Framework_TestCase
+class IsBasicAuthProviderTest extends TestCase
 {
     public function testIsBasicAuth()
     {

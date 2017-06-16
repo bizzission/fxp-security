@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Permission;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class FieldVoteTest extends \PHPUnit_Framework_TestCase
+class FieldVoteTest extends TestCase
 {
     public function testFieldVote()
     {

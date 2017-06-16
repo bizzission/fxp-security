@@ -16,6 +16,7 @@ use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\FilterCollection;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Sonatra\Component\Security\Doctrine\ORM\Filter\SharingFilter;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
@@ -30,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingFilterTest extends \PHPUnit_Framework_TestCase
+class SharingFilterTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject

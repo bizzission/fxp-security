@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class GroupSecurityIdentityTest extends \PHPUnit_Framework_TestCase
+class GroupSecurityIdentityTest extends TestCase
 {
     public function testDebugInfo()
     {

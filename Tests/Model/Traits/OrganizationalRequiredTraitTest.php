@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Model\Traits;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\Traits\OrganizationalRequiredTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OrganizationalRequiredTraitTest extends \PHPUnit_Framework_TestCase
+class OrganizationalRequiredTraitTest extends TestCase
 {
     public function testModel()
     {

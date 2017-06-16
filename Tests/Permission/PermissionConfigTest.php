@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Permission;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Permission\PermissionConfig;
 use Sonatra\Component\Security\Permission\PermissionFieldConfig;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionConfigTest extends \PHPUnit_Framework_TestCase
+class PermissionConfigTest extends TestCase
 {
     public function testPermissionConfigByDefault()
     {

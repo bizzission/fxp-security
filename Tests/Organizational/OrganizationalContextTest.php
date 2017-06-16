@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Organizational;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\SetCurrentOrganizationEvent;
 use Sonatra\Component\Security\Event\SetCurrentOrganizationUserEvent;
 use Sonatra\Component\Security\Event\SetOrganizationalOptionalFilterTypeEvent;
@@ -28,7 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OrganizationalContextTest extends \PHPUnit_Framework_TestCase
+class OrganizationalContextTest extends TestCase
 {
     /**
      * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Model;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\PermissionContexts;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionTest extends \PHPUnit_Framework_TestCase
+class PermissionTest extends TestCase
 {
     public function testModel()
     {

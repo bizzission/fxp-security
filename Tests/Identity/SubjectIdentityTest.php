@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -19,7 +20,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockSubjectObject;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SubjectIdentityTest extends \PHPUnit_Framework_TestCase
+class SubjectIdentityTest extends TestCase
 {
     public function testDebugInfo()
     {

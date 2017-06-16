@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Event\PostSecurityIdentityEvent;
 use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SecurityIdentityManagerTest extends \PHPUnit_Framework_TestCase
+class SecurityIdentityManagerTest extends TestCase
 {
     /**
      * @var EventDispatcher

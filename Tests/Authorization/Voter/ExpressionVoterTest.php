@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Voter\ExpressionVoter;
 use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
@@ -31,7 +32,7 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ExpressionVoterTest extends \PHPUnit_Framework_TestCase
+class ExpressionVoterTest extends TestCase
 {
     /**
      * @var EventDispatcher

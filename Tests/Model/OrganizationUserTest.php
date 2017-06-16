@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Model;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\UserInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OrganizationUserTest extends \PHPUnit_Framework_TestCase
+class OrganizationUserTest extends TestCase
 {
     public function testModel()
     {

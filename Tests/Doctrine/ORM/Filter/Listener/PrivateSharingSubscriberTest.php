@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Sonatra\Component\Security\Doctrine\ORM\Filter\Listener\PrivateSharingSubscriber;
 use Sonatra\Component\Security\Model\Sharing;
@@ -29,7 +30,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PrivateSharingSubscriberTest extends \PHPUnit_Framework_TestCase
+class PrivateSharingSubscriberTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject

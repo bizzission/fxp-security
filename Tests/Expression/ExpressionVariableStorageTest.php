@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Expression;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
 use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
@@ -25,7 +26,7 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ExpressionVariableStorageTest extends \PHPUnit_Framework_TestCase
+class ExpressionVariableStorageTest extends TestCase
 {
     /**
      * @var AuthenticationTrustResolverInterface|\PHPUnit_Framework_MockObject_MockObject

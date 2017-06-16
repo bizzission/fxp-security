@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\PostReachableRoleEvent;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PostReachableRoleEventTest extends \PHPUnit_Framework_TestCase
+class PostReachableRoleEventTest extends TestCase
 {
     public function testEvent()
     {

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PreSecurityIdentityEventTest extends \PHPUnit_Framework_TestCase
+class PreSecurityIdentityEventTest extends TestCase
 {
     public function testEvent()
     {

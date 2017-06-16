@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Listener;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Listener\OrganizationSecurityIdentitySubscriber;
 use Sonatra\Component\Security\Model\OrganizationInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OrganizationSecurityIdentitySubscriberTest extends \PHPUnit_Framework_TestCase
+class OrganizationSecurityIdentitySubscriberTest extends TestCase
 {
     /**
      * @var RoleHierarchyInterface|\PHPUnit_Framework_MockObject_MockObject

@@ -11,12 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\ObjectFilter;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\ObjectFilter\MixedValue;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class MixedValueTest extends \PHPUnit_Framework_TestCase
+class MixedValueTest extends TestCase
 {
     public function getValues()
     {

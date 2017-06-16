@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Validator\Constraints;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Validator\Constraints\Sharing;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingTest extends \PHPUnit_Framework_TestCase
+class SharingTest extends TestCase
 {
     public function testGetTargets()
     {

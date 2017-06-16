@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Model\Traits;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUserRoleableGroupable;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRoleable;
@@ -19,7 +20,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class RoleableTraitTest extends \PHPUnit_Framework_TestCase
+class RoleableTraitTest extends TestCase
 {
     public function testModel()
     {

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Organizational;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Organizational\OrganizationalUtil;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
@@ -19,7 +20,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsers;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class OrganizationalUtilTest extends \PHPUnit_Framework_TestCase
+class OrganizationalUtilTest extends TestCase
 {
     public function testFormatName()
     {

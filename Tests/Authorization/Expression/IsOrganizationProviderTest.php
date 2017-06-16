@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Authorization\Expression;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Expression\IsOrganizationProvider;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class IsOrganizationProviderTest extends \PHPUnit_Framework_TestCase
+class IsOrganizationProviderTest extends TestCase
 {
     public function testIsOrganization()
     {

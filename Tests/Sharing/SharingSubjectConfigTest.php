@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Sharing;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Sharing\SharingSubjectConfig;
 use Sonatra\Component\Security\SharingVisibilities;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingSubjectConfigTest extends \PHPUnit_Framework_TestCase
+class SharingSubjectConfigTest extends TestCase
 {
     public function testSharingSubjectConfigByDefault()
     {

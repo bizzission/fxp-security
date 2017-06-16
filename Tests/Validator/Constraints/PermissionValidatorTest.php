@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Validator\Constraints;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
@@ -22,7 +23,7 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionValidatorTest extends \PHPUnit_Framework_TestCase
+class PermissionValidatorTest extends TestCase
 {
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject

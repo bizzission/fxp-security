@@ -13,12 +13,13 @@ namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Listener;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\ObjectFilter\DoctrineOrmCollectionValue;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class DoctrineOrmCollectionValueTest extends \PHPUnit_Framework_TestCase
+class DoctrineOrmCollectionValueTest extends TestCase
 {
     public function getValues()
     {

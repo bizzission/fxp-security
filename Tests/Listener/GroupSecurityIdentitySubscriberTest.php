@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Listener;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
 use Sonatra\Component\Security\Listener\GroupSecurityIdentitySubscriber;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserGroupable;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class GroupSecurityIdentitySubscriberTest extends \PHPUnit_Framework_TestCase
+class GroupSecurityIdentitySubscriberTest extends TestCase
 {
     public function testAddGroupSecurityIdentitiesWithException()
     {

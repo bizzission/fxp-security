@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Firewall;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Firewall\HostRoleListener;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class HostRoleListenerTest extends \PHPUnit_Framework_TestCase
+class HostRoleListenerTest extends TestCase
 {
     /**
      * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject

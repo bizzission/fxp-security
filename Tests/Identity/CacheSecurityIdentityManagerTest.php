@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\CacheSecurityIdentityManager;
 use Sonatra\Component\Security\Tests\Fixtures\Listener\MockCacheSecurityIdentitySubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class CacheSecurityIdentityManagerTest extends \PHPUnit_Framework_TestCase
+class CacheSecurityIdentityManagerTest extends TestCase
 {
     /**
      * @var EventDispatcher

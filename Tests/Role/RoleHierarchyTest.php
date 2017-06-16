@@ -17,6 +17,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
+use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
@@ -28,7 +29,7 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class RoleHierarchyTest extends \PHPUnit_Framework_TestCase
+class RoleHierarchyTest extends TestCase
 {
     /**
      * @var ManagerRegistryInterface|\PHPUnit_Framework_MockObject_MockObject

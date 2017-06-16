@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Authentication\Provider;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authentication\Provider\HostRoleProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class HostRoleProviderTest extends \PHPUnit_Framework_TestCase
+class HostRoleProviderTest extends TestCase
 {
     public function testBasic()
     {

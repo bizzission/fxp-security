@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\ObjectFilter;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterExtension;
 use Sonatra\Component\Security\ObjectFilter\ObjectFilterVoterInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ObjectFilterExtensionTest extends \PHPUnit_Framework_TestCase
+class ObjectFilterExtensionTest extends TestCase
 {
     public function testFilterValue()
     {

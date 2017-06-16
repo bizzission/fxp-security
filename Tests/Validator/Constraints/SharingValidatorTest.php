@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Validator\Constraints;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Sharing\SharingIdentityConfig;
 use Sonatra\Component\Security\Sharing\SharingManagerInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingValidatorTest extends \PHPUnit_Framework_TestCase
+class SharingValidatorTest extends TestCase
 {
     /**
      * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject

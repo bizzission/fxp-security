@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Listener;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\AbstractEditableSecurityEvent;
 use Sonatra\Component\Security\Event\PostReachableRoleEvent;
 use Sonatra\Component\Security\Listener\DisablePermissionSubscriber;
@@ -19,7 +20,7 @@ use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class DisablePermissionSubscriberTest extends \PHPUnit_Framework_TestCase
+class DisablePermissionSubscriberTest extends TestCase
 {
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject

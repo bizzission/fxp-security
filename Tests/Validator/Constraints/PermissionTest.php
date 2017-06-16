@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Validator\Constraints;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Validator\Constraints\Permission;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionTest extends \PHPUnit_Framework_TestCase
+class PermissionTest extends TestCase
 {
     public function testGetTargets()
     {

@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Sharing;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Sharing\SharingIdentityConfig;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingIdentityConfigTest extends \PHPUnit_Framework_TestCase
+class SharingIdentityConfigTest extends TestCase
 {
     public function testSharingIdentityConfigByDefault()
     {

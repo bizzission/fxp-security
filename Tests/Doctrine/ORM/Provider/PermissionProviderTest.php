@@ -18,6 +18,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Provider\PermissionProvider;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionConfigInterface;
@@ -31,7 +32,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionProviderTest extends \PHPUnit_Framework_TestCase
+class PermissionProviderTest extends TestCase
 {
     /**
      * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject

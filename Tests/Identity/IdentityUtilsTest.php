@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class IdentityUtilsTest extends \PHPUnit_Framework_TestCase
+class IdentityUtilsTest extends TestCase
 {
     public function testMerge()
     {

@@ -15,6 +15,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Provider\SharingProvider;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
@@ -31,7 +32,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingProviderTest extends \PHPUnit_Framework_TestCase
+class SharingProviderTest extends TestCase
 {
     /**
      * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Sharing;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\SubjectIdentity;
 use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
 use Sonatra\Component\Security\Sharing\SharingIdentityConfig;
@@ -30,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingManagerTest extends \PHPUnit_Framework_TestCase
+class SharingManagerTest extends TestCase
 {
     /**
      * @var SharingProviderInterface|\PHPUnit_Framework_MockObject_MockObject

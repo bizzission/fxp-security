@@ -16,12 +16,13 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDOPgSql\Driver;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\DoctrineUtils;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class DoctrineUtilsTest extends \PHPUnit_Framework_TestCase
+class DoctrineUtilsTest extends TestCase
 {
     public function testGetIdentifier()
     {

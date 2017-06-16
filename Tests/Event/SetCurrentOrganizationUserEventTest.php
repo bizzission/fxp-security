@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\SetCurrentOrganizationUserEvent;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SetCurrentOrganizationUserEventTest extends \PHPUnit_Framework_TestCase
+class SetCurrentOrganizationUserEventTest extends TestCase
 {
     public function testEvent()
     {

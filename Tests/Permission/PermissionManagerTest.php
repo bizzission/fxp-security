@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Permission;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
@@ -40,7 +41,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionManagerTest extends \PHPUnit_Framework_TestCase
+class PermissionManagerTest extends TestCase
 {
     /**
      * @var EventDispatcher

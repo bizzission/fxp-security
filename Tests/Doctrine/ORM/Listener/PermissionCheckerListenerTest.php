@@ -14,6 +14,7 @@ namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Listener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\PermissionCheckerListener;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\Token\ConsoleToken;
@@ -24,7 +25,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionCheckerListenerTest extends \PHPUnit_Framework_TestCase
+class PermissionCheckerListenerTest extends TestCase
 {
     /**
      * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject

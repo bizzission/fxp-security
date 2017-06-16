@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Listener;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Listener\PermissionExceptionListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionExceptionListenerTest extends \PHPUnit_Framework_TestCase
+class PermissionExceptionListenerTest extends TestCase
 {
     /**
      * @var HttpKernelInterface

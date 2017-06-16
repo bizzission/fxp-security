@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Identity\UserSecurityIdentity;
 use Sonatra\Component\Security\Model\UserInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class UserSecurityIdentityTest extends \PHPUnit_Framework_TestCase
+class UserSecurityIdentityTest extends TestCase
 {
     public function testDebugInfo()
     {

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Identity;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class RoleSecurityIdentityTest extends \PHPUnit_Framework_TestCase
+class RoleSecurityIdentityTest extends TestCase
 {
     public function testDebugInfo()
     {

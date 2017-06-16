@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\PreReachableRoleEvent;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PreReachableRoleEventTest extends \PHPUnit_Framework_TestCase
+class PreReachableRoleEventTest extends TestCase
 {
     public function testEvent()
     {

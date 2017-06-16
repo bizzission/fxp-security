@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PreLoadPermissionsEventTest extends \PHPUnit_Framework_TestCase
+class PreLoadPermissionsEventTest extends TestCase
 {
     public function testEvent()
     {

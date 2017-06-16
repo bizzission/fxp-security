@@ -11,12 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Exception;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Exception\PermissionNotFoundException;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class PermissionNotFoundExceptionTest extends \PHPUnit_Framework_TestCase
+class PermissionNotFoundExceptionTest extends TestCase
 {
     public function testException()
     {

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\ObjectFilter;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
 use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
 use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;
@@ -30,7 +31,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ObjectFilterTest extends \PHPUnit_Framework_TestCase
+class ObjectFilterTest extends TestCase
 {
     /**
      * @var UnitOfWorkInterface|\PHPUnit_Framework_MockObject_MockObject

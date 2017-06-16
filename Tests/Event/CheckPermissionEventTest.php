@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
@@ -19,7 +20,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class CheckPermissionEventTest extends \PHPUnit_Framework_TestCase
+class CheckPermissionEventTest extends TestCase
 {
     public function testEvent()
     {

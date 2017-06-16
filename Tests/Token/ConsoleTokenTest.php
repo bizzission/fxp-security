@@ -11,12 +11,13 @@
 
 namespace Sonatra\Component\Security\Tests\Token;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Token\ConsoleToken;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ConsoleTokenTest extends \PHPUnit_Framework_TestCase
+class ConsoleTokenTest extends TestCase
 {
     public function testConsoleToken()
     {

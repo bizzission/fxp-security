@@ -17,6 +17,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Cache\Adapter\AdapterInterface;
 use Sonatra\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
 use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
@@ -31,7 +32,7 @@ use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class RoleHierarchyListenerTest extends \PHPUnit_Framework_TestCase
+class RoleHierarchyListenerTest extends TestCase
 {
     /**
      * @var CacheSecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject

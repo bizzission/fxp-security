@@ -14,6 +14,7 @@ namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Filter\Listener;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Doctrine\ORM\Filter\Listener\SharingFilterSubscriber;
 use Sonatra\Component\Security\Doctrine\ORM\Filter\SharingFilter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
@@ -31,7 +32,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingFilterSubscriberTest extends \PHPUnit_Framework_TestCase
+class SharingFilterSubscriberTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Model;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SharingTest extends \PHPUnit_Framework_TestCase
+class SharingTest extends TestCase
 {
     public function testModel()
     {

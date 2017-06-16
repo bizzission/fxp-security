@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Authorization\Voter;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Voter\GroupableVoter;
 use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class GroupableVoterTest extends \PHPUnit_Framework_TestCase
+class GroupableVoterTest extends TestCase
 {
     /**
      * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject

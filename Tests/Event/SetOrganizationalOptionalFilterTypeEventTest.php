@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\SetOrganizationalOptionalFilterTypeEvent;
 use Sonatra\Component\Security\OrganizationalTypes;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class SetOrganizationalOptionalFilterTypeEventTest extends \PHPUnit_Framework_TestCase
+class SetOrganizationalOptionalFilterTypeEventTest extends TestCase
 {
     public function testEvent()
     {

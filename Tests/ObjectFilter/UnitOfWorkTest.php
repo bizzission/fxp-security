@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\ObjectFilter;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\ObjectFilter\UnitOfWork;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class UnitOfWorkTest extends \PHPUnit_Framework_TestCase
+class UnitOfWorkTest extends TestCase
 {
     public function testGetObjectIdentifiers()
     {

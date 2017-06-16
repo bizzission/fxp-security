@@ -11,13 +11,14 @@
 
 namespace Sonatra\Component\Security\Tests\Authentication\Provider;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authentication\Provider\AnonymousRoleProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class AnonymousRoleProviderTest extends \PHPUnit_Framework_TestCase
+class AnonymousRoleProviderTest extends TestCase
 {
     public function testBasic()
     {

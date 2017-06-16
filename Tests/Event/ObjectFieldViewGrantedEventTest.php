@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Tests\Event;
 
+use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -18,7 +19,7 @@ use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-class ObjectFieldViewGrantedEventTest extends \PHPUnit_Framework_TestCase
+class ObjectFieldViewGrantedEventTest extends TestCase
 {
     public function testEvent()
     {
