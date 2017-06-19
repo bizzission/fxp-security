@@ -79,11 +79,8 @@ class OrganizationalContext implements OrganizationalContextInterface
         if (null === $organization || false === $organization || $organization instanceof OrganizationInterface) {
             $old = $this->organization;
             $this->organization = $organization;
-            $this->dispatch(
-                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION,
-                SetCurrentOrganizationEvent::class,
-                $organization,
-                $old
+            $this->dispatch(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION,
+                SetCurrentOrganizationEvent::class, $organization, $old
             );
         }
     }
@@ -124,11 +121,8 @@ class OrganizationalContext implements OrganizationalContextInterface
             $old = $this->organizationUser;
             $this->organizationUser = $organizationUser;
             $org = $organizationUser->getOrganization();
-            $this->dispatch(
-                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER,
-                SetCurrentOrganizationUserEvent::class,
-                $organizationUser,
-                $old
+            $this->dispatch(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER,
+                SetCurrentOrganizationUserEvent::class, $organizationUser, $old
             );
         }
         $this->setCurrentOrganization($org);
@@ -159,12 +153,8 @@ class OrganizationalContext implements OrganizationalContextInterface
     {
         $old = $this->optionalFilterType;
         $this->optionalFilterType = $type;
-        $this->dispatch(
-            OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
-            SetOrganizationalOptionalFilterTypeEvent::class,
-            $type,
-            $old
-        );
+        $this->dispatch(OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
+            SetOrganizationalOptionalFilterTypeEvent::class, $type, $old);
     }
 
     /**

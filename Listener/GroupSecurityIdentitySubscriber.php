@@ -43,8 +43,7 @@ class GroupSecurityIdentitySubscriber implements EventSubscriberInterface
     {
         try {
             $sids = $event->getSecurityIdentities();
-            $sids = IdentityUtils::merge(
-                $sids,
+            $sids = IdentityUtils::merge($sids,
                 GroupSecurityIdentity::fromToken($event->getToken())
             );
             $event->setSecurityIdentities($sids);

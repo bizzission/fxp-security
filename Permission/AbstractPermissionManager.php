@@ -248,9 +248,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         $contexts = null;
 
         if ($role instanceof OrganizationalInterface) {
-            $contexts = null !== $role->getOrganization()
-                ? array(PermissionContexts::ORGANIZATION_ROLE)
-                : array(PermissionContexts::ROLE);
+            $contexts = array(null !== $role->getOrganization() ? PermissionContexts::ORGANIZATION_ROLE : PermissionContexts::ROLE);
         }
 
         return $contexts;

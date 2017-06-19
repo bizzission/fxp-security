@@ -110,13 +110,7 @@ class SharingFilter extends AbstractFilter
             SharingFilterEvents::DOCTRINE_ORM_FILTER,
             $this->sm->getSharingVisibility(SubjectUtils::getSubjectIdentity($targetEntity->getName()))
         );
-        $event = new GetFilterEvent(
-            $this,
-            $this->getEntityManager(),
-            $targetEntity,
-            $targetTableAlias,
-            $this->sharingClass
-        );
+        $event = new GetFilterEvent($this, $this->getEntityManager(), $targetEntity, $targetTableAlias, $this->sharingClass);
         $this->dispatcher->dispatch($name, $event);
 
         return $event->getFilterConstraint();

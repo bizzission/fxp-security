@@ -81,8 +81,7 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
     {
         try {
             $sids = $event->getSecurityIdentities();
-            $sids = IdentityUtils::merge(
-                $sids,
+            $sids = IdentityUtils::merge($sids,
                 OrganizationSecurityIdentity::fromToken($event->getToken(),
                     $this->context, $this->roleHierarchy)
             );

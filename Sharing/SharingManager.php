@@ -72,8 +72,7 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
                         : array();
 
                     $this->cacheSubjectSharing[$id]['sharings'][] = $entrySharing;
-                    $this->cacheSubjectSharing[$id]['operations'] = array_unique(array_merge(
-                        $operations,
+                    $this->cacheSubjectSharing[$id]['operations'] = array_unique(array_merge($operations,
                         SharingUtils::buildOperations($entrySharing)
                     ));
                 }

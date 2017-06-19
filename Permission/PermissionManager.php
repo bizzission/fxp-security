@@ -156,11 +156,9 @@ class PermissionManager extends AbstractPermissionManager
 
         foreach ($this->provider->getPermissionsBySubject($subject, $contexts) as $permission) {
             $operation = $permission->getOperation();
-            $permissions[$operation] = new PermissionChecking(
-                $permission,
-                $this->isGranted(array($sid), array($operation), $subject),
-                $this->isConfigPermission($operation, $class, $field)
-            );
+            $granted = $this->isGranted(array($sid), array($operation), $subject);
+            $isConfig = $this->isConfigPermission($operation, $class, $field);
+            $permissions[$operation] = new PermissionChecking($permission, $granted, $isConfig);
         }
 
         return $this->validateRolePermissions($sid, $permissions, $subject, $class, $field);
