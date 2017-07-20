@@ -23,6 +23,22 @@ use Symfony\Component\Security\Core\Role\Role;
 final class RoleSecurityIdentity extends AbstractSecurityIdentity
 {
     /**
+     * Constructor.
+     *
+     * @param string $identifier The identifier
+     * @param string $type       The type
+     *
+     * @throws InvalidArgumentException When the identifier is empty
+     * @throws InvalidArgumentException When the type is empty
+     */
+    public function __construct($type, $identifier)
+    {
+        parent::__construct($type, $identifier);
+
+        $this->type = Role::class === $this->type ? 'role' : $this->type;
+    }
+
+    /**
      * Creates a role security identity from a RoleInterface.
      *
      * @param Role $role The role
