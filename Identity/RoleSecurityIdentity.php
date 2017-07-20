@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Identity;
 
+use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -21,8 +22,6 @@ use Symfony\Component\Security\Core\Role\Role;
  */
 final class RoleSecurityIdentity extends AbstractSecurityIdentity
 {
-    const TYPE = 'role';
-
     /**
      * Creates a role security identity from a RoleInterface.
      *
@@ -32,7 +31,7 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
      */
     public static function fromAccount(Role $role)
     {
-        return new self($role->getRole());
+        return new self(ClassUtils::getClass($role), $role->getRole());
     }
 
     /**
@@ -61,13 +60,5 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
         }
 
         throw new InvalidArgumentException('The user class must implement "Sonatra\Component\Security\Model\Traits\RoleableInterface"');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return self::TYPE;
     }
 }

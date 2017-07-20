@@ -254,8 +254,8 @@ class SharingProviderTest extends TestCase
     public function testGetPermissionRolesWithSecurityIdentities()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new UserSecurityIdentity('user.test'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new UserSecurityIdentity(MockUserRoleable::class, 'user.test'),
         );
         $subjects = array(
             SubjectIdentity::fromObject(new MockObject('foo', 42)),
@@ -265,13 +265,13 @@ class SharingProviderTest extends TestCase
 
         $this->sharingManager->expects($this->at(0))
             ->method('getIdentityConfig')
-            ->with(RoleSecurityIdentity::TYPE)
-            ->willReturn(new SharingIdentityConfig(MockRole::class, RoleSecurityIdentity::TYPE));
+            ->with(MockRole::class)
+            ->willReturn(new SharingIdentityConfig(MockRole::class, 'role'));
 
         $this->sharingManager->expects($this->at(1))
             ->method('getIdentityConfig')
-            ->with(UserSecurityIdentity::TYPE)
-            ->willReturn(new SharingIdentityConfig(MockUserRoleable::class, UserSecurityIdentity::TYPE));
+            ->with(MockUserRoleable::class)
+            ->willReturn(new SharingIdentityConfig(MockUserRoleable::class, 'role'));
 
         $this->sharingRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -377,8 +377,8 @@ class SharingProviderTest extends TestCase
     public function testGetSharingEntriesWithoutSharingManager()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new UserSecurityIdentity('user.test'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new UserSecurityIdentity(MockUserRoleable::class, 'user.test'),
         );
         $subjects = array(
             SubjectIdentity::fromObject(new MockObject('foo', 42)),

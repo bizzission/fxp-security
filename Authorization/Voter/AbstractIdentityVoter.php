@@ -80,8 +80,8 @@ abstract class AbstractIdentityVoter extends Voter
      */
     protected function isValidIdentity($attribute, SecurityIdentityInterface $sid)
     {
-        return $this->getValidType() === $sid->getType()
-                && substr($attribute, strlen($this->prefix)) === OrganizationalUtil::format($sid->getIdentifier());
+        return ($this->getValidType() === $sid->getType() || in_array($this->getValidType(), class_implements($sid->getType())))
+            && substr($attribute, strlen($this->prefix)) === OrganizationalUtil::format($sid->getIdentifier());
     }
 
     /**

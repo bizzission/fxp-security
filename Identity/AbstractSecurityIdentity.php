@@ -14,31 +14,8 @@ namespace Sonatra\Component\Security\Identity;
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-abstract class AbstractSecurityIdentity implements SecurityIdentityInterface
+abstract class AbstractSecurityIdentity extends AbstractBaseIdentity implements SecurityIdentityInterface
 {
-    /**
-     * @var string
-     */
-    protected $identifier;
-
-    /**
-     * Constructor.
-     *
-     * @param string $identifier The identifier
-     */
-    public function __construct($identifier)
-    {
-        $this->identifier = $identifier;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
-
     /**
      * {@inheritdoc}
      */

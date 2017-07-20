@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Identity;
 
+use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Sonatra\Component\Security\Model\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -20,8 +21,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 final class UserSecurityIdentity extends AbstractSecurityIdentity
 {
-    const TYPE = 'user';
-
     /**
      * Creates a user security identity from a UserInterface.
      *
@@ -31,7 +30,7 @@ final class UserSecurityIdentity extends AbstractSecurityIdentity
      */
     public static function fromAccount(UserInterface $user)
     {
-        return new self($user->getUsername());
+        return new self(ClassUtils::getClass($user), $user->getUsername());
     }
 
     /**
@@ -52,13 +51,5 @@ final class UserSecurityIdentity extends AbstractSecurityIdentity
         }
 
         throw new InvalidArgumentException('The user class must implement "Sonatra\Component\Security\Model\UserInterface"');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return self::TYPE;
     }
 }

@@ -211,7 +211,7 @@ class PermissionManagerTest extends TestCase
     public function testIsGranted()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $object = MockObject::class;
         $permission = 'view';
@@ -222,7 +222,7 @@ class PermissionManagerTest extends TestCase
     public function testIsGrantedWithNonExistentSubject()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $object = 'FooBar';
         $permission = 'view';
@@ -233,7 +233,7 @@ class PermissionManagerTest extends TestCase
     public function testIsGrantedWithGlobalPermission()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $object = null;
         $permission = 'foo';
@@ -252,8 +252,8 @@ class PermissionManagerTest extends TestCase
     public function testIsGrantedWithGlobalPermissionAndMaster()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new UserSecurityIdentity('user.test'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new UserSecurityIdentity(MockUserRoleable::class, 'user.test'),
         );
         $org = new MockOrganization('foo');
         $user = new MockUserRoleable();
@@ -281,8 +281,8 @@ class PermissionManagerTest extends TestCase
         $permConfigOrgUser = new PermissionConfig(MockOrganizationUser::class, array(), array(), array(), 'organization');
 
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new UserSecurityIdentity('user.test'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new UserSecurityIdentity(MockUserRoleable::class, 'user.test'),
         );
         $object = new SubjectIdentity(MockOrganizationUser::class, 42);
         $permission = 'view';
@@ -310,9 +310,9 @@ class PermissionManagerTest extends TestCase
     public function testIsGrantedWithGlobalPermissionWithoutGrant()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new RoleSecurityIdentity('ROLE_USER__foo'),
-            new RoleSecurityIdentity('ROLE_ADMIN__foo'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER__foo'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_ADMIN__foo'),
         );
         $object = null;
         $permission = 'bar';
@@ -331,7 +331,7 @@ class PermissionManagerTest extends TestCase
     public function testIsFieldGranted()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $object = new MockObject('foo');
         $field = 'name';
@@ -343,7 +343,7 @@ class PermissionManagerTest extends TestCase
     public function testIsGrantedWithSharingPermission()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $object = new MockObject('foo');
         $permission = 'test';
@@ -379,8 +379,8 @@ class PermissionManagerTest extends TestCase
     public function testIsGrantedWithSystemPermission()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new UserSecurityIdentity('user.test'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new UserSecurityIdentity(MockUserRoleable::class, 'user.test'),
         );
         $org = new MockOrganization('foo');
         $user = new MockUserRoleable();
@@ -758,7 +758,7 @@ class PermissionManagerTest extends TestCase
     public function testEvents()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $object = MockObject::class;
         $permission = 'view';
@@ -800,7 +800,7 @@ class PermissionManagerTest extends TestCase
     public function testOverrideGrantValueWithEvent()
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $object = MockObject::class;
         $permission = 'view';

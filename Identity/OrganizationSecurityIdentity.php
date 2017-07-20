@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Identity;
 
+use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\OrganizationInterface;
 use Sonatra\Component\Security\Model\OrganizationUserInterface;
@@ -28,8 +29,6 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  */
 final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
 {
-    const TYPE = 'organization';
-
     /**
      * Creates a organization security identity from a OrganizationInterface.
      *
@@ -39,7 +38,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      */
     public static function fromAccount(OrganizationInterface $organization)
     {
-        return new self($organization->getName());
+        return new self(ClassUtils::getClass($organization), $organization->getName());
     }
 
     /**
@@ -64,14 +63,6 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
         return null !== $context
             ? static::getSecurityIdentityForCurrentOrganization($context, $roleHierarchy)
             : static::getSecurityIdentityForAllOrganizations($user, $roleHierarchy);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return self::TYPE;
     }
 
     /**
@@ -150,7 +141,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
         if ($user instanceof GroupableInterface) {
             foreach ($user->getGroups() as $group) {
                 if ($group instanceof GroupInterface) {
-                    $sids[] = new GroupSecurityIdentity($group->getGroup().'__'.$orgName);
+                    $sids[] = new GroupSecurityIdentity(ClassUtils::getClass($group), $group->getGroup().'__'.$orgName);
                 }
             }
         }

@@ -21,18 +21,8 @@ use Sonatra\Component\Security\Exception\UnexpectedTypeException;
  *
  * @author François Pluchino <francois.pluchino@sonatra.com>
  */
-final class SubjectIdentity implements SubjectIdentityInterface
+final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdentityInterface
 {
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $identifier;
-
     /**
      * @var object|null
      */
@@ -51,13 +41,7 @@ final class SubjectIdentity implements SubjectIdentityInterface
      */
     public function __construct($type, $identifier, $subject = null)
     {
-        if (empty($type)) {
-            throw new InvalidArgumentException('The type cannot be empty');
-        }
-
-        if ('' === $identifier) {
-            throw new InvalidArgumentException('The identifier cannot be empty');
-        }
+        parent::__construct($type, $identifier);
 
         if (null !== $subject && !is_object($subject)) {
             throw new UnexpectedTypeException($subject, 'object|null');
@@ -116,22 +100,6 @@ final class SubjectIdentity implements SubjectIdentityInterface
         } catch (InvalidArgumentException $e) {
             throw new InvalidSubjectIdentityException($e->getMessage(), 0, $e);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
     }
 
     /**

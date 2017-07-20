@@ -18,6 +18,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Sonatra\Component\Security\Permission\FieldVote;
 use Sonatra\Component\Security\Permission\PermissionManagerInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -106,7 +107,7 @@ class PermissionVoterTest extends TestCase
     public function testVote(array $attributes, $subject, $result, $permManagerResult = null)
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
 
         if (null !== $permManagerResult) {

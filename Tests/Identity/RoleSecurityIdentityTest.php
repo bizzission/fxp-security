@@ -16,6 +16,7 @@ use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Model\Traits\RoleableInterface;
 use Sonatra\Component\Security\Model\UserInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
@@ -26,28 +27,28 @@ class RoleSecurityIdentityTest extends TestCase
 {
     public function testDebugInfo()
     {
-        $sid = new RoleSecurityIdentity('ROLE_TEST');
+        $sid = new RoleSecurityIdentity(MockRole::class, 'ROLE_TEST');
 
         $this->assertSame('RoleSecurityIdentity(ROLE_TEST)', (string) $sid);
     }
 
     public function testTypeAndIdentifier()
     {
-        $identity = new RoleSecurityIdentity('identifier');
+        $identity = new RoleSecurityIdentity(MockRole::class, 'identifier');
 
-        $this->assertSame(RoleSecurityIdentity::TYPE, $identity->getType());
+        $this->assertSame(MockRole::class, $identity->getType());
         $this->assertSame('identifier', $identity->getIdentifier());
     }
 
     public function getIdentities()
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
-        $id3->expects($this->any())->method('getType')->willReturn(RoleSecurityIdentity::TYPE);
+        $id3->expects($this->any())->method('getType')->willReturn(MockRole::class);
         $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
 
         return array(
-            array(new RoleSecurityIdentity('identifier'), true),
-            array(new RoleSecurityIdentity('other'), false),
+            array(new RoleSecurityIdentity(MockRole::class, 'identifier'), true),
+            array(new RoleSecurityIdentity(MockRole::class, 'other'), false),
             array($id3, false),
         );
     }
@@ -60,7 +61,7 @@ class RoleSecurityIdentityTest extends TestCase
      */
     public function testEquals($value, $result)
     {
-        $identity = new RoleSecurityIdentity('identifier');
+        $identity = new RoleSecurityIdentity(MockRole::class, 'identifier');
 
         $this->assertSame($result, $identity->equals($value));
     }
@@ -76,7 +77,7 @@ class RoleSecurityIdentityTest extends TestCase
         $sid = RoleSecurityIdentity::fromAccount($role);
 
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sid);
-        $this->assertSame(RoleSecurityIdentity::TYPE, $sid->getType());
+        $this->assertSame(get_class($role), $sid->getType());
         $this->assertSame('ROLE_TEST', $sid->getIdentifier());
     }
 
@@ -104,7 +105,7 @@ class RoleSecurityIdentityTest extends TestCase
 
         $this->assertCount(1, $sids);
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[0]);
-        $this->assertSame(RoleSecurityIdentity::TYPE, $sids[0]->getType());
+        $this->assertSame(get_class($role), $sids[0]->getType());
         $this->assertSame('ROLE_TEST', $sids[0]->getIdentifier());
     }
 

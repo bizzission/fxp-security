@@ -14,6 +14,7 @@ namespace Sonatra\Component\Security\Tests\Identity;
 use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Identity\IdentityUtils;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -22,10 +23,10 @@ class IdentityUtilsTest extends TestCase
 {
     public function testMerge()
     {
-        $role1 = new RoleSecurityIdentity('ROLE_USER');
-        $role2 = new RoleSecurityIdentity('ROLE_ADMIN');
-        $role3 = new RoleSecurityIdentity('ROLE_USER');
-        $role4 = new RoleSecurityIdentity('ROLE_FOO');
+        $role1 = new RoleSecurityIdentity(MockRole::class, 'ROLE_USER');
+        $role2 = new RoleSecurityIdentity(MockRole::class, 'ROLE_ADMIN');
+        $role3 = new RoleSecurityIdentity(MockRole::class, 'ROLE_USER');
+        $role4 = new RoleSecurityIdentity(MockRole::class, 'ROLE_FOO');
 
         $sids = array($role1, $role2);
         $newSids = array($role3, $role4);

@@ -16,6 +16,7 @@ use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -26,7 +27,7 @@ class CheckPermissionEventTest extends TestCase
     {
         $sids = array(
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $permissionMap = array(
             '_global' => array(

@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Identity;
 
+use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Exception\InvalidArgumentException;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
@@ -21,8 +22,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 final class GroupSecurityIdentity extends AbstractSecurityIdentity
 {
-    const TYPE = 'group';
-
     /**
      * Creates a group security identity from a GroupInterface.
      *
@@ -32,7 +31,7 @@ final class GroupSecurityIdentity extends AbstractSecurityIdentity
      */
     public static function fromAccount(GroupInterface $group)
     {
-        return new self($group->getGroup());
+        return new self(ClassUtils::getClass($group), $group->getGroup());
     }
 
     /**
@@ -60,13 +59,5 @@ final class GroupSecurityIdentity extends AbstractSecurityIdentity
         }
 
         throw new InvalidArgumentException('The user class must implement "Sonatra\Component\Security\Model\Traits\GroupableInterface"');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return self::TYPE;
     }
 }

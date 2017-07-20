@@ -191,8 +191,8 @@ class SharingFilterSubscriberTest extends TestCase
             ->method('getSecurityIdentities')
             ->with($token)
             ->willReturn(array(
-                new RoleSecurityIdentity('ROLE_USER'),
-                new RoleSecurityIdentity('ROLE_ADMIN'),
+                new RoleSecurityIdentity('role', 'ROLE_USER'),
+                new RoleSecurityIdentity('role', 'ROLE_ADMIN'),
             ));
 
         $this->sharingManager->expects($this->any())

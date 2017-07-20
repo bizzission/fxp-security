@@ -17,6 +17,7 @@ use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
 use Sonatra\Component\Security\Model\GroupInterface;
 use Sonatra\Component\Security\Model\Traits\GroupableInterface;
 use Sonatra\Component\Security\Model\UserInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -26,28 +27,28 @@ class GroupSecurityIdentityTest extends TestCase
 {
     public function testDebugInfo()
     {
-        $sid = new GroupSecurityIdentity('GROUP_TEST');
+        $sid = new GroupSecurityIdentity(MockGroup::class, 'GROUP_TEST');
 
         $this->assertSame('GroupSecurityIdentity(GROUP_TEST)', (string) $sid);
     }
 
     public function testTypeAndIdentifier()
     {
-        $identity = new GroupSecurityIdentity('identifier');
+        $identity = new GroupSecurityIdentity(MockGroup::class, 'identifier');
 
-        $this->assertSame(GroupSecurityIdentity::TYPE, $identity->getType());
+        $this->assertSame(MockGroup::class, $identity->getType());
         $this->assertSame('identifier', $identity->getIdentifier());
     }
 
     public function getIdentities()
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
-        $id3->expects($this->any())->method('getType')->willReturn(GroupSecurityIdentity::TYPE);
+        $id3->expects($this->any())->method('getType')->willReturn(MockGroup::class);
         $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
 
         return array(
-            array(new GroupSecurityIdentity('identifier'), true),
-            array(new GroupSecurityIdentity('other'), false),
+            array(new GroupSecurityIdentity(MockGroup::class, 'identifier'), true),
+            array(new GroupSecurityIdentity(MockGroup::class, 'other'), false),
             array($id3, false),
         );
     }
@@ -60,7 +61,7 @@ class GroupSecurityIdentityTest extends TestCase
      */
     public function testEquals($value, $result)
     {
-        $identity = new GroupSecurityIdentity('identifier');
+        $identity = new GroupSecurityIdentity(MockGroup::class, 'identifier');
 
         $this->assertSame($result, $identity->equals($value));
     }
@@ -76,7 +77,7 @@ class GroupSecurityIdentityTest extends TestCase
         $sid = GroupSecurityIdentity::fromAccount($group);
 
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sid);
-        $this->assertSame(GroupSecurityIdentity::TYPE, $sid->getType());
+        $this->assertSame(get_class($group), $sid->getType());
         $this->assertSame('GROUP_TEST', $sid->getIdentifier());
     }
 
@@ -104,7 +105,7 @@ class GroupSecurityIdentityTest extends TestCase
 
         $this->assertCount(1, $sids);
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sids[0]);
-        $this->assertSame(GroupSecurityIdentity::TYPE, $sids[0]->getType());
+        $this->assertSame(get_class($group), $sids[0]->getType());
         $this->assertSame('GROUP_TEST', $sids[0]->getIdentifier());
     }
 

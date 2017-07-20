@@ -16,8 +16,9 @@ use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
 use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -44,7 +45,7 @@ class ExpressionVariableStorageTest extends TestCase
     protected $context;
 
     /**
-     * @var OrganizationalRoleInterface
+     * @var RoleInterface
      */
     protected $orgRole;
 
@@ -64,8 +65,8 @@ class ExpressionVariableStorageTest extends TestCase
     {
         $event = new GetExpressionVariablesEvent($this->token);
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
         );
 
         $this->token->expects($this->never())

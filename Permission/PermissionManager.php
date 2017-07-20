@@ -11,6 +11,7 @@
 
 namespace Sonatra\Component\Security\Permission;
 
+use Doctrine\Common\Util\ClassUtils;
 use Sonatra\Component\Security\Event\CheckPermissionEvent;
 use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
@@ -150,7 +151,7 @@ class PermissionManager extends AbstractPermissionManager
     protected function doGetRolePermissions(RoleInterface $role, $subject = null)
     {
         $permissions = array();
-        $sid = new RoleSecurityIdentity($role->getRole());
+        $sid = new RoleSecurityIdentity(ClassUtils::getClass($role), $role->getRole());
         $contexts = $this->buildContexts($role);
         list($class, $field) = PermissionUtils::getClassAndField($subject, true);
 

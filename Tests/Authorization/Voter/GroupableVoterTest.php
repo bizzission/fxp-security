@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Voter\GroupableVoter;
 use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -60,7 +61,7 @@ class GroupableVoterTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $sids = array(
-            new GroupSecurityIdentity('FOO'),
+            new GroupSecurityIdentity(MockGroup::class, 'FOO'),
         );
 
         if (VoterInterface::ACCESS_ABSTAIN !== $access) {

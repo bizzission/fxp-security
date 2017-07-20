@@ -16,8 +16,9 @@ use Sonatra\Component\Security\Authorization\Voter\ExpressionVoter;
 use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Sonatra\Component\Security\Model\RoleInterface;
 use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalRoleInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
@@ -60,7 +61,7 @@ class ExpressionVoterTest extends TestCase
     protected $context;
 
     /**
-     * @var OrganizationalRoleInterface
+     * @var RoleInterface
      */
     protected $orgRole;
 
@@ -86,7 +87,7 @@ class ExpressionVoterTest extends TestCase
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
-        $this->orgRole = $this->getMockBuilder(OrganizationalRoleInterface::class)->getMock();
+        $this->orgRole = $this->getMockBuilder(RoleInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->variableStorage = new ExpressionVariableStorage(
@@ -142,8 +143,8 @@ class ExpressionVoterTest extends TestCase
     public function testWithExpression($resultVoter, $resultExpression)
     {
         $sids = array(
-            new RoleSecurityIdentity('ROLE_USER'),
-            new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
+            new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
         );
 
         $this->sidManager->expects($this->once())

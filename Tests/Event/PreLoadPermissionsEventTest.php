@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 
 /**
  * @author François Pluchino <francois.pluchino@sonatra.com>
@@ -25,7 +26,7 @@ class PreLoadPermissionsEventTest extends TestCase
     {
         $sids = array(
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),
-            new RoleSecurityIdentity('ROLE_USER'),
+            new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         );
         $roles = array(
             'ROLE_USER',

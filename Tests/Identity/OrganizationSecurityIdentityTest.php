@@ -33,28 +33,28 @@ class OrganizationSecurityIdentityTest extends TestCase
 {
     public function testDebugInfo()
     {
-        $sid = new OrganizationSecurityIdentity('foo');
+        $sid = new OrganizationSecurityIdentity(MockOrganization::class, 'foo');
 
         $this->assertSame('OrganizationSecurityIdentity(foo)', (string) $sid);
     }
 
     public function testTypeAndIdentifier()
     {
-        $identity = new OrganizationSecurityIdentity('identifier');
+        $identity = new OrganizationSecurityIdentity(MockOrganization::class, 'identifier');
 
-        $this->assertSame(OrganizationSecurityIdentity::TYPE, $identity->getType());
+        $this->assertSame(MockOrganization::class, $identity->getType());
         $this->assertSame('identifier', $identity->getIdentifier());
     }
 
     public function getIdentities()
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
-        $id3->expects($this->any())->method('getType')->willReturn(OrganizationSecurityIdentity::TYPE);
+        $id3->expects($this->any())->method('getType')->willReturn(MockOrganization::class);
         $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
 
         return array(
-            array(new OrganizationSecurityIdentity('identifier'), true),
-            array(new OrganizationSecurityIdentity('other'), false),
+            array(new OrganizationSecurityIdentity(MockOrganization::class, 'identifier'), true),
+            array(new OrganizationSecurityIdentity(MockOrganization::class, 'other'), false),
             array($id3, false),
         );
     }
@@ -67,7 +67,7 @@ class OrganizationSecurityIdentityTest extends TestCase
      */
     public function testEquals($value, $result)
     {
-        $identity = new OrganizationSecurityIdentity('identifier');
+        $identity = new OrganizationSecurityIdentity(MockOrganization::class, 'identifier');
 
         $this->assertSame($result, $identity->equals($value));
     }
@@ -83,7 +83,7 @@ class OrganizationSecurityIdentityTest extends TestCase
         $sid = OrganizationSecurityIdentity::fromAccount($org);
 
         $this->assertInstanceOf(OrganizationSecurityIdentity::class, $sid);
-        $this->assertSame(OrganizationSecurityIdentity::TYPE, $sid->getType());
+        $this->assertSame(get_class($org), $sid->getType());
         $this->assertSame('foo', $sid->getIdentifier());
     }
 

@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Voter\OrganizationVoter;
 use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -60,7 +61,7 @@ class OrganizationVoterTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $sids = array(
-            new OrganizationSecurityIdentity('FOO'),
+            new OrganizationSecurityIdentity(MockOrganization::class, 'FOO'),
         );
 
         if (VoterInterface::ACCESS_ABSTAIN !== $access) {

@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sonatra\Component\Security\Authorization\Voter\RoleSecurityIdentityVoter;
 use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
 use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -60,7 +61,7 @@ class RoleSecurityIdentityVoterTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $sids = array(
-            new RoleSecurityIdentity('TEST_ADMIN'),
+            new RoleSecurityIdentity(MockRole::class, 'TEST_ADMIN'),
         );
 
         $this->sidManager->expects($this->atLeast(2))

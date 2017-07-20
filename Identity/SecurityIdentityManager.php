@@ -164,14 +164,14 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
         $sids = $this->injectSpecialRoles($sids);
 
         if ($this->authenticationTrustResolver->isFullFledged($token)) {
-            $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_FULLY);
-            $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-            $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
+            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_FULLY);
+            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
         } elseif ($this->authenticationTrustResolver->isRememberMe($token)) {
-            $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-            $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
+            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
         } elseif ($this->authenticationTrustResolver->isAnonymous($token)) {
-            $sids[] = new RoleSecurityIdentity(AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
+            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
         }
 
         return $sids;
