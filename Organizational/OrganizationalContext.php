@@ -74,7 +74,7 @@ class OrganizationalContext implements OrganizationalContextInterface
      */
     public function setCurrentOrganization($organization)
     {
-        $this->getToken('organization');
+        $this->getToken('organization', $organization instanceof OrganizationInterface);
 
         if (null === $organization || false === $organization || $organization instanceof OrganizationInterface) {
             $old = $this->organization;
@@ -111,8 +111,8 @@ class OrganizationalContext implements OrganizationalContextInterface
      */
     public function setCurrentOrganizationUser($organizationUser)
     {
-        $token = $this->getToken('organization user');
-        $user = $token->getUser();
+        $token = $this->getToken('organization user', $organizationUser instanceof OrganizationUserInterface);
+        $user = null !== $token ? $token->getUser() : null;
         $this->organizationUser = null;
         $org = null;
 
@@ -176,17 +176,18 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * Get the token.
      *
-     * @param string $type The type name
+     * @param string $type          The type name
+     * @param bool   $tokenRequired Check if the token is required
      *
      * @return TokenInterface
      *
      * @throws
      */
-    protected function getToken($type)
+    protected function getToken($type, $tokenRequired = true)
     {
         $token = $this->tokenStorage->getToken();
 
-        if (null === $token) {
+        if ($tokenRequired && null === $token) {
             throw new RuntimeException(sprintf('The current %s cannot be added in security token because the security token is empty', $type));
         }
 

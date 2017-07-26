@@ -251,12 +251,28 @@ class OrganizationalContextTest extends TestCase
         $this->assertTrue($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
     }
 
+    public function testValidEmptyTokenForUser()
+    {
+        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
+        $tokenStorage->expects($this->atLeastOnce())
+            ->method('getToken')
+            ->willReturn(null);
+
+        $context = new OrganizationalContext($tokenStorage);
+        $context->setCurrentOrganization(null);
+        $this->assertNull($context->getCurrentOrganization());
+    }
+
     /**
      * @expectedException \Sonatra\Component\Security\Exception\RuntimeException
      * @expectedExceptionMessage The current organization cannot be added in security token because the security token is empty
      */
     public function testInvalidTokenForUser()
     {
+        /* @var OrganizationInterface $org */
+        $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
+
         /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $tokenStorage->expects($this->once())
@@ -264,7 +280,23 @@ class OrganizationalContextTest extends TestCase
             ->willReturn(null);
 
         $context = new OrganizationalContext($tokenStorage);
-        $context->setCurrentOrganization(null);
+        $context->setCurrentOrganization($org);
+    }
+
+    public function testValidEmptyTokenForOrganizationUser()
+    {
+        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
+        $tokenStorage->expects($this->atLeastOnce())
+            ->method('getToken')
+            ->willReturn(null);
+
+        $this->dispatcher->expects($this->never())
+            ->method('dispatch');
+
+        $context = new OrganizationalContext($tokenStorage);
+        $context->setCurrentOrganizationUser(null);
+        $this->assertNull($context->getCurrentOrganizationUser());
     }
 
     /**
@@ -273,6 +305,9 @@ class OrganizationalContextTest extends TestCase
      */
     public function testInvalidTokenForOrganizationUser()
     {
+        /* @var OrganizationUserInterface $orgUser */
+        $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
+
         /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $tokenStorage->expects($this->once())
@@ -283,6 +318,6 @@ class OrganizationalContextTest extends TestCase
             ->method('dispatch');
 
         $context = new OrganizationalContext($tokenStorage);
-        $context->setCurrentOrganizationUser(null);
+        $context->setCurrentOrganizationUser($orgUser);
     }
 }
