@@ -370,6 +370,92 @@ class SharingProviderTest extends TestCase
         $this->assertSame($result, $provider->getSharingEntries($subjects, $sids));
     }
 
+    public function testGetPermissionRolesWithEmptySecurityIdentities()
+    {
+        $sids = array(
+            new RoleSecurityIdentity(MockRole::class, 'IS_AUTHENTICATED_ANONYMOUSLY'),
+        );
+        $subjects = array(
+            SubjectIdentity::fromObject(new MockObject('foo', 42)),
+            SubjectIdentity::fromObject(new MockObject('bar', 23)),
+        );
+        $result = array();
+
+        $this->sharingManager->expects($this->never())
+            ->method('getIdentityConfig');
+
+        $this->sharingRepo->expects($this->once())
+            ->method('createQueryBuilder')
+            ->with('s')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(0))
+            ->method('addSelect')
+            ->with('p')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(1))
+            ->method('leftJoin')
+            ->with('s.permissions', 'p')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(2))
+            ->method('where')
+            ->with('(s.subjectClass = :subject0_class AND s.subjectId = :subject0_id) OR (s.subjectClass = :subject1_class AND s.subjectId = :subject1_id)')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(3))
+            ->method('setParameter')
+            ->with('subject0_class', MockObject::class)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(4))
+            ->method('setParameter')
+            ->with('subject0_id', 42)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(5))
+            ->method('setParameter')
+            ->with('subject1_class', MockObject::class)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(6))
+            ->method('setParameter')
+            ->with('subject1_id', 23)
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(7))
+            ->method('andWhere')
+            ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(8))
+            ->method('orderBy')
+            ->with('p.class', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(9))
+            ->method('addOrderBy')
+            ->with('p.field', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(10))
+            ->method('addOrderBy')
+            ->with('p.operation', 'asc')
+            ->willReturn($this->qb);
+
+        $this->qb->expects($this->at(11))
+            ->method('getQuery')
+            ->willReturn($this->query);
+
+        $this->query->expects($this->once())
+            ->method('getResult')
+            ->willReturn($result);
+
+        $provider = $this->createProvider();
+        $this->assertSame($result, $provider->getSharingEntries($subjects, $sids));
+    }
+
     /**
      * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
      * @expectedExceptionMessage The "setSharingManager()" must be called before

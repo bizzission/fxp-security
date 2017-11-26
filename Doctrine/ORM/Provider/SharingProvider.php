@@ -228,10 +228,9 @@ class SharingProvider implements SharingProviderInterface
      */
     private function addWhereSecurityIdentitiesForSharing(QueryBuilder $qb, array $sids)
     {
-        if (!empty($sids)) {
+        if (!empty($sids) && !empty($groupSids = $this->groupSecurityIdentities($sids))) {
             $where = '';
             $parameters = array();
-            $groupSids = $this->groupSecurityIdentities($sids);
             $i = 0;
 
             foreach ($groupSids as $type => $identifiers) {
