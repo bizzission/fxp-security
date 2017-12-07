@@ -102,6 +102,7 @@ SELECTCLAUSE;
     {
         $where = '';
         $mapSids = (array) $event->getRealParameter('map_security_identities');
+        $mapSids = !empty($mapSids) ? $mapSids : array('_without_security_identity' => 'null');
         $connection = $event->getConnection();
 
         foreach ($mapSids as $type => $stringIds) {
