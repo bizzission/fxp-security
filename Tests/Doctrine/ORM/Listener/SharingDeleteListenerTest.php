@@ -153,13 +153,13 @@ class SharingDeleteListenerTest extends TestCase
         $this->sharingManager->expects($this->atLeastOnce())
             ->method('hasSubjectConfig')
             ->willReturnCallback(function ($type) {
-                return $type === MockObject::class;
+                return MockObject::class === $type;
             });
 
         $this->sharingManager->expects($this->atLeastOnce())
             ->method('hasIdentityConfig')
             ->willReturnCallback(function ($type) {
-                return $type === MockRole::class || $type === MockGroup::class;
+                return MockRole::class === $type || MockGroup::class === $type;
             });
 
         // post flush: query builder

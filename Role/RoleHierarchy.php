@@ -341,7 +341,7 @@ class RoleHierarchy extends BaseRoleHierarchy
             $name = $this->formatCleanedRoleName($role->getRole());
 
             if (!in_array($name, $existingRoles)) {
-                $rSuffix = $name !== 'ROLE_USER' ? $suffix : '';
+                $rSuffix = 'ROLE_USER' !== $name ? $suffix : '';
                 $role = new Role($role->getRole().$rSuffix);
                 $existingRoles[] = $name;
                 $finalRoles[] = $role;

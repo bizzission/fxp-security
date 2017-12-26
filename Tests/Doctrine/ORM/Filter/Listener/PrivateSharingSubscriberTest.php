@@ -245,7 +245,7 @@ SELECTCLAUSE;
             ? 't0.owner_id = \'50\''
             : 't0.owner_id IS NULL';
 
-        if ($withCurrentUser && $objectClass === MockObjectOwnerableOptional::class) {
+        if ($withCurrentUser && MockObjectOwnerableOptional::class === $objectClass) {
             $ownerFilter .= ' OR t0.owner_id IS NULL';
         }
 

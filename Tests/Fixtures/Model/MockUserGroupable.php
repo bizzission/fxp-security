@@ -104,7 +104,7 @@ class MockUserGroupable implements UserInterface, GroupableInterface
      */
     public function hasGroup($name)
     {
-        return $name === 'GROUP_TEST';
+        return 'GROUP_TEST' === $name;
     }
 
     /**

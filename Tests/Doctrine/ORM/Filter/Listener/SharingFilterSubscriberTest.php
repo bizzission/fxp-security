@@ -202,7 +202,7 @@ class SharingFilterSubscriberTest extends TestCase
                 $config->expects($this->any())
                     ->method('getType')
                     ->willReturnCallback(function () use ($v) {
-                        return $v === 'role'
+                        return 'role' === $v
                             ? MockRole::class
                             : 'foo';
                     });
