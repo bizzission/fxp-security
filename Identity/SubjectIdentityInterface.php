@@ -52,5 +52,5 @@ interface SubjectIdentityInterface
      *
      * @return bool
      */
-    public function equals(SubjectIdentityInterface $identity);
+    public function equals(self $identity);
 }
