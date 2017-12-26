@@ -95,7 +95,7 @@ class GetFilterEventTest extends TestCase
         $this->assertFalse($this->event->hasParameter('foo'));
         $this->event->setParameter('foo', true, 'boolean');
         $this->assertSame('\'1\'', $this->event->getParameter('foo'));
-        $this->assertSame(true, $this->event->getRealParameter('foo'));
+        $this->assertTrue($this->event->getRealParameter('foo'));
     }
 
     public function testSetFilterConstraint()
