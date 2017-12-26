@@ -52,7 +52,7 @@ abstract class Role extends BaseRole implements RoleHierarchicalInterface
      */
     public function __construct($name)
     {
-        parent::__construct(null);
+        parent::__construct('');
 
         $this->name = $name;
     }
