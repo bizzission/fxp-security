@@ -1,35 +1,35 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Filter;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Filter;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\FilterCollection;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
+use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Model\Sharing;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\SharingFilterEvents;
+use Fxp\Component\Security\SharingVisibilities;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
-use Sonatra\Component\Security\Doctrine\ORM\Filter\SharingFilter;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Model\Sharing;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\SharingFilterEvents;
-use Sonatra\Component\Security\SharingVisibilities;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingFilterTest extends TestCase
 {

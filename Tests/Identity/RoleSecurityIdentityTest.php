@@ -1,27 +1,27 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Identity;
+namespace Fxp\Component\Security\Tests\Identity;
 
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Model\Traits\RoleableInterface;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Model\Traits\RoleableInterface;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class RoleSecurityIdentityTest extends TestCase
 {
@@ -110,8 +110,8 @@ class RoleSecurityIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The user class must implement "Sonatra\Component\Security\Model\Traits\RoleableInterface"
+     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The user class must implement "Fxp\Component\Security\Model\Traits\RoleableInterface"
      */
     public function testFormTokenWithInvalidInterface()
     {

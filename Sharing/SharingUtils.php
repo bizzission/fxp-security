@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Sharing;
+namespace Fxp\Component\Security\Sharing;
 
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Model\SharingInterface;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Model\SharingInterface;
 
 /**
  * Sharing utils.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 abstract class SharingUtils
 {

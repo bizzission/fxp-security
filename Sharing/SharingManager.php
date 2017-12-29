@@ -1,27 +1,27 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Sharing;
+namespace Fxp\Component\Security\Sharing;
 
-use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Model\RoleInterface;
-use Sonatra\Component\Security\Model\SharingInterface;
-use Sonatra\Component\Security\Permission\PermissionUtils;
+use Fxp\Component\Security\Exception\InvalidSubjectIdentityException;
+use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\Model\SharingInterface;
+use Fxp\Component\Security\Permission\PermissionUtils;
 
 /**
  * Sharing manager.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingManager extends AbstractSharingManager implements SharingManagerInterface
 {

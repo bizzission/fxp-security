@@ -1,38 +1,38 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
+namespace Fxp\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
+use Fxp\Component\Cache\Adapter\AdapterInterface;
+use Fxp\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Model\GroupInterface;
+use Fxp\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\OrganizationUserInterface;
+use Fxp\Component\Security\Model\RoleHierarchicalInterface;
+use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\Cache\Adapter\AdapterInterface;
-use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Model\GroupInterface;
-use Sonatra\Component\Security\Model\OrganizationInterface;
-use Sonatra\Component\Security\Model\OrganizationUserInterface;
-use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
-use Sonatra\Component\Security\Model\Traits\GroupableInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Invalidate the role hierarchy cache when users, roles or groups is inserted,
  * updated or deleted.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class RoleHierarchyListener implements EventSubscriber
 {

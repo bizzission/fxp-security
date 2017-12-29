@@ -1,24 +1,24 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Identity;
+namespace Fxp\Component\Security\Tests\Identity;
 
+use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSubjectObject;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockSubjectObject;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SubjectIdentityTest extends TestCase
 {
@@ -28,7 +28,7 @@ class SubjectIdentityTest extends TestCase
 
         $si = new SubjectIdentity(get_class($object), (string) $object->getId(), $object);
 
-        $this->assertSame('SubjectIdentity(Sonatra\Component\Security\Tests\Fixtures\Model\MockObject, 42)', (string) $si);
+        $this->assertSame('SubjectIdentity(Fxp\Component\Security\Tests\Fixtures\Model\MockObject, 42)', (string) $si);
     }
 
     public function testTypeAndIdentifier()
@@ -43,7 +43,7 @@ class SubjectIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
+     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
      * @expectedExceptionMessage The type cannot be empty
      */
     public function testEmptyType()
@@ -52,7 +52,7 @@ class SubjectIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
+     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
      * @expectedExceptionMessage The identifier cannot be empty
      */
     public function testEmptyIdentifier()
@@ -61,7 +61,7 @@ class SubjectIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\UnexpectedTypeException
+     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
      * @expectedExceptionMessage Expected argument of type "object|null", "integer" given
      */
     public function testInvalidSubject()
@@ -103,7 +103,7 @@ class SubjectIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
+     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage The class "FooBar" does not exist
      */
     public function testFromClassnameWithNonExistentClass()
@@ -143,7 +143,7 @@ class SubjectIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
+     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage Expected argument of type "object", "integer" given
      */
     public function testFromObjectWithNonObject()
@@ -155,7 +155,7 @@ class SubjectIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
+     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage The identifier cannot be empty
      */
     public function testFromObjectWithEmptyIdentifier()
@@ -166,7 +166,7 @@ class SubjectIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidSubjectIdentityException
+     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
      * @expectedExceptionMessage The object must either implement the SubjectInterface, or have a method named "getId"
      */
     public function testFromObjectWithInvalidObject()

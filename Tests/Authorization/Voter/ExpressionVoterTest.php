@@ -1,24 +1,24 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Authorization\Voter;
+namespace Fxp\Component\Security\Tests\Authorization\Voter;
 
+use Fxp\Component\Security\Authorization\Voter\ExpressionVoter;
+use Fxp\Component\Security\Expression\ExpressionVariableStorage;
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Authorization\Voter\ExpressionVoter;
-use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Model\RoleInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
@@ -31,7 +31,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class ExpressionVoterTest extends TestCase
 {

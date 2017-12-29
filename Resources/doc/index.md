@@ -5,10 +5,10 @@ Getting Started
 
 ### Download the library using composer
 
-Add Sonatra Security in your composer.json:
+Add Fxp Security in your composer.json:
 
 ```
-$ composer require sonatra/security:"~1.0"
+$ composer require fxp/security:"~1.0"
 ```
 
-Composer will install the library to your project's `vendor/sonatra` directory.
+Composer will install the library to your project's `vendor/fxp` directory.

@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Event;
+namespace Fxp\Component\Security\Event;
 
-use Sonatra\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\OrganizationInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
  * The event of set current organization by the organizational context.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SetCurrentOrganizationEvent extends Event
 {

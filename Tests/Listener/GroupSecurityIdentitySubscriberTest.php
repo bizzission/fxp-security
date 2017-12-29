@@ -1,24 +1,24 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Listener;
+namespace Fxp\Component\Security\Tests\Listener;
 
+use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
+use Fxp\Component\Security\Listener\GroupSecurityIdentitySubscriber;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserGroupable;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
-use Sonatra\Component\Security\Listener\GroupSecurityIdentitySubscriber;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserGroupable;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class GroupSecurityIdentitySubscriberTest extends TestCase
 {

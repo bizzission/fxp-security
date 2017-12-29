@@ -1,26 +1,26 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Organizational;
+namespace Fxp\Component\Security\Organizational;
 
-use Sonatra\Component\Security\Event\SetCurrentOrganizationEvent;
-use Sonatra\Component\Security\Event\SetCurrentOrganizationUserEvent;
-use Sonatra\Component\Security\Event\SetOrganizationalOptionalFilterTypeEvent;
-use Sonatra\Component\Security\Exception\RuntimeException;
-use Sonatra\Component\Security\Model\OrganizationInterface;
-use Sonatra\Component\Security\Model\OrganizationUserInterface;
-use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\OrganizationalContextEvents;
-use Sonatra\Component\Security\OrganizationalTypes;
+use Fxp\Component\Security\Event\SetCurrentOrganizationEvent;
+use Fxp\Component\Security\Event\SetCurrentOrganizationUserEvent;
+use Fxp\Component\Security\Event\SetOrganizationalOptionalFilterTypeEvent;
+use Fxp\Component\Security\Exception\RuntimeException;
+use Fxp\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\OrganizationUserInterface;
+use Fxp\Component\Security\Model\Traits\OrganizationalInterface;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\OrganizationalContextEvents;
+use Fxp\Component\Security\OrganizationalTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * Organizational Context.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class OrganizationalContext implements OrganizationalContextInterface
 {

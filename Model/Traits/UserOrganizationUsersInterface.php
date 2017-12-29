@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Model\Traits;
+namespace Fxp\Component\Security\Model\Traits;
 
 use Doctrine\Common\Collections\Collection;
-use Sonatra\Component\Security\Model\OrganizationUserInterface;
+use Fxp\Component\Security\Model\OrganizationUserInterface;
 
 /**
  * Trait of organization users in user model.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 interface UserOrganizationUsersInterface
 {

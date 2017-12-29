@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Firewall;
+namespace Fxp\Component\Security\Firewall;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Role\Role;
@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * Inject the host role in security identity manager.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class HostRoleListener extends AbstractRoleListener
 {

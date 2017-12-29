@@ -1,25 +1,25 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
+namespace Fxp\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\Common\EventSubscriber;
-use Sonatra\Component\Security\Exception\SecurityException;
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
+use Fxp\Component\Security\Exception\SecurityException;
+use Fxp\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Abstract doctrine listener class.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 abstract class AbstractListener implements EventSubscriber
 {

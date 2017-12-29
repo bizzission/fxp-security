@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Provider;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
@@ -18,19 +18,19 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Fxp\Component\Security\Doctrine\ORM\Provider\PermissionProvider;
+use Fxp\Component\Security\Permission\FieldVote;
+use Fxp\Component\Security\Permission\PermissionConfigInterface;
+use Fxp\Component\Security\Permission\PermissionProviderInterface;
+use Fxp\Component\Security\PermissionContexts;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockPermission;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\ORM\Provider\PermissionProvider;
-use Sonatra\Component\Security\Permission\FieldVote;
-use Sonatra\Component\Security\Permission\PermissionConfigInterface;
-use Sonatra\Component\Security\Permission\PermissionProviderInterface;
-use Sonatra\Component\Security\PermissionContexts;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class PermissionProviderTest extends TestCase
 {
@@ -175,7 +175,7 @@ class PermissionProviderTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The doctrine object manager is not found for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockObject"
+     * @expectedExceptionMessage The doctrine object manager is not found for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockObject"
      */
     public function testGetMasterClassWithoutObjectManagerForClass()
     {
@@ -192,7 +192,7 @@ class PermissionProviderTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The permission master association is not configured for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockObject"
+     * @expectedExceptionMessage The permission master association is not configured for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockObject"
      */
     public function testGetMasterClassWithoutMaster()
     {

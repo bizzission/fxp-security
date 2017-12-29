@@ -1,45 +1,45 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Permission;
+namespace Fxp\Component\Security\Tests\Permission;
 
+use Fxp\Component\Security\Event\CheckPermissionEvent;
+use Fxp\Component\Security\Event\PostLoadPermissionsEvent;
+use Fxp\Component\Security\Event\PreLoadPermissionsEvent;
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Identity\UserSecurityIdentity;
+use Fxp\Component\Security\Model\PermissionChecking;
+use Fxp\Component\Security\Permission\FieldVote;
+use Fxp\Component\Security\Permission\PermissionConfig;
+use Fxp\Component\Security\Permission\PermissionFieldConfig;
+use Fxp\Component\Security\Permission\PermissionManager;
+use Fxp\Component\Security\Permission\PermissionProviderInterface;
+use Fxp\Component\Security\PermissionEvents;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrgOptionalRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrgRequiredRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockPermission;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Event\CheckPermissionEvent;
-use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
-use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Identity\UserSecurityIdentity;
-use Sonatra\Component\Security\Model\PermissionChecking;
-use Sonatra\Component\Security\Permission\FieldVote;
-use Sonatra\Component\Security\Permission\PermissionConfig;
-use Sonatra\Component\Security\Permission\PermissionFieldConfig;
-use Sonatra\Component\Security\Permission\PermissionManager;
-use Sonatra\Component\Security\Permission\PermissionProviderInterface;
-use Sonatra\Component\Security\PermissionEvents;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgOptionalRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrgRequiredRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class PermissionManagerTest extends TestCase
 {
@@ -143,8 +143,8 @@ class PermissionManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\PermissionConfigNotFoundException
-     * @expectedExceptionMessage The permission configuration for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockObject" is not found
+     * @expectedException \Fxp\Component\Security\Exception\PermissionConfigNotFoundException
+     * @expectedExceptionMessage The permission configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockObject" is not found
      */
     public function testGetConfigWithNotManagedClass()
     {
@@ -183,7 +183,7 @@ class PermissionManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\UnexpectedTypeException
+     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
      * @expectedExceptionMessage Expected argument of type "FieldVote|SubjectIdentityInterface|object|string", "NULL"
      */
     public function testIsManagedWithUnexpectedTypeException()
@@ -639,8 +639,8 @@ class PermissionManagerTest extends TestCase
      *
      * @param MockRole $role
      *
-     * @expectedException \Sonatra\Component\Security\Exception\PermissionNotFoundException
-     * @expectedExceptionMessage The permission "test" for "Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUser" is not found ant it required by the permission configuration
+     * @expectedException \Fxp\Component\Security\Exception\PermissionNotFoundException
+     * @expectedExceptionMessage The permission "test" for "Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUser" is not found ant it required by the permission configuration
      */
     public function testGetRolePermissionsWithRequiredConfigPermission(MockRole $role)
     {

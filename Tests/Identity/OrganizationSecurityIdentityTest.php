@@ -1,33 +1,33 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Identity;
+namespace Fxp\Component\Security\Tests\Identity;
 
+use Fxp\Component\Security\Identity\GroupSecurityIdentity;
+use Fxp\Component\Security\Identity\OrganizationSecurityIdentity;
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Model\GroupInterface;
+use Fxp\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUserRoleableGroupable;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsersGroupable;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
-use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Model\GroupInterface;
-use Sonatra\Component\Security\Model\OrganizationInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganizationUserRoleableGroupable;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsersGroupable;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class OrganizationSecurityIdentityTest extends TestCase
 {

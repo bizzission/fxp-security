@@ -1,31 +1,31 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Expression;
+namespace Fxp\Component\Security\Tests\Expression;
 
+use Fxp\Component\Security\Event\GetExpressionVariablesEvent;
+use Fxp\Component\Security\Expression\ExpressionVariableStorage;
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
-use Sonatra\Component\Security\Expression\ExpressionVariableStorage;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Model\RoleInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class ExpressionVariableStorageTest extends TestCase
 {

@@ -1,35 +1,35 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Sharing;
+namespace Fxp\Component\Security\Tests\Sharing;
 
+use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Sharing\SharingIdentityConfig;
+use Fxp\Component\Security\Sharing\SharingManager;
+use Fxp\Component\Security\Sharing\SharingProviderInterface;
+use Fxp\Component\Security\Sharing\SharingSubjectConfig;
+use Fxp\Component\Security\SharingEvents;
+use Fxp\Component\Security\SharingVisibilities;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockGroup;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockPermission;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Sharing\SharingIdentityConfig;
-use Sonatra\Component\Security\Sharing\SharingManager;
-use Sonatra\Component\Security\Sharing\SharingProviderInterface;
-use Sonatra\Component\Security\Sharing\SharingSubjectConfig;
-use Sonatra\Component\Security\SharingEvents;
-use Sonatra\Component\Security\SharingVisibilities;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingManagerTest extends TestCase
 {
@@ -126,8 +126,8 @@ class SharingManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\AlreadyConfigurationAliasExistingException
-     * @expectedExceptionMessage The alias "foo" of sharing identity configuration for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup
+     * @expectedException \Fxp\Component\Security\Exception\AlreadyConfigurationAliasExistingException
+     * @expectedExceptionMessage The alias "foo" of sharing identity configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockGroup
      */
     public function testAddIdentityConfigWithAlreadyExistingAlias()
     {
@@ -156,8 +156,8 @@ class SharingManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\SharingSubjectConfigNotFoundException
-     * @expectedExceptionMessage The sharing subject configuration for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockRole" is not found
+     * @expectedException \Fxp\Component\Security\Exception\SharingSubjectConfigNotFoundException
+     * @expectedExceptionMessage The sharing subject configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockRole" is not found
      */
     public function testGetSubjectConfigWithNotManagedClass()
     {
@@ -165,8 +165,8 @@ class SharingManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\SharingIdentityConfigNotFoundException
-     * @expectedExceptionMessage The sharing identity configuration for the class "Sonatra\Component\Security\Tests\Fixtures\Model\MockRole" is not found
+     * @expectedException \Fxp\Component\Security\Exception\SharingIdentityConfigNotFoundException
+     * @expectedExceptionMessage The sharing identity configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockRole" is not found
      */
     public function testGetIdentityConfigWithNotManagedClass()
     {

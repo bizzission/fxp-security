@@ -1,26 +1,26 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Identity;
+namespace Fxp\Component\Security\Tests\Identity;
 
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Identity\UserSecurityIdentity;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\UserSecurityIdentity;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class UserSecurityIdentityTest extends TestCase
 {
@@ -102,8 +102,8 @@ class UserSecurityIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The user class must implement "Sonatra\Component\Security\Model\UserInterface"
+     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The user class must implement "Fxp\Component\Security\Model\UserInterface"
      */
     public function testFormTokenWithInvalidInterface()
     {

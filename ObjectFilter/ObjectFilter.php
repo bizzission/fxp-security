@@ -1,32 +1,32 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\ObjectFilter;
+namespace Fxp\Component\Security\ObjectFilter;
 
-use Sonatra\Component\Security\Event\ObjectFieldViewGrantedEvent;
-use Sonatra\Component\Security\Event\ObjectViewGrantedEvent;
-use Sonatra\Component\Security\Event\PostCommitObjectFilterEvent;
-use Sonatra\Component\Security\Event\PreCommitObjectFilterEvent;
-use Sonatra\Component\Security\Event\RestoreViewGrantedEvent;
-use Sonatra\Component\Security\Exception\UnexpectedTypeException;
-use Sonatra\Component\Security\ObjectFilterEvents;
-use Sonatra\Component\Security\Permission\FieldVote;
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
+use Fxp\Component\Security\Event\ObjectFieldViewGrantedEvent;
+use Fxp\Component\Security\Event\ObjectViewGrantedEvent;
+use Fxp\Component\Security\Event\PostCommitObjectFilterEvent;
+use Fxp\Component\Security\Event\PreCommitObjectFilterEvent;
+use Fxp\Component\Security\Event\RestoreViewGrantedEvent;
+use Fxp\Component\Security\Exception\UnexpectedTypeException;
+use Fxp\Component\Security\ObjectFilterEvents;
+use Fxp\Component\Security\Permission\FieldVote;
+use Fxp\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Object Filter.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class ObjectFilter implements ObjectFilterInterface
 {

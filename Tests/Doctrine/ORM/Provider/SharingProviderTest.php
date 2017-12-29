@@ -1,36 +1,36 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Provider;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Provider;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Fxp\Component\Security\Doctrine\ORM\Provider\SharingProvider;
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Identity\UserSecurityIdentity;
+use Fxp\Component\Security\Sharing\SharingIdentityConfig;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\ORM\Provider\SharingProvider;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Identity\UserSecurityIdentity;
-use Sonatra\Component\Security\Sharing\SharingIdentityConfig;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingProviderTest extends TestCase
 {
@@ -457,7 +457,7 @@ class SharingProviderTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
+     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
      * @expectedExceptionMessage The "setSharingManager()" must be called before
      */
     public function testGetSharingEntriesWithoutSharingManager()

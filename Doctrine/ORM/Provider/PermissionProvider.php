@@ -1,30 +1,30 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Provider;
+namespace Fxp\Component\Security\Doctrine\ORM\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Sonatra\Component\Security\Exception\InvalidArgumentException;
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Permission\PermissionConfigInterface;
-use Sonatra\Component\Security\Permission\PermissionProviderInterface;
-use Sonatra\Component\Security\Permission\PermissionUtils;
+use Fxp\Component\Security\Exception\InvalidArgumentException;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Permission\PermissionConfigInterface;
+use Fxp\Component\Security\Permission\PermissionProviderInterface;
+use Fxp\Component\Security\Permission\PermissionUtils;
 
 /**
  * The Doctrine Orm Permission Provider.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class PermissionProvider implements PermissionProviderInterface
 {

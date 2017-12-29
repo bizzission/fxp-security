@@ -1,29 +1,29 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Listener;
+namespace Fxp\Component\Security\Listener;
 
-use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
-use Sonatra\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
-use Sonatra\Component\Security\Identity\IdentityUtils;
-use Sonatra\Component\Security\Identity\OrganizationSecurityIdentity;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
-use Sonatra\Component\Security\SecurityIdentityEvents;
+use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
+use Fxp\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
+use Fxp\Component\Security\Identity\IdentityUtils;
+use Fxp\Component\Security\Identity\OrganizationSecurityIdentity;
+use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
+use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
  * Subscriber for add organization security identity from token.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface, CacheSecurityIdentityListenerInterface
 {

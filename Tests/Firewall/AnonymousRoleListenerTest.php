@@ -1,19 +1,19 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Firewall;
+namespace Fxp\Component\Security\Tests\Firewall;
 
+use Fxp\Component\Security\Firewall\AnonymousRoleListener;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Firewall\AnonymousRoleListener;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class AnonymousRoleListenerTest extends TestCase
 {

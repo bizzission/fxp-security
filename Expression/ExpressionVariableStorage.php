@@ -1,20 +1,20 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Expression;
+namespace Fxp\Component\Security\Expression;
 
-use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
-use Sonatra\Component\Security\ExpressionVariableEvents;
-use Sonatra\Component\Security\Identity\IdentityUtils;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Event\GetExpressionVariablesEvent;
+use Fxp\Component\Security\ExpressionVariableEvents;
+use Fxp\Component\Security\Identity\IdentityUtils;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Role\Role;
 /**
  * Variable storage of expression.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class ExpressionVariableStorage implements ExpressionVariableStorageInterface, EventSubscriberInterface
 {

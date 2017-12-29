@@ -1,29 +1,29 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security;
+namespace Fxp\Component\Security;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 final class SharingFilterEvents
 {
     /**
      * The SharingFilterEvents::FILTER event occurs when the sharing filter listener is triggered.
      *
-     * @Event("Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent")
+     * @Event("Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent")
      *
      * @var string
      */
-    const DOCTRINE_ORM_FILTER = 'sonatra_security.sharing.doctrine_orm.filter';
+    const DOCTRINE_ORM_FILTER = 'fxp_security.sharing.doctrine_orm.filter';
 
     /**
      * Build the event of sharing filter with visibility.

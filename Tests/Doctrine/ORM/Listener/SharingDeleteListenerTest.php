@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Listener;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,16 +18,16 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnitOfWork;
+use Fxp\Component\Security\Doctrine\ORM\Listener\SharingDeleteListener;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockGroup;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\SharingDeleteListener;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockSharing;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingDeleteListenerTest extends TestCase
 {
@@ -100,14 +100,14 @@ class SharingDeleteListenerTest extends TestCase
     /**
      * @dataProvider getInvalidInitMethods
      *
-     * @expectedException \Sonatra\Component\Security\Exception\SecurityException
+     * @expectedException \Fxp\Component\Security\Exception\SecurityException
      *
      * @param string   $method  The method
      * @param string[] $setters The setters
      */
     public function testInvalidInit($method, array $setters)
     {
-        $msg = sprintf('The "%s()" method must be called before the init of the "Sonatra\Component\Security\Doctrine\ORM\Listener\SharingDeleteListener" class', $method);
+        $msg = sprintf('The "%s()" method must be called before the init of the "Fxp\Component\Security\Doctrine\ORM\Listener\SharingDeleteListener" class', $method);
         $this->expectExceptionMessage($msg);
 
         $listener = new SharingDeleteListener(MockSharing::class);

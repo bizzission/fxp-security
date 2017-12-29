@@ -1,36 +1,36 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Filter\Listener;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Filter\Listener;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
+use Fxp\Component\Security\Doctrine\ORM\Filter\Listener\SharingFilterSubscriber;
+use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Model\Sharing;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\ORM\Filter\Listener\SharingFilterSubscriber;
-use Sonatra\Component\Security\Doctrine\ORM\Filter\SharingFilter;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Model\Sharing;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\Sharing\SharingIdentityConfigInterface;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingFilterSubscriberTest extends TestCase
 {

@@ -1,20 +1,20 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Identity;
+namespace Fxp\Component\Security\Identity;
 
-use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
-use Sonatra\Component\Security\Event\PostSecurityIdentityEvent;
-use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
-use Sonatra\Component\Security\SecurityIdentityEvents;
+use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
+use Fxp\Component\Security\Event\PostSecurityIdentityEvent;
+use Fxp\Component\Security\Event\PreSecurityIdentityEvent;
+use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 /**
  * Manager to retrieving security identities.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SecurityIdentityManager implements SecurityIdentityManagerInterface
 {

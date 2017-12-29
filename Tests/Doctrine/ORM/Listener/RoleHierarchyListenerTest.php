@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Listener;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Listener;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,20 +17,20 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\UnitOfWork;
+use Fxp\Component\Cache\Adapter\AdapterInterface;
+use Fxp\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
+use Fxp\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
+use Fxp\Component\Security\Model\GroupInterface;
+use Fxp\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\OrganizationUserInterface;
+use Fxp\Component\Security\Model\RoleHierarchicalInterface;
+use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Cache\Adapter\AdapterInterface;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\RoleHierarchyListener;
-use Sonatra\Component\Security\Identity\CacheSecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Model\GroupInterface;
-use Sonatra\Component\Security\Model\OrganizationInterface;
-use Sonatra\Component\Security\Model\OrganizationUserInterface;
-use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
-use Sonatra\Component\Security\Model\Traits\GroupableInterface;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class RoleHierarchyListenerTest extends TestCase
 {

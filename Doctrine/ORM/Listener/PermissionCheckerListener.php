@@ -1,26 +1,26 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Listener;
+namespace Fxp\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
-use Sonatra\Component\Security\Exception\AccessDeniedException;
-use Sonatra\Component\Security\Token\ConsoleToken;
+use Fxp\Component\Security\Exception\AccessDeniedException;
+use Fxp\Component\Security\Token\ConsoleToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * This class listens to all database activity and automatically adds constraints as permissions.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class PermissionCheckerListener extends AbstractPermissionListener
 {

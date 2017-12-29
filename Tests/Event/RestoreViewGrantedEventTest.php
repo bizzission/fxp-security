@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Event;
+namespace Fxp\Component\Security\Tests\Event;
 
+use Fxp\Component\Security\Event\RestoreViewGrantedEvent;
+use Fxp\Component\Security\Permission\FieldVote;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Event\RestoreViewGrantedEvent;
-use Sonatra\Component\Security\Permission\FieldVote;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class RestoreViewGrantedEventTest extends TestCase
 {
@@ -43,7 +43,7 @@ class RestoreViewGrantedEventTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\UnexpectedTypeException
+     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
      * @expectedExceptionMessage Expected argument of type "object", "NULL" given
      */
     public function testEventWithInvalidFieldVote()

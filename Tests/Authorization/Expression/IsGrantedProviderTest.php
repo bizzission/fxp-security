@@ -1,23 +1,23 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Authorization\Expression;
+namespace Fxp\Component\Security\Tests\Authorization\Expression;
 
+use Fxp\Component\Security\Authorization\Expression\IsGrantedProvider;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Authorization\Expression\IsGrantedProvider;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class IsGrantedProviderTest extends TestCase
 {

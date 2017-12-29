@@ -1,24 +1,24 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Identity;
+namespace Fxp\Component\Security\Tests\Identity;
 
+use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
+use Fxp\Component\Security\Event\PostSecurityIdentityEvent;
+use Fxp\Component\Security\Event\PreSecurityIdentityEvent;
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Identity\SecurityIdentityManager;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\SecurityIdentityEvents;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Event\AddSecurityIdentityEvent;
-use Sonatra\Component\Security\Event\PostSecurityIdentityEvent;
-use Sonatra\Component\Security\Event\PreSecurityIdentityEvent;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityManager;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SecurityIdentityManagerTest extends TestCase
 {

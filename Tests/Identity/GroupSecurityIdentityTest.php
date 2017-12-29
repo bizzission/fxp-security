@@ -1,27 +1,27 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Identity;
+namespace Fxp\Component\Security\Tests\Identity;
 
+use Fxp\Component\Security\Identity\GroupSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Model\GroupInterface;
+use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockGroup;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Identity\GroupSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Model\GroupInterface;
-use Sonatra\Component\Security\Model\Traits\GroupableInterface;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockGroup;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class GroupSecurityIdentityTest extends TestCase
 {
@@ -110,8 +110,8 @@ class GroupSecurityIdentityTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The user class must implement "Sonatra\Component\Security\Model\Traits\GroupableInterface"
+     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
+     * @expectedExceptionMessage The user class must implement "Fxp\Component\Security\Model\Traits\GroupableInterface"
      */
     public function testFormTokenWithInvalidInterface()
     {

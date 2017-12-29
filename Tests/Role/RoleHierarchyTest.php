@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Role;
+namespace Fxp\Component\Security\Tests\Role;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
@@ -17,17 +17,17 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
+use Fxp\Component\Security\Model\RoleHierarchicalInterface;
+use Fxp\Component\Security\Role\RoleHierarchy;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
-use Sonatra\Component\Security\Role\RoleHierarchy;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class RoleHierarchyTest extends TestCase
 {
@@ -227,7 +227,7 @@ class RoleHierarchyTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\SecurityException
+     * @expectedException \Fxp\Component\Security\Exception\SecurityException
      * @expectedExceptionMessage The Role class must be an instance of "Symfony\Component\Security\Core\Role\Role"
      */
     public function testInvalidRoleClassName()

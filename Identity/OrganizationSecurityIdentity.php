@@ -1,31 +1,31 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Identity;
+namespace Fxp\Component\Security\Identity;
 
 use Doctrine\Common\Util\ClassUtils;
-use Sonatra\Component\Security\Model\GroupInterface;
-use Sonatra\Component\Security\Model\OrganizationInterface;
-use Sonatra\Component\Security\Model\OrganizationUserInterface;
-use Sonatra\Component\Security\Model\Traits\GroupableInterface;
-use Sonatra\Component\Security\Model\Traits\RoleableInterface;
-use Sonatra\Component\Security\Model\Traits\UserOrganizationUsersInterface;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\Organizational\OrganizationalContextInterface;
+use Fxp\Component\Security\Model\GroupInterface;
+use Fxp\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\OrganizationUserInterface;
+use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Model\Traits\RoleableInterface;
+use Fxp\Component\Security\Model\Traits\UserOrganizationUsersInterface;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
 {

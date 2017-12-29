@@ -1,28 +1,28 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Filter;
+namespace Fxp\Component\Security\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sonatra\Component\DoctrineExtensions\Filter\AbstractFilter;
-use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
-use Sonatra\Component\Security\Identity\SubjectUtils;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\SharingFilterEvents;
+use Fxp\Component\DoctrineExtensions\Filter\AbstractFilter;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Identity\SubjectUtils;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\SharingFilterEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Sharing filter.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingFilter extends AbstractFilter
 {

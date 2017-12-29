@@ -1,26 +1,26 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine;
+namespace Fxp\Component\Security\Tests\Doctrine;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDOPgSql\Driver;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Fxp\Component\Security\Doctrine\DoctrineUtils;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\DoctrineUtils;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class DoctrineUtilsTest extends TestCase
 {
@@ -203,7 +203,7 @@ class DoctrineUtilsTest extends TestCase
     }
 
     /**
-     * @expectedException \Sonatra\Component\Security\Exception\RuntimeException
+     * @expectedException \Fxp\Component\Security\Exception\RuntimeException
      * @expectedExceptionMessage The Doctrine DBAL type is not found for "TestIdentifier::id" identifier
      */
     public function testGetIdentifierTypeWithInvalidType()

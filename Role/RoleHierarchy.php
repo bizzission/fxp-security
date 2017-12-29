@@ -1,26 +1,26 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Role;
+namespace Fxp\Component\Security\Role;
 
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
+use Fxp\Component\DoctrineExtensions\Util\SqlFilterUtil;
+use Fxp\Component\Security\Event\PostReachableRoleEvent;
+use Fxp\Component\Security\Event\PreReachableRoleEvent;
+use Fxp\Component\Security\Exception\SecurityException;
+use Fxp\Component\Security\Model\RoleHierarchicalInterface;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\ReachableRoleEvents;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Sonatra\Component\DoctrineExtensions\Util\SqlFilterUtil;
-use Sonatra\Component\Security\Event\PostReachableRoleEvent;
-use Sonatra\Component\Security\Event\PreReachableRoleEvent;
-use Sonatra\Component\Security\Exception\SecurityException;
-use Sonatra\Component\Security\Model\RoleHierarchicalInterface;
-use Sonatra\Component\Security\Model\RoleInterface;
-use Sonatra\Component\Security\ReachableRoleEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchy as BaseRoleHierarchy;
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchy as BaseRoleHierarchy;
 /**
  * RoleHierarchy defines a role hierarchy.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class RoleHierarchy extends BaseRoleHierarchy
 {

@@ -1,27 +1,27 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Listener;
+namespace Fxp\Component\Security\Listener;
 
-use Sonatra\Component\Security\Event\AbstractEditableSecurityEvent;
-use Sonatra\Component\Security\Event\AbstractSecurityEvent;
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
-use Sonatra\Component\Security\ReachableRoleEvents;
-use Sonatra\Component\Security\SecurityIdentityEvents;
+use Fxp\Component\Security\Event\AbstractEditableSecurityEvent;
+use Fxp\Component\Security\Event\AbstractSecurityEvent;
+use Fxp\Component\Security\Permission\PermissionManagerInterface;
+use Fxp\Component\Security\ReachableRoleEvents;
+use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Listener for disable/re-enable the permission manager.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class DisablePermissionSubscriber implements EventSubscriberInterface
 {

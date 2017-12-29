@@ -1,24 +1,24 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Event;
+namespace Fxp\Component\Security\Event;
 
-use Sonatra\Component\Security\Exception\UnexpectedTypeException;
-use Sonatra\Component\Security\Permission\FieldVote;
+use Fxp\Component\Security\Exception\UnexpectedTypeException;
+use Fxp\Component\Security\Permission\FieldVote;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
  * The abstract view granted event.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 abstract class AbstractViewGrantedEvent extends Event
 {

@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Filter\Listener;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Filter\Listener;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -17,18 +17,18 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Doctrine\ORM\Filter\Listener\PrivateSharingSubscriber;
+use Fxp\Component\Security\Model\Sharing;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObjectOwnerable;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObjectOwnerableOptional;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
-use Sonatra\Component\Security\Doctrine\ORM\Filter\Listener\PrivateSharingSubscriber;
-use Sonatra\Component\Security\Model\Sharing;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObjectOwnerable;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObjectOwnerableOptional;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class PrivateSharingSubscriberTest extends TestCase
 {
@@ -162,11 +162,11 @@ t0.id IN (SELECT
 FROM
     test_sharing s
 WHERE
-    s.subject_class = 'Sonatra\Component\Security\Tests\Fixtures\Model\MockObject'
+    s.subject_class = 'Fxp\Component\Security\Tests\Fixtures\Model\MockObject'
     AND s.enabled IS TRUE
     AND (s.started_at IS NULL OR s.started_at <= CURRENT_TIMESTAMP)
     AND (s.ended_at IS NULL OR s.ended_at >= CURRENT_TIMESTAMP)
-    AND ((s.identity_class = 'Sonatra\Component\Security\Tests\Fixtures\Model\MockRole' AND s.identity_name IN ('ROLE_USER')) OR (s.identity_class = 'Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable' AND s.identity_name IN ('user.test')))
+    AND ((s.identity_class = 'Fxp\Component\Security\Tests\Fixtures\Model\MockRole' AND s.identity_name IN ('ROLE_USER')) OR (s.identity_class = 'Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable' AND s.identity_name IN ('user.test')))
 GROUP BY
     s.subject_id)
 SELECTCLAUSE;
@@ -261,7 +261,7 @@ WHERE
     AND s.enabled IS TRUE
     AND (s.started_at IS NULL OR s.started_at <= CURRENT_TIMESTAMP)
     AND (s.ended_at IS NULL OR s.ended_at >= CURRENT_TIMESTAMP)
-    AND ((s.identity_class = 'Sonatra\Component\Security\Tests\Fixtures\Model\MockRole' AND s.identity_name IN ('ROLE_USER')) OR (s.identity_class = 'Sonatra\Component\Security\Tests\Fixtures\Model\MockUserRoleable' AND s.identity_name IN ('user.test')))
+    AND ((s.identity_class = 'Fxp\Component\Security\Tests\Fixtures\Model\MockRole' AND s.identity_name IN ('ROLE_USER')) OR (s.identity_class = 'Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable' AND s.identity_name IN ('user.test')))
 GROUP BY
     s.subject_id))
 SELECTCLAUSE;

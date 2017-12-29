@@ -1,18 +1,18 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security;
+namespace Fxp\Component\Security;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 final class PermissionContexts
 {
@@ -28,7 +28,7 @@ final class PermissionContexts
      * The PermissionContexts::ORGANIZATION_ROLE context check if the permission
      * can be added on a role of organization.
      *
-     * In this case, the Role model must implement Sonatra\Component\Security\Model\TraitsOrganizationalInterface
+     * In this case, the Role model must implement Fxp\Component\Security\Model\TraitsOrganizationalInterface
      *
      * @var string
      */

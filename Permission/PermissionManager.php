@@ -1,38 +1,38 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Permission;
+namespace Fxp\Component\Security\Permission;
 
 use Doctrine\Common\Util\ClassUtils;
-use Sonatra\Component\Security\Event\CheckPermissionEvent;
-use Sonatra\Component\Security\Event\PostLoadPermissionsEvent;
-use Sonatra\Component\Security\Event\PreLoadPermissionsEvent;
-use Sonatra\Component\Security\Exception\PermissionNotFoundException;
-use Sonatra\Component\Security\Identity\IdentityUtils;
-use Sonatra\Component\Security\Identity\RoleSecurityIdentity;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SubjectIdentity;
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Identity\SubjectUtils;
-use Sonatra\Component\Security\Model\PermissionChecking;
-use Sonatra\Component\Security\Model\RoleInterface;
-use Sonatra\Component\Security\PermissionEvents;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\Event\CheckPermissionEvent;
+use Fxp\Component\Security\Event\PostLoadPermissionsEvent;
+use Fxp\Component\Security\Event\PreLoadPermissionsEvent;
+use Fxp\Component\Security\Exception\PermissionNotFoundException;
+use Fxp\Component\Security\Identity\IdentityUtils;
+use Fxp\Component\Security\Identity\RoleSecurityIdentity;
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Identity\SubjectUtils;
+use Fxp\Component\Security\Model\PermissionChecking;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\PermissionEvents;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Permission manager.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class PermissionManager extends AbstractPermissionManager
 {

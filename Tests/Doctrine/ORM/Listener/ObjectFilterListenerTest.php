@@ -1,30 +1,30 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Doctrine\ORM\Listener;
+namespace Fxp\Component\Security\Tests\Doctrine\ORM\Listener;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use Fxp\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener;
+use Fxp\Component\Security\ObjectFilter\ObjectFilterInterface;
+use Fxp\Component\Security\Permission\PermissionManagerInterface;
+use Fxp\Component\Security\Token\ConsoleToken;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener;
-use Sonatra\Component\Security\ObjectFilter\ObjectFilterInterface;
-use Sonatra\Component\Security\Permission\PermissionManagerInterface;
-use Sonatra\Component\Security\Token\ConsoleToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class ObjectFilterListenerTest extends TestCase
 {
@@ -90,14 +90,14 @@ class ObjectFilterListenerTest extends TestCase
     /**
      * @dataProvider getInvalidInitMethods
      *
-     * @expectedException \Sonatra\Component\Security\Exception\SecurityException
+     * @expectedException \Fxp\Component\Security\Exception\SecurityException
      *
      * @param string   $method  The method
      * @param string[] $setters The setters
      */
     public function testInvalidInit($method, array $setters)
     {
-        $msg = sprintf('The "%s()" method must be called before the init of the "Sonatra\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener" class', $method);
+        $msg = sprintf('The "%s()" method must be called before the init of the "Fxp\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener" class', $method);
         $this->expectExceptionMessage($msg);
 
         $listener = new ObjectFilterListener();

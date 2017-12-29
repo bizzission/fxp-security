@@ -1,22 +1,22 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Model;
+namespace Fxp\Component\Security\Tests\Model;
 
+use Fxp\Component\Security\Tests\Fixtures\Model\MockPermission;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockPermission;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockRole;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class RoleTest extends TestCase
 {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8486ae0ad0ea52583142ebaa6fcb7959",
+    "content-hash": "9d9a651654607c3c308626735ec6c0f3",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1551,6 +1551,125 @@
             "time": "2017-12-20T00:38:15+00:00"
         },
         {
+            "name": "fxp/cache",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fxpio/fxp-cache.git",
+                "reference": "949d448d3efcf8e6349263fd511bbb9f6970e7b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fxpio/fxp-cache/zipball/949d448d3efcf8e6349263fd511bbb9f6970e7b2",
+                "reference": "949d448d3efcf8e6349263fd511bbb9f6970e7b2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.0",
+                "symfony/cache": "^3.4.0|^4.0.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^2.6.0",
+                "predis/predis": "^1.1.0",
+                "symfony/filesystem": "^3.4.0|^4.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fxp\\Component\\Cache\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Pluchino",
+                    "email": "francois.pluchino@gmail.com"
+                }
+            ],
+            "description": "Add extra features to Symfony PSR-6 Cache Component",
+            "homepage": "https://github.com/fxpio/fxp-cache",
+            "keywords": [
+                "cache",
+                "namespace",
+                "prefix",
+                "psr-6"
+            ],
+            "time": "2017-12-28T17:56:09+00:00"
+        },
+        {
+            "name": "fxp/doctrine-extensions",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fxpio/fxp-doctrine-extensions.git",
+                "reference": "c13f68d7fcbce80b73c519acad8d2adda26e0686"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fxpio/fxp-doctrine-extensions/zipball/c13f68d7fcbce80b73c519acad8d2adda26e0686",
+                "reference": "c13f68d7fcbce80b73c519acad8d2adda26e0686",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "^2.6.0",
+                "php": "^7.1.0"
+            },
+            "require-dev": {
+                "symfony/doctrine-bridge": "^3.4.0|^4.0.0",
+                "symfony/event-dispatcher": "^3.4.0|^4.0.0",
+                "symfony/http-kernel": "^3.4.0|^4.0.0",
+                "symfony/validator": "^3.4.0|^4.0.0"
+            },
+            "suggest": {
+                "creof/doctrine2-spatial": "For add geo spacial extensions",
+                "stof/doctrine-extensions-bundle": "For use some nice extensions for doctrine"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fxp\\Component\\DoctrineExtensions\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Pluchino",
+                    "email": "francois.pluchino@gmail.com"
+                }
+            ],
+            "description": "Add doctrine unique entity validator",
+            "homepage": "https://github.com/fxpio/fxp-doctrine-extensions",
+            "keywords": [
+                "doctrine",
+                "extensions",
+                "unique entity",
+                "validator"
+            ],
+            "time": "2017-12-29T09:35:28+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -1598,125 +1717,6 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
-        },
-        {
-            "name": "sonatra/cache",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sonatra/sonatra-cache.git",
-                "reference": "cd03cfe26ee26f2377c3132c1cd1e2032271d342"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sonatra/sonatra-cache/zipball/cd03cfe26ee26f2377c3132c1cd1e2032271d342",
-                "reference": "cd03cfe26ee26f2377c3132c1cd1e2032271d342",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1.0",
-                "symfony/cache": "^3.4.0|^4.0.0"
-            },
-            "require-dev": {
-                "doctrine/dbal": "^2.6.0",
-                "predis/predis": "^1.1.0",
-                "symfony/filesystem": "^3.4.0|^4.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Sonatra\\Component\\Cache\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Pluchino",
-                    "email": "francois.pluchino@sonatra.com"
-                }
-            ],
-            "description": "Add extra features to Symfony PSR-6 Cache Component",
-            "homepage": "https://github.com/sonatra/sonatra-cache",
-            "keywords": [
-                "cache",
-                "namespace",
-                "prefix",
-                "psr-6"
-            ],
-            "time": "2017-12-26T17:42:40+00:00"
-        },
-        {
-            "name": "sonatra/doctrine-extensions",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sonatra/sonatra-doctrine-extensions.git",
-                "reference": "ef64d3928e9d275f292ddeedd55c658d9e23ba41"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sonatra/sonatra-doctrine-extensions/zipball/ef64d3928e9d275f292ddeedd55c658d9e23ba41",
-                "reference": "ef64d3928e9d275f292ddeedd55c658d9e23ba41",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": "^2.6.0",
-                "php": "^7.1.0"
-            },
-            "require-dev": {
-                "symfony/doctrine-bridge": "^3.4.0|^4.0.0",
-                "symfony/event-dispatcher": "^3.4.0|^4.0.0",
-                "symfony/http-kernel": "^3.4.0|^4.0.0",
-                "symfony/validator": "^3.4.0|^4.0.0"
-            },
-            "suggest": {
-                "creof/doctrine2-spatial": "For add geo spacial extensions",
-                "stof/doctrine-extensions-bundle": "For use some nice extensions for doctrine"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Sonatra\\Component\\DoctrineExtensions\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Pluchino",
-                    "email": "francois.pluchino@sonatra.com"
-                }
-            ],
-            "description": "Add doctrine unique entity validator",
-            "homepage": "https://github.com/sonatra/sonatra-doctrine-extensions",
-            "keywords": [
-                "doctrine",
-                "extensions",
-                "unique entity",
-                "validator"
-            ],
-            "time": "2017-12-26T17:44:45+00:00"
         },
         {
             "name": "symfony/console",

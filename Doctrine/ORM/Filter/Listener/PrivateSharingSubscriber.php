@@ -1,30 +1,30 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Filter\Listener;
+namespace Fxp\Component\Security\Doctrine\ORM\Filter\Listener;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sonatra\Component\Security\Doctrine\DoctrineUtils;
-use Sonatra\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
-use Sonatra\Component\Security\Model\Traits\OwnerableInterface;
-use Sonatra\Component\Security\Model\Traits\OwnerableOptionalInterface;
-use Sonatra\Component\Security\SharingFilterEvents;
-use Sonatra\Component\Security\SharingVisibilities;
+use Fxp\Component\Security\Doctrine\DoctrineUtils;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Model\Traits\OwnerableInterface;
+use Fxp\Component\Security\Model\Traits\OwnerableOptionalInterface;
+use Fxp\Component\Security\SharingFilterEvents;
+use Fxp\Component\Security\SharingVisibilities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Sharing filter subscriber of Doctrine ORM SQL Filter to filter
  * the private sharing records.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class PrivateSharingSubscriber implements EventSubscriberInterface
 {

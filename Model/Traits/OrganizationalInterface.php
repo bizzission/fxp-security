@@ -1,22 +1,22 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Model\Traits;
+namespace Fxp\Component\Security\Model\Traits;
 
-use Sonatra\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\OrganizationInterface;
 
 /**
  * Interface to indicate that the model is linked with an organization.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 interface OrganizationalInterface
 {

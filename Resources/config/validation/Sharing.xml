@@ -3,7 +3,7 @@
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
 
-    <class name="Sonatra\Component\Security\Model\Sharing">
+    <class name="Fxp\Component\Security\Model\Sharing">
         <property name="subjectClass">
             <constraint name="NotBlank" />
             <constraint name="Length">
@@ -46,7 +46,7 @@
             <constraint name="DateTime" />
         </property>
 
-        <constraint name="Sonatra\Component\Security\Validator\Constraints\Sharing"/>
+        <constraint name="Fxp\Component\Security\Validator\Constraints\Sharing"/>
     </class>
 
 </constraint-mapping>

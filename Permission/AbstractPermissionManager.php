@@ -1,31 +1,31 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Permission;
+namespace Fxp\Component\Security\Permission;
 
 use Doctrine\Common\Util\ClassUtils;
-use Sonatra\Component\Security\Exception\InvalidSubjectIdentityException;
-use Sonatra\Component\Security\Exception\PermissionConfigNotFoundException;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SubjectIdentityInterface;
-use Sonatra\Component\Security\Model\PermissionChecking;
-use Sonatra\Component\Security\Model\RoleInterface;
-use Sonatra\Component\Security\Model\Traits\OrganizationalInterface;
-use Sonatra\Component\Security\PermissionContexts;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\Exception\InvalidSubjectIdentityException;
+use Fxp\Component\Security\Exception\PermissionConfigNotFoundException;
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Model\PermissionChecking;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\Model\Traits\OrganizationalInterface;
+use Fxp\Component\Security\PermissionContexts;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
 
 /**
  * Abstract permission manager.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 abstract class AbstractPermissionManager implements PermissionManagerInterface
 {

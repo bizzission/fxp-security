@@ -1,34 +1,34 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Doctrine\ORM\Filter\Listener;
+namespace Fxp\Component\Security\Doctrine\ORM\Filter\Listener;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use Sonatra\Component\DoctrineExtensions\Filter\Listener\AbstractFilterSubscriber;
-use Sonatra\Component\Security\Doctrine\ORM\Filter\SharingFilter;
-use Sonatra\Component\Security\Identity\IdentityUtils;
-use Sonatra\Component\Security\Identity\SecurityIdentityInterface;
-use Sonatra\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Sonatra\Component\Security\Model\UserInterface;
-use Sonatra\Component\Security\OrganizationalContextEvents;
-use Sonatra\Component\Security\Sharing\SharingManagerInterface;
-use Sonatra\Component\Security\SharingEvents;
+use Fxp\Component\DoctrineExtensions\Filter\Listener\AbstractFilterSubscriber;
+use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
+use Fxp\Component\Security\Identity\IdentityUtils;
+use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\OrganizationalContextEvents;
+use Fxp\Component\Security\Sharing\SharingManagerInterface;
+use Fxp\Component\Security\SharingEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Sharing filter listener.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class SharingFilterSubscriber extends AbstractFilterSubscriber
 {

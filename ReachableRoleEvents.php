@@ -1,18 +1,18 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security;
+namespace Fxp\Component\Security;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 final class ReachableRoleEvents
 {
@@ -20,19 +20,19 @@ final class ReachableRoleEvents
      * The ReachableRoleEvents::RETRIEVAL_PRE event occurs before the research of all
      * children roles.
      *
-     * @Event("Sonatra\Component\Security\Event\PreReachableRoleEvent")
+     * @Event("Fxp\Component\Security\Event\PreReachableRoleEvent")
      *
      * @var string
      */
-    const PRE = 'sonatra_security.reachable_roles.pre';
+    const PRE = 'fxp_security.reachable_roles.pre';
 
     /**
      * The ReachableRoleEvents::RETRIEVAL_POST event occurs after the research of all
      * children roles.
      *
-     * @Event("Sonatra\Component\Security\Event\PostReachableRoleEvent")
+     * @Event("Fxp\Component\Security\Event\PostReachableRoleEvent")
      *
      * @var string
      */
-    const POST = 'sonatra_security.reachable_roles.post';
+    const POST = 'fxp_security.reachable_roles.post';
 }

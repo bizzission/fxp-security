@@ -1,13 +1,13 @@
-Sonatra Security
-================
+Fxp Security
+============
 
-[![Latest Version](https://img.shields.io/packagist/v/sonatra/security.svg)](https://packagist.org/packages/sonatra/security)
-[![Build Status](https://img.shields.io/travis/sonatra/sonatra-security/master.svg)](https://travis-ci.org/sonatra/sonatra-security)
-[![Coverage Status](https://img.shields.io/coveralls/sonatra/sonatra-security/master.svg)](https://coveralls.io/r/sonatra/sonatra-security?branch=master)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/sonatra/sonatra-security/master.svg)](https://scrutinizer-ci.com/g/sonatra/sonatra-security?branch=master)
+[![Latest Version](https://img.shields.io/packagist/v/fxp/security.svg)](https://packagist.org/packages/fxp/security)
+[![Build Status](https://img.shields.io/travis/fxpio/fxp-security/master.svg)](https://travis-ci.org/fxpio/fxp-security)
+[![Coverage Status](https://img.shields.io/coveralls/fxpio/fxp-security/master.svg)](https://coveralls.io/r/fxpio/fxp-security?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/fxpio/fxp-security/master.svg)](https://scrutinizer-ci.com/g/fxpio/fxp-security?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/6951c069-4ec4-4cfa-a3b9-281085553fdb.svg)](https://insight.sensiolabs.com/projects/6951c069-4ec4-4cfa-a3b9-281085553fdb)
 
-The Sonatra Security Component is a Extended Role-Based Access Control (E-RBAC) including the management of roles,
+The Fxp Security Component is a Extended Role-Based Access Control (E-RBAC) including the management of roles,
 role hierarchy, groups, and permissions with a granularity ranging from global permission to permission for
 each field of each object. With the sharing rules, it's possible to define users, groups, roles or permissions
 for each record of an object. In this way, a user can get more permissions due to the context defined by the
@@ -70,10 +70,10 @@ This library is under the MIT license. See the complete license:
 About
 -----
 
-Sonatra Security is a [sonatra](https://github.com/sonatra) initiative.
-See also the list of [contributors](https://github.com/sonatra/sonatra-security/graphs/contributors).
+Fxp Security is a [François Pluchino](https://github.com/francoispluchino) initiative.
+See also the list of [contributors](https://github.com/fxpio/fxp-security/graphs/contributors).
 
 Reporting an issue or a feature request
 ---------------------------------------
 
-Issues and feature requests are tracked in the [Github issue tracker](https://github.com/sonatra/sonatra-security/issues).
+Issues and feature requests are tracked in the [Github issue tracker](https://github.com/fxpio/fxp-security/issues).

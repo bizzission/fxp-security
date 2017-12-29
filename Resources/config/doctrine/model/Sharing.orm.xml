@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
 
-    <mapped-superclass name="Sonatra\Component\Security\Model\Sharing">
+    <mapped-superclass name="Fxp\Component\Security\Model\Sharing">
 
         <indexes>
             <index name="subject_class_idx" columns="subject_class"/>

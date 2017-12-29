@@ -1,18 +1,18 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Authorization\Voter;
+namespace Fxp\Component\Security\Authorization\Voter;
 
-use Sonatra\Component\Security\Event\GetExpressionVariablesEvent;
-use Sonatra\Component\Security\ExpressionVariableEvents;
+use Fxp\Component\Security\Event\GetExpressionVariablesEvent;
+use Fxp\Component\Security\ExpressionVariableEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 /**
  * Override the Expression Voter to use Security Identity Manager to get all roles.
  *
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class ExpressionVoter implements VoterInterface
 {

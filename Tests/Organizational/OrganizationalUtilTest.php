@@ -1,24 +1,24 @@
 <?php
 
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Sonatra\Component\Security\Tests\Organizational;
+namespace Fxp\Component\Security\Tests\Organizational;
 
+use Fxp\Component\Security\Organizational\OrganizationalUtil;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsers;
 use PHPUnit\Framework\TestCase;
-use Sonatra\Component\Security\Organizational\OrganizationalUtil;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockObject;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockOrganization;
-use Sonatra\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsers;
 
 /**
- * @author François Pluchino <francois.pluchino@sonatra.com>
+ * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class OrganizationalUtilTest extends TestCase
 {
