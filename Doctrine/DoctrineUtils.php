@@ -35,26 +35,26 @@ abstract class DoctrineUtils
     /**
      * @var array
      */
-    private static $cacheIdentifiers = array();
+    private static $cacheIdentifiers = [];
 
     /**
      * @var array
      */
-    private static $cacheZeroIds = array();
+    private static $cacheZeroIds = [];
 
     /**
      * @var array
      */
-    private static $cacheCastIdentifiers = array();
+    private static $cacheCastIdentifiers = [];
 
     /**
      * Clear the caches.
      */
     public static function clearCaches()
     {
-        self::$cacheIdentifiers = array();
-        self::$cacheZeroIds = array();
-        self::$cacheCastIdentifiers = array();
+        self::$cacheIdentifiers = [];
+        self::$cacheZeroIds = [];
+        self::$cacheCastIdentifiers = [];
     }
 
     /**

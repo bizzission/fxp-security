@@ -24,16 +24,16 @@ class PermissionFieldConfigTest extends TestCase
         $config = new PermissionFieldConfig('foo');
 
         $this->assertSame('foo', $config->getField());
-        $this->assertSame(array(), $config->getOperations());
+        $this->assertSame([], $config->getOperations());
         $this->assertFalse($config->hasOperation('foo'));
     }
 
     public function testPermissionFieldConfig()
     {
-        $operations = array('read', 'edit');
-        $alias = array(
+        $operations = ['read', 'edit'];
+        $alias = [
             'test' => 'read',
-        );
+        ];
         $config = new PermissionFieldConfig('foo', $operations, $alias);
 
         $this->assertSame('foo', $config->getField());

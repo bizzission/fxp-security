@@ -42,11 +42,11 @@ class OrganizationVoterTest extends TestCase
 
     public function getAccessResults()
     {
-        return array(
-            array(array('ORG_FOO'), VoterInterface::ACCESS_GRANTED),
-            array(array('ORG_BAR'), VoterInterface::ACCESS_DENIED),
-            array(array('TEST_FOO'), VoterInterface::ACCESS_ABSTAIN),
-        );
+        return [
+            [['ORG_FOO'], VoterInterface::ACCESS_GRANTED],
+            [['ORG_BAR'], VoterInterface::ACCESS_DENIED],
+            [['TEST_FOO'], VoterInterface::ACCESS_ABSTAIN],
+        ];
     }
 
     /**
@@ -60,9 +60,9 @@ class OrganizationVoterTest extends TestCase
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $sids = array(
+        $sids = [
             new OrganizationSecurityIdentity(MockOrganization::class, 'FOO'),
-        );
+        ];
 
         if (VoterInterface::ACCESS_ABSTAIN !== $access) {
             $this->sidManager->expects($this->atLeast(2))

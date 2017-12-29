@@ -58,7 +58,7 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * @var string[]
      */
-    private $excludedClasses = array();
+    private $excludedClasses = [];
 
     /**
      * If the action filtering/restoring is in a transaction, then the action
@@ -73,14 +73,14 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @var array
      */
-    private $queue = array();
+    private $queue = [];
 
     /**
      * The object ids of object to filter (empty after commit).
      *
      * @var array
      */
-    private $toFilter = array();
+    private $toFilter = [];
 
     /**
      * Constructor.
@@ -151,7 +151,7 @@ class ObjectFilter implements ObjectFilterInterface
         $event = new PostCommitObjectFilterEvent($this->queue);
         $this->dispatcher->dispatch(ObjectFilterEvents::POST_COMMIT, $event);
 
-        $this->queue = array();
+        $this->queue = [];
         $this->isTransactional = false;
     }
 
@@ -323,7 +323,7 @@ class ObjectFilter implements ObjectFilterInterface
     {
         if ((is_int($value) || is_string($value))
                 && (string) $value === $fieldVote->getSubject()->getIdentifier()
-                && in_array($fieldVote->getField(), array('id', 'subjectIdentifier'))) {
+                && in_array($fieldVote->getField(), ['id', 'subjectIdentifier'])) {
             return true;
         }
 

@@ -29,7 +29,7 @@ class GroupSecurityIdentitySubscriberTest extends TestCase
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $sids = array();
+        $sids = [];
 
         $event = new AddSecurityIdentityEvent($token, $sids);
 
@@ -43,7 +43,7 @@ class GroupSecurityIdentitySubscriberTest extends TestCase
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $sids = array();
+        $sids = [];
 
         $user = new MockUserGroupable();
 

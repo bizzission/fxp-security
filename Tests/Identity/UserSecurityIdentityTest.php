@@ -45,11 +45,11 @@ class UserSecurityIdentityTest extends TestCase
         $id3->expects($this->any())->method('getType')->willReturn(MockUserRoleable::class);
         $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
 
-        return array(
-            array(new UserSecurityIdentity(MockUserRoleable::class, 'identifier'), true),
-            array(new UserSecurityIdentity(MockUserRoleable::class, 'other'), false),
-            array($id3, false),
-        );
+        return [
+            [new UserSecurityIdentity(MockUserRoleable::class, 'identifier'), true],
+            [new UserSecurityIdentity(MockUserRoleable::class, 'other'), false],
+            [$id3, false],
+        ];
     }
 
     /**

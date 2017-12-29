@@ -21,7 +21,7 @@ abstract class AbstractPermissionListener extends AbstractListener
     /**
      * @var array
      */
-    protected $postResetPermissions = array();
+    protected $postResetPermissions = [];
 
     /**
      * Reset the preloaded permissions used for the insertions.
@@ -29,6 +29,6 @@ abstract class AbstractPermissionListener extends AbstractListener
     public function postFlush()
     {
         $this->getPermissionManager()->resetPreloadPermissions($this->postResetPermissions);
-        $this->postResetPermissions = array();
+        $this->postResetPermissions = [];
     }
 }

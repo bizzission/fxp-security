@@ -69,7 +69,7 @@ class PermissionManager extends AbstractPermissionManager
                                 PermissionProviderInterface $provider,
                                 PropertyAccessorInterface $propertyAccessor,
                                 SharingManagerInterface $sharingManager = null,
-                                array $configs = array())
+                                array $configs = [])
     {
         parent::__construct($sharingManager, $configs);
 
@@ -130,8 +130,8 @@ class PermissionManager extends AbstractPermissionManager
     protected function doIsGranted(array $sids, array $permissions, $subject = null, $field = null)
     {
         if (null !== $subject) {
-            $this->preloadPermissions(array($subject));
-            $this->preloadSharingRolePermissions(array($subject));
+            $this->preloadPermissions([$subject]);
+            $this->preloadSharingRolePermissions([$subject]);
         }
 
         $id = $this->loadPermissions($sids);
@@ -150,14 +150,14 @@ class PermissionManager extends AbstractPermissionManager
      */
     protected function doGetRolePermissions(RoleInterface $role, $subject = null)
     {
-        $permissions = array();
+        $permissions = [];
         $sid = new RoleSecurityIdentity(ClassUtils::getClass($role), $role->getRole());
         $contexts = $this->buildContexts($role);
         list($class, $field) = PermissionUtils::getClassAndField($subject, true);
 
         foreach ($this->provider->getPermissionsBySubject($subject, $contexts) as $permission) {
             $operation = $permission->getOperation();
-            $granted = $this->isGranted(array($sid), array($operation), $subject);
+            $granted = $this->isGranted([$sid], [$operation], $subject);
             $isConfig = $this->isConfigPermission($operation, $class, $field);
             $permissions[$operation] = new PermissionChecking($permission, $granted, $isConfig);
         }
@@ -239,7 +239,7 @@ class PermissionManager extends AbstractPermissionManager
 
             if (null !== $config->getMaster()) {
                 $realOperation = $config->getMappingPermission($operation);
-                $granted = $this->isGranted(array($sid), array($realOperation), $subject);
+                $granted = $this->isGranted([$sid], [$realOperation], $subject);
             }
         }
 
@@ -255,7 +255,7 @@ class PermissionManager extends AbstractPermissionManager
     {
         if (null === $this->cacheConfigPermissions) {
             $sps = $this->provider->getConfigPermissions();
-            $this->cacheConfigPermissions = array();
+            $this->cacheConfigPermissions = [];
 
             foreach ($sps as $sp) {
                 $classAction = PermissionUtils::getMapAction($sp->getClass());
@@ -319,7 +319,7 @@ class PermissionManager extends AbstractPermissionManager
         $id = implode('|', $roles);
 
         if (!array_key_exists($id, $this->cache)) {
-            $this->cache[$id] = array();
+            $this->cache[$id] = [];
             $preEvent = new PreLoadPermissionsEvent($sids, $roles);
             $this->dispatcher->dispatch(PermissionEvents::PRE_LOAD, $preEvent);
             $perms = $this->provider->getPermissions($roles);
@@ -371,7 +371,7 @@ class PermissionManager extends AbstractPermissionManager
         $map = $this->getMapConfigPermissions();
         $class = PermissionUtils::getMapAction($class);
         $field = PermissionUtils::getMapAction($field);
-        $operations = array();
+        $operations = [];
 
         if (isset($map[$class][$field])) {
             $operations = array_keys($map[$class][$field]);
@@ -390,7 +390,7 @@ class PermissionManager extends AbstractPermissionManager
         $id = '_config';
 
         if (!array_key_exists($id, $this->cache)) {
-            $this->cache[$id] = array();
+            $this->cache[$id] = [];
             $this->buildSystemPermissions($id);
         }
 

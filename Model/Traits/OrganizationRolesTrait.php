@@ -40,7 +40,7 @@ trait OrganizationRolesTrait
      */
     public function getOrganizationRoleNames()
     {
-        $names = array();
+        $names = [];
         foreach ($this->getOrganizationRoles() as $role) {
             $names[] = $role->getName();
         }

@@ -56,7 +56,7 @@ class DisablePermissionSubscriberTest extends TestCase
         $listener = new DisablePermissionSubscriber($this->permManager);
         $this->assertCount(4, $listener->getSubscribedEvents());
 
-        $event = new PostReachableRoleEvent(array(), true);
+        $event = new PostReachableRoleEvent([], true);
 
         $this->permManager->expects($this->once())
             ->method('setEnabled')

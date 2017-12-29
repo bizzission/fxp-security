@@ -64,10 +64,10 @@ class ExpressionVariableStorageTest extends TestCase
     public function testSetVariablesWithSecurityIdentityManager()
     {
         $event = new GetExpressionVariablesEvent($this->token);
-        $sids = array(
+        $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
             new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
-        );
+        ];
 
         $this->token->expects($this->never())
             ->method('getRoles');
@@ -78,10 +78,10 @@ class ExpressionVariableStorageTest extends TestCase
             ->willReturn($sids);
 
         $variableStorage = new ExpressionVariableStorage(
-            array(
+            [
                 'organizational_context' => $this->context,
                 'organizational_role' => $this->orgRole,
-            ),
+            ],
             $this->sidManager
         );
         $variableStorage->add('trust_resolver', $this->trustResolver);
@@ -95,7 +95,7 @@ class ExpressionVariableStorageTest extends TestCase
         $this->assertArrayHasKey('trust_resolver', $variables);
         $this->assertArrayHasKey('organizational_context', $variables);
         $this->assertArrayHasKey('organizational_role', $variables);
-        $this->assertEquals(array('ROLE_USER'), $variables['roles']);
+        $this->assertEquals(['ROLE_USER'], $variables['roles']);
         $this->assertCount(1, $variableStorage->getSubscribedEvents());
     }
 
@@ -103,9 +103,9 @@ class ExpressionVariableStorageTest extends TestCase
     {
         $this->token->expects($this->once())
             ->method('getRoles')
-            ->willReturn(array(
+            ->willReturn([
                 new Role('ROLE_USER'),
-            ));
+            ]);
 
         $event = new GetExpressionVariablesEvent($this->token);
         $variableStorage = new ExpressionVariableStorage();
@@ -118,15 +118,15 @@ class ExpressionVariableStorageTest extends TestCase
         $this->assertArrayHasKey('user', $variables);
         $this->assertArrayHasKey('roles', $variables);
         $this->assertArrayHasKey('trust_resolver', $variables);
-        $this->assertEquals(array('ROLE_USER'), $variables['roles']);
+        $this->assertEquals(['ROLE_USER'], $variables['roles']);
         $this->assertCount(1, $variableStorage->getSubscribedEvents());
     }
 
     public function testHasVariable()
     {
-        $variableStorage = new ExpressionVariableStorage(array(
+        $variableStorage = new ExpressionVariableStorage([
             'foo' => 'bar',
-        ));
+        ]);
 
         $this->assertFalse($variableStorage->has('bar'));
         $this->assertTrue($variableStorage->has('foo'));
@@ -148,9 +148,9 @@ class ExpressionVariableStorageTest extends TestCase
 
     public function testRemoveVariable()
     {
-        $variableStorage = new ExpressionVariableStorage(array(
+        $variableStorage = new ExpressionVariableStorage([
             'foo' => 'bar',
-        ));
+        ]);
 
         $this->assertTrue($variableStorage->has('foo'));
 

@@ -25,9 +25,9 @@ class PreSecurityIdentityEventTest extends TestCase
     {
         /* @var TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $sids = array(
+        $sids = [
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),
-        );
+        ];
 
         $event = new PreSecurityIdentityEvent($token, $sids);
 

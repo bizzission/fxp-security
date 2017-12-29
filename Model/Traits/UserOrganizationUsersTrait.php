@@ -39,7 +39,7 @@ trait UserOrganizationUsersTrait
      */
     public function getUserOrganizationNames()
     {
-        $names = array();
+        $names = [];
         foreach ($this->getUserOrganizations() as $userOrg) {
             $names[] = $userOrg->getOrganization()->getName();
         }

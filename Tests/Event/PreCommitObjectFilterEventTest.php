@@ -21,11 +21,11 @@ class PreCommitObjectFilterEventTest extends TestCase
 {
     public function testEvent()
     {
-        $objects = array(
+        $objects = [
             new \stdClass(),
             new \stdClass(),
             new \stdClass(),
-        );
+        ];
 
         $event = new PreCommitObjectFilterEvent($objects);
         $this->assertSame($objects, $event->getObjects());

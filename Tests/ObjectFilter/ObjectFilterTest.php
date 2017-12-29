@@ -83,7 +83,7 @@ class ObjectFilterTest extends TestCase
     {
         $preEventAction = false;
         $postEventAction = false;
-        $objects = array();
+        $objects = [];
 
         $this->dispatcher->addListener(ObjectFilterEvents::PRE_COMMIT, function (PreCommitObjectFilterEvent $event) use (&$objects, &$preEventAction) {
             $preEventAction = true;
@@ -202,16 +202,16 @@ class ObjectFilterTest extends TestCase
         $this->uow->expects($this->once())
             ->method('getObjectChangeSet')
             ->with($object)
-            ->willReturn(array(
-                'name' => array(
+            ->willReturn([
+                'name' => [
                     'old' => 'bar',
                     'new' => 'foo',
-                ),
-            ));
+                ],
+            ]);
 
         $this->pm->expects($this->once())
             ->method('preloadPermissions')
-            ->with(array($object));
+            ->with([$object]);
 
         $this->ac->expects($this->once())
             ->method('isGranted')
@@ -247,19 +247,19 @@ class ObjectFilterTest extends TestCase
 
     public function getRestoreActions()
     {
-        return array(
-            array(false, false, null, 'foo', null),
-            array(false, false, 'bar', 'foo', 'bar'),
-            array(false, false, 'bar', null, 'bar'),
+        return [
+            [false, false, null, 'foo', null],
+            [false, false, 'bar', 'foo', 'bar'],
+            [false, false, 'bar', null, 'bar'],
 
-            array(true, false, null, 'foo', null),
-            array(true, false, 'bar', 'foo', 'bar'),
-            array(true, false, 'bar', null, 'bar'),
+            [true, false, null, 'foo', null],
+            [true, false, 'bar', 'foo', 'bar'],
+            [true, false, 'bar', null, 'bar'],
 
-            array(true, true, null, 'foo', 'foo'),
-            array(true, true, 'bar', 'foo', 'foo'),
-            array(true, true, 'bar', null, null),
-        );
+            [true, true, null, 'foo', 'foo'],
+            [true, true, 'bar', 'foo', 'foo'],
+            [true, true, 'bar', null, null],
+        ];
     }
 
     /**
@@ -276,12 +276,12 @@ class ObjectFilterTest extends TestCase
         $object = new MockObject($newValue);
         $fv = new FieldVote($object, 'name');
 
-        $this->prepareRestoreTest($object, array(
-            'name' => array(
+        $this->prepareRestoreTest($object, [
+            'name' => [
                 'old' => $oldValue,
                 'new' => $newValue,
-            ),
-        ));
+            ],
+        ]);
 
         $this->ac->expects($this->at(0))
             ->method('isGranted')
@@ -302,9 +302,9 @@ class ObjectFilterTest extends TestCase
 
     public function testExcludedClasses()
     {
-        $this->of->setExcludedClasses(array(
+        $this->of->setExcludedClasses([
             MockObject::class,
-        ));
+        ]);
 
         $object = new MockObject('foo');
 
@@ -342,7 +342,7 @@ class ObjectFilterTest extends TestCase
 
         $this->pm->expects($this->once())
             ->method('preloadPermissions')
-            ->with(array($object));
+            ->with([$object]);
     }
 
     /**
@@ -354,17 +354,17 @@ class ObjectFilterTest extends TestCase
     protected function prepareRestoreTest($object, $changeSet = null)
     {
         if (null === $changeSet) {
-            $changeSet = array(
-                'name' => array(
+            $changeSet = [
+                'name' => [
                     'old' => 'bar',
                     'new' => 'foo',
-                ),
-            );
+                ],
+            ];
         }
 
         $this->pm->expects($this->once())
             ->method('preloadPermissions')
-            ->with(array($object));
+            ->with([$object]);
 
         $this->uow->expects($this->once())
             ->method('attach')

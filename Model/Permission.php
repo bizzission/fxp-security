@@ -29,7 +29,7 @@ abstract class Permission implements PermissionInterface
     /**
      * @var string[]
      */
-    protected $contexts = array();
+    protected $contexts = [];
 
     /**
      * @var string|null

@@ -31,7 +31,7 @@ class MockGroup implements GroupInterface
     /**
      * @var array
      */
-    protected $roles = array();
+    protected $roles = [];
 
     /**
      * Constructor.

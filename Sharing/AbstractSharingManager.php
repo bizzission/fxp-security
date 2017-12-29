@@ -40,17 +40,17 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * @var array
      */
-    protected $subjectConfigs = array();
+    protected $subjectConfigs = [];
 
     /**
      * @var array
      */
-    protected $identityConfigs = array();
+    protected $identityConfigs = [];
 
     /**
      * @var array
      */
-    protected $identityAliases = array();
+    protected $identityAliases = [];
 
     /**
      * @var bool
@@ -70,7 +70,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * @var array
      */
-    protected $cacheSubjectVisibilities = array();
+    protected $cacheSubjectVisibilities = [];
 
     /**
      * Constructor.
@@ -80,8 +80,8 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      * @param SharingIdentityConfigInterface[] $identityConfigs The identity configs
      */
     public function __construct(SharingProviderInterface $provider,
-                                array $subjectConfigs = array(),
-                                array $identityConfigs = array())
+                                array $subjectConfigs = [],
+                                array $identityConfigs = [])
     {
         $this->provider = $provider;
         $this->provider->setSharingManager($this);

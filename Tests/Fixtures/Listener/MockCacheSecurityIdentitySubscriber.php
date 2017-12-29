@@ -25,9 +25,9 @@ class MockCacheSecurityIdentitySubscriber implements EventSubscriberInterface, C
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            SecurityIdentityEvents::RETRIEVAL_ADD => array('onAddIdentity', 0),
-        );
+        return [
+            SecurityIdentityEvents::RETRIEVAL_ADD => ['onAddIdentity', 0],
+        ];
     }
 
     /**

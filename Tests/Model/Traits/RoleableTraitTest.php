@@ -28,17 +28,17 @@ class RoleableTraitTest extends TestCase
 
         $this->assertFalse($roleable->hasRole('ROLE_TEST'));
 
-        $roleable->setRoles(array(
+        $roleable->setRoles([
             'ROLE_TEST',
             'ROLE_USER',
             'ROLE_ORGANIZATION_USER',
-        ));
+        ]);
 
         $this->assertTrue($roleable->hasRole('ROLE_TEST'));
         $this->assertFalse($roleable->hasRole('ROLE_USER')); // Skip the ROLE_USER role
         $this->assertFalse($roleable->hasRole('ROLE_ORGANIZATION_USER')); // Skip the ROLE_ORGANIZATION_USER role
 
-        $this->assertEquals(array('ROLE_TEST'), $roleable->getRoles());
+        $this->assertEquals(['ROLE_TEST'], $roleable->getRoles());
 
         $roleable->removeRole('ROLE_TEST');
         $this->assertFalse($roleable->hasRole('ROLE_TEST'));
@@ -48,14 +48,14 @@ class RoleableTraitTest extends TestCase
     {
         $roleable = new MockUserRoleable();
 
-        $this->assertEquals(array('ROLE_USER'), $roleable->getRoles());
+        $this->assertEquals(['ROLE_USER'], $roleable->getRoles());
 
         $roleable->addRole('ROLE_TEST');
 
-        $validRoles = array(
+        $validRoles = [
             'ROLE_TEST',
             'ROLE_USER',
-        );
+        ];
         $this->assertEquals($validRoles, $roleable->getRoles());
     }
 
@@ -65,14 +65,14 @@ class RoleableTraitTest extends TestCase
         $user = new MockUserRoleable();
         $roleable = new MockOrganizationUserRoleableGroupable($org, $user);
 
-        $this->assertEquals(array('ROLE_ORGANIZATION_USER'), $roleable->getRoles());
+        $this->assertEquals(['ROLE_ORGANIZATION_USER'], $roleable->getRoles());
 
         $roleable->addRole('ROLE_TEST');
 
-        $validRoles = array(
+        $validRoles = [
             'ROLE_TEST',
             'ROLE_ORGANIZATION_USER',
-        );
+        ];
         $this->assertEquals($validRoles, $roleable->getRoles());
     }
 }

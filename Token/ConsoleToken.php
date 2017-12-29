@@ -30,7 +30,7 @@ class ConsoleToken extends AbstractToken
      * @param string $user  The user
      * @param Role[] $roles An array of roles
      */
-    public function __construct($key, $user, array $roles = array())
+    public function __construct($key, $user, array $roles = [])
     {
         parent::__construct($roles);
 
@@ -62,7 +62,7 @@ class ConsoleToken extends AbstractToken
      */
     public function serialize()
     {
-        return serialize(array($this->key, parent::serialize()));
+        return serialize([$this->key, parent::serialize()]);
     }
 
     /**

@@ -96,7 +96,7 @@ class MockUserGroupable implements UserInterface, GroupableInterface
      */
     public function getRoles()
     {
-        return array('ROLE_TEST');
+        return ['ROLE_TEST'];
     }
 
     /**
@@ -112,8 +112,8 @@ class MockUserGroupable implements UserInterface, GroupableInterface
      */
     public function getGroups()
     {
-        return array(
+        return [
             new MockGroup('GROUP_TEST'),
-        );
+        ];
     }
 }

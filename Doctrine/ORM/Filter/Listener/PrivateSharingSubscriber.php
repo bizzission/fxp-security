@@ -38,9 +38,9 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
             SharingVisibilities::TYPE_PRIVATE
         );
 
-        return array(
-            $privateFilter => array('getFilter', 0),
-        );
+        return [
+            $privateFilter => ['getFilter', 0],
+        ];
     }
 
     /**
@@ -102,7 +102,7 @@ SELECTCLAUSE;
     {
         $where = '';
         $mapSids = (array) $event->getRealParameter('map_security_identities');
-        $mapSids = !empty($mapSids) ? $mapSids : array('_without_security_identity' => 'null');
+        $mapSids = !empty($mapSids) ? $mapSids : ['_without_security_identity' => 'null'];
         $connection = $event->getConnection();
 
         foreach ($mapSids as $type => $stringIds) {

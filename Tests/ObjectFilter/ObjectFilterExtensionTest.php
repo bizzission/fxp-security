@@ -43,11 +43,11 @@ class ObjectFilterExtensionTest extends TestCase
         $voter3->expects($this->never())
             ->method('getValue');
 
-        $ofe = new ObjectFilterExtension(array(
+        $ofe = new ObjectFilterExtension([
             $voter1,
             $voter2,
             $voter3,
-        ));
+        ]);
 
         $this->assertSame('TEST', $ofe->filterValue(42));
     }

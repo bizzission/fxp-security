@@ -65,11 +65,11 @@ class SecurityIdentityManagerTest extends TestCase
 
     public function getAuthenticationTrustResolverStatus()
     {
-        return array(
-            array('isFullFledged', 7),
-            array('isRememberMe', 6),
-            array('isAnonymous', 5),
-        );
+        return [
+            ['isFullFledged', 7],
+            ['isRememberMe', 6],
+            ['isAnonymous', 5],
+        ];
     }
 
     /**
@@ -112,9 +112,9 @@ class SecurityIdentityManagerTest extends TestCase
             ->method('getUsername')
             ->willReturn('user.test');
 
-        $tokenRoles = array(
+        $tokenRoles = [
             new Role('ROLE_TOKEN'),
-        );
+        ];
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
@@ -131,14 +131,14 @@ class SecurityIdentityManagerTest extends TestCase
             ->with($tokenRoles)
             ->willReturn($tokenRoles);
 
-        if (in_array($trustMethod, array('isRememberMe', 'isAnonymous'))) {
+        if (in_array($trustMethod, ['isRememberMe', 'isAnonymous'])) {
             $this->authenticationTrustResolver->expects($this->once())
                 ->method('isFullFledged')
                 ->with($token)
                 ->willReturn(false);
         }
 
-        if (in_array($trustMethod, array('isAnonymous'))) {
+        if (in_array($trustMethod, ['isAnonymous'])) {
             $this->authenticationTrustResolver->expects($this->once())
                 ->method('isRememberMe')
                 ->with($token)

@@ -24,7 +24,7 @@ class UnitOfWork implements UnitOfWorkInterface
      *
      * @var array
      */
-    private $originalObjectData = array();
+    private $originalObjectData = [];
 
     /**
      * {@inheritdoc}
@@ -45,7 +45,7 @@ class UnitOfWork implements UnitOfWorkInterface
             return;
         }
 
-        $this->originalObjectData[$oid] = array();
+        $this->originalObjectData[$oid] = [];
         $ref = new \ReflectionClass($object);
 
         foreach ($ref->getProperties() as $property) {
@@ -78,10 +78,10 @@ class UnitOfWork implements UnitOfWorkInterface
         $oid = spl_object_hash($object);
 
         if (!array_key_exists($oid, $this->originalObjectData)) {
-            return array();
+            return [];
         }
 
-        $changeSet = array();
+        $changeSet = [];
         $ref = new \ReflectionClass($object);
 
         foreach ($ref->getProperties() as $property) {
@@ -90,10 +90,10 @@ class UnitOfWork implements UnitOfWorkInterface
             $newValue = $property->getValue($object);
 
             if ($newValue !== $oldValue) {
-                $changeSet[$property->getName()] = array(
+                $changeSet[$property->getName()] = [
                         'old' => $oldValue,
                         'new' => $newValue,
-                );
+                ];
             }
         }
 
@@ -105,6 +105,6 @@ class UnitOfWork implements UnitOfWorkInterface
      */
     public function flush()
     {
-        $this->originalObjectData = array();
+        $this->originalObjectData = [];
     }
 }

@@ -46,11 +46,11 @@ class GroupSecurityIdentityTest extends TestCase
         $id3->expects($this->any())->method('getType')->willReturn(MockGroup::class);
         $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
 
-        return array(
-            array(new GroupSecurityIdentity(MockGroup::class, 'identifier'), true),
-            array(new GroupSecurityIdentity(MockGroup::class, 'other'), false),
-            array($id3, false),
-        );
+        return [
+            [new GroupSecurityIdentity(MockGroup::class, 'identifier'), true],
+            [new GroupSecurityIdentity(MockGroup::class, 'other'), false],
+            [$id3, false],
+        ];
     }
 
     /**
@@ -93,7 +93,7 @@ class GroupSecurityIdentityTest extends TestCase
         $user = $this->getMockBuilder(GroupableInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getGroups')
-            ->willReturn(array($group));
+            ->willReturn([$group]);
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();

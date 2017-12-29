@@ -68,32 +68,32 @@ class PermissionVoterTest extends TestCase
         $class = MockObject::class;
         $object = new MockObject('foo');
         $fieldVote = new FieldVote($object, 'name');
-        $arrayValid = array($object, 'name');
-        $arrayInvalid = array($object);
+        $arrayValid = [$object, 'name'];
+        $arrayInvalid = [$object];
 
-        return array(
-            array(array(42), $class, VoterInterface::ACCESS_ABSTAIN),
-            array(array(42), $object, VoterInterface::ACCESS_ABSTAIN),
-            array(array(42), $fieldVote, VoterInterface::ACCESS_ABSTAIN),
-            array(array(42), $arrayValid, VoterInterface::ACCESS_ABSTAIN),
-            array(array(42), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
-            array(array('view'), $class, VoterInterface::ACCESS_ABSTAIN),
-            array(array('view'), $object, VoterInterface::ACCESS_ABSTAIN),
-            array(array('view'), $fieldVote, VoterInterface::ACCESS_ABSTAIN),
-            array(array('view'), $arrayValid, VoterInterface::ACCESS_ABSTAIN),
-            array(array('view'), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
-            array(array('perm_view'), $class, VoterInterface::ACCESS_GRANTED, true),
-            array(array('perm_view'), $object, VoterInterface::ACCESS_GRANTED, true),
-            array(array('perm_view'), $object, VoterInterface::ACCESS_DENIED, false),
-            array(array('perm_view'), $fieldVote, VoterInterface::ACCESS_GRANTED, true),
-            array(array('perm_view'), $fieldVote, VoterInterface::ACCESS_DENIED, false),
-            array(array('perm_view'), $arrayValid, VoterInterface::ACCESS_GRANTED, true),
-            array(array('perm_view'), $arrayValid, VoterInterface::ACCESS_DENIED, false),
-            array(array('perm_view'), $arrayInvalid, VoterInterface::ACCESS_ABSTAIN),
-            array(array('foo'), null, VoterInterface::ACCESS_ABSTAIN),
-            array(array('perm_foo'), null, VoterInterface::ACCESS_GRANTED, true),
-            array(array('perm_foo'), null, VoterInterface::ACCESS_DENIED, false),
-        );
+        return [
+            [[42], $class, VoterInterface::ACCESS_ABSTAIN],
+            [[42], $object, VoterInterface::ACCESS_ABSTAIN],
+            [[42], $fieldVote, VoterInterface::ACCESS_ABSTAIN],
+            [[42], $arrayValid, VoterInterface::ACCESS_ABSTAIN],
+            [[42], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN],
+            [['view'], $class, VoterInterface::ACCESS_ABSTAIN],
+            [['view'], $object, VoterInterface::ACCESS_ABSTAIN],
+            [['view'], $fieldVote, VoterInterface::ACCESS_ABSTAIN],
+            [['view'], $arrayValid, VoterInterface::ACCESS_ABSTAIN],
+            [['view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN],
+            [['perm_view'], $class, VoterInterface::ACCESS_GRANTED, true],
+            [['perm_view'], $object, VoterInterface::ACCESS_GRANTED, true],
+            [['perm_view'], $object, VoterInterface::ACCESS_DENIED, false],
+            [['perm_view'], $fieldVote, VoterInterface::ACCESS_GRANTED, true],
+            [['perm_view'], $fieldVote, VoterInterface::ACCESS_DENIED, false],
+            [['perm_view'], $arrayValid, VoterInterface::ACCESS_GRANTED, true],
+            [['perm_view'], $arrayValid, VoterInterface::ACCESS_DENIED, false],
+            [['perm_view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN],
+            [['foo'], null, VoterInterface::ACCESS_ABSTAIN],
+            [['perm_foo'], null, VoterInterface::ACCESS_GRANTED, true],
+            [['perm_foo'], null, VoterInterface::ACCESS_DENIED, false],
+        ];
     }
 
     /**
@@ -106,9 +106,9 @@ class PermissionVoterTest extends TestCase
      */
     public function testVote(array $attributes, $subject, $result, $permManagerResult = null)
     {
-        $sids = array(
+        $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
-        );
+        ];
 
         if (null !== $permManagerResult) {
             $this->sidManager->expects($this->once())

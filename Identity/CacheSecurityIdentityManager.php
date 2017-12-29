@@ -29,14 +29,14 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
     /**
      * @var array
      */
-    private $cacheExec = array();
+    private $cacheExec = [];
 
     /**
      * Invalidate the execution cache.
      */
     public function invalidateCache()
     {
-        $this->cacheExec = array();
+        $this->cacheExec = [];
     }
 
     /**
@@ -45,7 +45,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
     public function getSecurityIdentities(TokenInterface $token = null)
     {
         if (null === $token) {
-            return array();
+            return [];
         }
 
         $id = $this->buildId($token);
@@ -84,7 +84,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
     protected function getCacheIdentityListeners()
     {
         if (null === $this->cacheIdentityListeners) {
-            $this->cacheIdentityListeners = array();
+            $this->cacheIdentityListeners = [];
             $listeners = $this->dispatcher->getListeners(SecurityIdentityEvents::RETRIEVAL_ADD);
 
             foreach ($listeners as $listener) {

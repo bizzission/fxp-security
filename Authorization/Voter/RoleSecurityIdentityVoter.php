@@ -45,7 +45,7 @@ class RoleSecurityIdentityVoter extends RoleVoter
     public function __construct(SecurityIdentityManagerInterface $sim, $prefix = 'ROLE_')
     {
         $this->sim = $sim;
-        $this->cacheExec = array();
+        $this->cacheExec = [];
 
         parent::__construct($prefix);
     }
@@ -62,7 +62,7 @@ class RoleSecurityIdentityVoter extends RoleVoter
             return $this->cacheExec[$id];
         }
 
-        $roles = array();
+        $roles = [];
 
         foreach ($sids as $sid) {
             if ($sid instanceof RoleSecurityIdentity) {

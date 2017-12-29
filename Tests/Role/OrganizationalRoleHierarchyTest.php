@@ -89,11 +89,11 @@ class OrganizationalRoleHierarchyTest extends TestCase
         $this->repo = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $this->filters = $this->getMockBuilder(FilterCollection::class)->disableOriginalConstructor()->getMock();
 
-        $hierarchy = array(
-            'ROLE_ADMIN' => array(
+        $hierarchy = [
+            'ROLE_ADMIN' => [
                 'ROLE_USER',
-            ),
-        );
+            ],
+        ];
         $this->roleHierarchy = new OrganizationalRoleHierarchy(
             $hierarchy,
             $this->registry,
@@ -121,11 +121,11 @@ class OrganizationalRoleHierarchyTest extends TestCase
 
     public function getOrganizationContextType()
     {
-        return array(
-            array(null),
-            array('user'),
-            array('organization'),
-        );
+        return [
+            [null],
+            ['user'],
+            ['organization'],
+        ];
     }
 
     /**
@@ -137,13 +137,13 @@ class OrganizationalRoleHierarchyTest extends TestCase
     {
         $this->initOrgContextType($orgContextType);
 
-        $roles = array(
+        $roles = [
             new MockRole('ROLE_ADMIN'),
-        );
-        $validRoles = array(
+        ];
+        $validRoles = [
             new Role('ROLE_ADMIN'),
             new Role('ROLE_USER'),
-        );
+        ];
 
         $cacheItem = $this->getMockBuilder(CacheItemInterface::class)->getMock();
 
@@ -164,9 +164,9 @@ class OrganizationalRoleHierarchyTest extends TestCase
         $this->eventDispatcher->expects($this->atLeastOnce())
             ->method('dispatch');
 
-        $sqlFilters = array(
-            'test_filter' => $this->getMockForAbstractClass(SQLFilter::class, array(), '', false),
-        );
+        $sqlFilters = [
+            'test_filter' => $this->getMockForAbstractClass(SQLFilter::class, [], '', false),
+        ];
 
         $this->filters->expects($this->once())
             ->method('getEnabledFilters')
@@ -193,12 +193,12 @@ class OrganizationalRoleHierarchyTest extends TestCase
 
         $dbRoleChildren->expects($this->once())
             ->method('toArray')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->repo->expects($this->once())
             ->method('findBy')
-            ->with(array('name' => array('ROLE_ADMIN')))
-            ->willReturn(array($dbRole));
+            ->with(['name' => ['ROLE_ADMIN']])
+            ->willReturn([$dbRole]);
 
         $this->filters->expects($this->once())
             ->method('enable')
@@ -225,7 +225,7 @@ class OrganizationalRoleHierarchyTest extends TestCase
     {
         $org = null;
 
-        if (in_array($orgContextType, array('user', 'organization'))) {
+        if (in_array($orgContextType, ['user', 'organization'])) {
             $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
             $org->expects($this->once())
                 ->method('isUserOrganization')

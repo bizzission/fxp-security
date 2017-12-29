@@ -37,11 +37,11 @@ class ObjectFilterListener extends AbstractPermissionListener
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::postLoad,
             Events::onFlush,
             Events::postFlush,
-        );
+        ];
     }
 
     /**
@@ -136,10 +136,10 @@ class ObjectFilterListener extends AbstractPermissionListener
      */
     protected function getInitProperties()
     {
-        return array(
+        return [
             'tokenStorage' => 'setTokenStorage',
             'permissionManager' => 'setPermissionManager',
             'objectFilter' => 'setObjectFilter',
-        );
+        ];
     }
 }

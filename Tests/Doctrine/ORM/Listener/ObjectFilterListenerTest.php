@@ -80,11 +80,11 @@ class ObjectFilterListenerTest extends TestCase
 
     public function getInvalidInitMethods()
     {
-        return array(
-            array('setTokenStorage', array()),
-            array('setPermissionManager', array('tokenStorage')),
-            array('setObjectFilter', array('tokenStorage', 'permissionManager')),
-        );
+        return [
+            ['setTokenStorage', []],
+            ['setPermissionManager', ['tokenStorage']],
+            ['setObjectFilter', ['tokenStorage', 'permissionManager']],
+        ];
     }
 
     /**
@@ -124,7 +124,7 @@ class ObjectFilterListenerTest extends TestCase
     {
         $this->permissionManager->expects($this->once())
             ->method('resetPreloadPermissions')
-            ->with(array());
+            ->with([]);
 
         $this->listener->postFlush();
     }
@@ -281,15 +281,15 @@ class ObjectFilterListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array($object));
+            ->willReturn([$object]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->objectFilter->expects($this->once())
             ->method('restore');
@@ -321,15 +321,15 @@ class ObjectFilterListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array($object));
+            ->willReturn([$object]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->objectFilter->expects($this->once())
             ->method('restore');
@@ -361,15 +361,15 @@ class ObjectFilterListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array($object));
+            ->willReturn([$object]);
 
         $this->listener->onFlush($args);
     }
@@ -397,15 +397,15 @@ class ObjectFilterListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->objectFilter->expects($this->once())
             ->method('commit');

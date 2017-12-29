@@ -67,12 +67,12 @@ class CacheSecurityIdentityManagerTest extends TestCase
 
         $token->expects($this->exactly(2))
             ->method('getRoles')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->roleHierarchy->expects($this->exactly(2))
             ->method('getReachableRoles')
-            ->with(array())
-            ->willReturn(array());
+            ->with([])
+            ->willReturn([]);
 
         $this->authenticationTrustResolver->expects($this->exactly(2))
             ->method('isFullFledged')

@@ -30,7 +30,7 @@ abstract class IdentityUtils
      */
     public static function merge(array $sids, array $newSids)
     {
-        $existingSids = array();
+        $existingSids = [];
 
         foreach ($sids as $sid) {
             $existingSids[] = $sid->getType().'::'.$sid->getIdentifier();
@@ -57,7 +57,7 @@ abstract class IdentityUtils
      */
     public static function filterRolesIdentities(array $sids)
     {
-        $roles = array();
+        $roles = [];
 
         foreach ($sids as $sid) {
             if ($sid instanceof RoleSecurityIdentity && false === strpos($sid->getIdentifier(), 'IS_')) {

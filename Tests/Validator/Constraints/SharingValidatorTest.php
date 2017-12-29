@@ -57,15 +57,15 @@ class SharingValidatorTest extends TestCase
         $constraint = new Sharing();
         $sharing = new MockSharing();
 
-        $this->addViolation(0, 'sharing.class.invalid', 'subjectClass', array(
+        $this->addViolation(0, 'sharing.class.invalid', 'subjectClass', [
             '%class_property%' => 'subjectClass',
             '%class%' => null,
-        ));
+        ]);
 
-        $this->addViolation(1, 'sharing.class.invalid', 'identityClass', array(
+        $this->addViolation(1, 'sharing.class.invalid', 'identityClass', [
             '%class_property%' => 'identityClass',
             '%class%' => null,
-        ));
+        ]);
 
         $this->validator->initialize($this->context);
         $this->validator->validate($sharing, $constraint);
@@ -83,20 +83,20 @@ class SharingValidatorTest extends TestCase
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(false);
 
-        $this->addViolation(0, 'sharing.class.not_managed', 'subjectClass', array(
+        $this->addViolation(0, 'sharing.class.not_managed', 'subjectClass', [
             '%class_property%' => 'subjectClass',
             '%class%' => MockObject::class,
-        ));
+        ]);
 
         $this->sharingManager->expects($this->at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
             ->willReturn(false);
 
-        $this->addViolation(1, 'sharing.class.not_managed', 'identityClass', array(
+        $this->addViolation(1, 'sharing.class.not_managed', 'identityClass', [
             '%class_property%' => 'identityClass',
             '%class%' => MockRole::class,
-        ));
+        ]);
 
         $this->validator->initialize($this->context);
         $this->validator->validate($sharing, $constraint);
@@ -108,7 +108,7 @@ class SharingValidatorTest extends TestCase
         $sharing = new MockSharing();
         $sharing->setSubjectClass(MockObject::class);
         $sharing->setIdentityClass(MockRole::class);
-        $sharing->setRoles(array('ROLE_TEST'));
+        $sharing->setRoles(['ROLE_TEST']);
 
         $this->sharingManager->expects($this->at(0))
             ->method('hasSharingVisibility')
@@ -127,10 +127,10 @@ class SharingValidatorTest extends TestCase
             ->with(MockRole::class)
             ->willReturn($config);
 
-        $this->addViolation(0, 'sharing.class.identity_not_roleable', 'roles', array(
+        $this->addViolation(0, 'sharing.class.identity_not_roleable', 'roles', [
             '%class_property%' => 'identityClass',
             '%class%' => MockRole::class,
-        ));
+        ]);
 
         $this->validator->initialize($this->context);
         $this->validator->validate($sharing, $constraint);
@@ -161,10 +161,10 @@ class SharingValidatorTest extends TestCase
             ->with(MockRole::class)
             ->willReturn($config);
 
-        $this->addViolation(0, 'sharing.class.identity_not_permissible', 'permissions', array(
+        $this->addViolation(0, 'sharing.class.identity_not_permissible', 'permissions', [
             '%class_property%' => 'identityClass',
             '%class%' => MockRole::class,
-        ));
+        ]);
 
         $this->validator->initialize($this->context);
         $this->validator->validate($sharing, $constraint);
@@ -176,7 +176,7 @@ class SharingValidatorTest extends TestCase
         $sharing = new MockSharing();
         $sharing->setSubjectClass(MockObject::class);
         $sharing->setIdentityClass(MockRole::class);
-        $sharing->setRoles(array('ROLE_TEST'));
+        $sharing->setRoles(['ROLE_TEST']);
         $sharing->getPermissions()->add(new MockPermission());
 
         $this->sharingManager->expects($this->at(0))
@@ -208,7 +208,7 @@ class SharingValidatorTest extends TestCase
      * @param string $path       The property path
      * @param array  $parameters The violation parameters
      */
-    protected function addViolation($position, $message, $path, array $parameters = array())
+    protected function addViolation($position, $message, $path, array $parameters = [])
     {
         $vb = $this->getMockBuilder(ConstraintViolationBuilderInterface::class)->getMock();
         $i = 0;

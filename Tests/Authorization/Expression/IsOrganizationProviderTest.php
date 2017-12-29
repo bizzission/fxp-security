@@ -32,15 +32,15 @@ class IsOrganizationProviderTest extends TestCase
             ->with()
             ->willReturn(true);
 
-        $expressionLanguage = new ExpressionLanguage(null, array(new IsOrganizationProvider()));
-        $variables = array(
+        $expressionLanguage = new ExpressionLanguage(null, [new IsOrganizationProvider()]);
+        $variables = [
             'object' => $org,
             'organizational_context' => $orgContext,
-        );
+        ];
 
         $this->assertTrue($expressionLanguage->evaluate('is_organization()', $variables));
 
         $compiled = '$organizational_context && $organizational_context->isOrganization()';
-        $this->assertEquals($compiled, $expressionLanguage->compile('is_organization()', array('object')));
+        $this->assertEquals($compiled, $expressionLanguage->compile('is_organization()', ['object']));
     }
 }

@@ -41,8 +41,8 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
      * @param string[] $mappingPermissions The map of alias permission and real permission
      */
     public function __construct($field,
-                                array $operations = array(),
-                                array $mappingPermissions = array())
+                                array $operations = [],
+                                array $mappingPermissions = [])
     {
         $this->field = $field;
         $this->operations = array_values($operations);

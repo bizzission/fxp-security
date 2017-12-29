@@ -81,11 +81,11 @@ class RoleHierarchyTest extends TestCase
         $this->repo = $this->getMockBuilder(ObjectRepository::class)->getMock();
         $this->filters = $this->getMockBuilder(FilterCollection::class)->disableOriginalConstructor()->getMock();
 
-        $hierarchy = array(
-            'ROLE_ADMIN' => array(
+        $hierarchy = [
+            'ROLE_ADMIN' => [
                 'ROLE_USER',
-            ),
-        );
+            ],
+        ];
         $this->roleHierarchy = new RoleHierarchy($hierarchy, $this->registry, $this->roleClassname, $this->cache);
 
         $this->roleHierarchy->setEventDispatcher($this->eventDispatcher);
@@ -107,13 +107,13 @@ class RoleHierarchyTest extends TestCase
 
     public function testGetReachableRolesWithCustomRoles()
     {
-        $roles = array(
+        $roles = [
             new MockRole('ROLE_ADMIN'),
-        );
-        $validRoles = array(
+        ];
+        $validRoles = [
             new Role('ROLE_ADMIN'),
             new Role('ROLE_USER'),
-        );
+        ];
 
         $cacheItem = $this->getMockBuilder(CacheItemInterface::class)->getMock();
 
@@ -134,9 +134,9 @@ class RoleHierarchyTest extends TestCase
         $this->eventDispatcher->expects($this->atLeastOnce())
             ->method('dispatch');
 
-        $sqlFilters = array(
-            'test_filter' => $this->getMockForAbstractClass(SQLFilter::class, array(), '', false),
-        );
+        $sqlFilters = [
+            'test_filter' => $this->getMockForAbstractClass(SQLFilter::class, [], '', false),
+        ];
 
         $this->filters->expects($this->once())
             ->method('getEnabledFilters')
@@ -163,12 +163,12 @@ class RoleHierarchyTest extends TestCase
 
         $dbRoleChildren->expects($this->once())
             ->method('toArray')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->repo->expects($this->once())
             ->method('findBy')
-            ->with(array('name' => array('ROLE_ADMIN')))
-            ->willReturn(array($dbRole));
+            ->with(['name' => ['ROLE_ADMIN']])
+            ->willReturn([$dbRole]);
 
         $this->filters->expects($this->once())
             ->method('enable')
@@ -193,13 +193,13 @@ class RoleHierarchyTest extends TestCase
 
     public function testGetReachableRolesWithCachedRoles()
     {
-        $roles = array(
+        $roles = [
             new MockRole('ROLE_ADMIN'),
-        );
-        $validRoles = array(
+        ];
+        $validRoles = [
             new Role('ROLE_ADMIN'),
             new Role('ROLE_USER'),
-        );
+        ];
 
         $cacheItem = $this->getMockBuilder(CacheItemInterface::class)->getMock();
 
@@ -210,10 +210,10 @@ class RoleHierarchyTest extends TestCase
         $cacheItem->expects($this->once())
             ->method('get')
             ->with()
-            ->willReturn(array(
+            ->willReturn([
                 new Role('ROLE_ADMIN'),
                 new Role('ROLE_USER'),
-            ));
+            ]);
 
         $cacheItem->expects($this->once())
             ->method('isHit')
@@ -232,9 +232,9 @@ class RoleHierarchyTest extends TestCase
      */
     public function testInvalidRoleClassName()
     {
-        $roles = array(
+        $roles = [
             $this->getMockBuilder(\stdClass::class)->getMock(),
-        );
+        ];
 
         $this->roleHierarchy->getReachableRoles($roles);
     }

@@ -32,7 +32,7 @@ class MixedValue implements ObjectFilterVoterInterface
     public function getValue($value)
     {
         return is_array($value)
-            ? array()
+            ? []
             : null;
     }
 }

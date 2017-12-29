@@ -32,11 +32,11 @@ class IsBasicAuthProviderTest extends TestCase
             ->with($token)
             ->willReturn(false);
 
-        $expressionLanguage = new ExpressionLanguage(null, array(new IsBasicAuthProvider()));
-        $variables = array(
+        $expressionLanguage = new ExpressionLanguage(null, [new IsBasicAuthProvider()]);
+        $variables = [
             'token' => $token,
             'trust_resolver' => $trustResolver,
-        );
+        ];
 
         $this->assertTrue($expressionLanguage->evaluate('is_basic_auth()', $variables));
 

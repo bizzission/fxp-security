@@ -52,11 +52,11 @@ class OrganizationSecurityIdentityTest extends TestCase
         $id3->expects($this->any())->method('getType')->willReturn(MockOrganization::class);
         $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
 
-        return array(
-            array(new OrganizationSecurityIdentity(MockOrganization::class, 'identifier'), true),
-            array(new OrganizationSecurityIdentity(MockOrganization::class, 'other'), false),
-            array($id3, false),
-        );
+        return [
+            [new OrganizationSecurityIdentity(MockOrganization::class, 'identifier'), true],
+            [new OrganizationSecurityIdentity(MockOrganization::class, 'other'), false],
+            [$id3, false],
+        ];
     }
 
     /**

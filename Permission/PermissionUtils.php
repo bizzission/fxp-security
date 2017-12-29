@@ -61,7 +61,7 @@ abstract class PermissionUtils
                 : null;
         }
 
-        return array($subject, $field);
+        return [$subject, $field];
     }
 
     /**
@@ -81,6 +81,6 @@ abstract class PermissionUtils
             ? $subject->getType()
             : null;
 
-        return array($class, $field);
+        return [$class, $field];
     }
 }

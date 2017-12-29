@@ -24,13 +24,13 @@ class PreLoadPermissionsEventTest extends TestCase
 {
     public function testEvent()
     {
-        $sids = array(
+        $sids = [
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
-        );
-        $roles = array(
+        ];
+        $roles = [
             'ROLE_USER',
-        );
+        ];
 
         $event = new PreLoadPermissionsEvent($sids, $roles);
 

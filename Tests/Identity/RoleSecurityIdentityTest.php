@@ -46,11 +46,11 @@ class RoleSecurityIdentityTest extends TestCase
         $id3->expects($this->any())->method('getType')->willReturn(MockRole::class);
         $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
 
-        return array(
-            array(new RoleSecurityIdentity(MockRole::class, 'identifier'), true),
-            array(new RoleSecurityIdentity(MockRole::class, 'other'), false),
-            array($id3, false),
-        );
+        return [
+            [new RoleSecurityIdentity(MockRole::class, 'identifier'), true],
+            [new RoleSecurityIdentity(MockRole::class, 'other'), false],
+            [$id3, false],
+        ];
     }
 
     /**
@@ -93,7 +93,7 @@ class RoleSecurityIdentityTest extends TestCase
         $user = $this->getMockBuilder(RoleableInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getRoles')
-            ->willReturn(array($role));
+            ->willReturn([$role]);
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();

@@ -89,7 +89,7 @@ class SharingProvider implements SharingProviderInterface
     public function getPermissionRoles(array $roles)
     {
         if (empty($roles)) {
-            return array();
+            return [];
         }
 
         $qb = $this->roleRepo->createQueryBuilder('r')
@@ -114,7 +114,7 @@ class SharingProvider implements SharingProviderInterface
     public function getSharingEntries(array $subjects, $sids = null)
     {
         if (empty($subjects) || null === $this->sharingRepo) {
-            return array();
+            return [];
         }
 
         $sids = $this->getSecurityIdentities($sids);
@@ -198,7 +198,7 @@ class SharingProvider implements SharingProviderInterface
     private function addWhereForSharing(QueryBuilder $qb, array $subjects, array $sids)
     {
         $where = '';
-        $parameters = array();
+        $parameters = [];
 
         foreach ($subjects as $i => $subject) {
             $class = 'subject'.$i.'_class';
@@ -230,7 +230,7 @@ class SharingProvider implements SharingProviderInterface
     {
         if (!empty($sids) && !empty($groupSids = $this->groupSecurityIdentities($sids))) {
             $where = '';
-            $parameters = array();
+            $parameters = [];
             $i = 0;
 
             foreach ($groupSids as $type => $identifiers) {
@@ -262,7 +262,7 @@ class SharingProvider implements SharingProviderInterface
      */
     private function groupSecurityIdentities(array $sids)
     {
-        $groupSids = array();
+        $groupSids = [];
 
         if (null === $this->sharingManager) {
             throw new InvalidArgumentException('The "setSharingManager()" must be called before');
@@ -293,6 +293,6 @@ class SharingProvider implements SharingProviderInterface
 
         return null !== $sids
             ? $sids
-            : array();
+            : [];
     }
 }

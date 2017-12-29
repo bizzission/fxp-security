@@ -45,12 +45,12 @@ class DisablePermissionSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            SecurityIdentityEvents::RETRIEVAL_PRE => array('disablePermissionManager', -255),
-            ReachableRoleEvents::PRE => array('disablePermissionManager', -255),
-            SecurityIdentityEvents::RETRIEVAL_POST => array('enablePermissionManager', 255),
-            ReachableRoleEvents::POST => array('enablePermissionManager', 255),
-        );
+        return [
+            SecurityIdentityEvents::RETRIEVAL_PRE => ['disablePermissionManager', -255],
+            ReachableRoleEvents::PRE => ['disablePermissionManager', -255],
+            SecurityIdentityEvents::RETRIEVAL_POST => ['enablePermissionManager', 255],
+            ReachableRoleEvents::POST => ['enablePermissionManager', 255],
+        ];
     }
 
     /**

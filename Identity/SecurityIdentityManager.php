@@ -48,7 +48,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
     /**
      * @var Role[]
      */
-    protected $roles = array();
+    protected $roles = [];
 
     /**
      * Constructor.
@@ -83,7 +83,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      */
     public function getSecurityIdentities(TokenInterface $token = null)
     {
-        $sids = array();
+        $sids = [];
 
         if (null === $token) {
             return $sids;
@@ -206,7 +206,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      */
     private function getRoleNames(array $sids)
     {
-        $roles = array();
+        $roles = [];
 
         foreach ($sids as $sid) {
             if ($sid instanceof RoleSecurityIdentity) {

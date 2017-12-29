@@ -42,11 +42,11 @@ class RoleSecurityIdentityVoterTest extends TestCase
 
     public function getAccessResults()
     {
-        return array(
-            array(array('TEST_ADMIN'), VoterInterface::ACCESS_GRANTED),
-            array(array('TEST_USER'), VoterInterface::ACCESS_DENIED),
-            array(array('ROLE_ADMIN'), VoterInterface::ACCESS_ABSTAIN),
-        );
+        return [
+            [['TEST_ADMIN'], VoterInterface::ACCESS_GRANTED],
+            [['TEST_USER'], VoterInterface::ACCESS_DENIED],
+            [['ROLE_ADMIN'], VoterInterface::ACCESS_ABSTAIN],
+        ];
     }
 
     /**
@@ -60,9 +60,9 @@ class RoleSecurityIdentityVoterTest extends TestCase
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $sids = array(
+        $sids = [
             new RoleSecurityIdentity(MockRole::class, 'TEST_ADMIN'),
-        );
+        ];
 
         $this->sidManager->expects($this->atLeast(2))
             ->method('getSecurityIdentities')

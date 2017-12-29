@@ -64,9 +64,9 @@ class AnonymousRoleListenerTest extends TestCase
     protected function setUp()
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->config = array(
+        $this->config = [
             'role' => 'ROLE_CUSTOM_ANONYMOUS',
-        );
+        ];
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->request = $this->getMockBuilder(Request::class)->getMock();
@@ -109,9 +109,9 @@ class AnonymousRoleListenerTest extends TestCase
     {
         $this->listener = new AnonymousRoleListener(
             $this->sidManager,
-            array(
+            [
                 'role' => null,
-            ),
+            ],
             $this->trustResolver,
             $this->tokenStorage
         );

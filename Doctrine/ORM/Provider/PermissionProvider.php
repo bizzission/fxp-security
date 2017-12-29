@@ -57,7 +57,7 @@ class PermissionProvider implements PermissionProviderInterface
     public function getPermissions(array $roles)
     {
         if (empty($roles)) {
-            return array();
+            return [];
         }
 
         $qb = $this->permissionRepo->createQueryBuilder('p')

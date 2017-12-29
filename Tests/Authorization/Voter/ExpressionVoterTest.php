@@ -91,10 +91,10 @@ class ExpressionVoterTest extends TestCase
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->variableStorage = new ExpressionVariableStorage(
-            array(
+            [
                 'organizational_context' => $this->context,
                 'organizational_role' => $this->orgRole,
-            ),
+            ],
             $this->sidManager
         );
         $this->variableStorage->add('trust_resolver', $this->trustResolver);
@@ -121,17 +121,17 @@ class ExpressionVoterTest extends TestCase
 
     public function testWithoutExpression()
     {
-        $res = $this->voter->vote($this->token, null, array(42));
+        $res = $this->voter->vote($this->token, null, [42]);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $res);
     }
 
     public function getExpressionResults()
     {
-        return array(
-            array(VoterInterface::ACCESS_GRANTED, true),
-            array(VoterInterface::ACCESS_DENIED, false),
-        );
+        return [
+            [VoterInterface::ACCESS_GRANTED, true],
+            [VoterInterface::ACCESS_DENIED, false],
+        ];
     }
 
     /**
@@ -142,10 +142,10 @@ class ExpressionVoterTest extends TestCase
      */
     public function testWithExpression($resultVoter, $resultExpression)
     {
-        $sids = array(
+        $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
             new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
-        );
+        ];
 
         $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
@@ -167,13 +167,13 @@ class ExpressionVoterTest extends TestCase
                 $this->assertArrayHasKey('organizational_role', $variables);
                 $this->assertArrayNotHasKey('request', $variables);
 
-                $this->assertEquals(array('ROLE_USER'), $variables['roles']);
+                $this->assertEquals(['ROLE_USER'], $variables['roles']);
 
                 return $resultExpression;
             });
 
         $expression = new Expression('"ROLE_USER" in roles');
-        $res = $this->voter->vote($this->token, null, array($expression));
+        $res = $this->voter->vote($this->token, null, [$expression]);
 
         $this->assertSame($resultVoter, $res);
     }
@@ -182,7 +182,7 @@ class ExpressionVoterTest extends TestCase
     {
         $this->token->expects($this->once())
             ->method('getRoles')
-            ->willReturn(array(new Role('ROLE_USER')));
+            ->willReturn([new Role('ROLE_USER')]);
 
         $this->expressionLanguage->expects($this->once())
             ->method('evaluate')
@@ -199,7 +199,7 @@ class ExpressionVoterTest extends TestCase
                 $this->assertArrayNotHasKey('organizational_role', $variables);
                 $this->assertArrayHasKey('request', $variables);
 
-                $this->assertEquals(array('ROLE_USER'), $variables['roles']);
+                $this->assertEquals(['ROLE_USER'], $variables['roles']);
 
                 return true;
             });
@@ -215,7 +215,7 @@ class ExpressionVoterTest extends TestCase
             $dispatcher,
             $this->expressionLanguage
         );
-        $res = $voter->vote($this->token, $request, array($expression));
+        $res = $voter->vote($this->token, $request, [$expression]);
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $res);
     }

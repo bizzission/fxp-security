@@ -21,9 +21,9 @@ class ConsoleTokenTest extends TestCase
 {
     public function testConsoleToken()
     {
-        $token = new ConsoleToken('key', 'username', array(
+        $token = new ConsoleToken('key', 'username', [
             'ROLE_TEST',
-        ));
+        ]);
 
         $this->assertSame('', $token->getCredentials());
         $this->assertSame('key', $token->getKey());

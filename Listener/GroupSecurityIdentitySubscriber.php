@@ -29,9 +29,9 @@ class GroupSecurityIdentitySubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            SecurityIdentityEvents::RETRIEVAL_ADD => array('addGroupSecurityIdentities', 0),
-        );
+        return [
+            SecurityIdentityEvents::RETRIEVAL_ADD => ['addGroupSecurityIdentities', 0],
+        ];
     }
 
     /**

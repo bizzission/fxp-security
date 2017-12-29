@@ -40,7 +40,7 @@ trait OrganizationGroupsTrait
      */
     public function getOrganizationGroupNames()
     {
-        $names = array();
+        $names = [];
         foreach ($this->getOrganizationGroups() as $group) {
             $names[] = $group->getName();
         }

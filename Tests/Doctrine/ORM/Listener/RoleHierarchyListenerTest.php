@@ -85,18 +85,18 @@ class RoleHierarchyListenerTest extends TestCase
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(UserInterface::class)->getMock();
-        $changeSet = array(
-            'roles' => array(
-                array(),
-                array('ROLE_TEST'),
-            ),
-        );
+        $changeSet = [
+            'roles' => [
+                [],
+                ['ROLE_TEST'],
+            ],
+        ];
 
         $args->expects($this->once())
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($object));
+        $this->allScheduledCollections([$object]);
 
         $this->uow->expects($this->once())
             ->method('getEntityChangeSet')
@@ -105,7 +105,7 @@ class RoleHierarchyListenerTest extends TestCase
 
         $this->cache->expects($this->once())
             ->method('clearByPrefixes')
-            ->with(array('user__'));
+            ->with(['user__']);
 
         $this->sidManager->expects($this->once())
             ->method('invalidateCache');
@@ -118,13 +118,13 @@ class RoleHierarchyListenerTest extends TestCase
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(UserInterface::class)->getMock();
-        $changeSet = array();
+        $changeSet = [];
 
         $args->expects($this->once())
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($object));
+        $this->allScheduledCollections([$object]);
 
         $this->uow->expects($this->once())
             ->method('getEntityChangeSet')
@@ -148,18 +148,18 @@ class RoleHierarchyListenerTest extends TestCase
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
-        $changeSet = array(
-            'roles' => array(
-                array(),
-                array('ROLE_TEST'),
-            ),
-        );
+        $changeSet = [
+            'roles' => [
+                [],
+                ['ROLE_TEST'],
+            ],
+        ];
 
         $args->expects($this->once())
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($object));
+        $this->allScheduledCollections([$object]);
 
         $this->uow->expects($this->once())
             ->method('getEntityChangeSet')
@@ -168,7 +168,7 @@ class RoleHierarchyListenerTest extends TestCase
 
         $this->cache->expects($this->once())
             ->method('clearByPrefixes')
-            ->with(array('user__'));
+            ->with(['user__']);
 
         $this->sidManager->expects($this->once())
             ->method('invalidateCache');
@@ -181,18 +181,18 @@ class RoleHierarchyListenerTest extends TestCase
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(GroupInterface::class)->getMock();
-        $changeSet = array(
-            'roles' => array(
-                array(),
-                array('ROLE_TEST'),
-            ),
-        );
+        $changeSet = [
+            'roles' => [
+                [],
+                ['ROLE_TEST'],
+            ],
+        ];
 
         $args->expects($this->once())
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($object));
+        $this->allScheduledCollections([$object]);
 
         $this->uow->expects($this->once())
             ->method('getEntityChangeSet')
@@ -201,7 +201,7 @@ class RoleHierarchyListenerTest extends TestCase
 
         $this->cache->expects($this->once())
             ->method('clearByPrefixes')
-            ->with(array('user__'));
+            ->with(['user__']);
 
         $this->sidManager->expects($this->once())
             ->method('invalidateCache');
@@ -215,12 +215,12 @@ class RoleHierarchyListenerTest extends TestCase
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $object = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
-        $changeSet = array(
-            'roles' => array(
-                array(),
-                array('ROLE_TEST'),
-            ),
-        );
+        $changeSet = [
+            'roles' => [
+                [],
+                ['ROLE_TEST'],
+            ],
+        ];
 
         $object->expects($this->once())
             ->method('getOrganization')
@@ -234,7 +234,7 @@ class RoleHierarchyListenerTest extends TestCase
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($object));
+        $this->allScheduledCollections([$object]);
 
         $this->uow->expects($this->once())
             ->method('getEntityChangeSet')
@@ -243,7 +243,7 @@ class RoleHierarchyListenerTest extends TestCase
 
         $this->cache->expects($this->once())
             ->method('clearByPrefixes')
-            ->with(array('42__'));
+            ->with(['42__']);
 
         $this->sidManager->expects($this->once())
             ->method('invalidateCache');
@@ -253,10 +253,10 @@ class RoleHierarchyListenerTest extends TestCase
 
     public function getCollectionInterfaces()
     {
-        return array(
-            array(RoleHierarchicalInterface::class, 'children'),
-            array(GroupableInterface::class, 'groups'),
-        );
+        return [
+            [RoleHierarchicalInterface::class, 'children'],
+            [GroupableInterface::class, 'groups'],
+        ];
     }
 
     /**
@@ -276,22 +276,22 @@ class RoleHierarchyListenerTest extends TestCase
         $meta = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $persistCollection = new PersistentCollection($this->em, $meta, $collection);
 
-        $persistCollection->setOwner($object, array(
+        $persistCollection->setOwner($object, [
             'inversedBy' => '',
             'mappedBy' => '',
             'sourceEntity' => get_class($object),
             'fieldName' => $fieldName,
-        ));
+        ]);
 
         $args->expects($this->once())
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($persistCollection));
+        $this->allScheduledCollections([$persistCollection]);
 
         $this->cache->expects($this->once())
             ->method('clearByPrefixes')
-            ->with(array('user__'));
+            ->with(['user__']);
 
         $this->sidManager->expects($this->once())
             ->method('invalidateCache');
@@ -310,17 +310,17 @@ class RoleHierarchyListenerTest extends TestCase
         $meta = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $persistCollection = new PersistentCollection($this->em, $meta, $collection);
 
-        $persistCollection->setOwner($object, array(
+        $persistCollection->setOwner($object, [
             'inversedBy' => '',
             'mappedBy' => '',
             'sourceEntity' => get_class($object),
-        ));
+        ]);
 
         $args->expects($this->once())
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($persistCollection));
+        $this->allScheduledCollections([$persistCollection]);
 
         $this->cache->expects($this->never())
             ->method('clear');
@@ -339,18 +339,18 @@ class RoleHierarchyListenerTest extends TestCase
         /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
-        $changeSet = array(
-            'roles' => array(
-                array(),
-                array('ROLE_TEST'),
-            ),
-        );
+        $changeSet = [
+            'roles' => [
+                [],
+                ['ROLE_TEST'],
+            ],
+        ];
 
         $args->expects($this->once())
             ->method('getEntityManager')
             ->willReturn($this->em);
 
-        $this->allScheduledCollections(array($object));
+        $this->allScheduledCollections([$object]);
 
         $this->uow->expects($this->once())
             ->method('getEntityChangeSet')
@@ -371,11 +371,11 @@ class RoleHierarchyListenerTest extends TestCase
     /**
      * @param array $objects The objects
      */
-    protected function allScheduledCollections(array $objects = array())
+    protected function allScheduledCollections(array $objects = [])
     {
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
@@ -383,14 +383,14 @@ class RoleHierarchyListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledCollectionUpdates')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledCollectionDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
     }
 }

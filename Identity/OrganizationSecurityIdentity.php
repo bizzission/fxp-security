@@ -57,7 +57,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
-            return array();
+            return [];
         }
 
         return null !== $context
@@ -75,7 +75,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      */
     protected static function getSecurityIdentityForAllOrganizations(UserInterface $user, $roleHierarchy = null)
     {
-        $sids = array();
+        $sids = [];
 
         if ($user instanceof UserOrganizationUsersInterface) {
             foreach ($user->getUserOrganizations() as $userOrg) {
@@ -103,10 +103,10 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
     protected static function getSecurityIdentityForCurrentOrganization(OrganizationalContextInterface $context,
                                                                         $roleHierarchy = null)
     {
-        $sids = array();
+        $sids = [];
         $org = $context->getCurrentOrganization();
         $userOrg = $context->getCurrentOrganizationUser();
-        $orgRoles = array();
+        $orgRoles = [];
 
         if ($org) {
             $sids[] = self::fromAccount($org);
@@ -135,7 +135,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      */
     protected static function getOrganizationGroups(OrganizationUserInterface $user)
     {
-        $sids = array();
+        $sids = [];
         $orgName = $user->getOrganization()->getName();
 
         if ($user instanceof GroupableInterface) {
@@ -159,10 +159,10 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      */
     protected static function getOrganizationRoles(OrganizationInterface $organization, $roleHierarchy = null)
     {
-        $roles = array();
+        $roles = [];
 
         if ($organization instanceof RoleableInterface && $organization instanceof OrganizationInterface) {
-            $roles = self::buildOrganizationRoles(array(), $organization);
+            $roles = self::buildOrganizationRoles([], $organization);
 
             if ($roleHierarchy instanceof RoleHierarchyInterface) {
                 $roles = $roleHierarchy->getReachableRoles($roles);
@@ -182,7 +182,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      */
     protected static function getOrganizationUserRoles(OrganizationUserInterface $user, $roleHierarchy = null)
     {
-        $roles = array();
+        $roles = [];
 
         if ($user instanceof RoleableInterface && $user instanceof OrganizationUserInterface) {
             $org = $user->getOrganization();
@@ -229,7 +229,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
         $orgName = $org->getName();
 
         if ($org instanceof RoleableInterface) {
-            $existingRoles = array();
+            $existingRoles = [];
 
             foreach ($roles as $role) {
                 $existingRoles[] = $role->getRole();

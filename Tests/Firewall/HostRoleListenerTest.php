@@ -52,12 +52,12 @@ class HostRoleListenerTest extends TestCase
     protected function setUp()
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->config = array(
+        $this->config = [
             '/foo.bar.tld/' => 'ROLE_HOST',
             '/.*.baz.tld/' => 'ROLE_HOST_BAZ',
             '/.*.foo.*/' => 'ROLE_HOST_FOO',
             '*.bar' => 'ROLE_HOST_BAR',
-        );
+        ];
         $this->request = $this->getMockBuilder(Request::class)->getMock();
         $this->event = $this->getMockBuilder(GetResponseEvent::class)->disableOriginalConstructor()->getMock();
         $this->event->expects($this->any())
@@ -110,9 +110,9 @@ class HostRoleListenerTest extends TestCase
 
     public function testHandleWithAlreadyRoleIncluded()
     {
-        $token = new AnonymousToken('secret', 'user', array(
+        $token = new AnonymousToken('secret', 'user', [
             'ROLE_HOST',
-        ));
+        ]);
 
         $this->request->expects($this->once())
             ->method('getHttpHost')
@@ -129,17 +129,17 @@ class HostRoleListenerTest extends TestCase
 
     public function getHosts()
     {
-        return array(
-            array('foo.bar.tld', 'ROLE_HOST'),
-            array('foo.baz.tld', 'ROLE_HOST_BAZ'),
-            array('a.foo.tld', 'ROLE_HOST_FOO'),
-            array('b.foo.tld', 'ROLE_HOST_FOO'),
-            array('a.foo.com', 'ROLE_HOST_FOO'),
-            array('b.foo.com', 'ROLE_HOST_FOO'),
-            array('a.foo.org', 'ROLE_HOST_FOO'),
-            array('b.foo.org', 'ROLE_HOST_FOO'),
-            array('www.example.bar', 'ROLE_HOST_BAR'),
-        );
+        return [
+            ['foo.bar.tld', 'ROLE_HOST'],
+            ['foo.baz.tld', 'ROLE_HOST_BAZ'],
+            ['a.foo.tld', 'ROLE_HOST_FOO'],
+            ['b.foo.tld', 'ROLE_HOST_FOO'],
+            ['a.foo.com', 'ROLE_HOST_FOO'],
+            ['b.foo.com', 'ROLE_HOST_FOO'],
+            ['a.foo.org', 'ROLE_HOST_FOO'],
+            ['b.foo.org', 'ROLE_HOST_FOO'],
+            ['www.example.bar', 'ROLE_HOST_BAR'],
+        ];
     }
 
     /**
@@ -150,9 +150,9 @@ class HostRoleListenerTest extends TestCase
      */
     public function testHandle($host, $validRole)
     {
-        $token = new AnonymousToken('secret', 'user', array(
+        $token = new AnonymousToken('secret', 'user', [
             'ROLE_FOO',
-        ));
+        ]);
 
         $this->request->expects($this->once())
             ->method('getHttpHost')

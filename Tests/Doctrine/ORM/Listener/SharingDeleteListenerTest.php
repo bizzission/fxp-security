@@ -77,14 +77,14 @@ class SharingDeleteListenerTest extends TestCase
 
         $this->query = $this->getMockForAbstractClass(
             AbstractQuery::class,
-            array(),
+            [],
             '',
             false,
             false,
             true,
-            array(
+            [
                 'execute',
-            )
+            ]
         );
 
         $this->assertCount(2, $this->listener->getSubscribedEvents());
@@ -92,9 +92,9 @@ class SharingDeleteListenerTest extends TestCase
 
     public function getInvalidInitMethods()
     {
-        return array(
-            array('setSharingManager', array()),
-        );
+        return [
+            ['setSharingManager', []],
+        ];
     }
 
     /**
@@ -144,7 +144,7 @@ class SharingDeleteListenerTest extends TestCase
         $object2 = new MockObject('bar', 50);
         $role = new MockRole('ROLE_TEST', 23);
         $group = new MockGroup('GROUP_TEST', 32);
-        $deletions = array($object, $role, $object2, $group);
+        $deletions = [$object, $role, $object2, $group];
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
@@ -184,7 +184,7 @@ class SharingDeleteListenerTest extends TestCase
 
         $this->qb->expects($this->at(3))
             ->method('setParameter')
-            ->with('subjectIds_0', array(42, 50))
+            ->with('subjectIds_0', [42, 50])
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(4))
@@ -199,7 +199,7 @@ class SharingDeleteListenerTest extends TestCase
 
         $this->qb->expects($this->at(6))
             ->method('setParameter')
-            ->with('identityNames_0', array(23))
+            ->with('identityNames_0', [23])
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(7))
@@ -209,7 +209,7 @@ class SharingDeleteListenerTest extends TestCase
 
         $this->qb->expects($this->at(8))
             ->method('setParameter')
-            ->with('identityNames_1', array(32))
+            ->with('identityNames_1', [32])
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(9))

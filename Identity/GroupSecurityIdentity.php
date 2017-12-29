@@ -48,7 +48,7 @@ final class GroupSecurityIdentity extends AbstractSecurityIdentity
         $user = $token->getUser();
 
         if ($user instanceof GroupableInterface) {
-            $sids = array();
+            $sids = [];
             $groups = $user->getGroups();
 
             foreach ($groups as $group) {

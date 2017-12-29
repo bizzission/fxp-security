@@ -43,12 +43,12 @@ class SharingDeleteListener implements EventSubscriber
     /**
      * @var array
      */
-    protected $deleteSharingSubjects = array();
+    protected $deleteSharingSubjects = [];
 
     /**
      * @var array
      */
-    protected $deleteSharingIdentities = array();
+    protected $deleteSharingIdentities = [];
 
     /**
      * @var bool
@@ -72,10 +72,10 @@ class SharingDeleteListener implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::onFlush,
             Events::postFlush,
-        );
+        ];
     }
 
     /**
@@ -111,8 +111,8 @@ class SharingDeleteListener implements EventSubscriber
             $this->buildDeleteQuery($args->getEntityManager())->execute();
         }
 
-        $this->deleteSharingSubjects = array();
-        $this->deleteSharingIdentities = array();
+        $this->deleteSharingSubjects = [];
+        $this->deleteSharingIdentities = [];
     }
 
     /**
@@ -187,7 +187,7 @@ class SharingDeleteListener implements EventSubscriber
     {
         if (!empty($mapIds)) {
             $where = '';
-            $parameters = array();
+            $parameters = [];
             $i = 0;
 
             foreach ($mapIds as $type => $identifiers) {

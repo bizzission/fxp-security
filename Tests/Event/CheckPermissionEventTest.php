@@ -25,15 +25,15 @@ class CheckPermissionEventTest extends TestCase
 {
     public function testEvent()
     {
-        $sids = array(
+        $sids = [
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
-        );
-        $permissionMap = array(
-            '_global' => array(
+        ];
+        $permissionMap = [
+            '_global' => [
                 'test' => true,
-            ),
-        );
+            ],
+        ];
         $operation = 'test';
         $subject = MockObject::class;
         $field = 'name';

@@ -81,18 +81,18 @@ class SharingManagerTest extends TestCase
 
     public function testHasSubjectConfig()
     {
-        $pm = new SharingManager($this->provider, array(
+        $pm = new SharingManager($this->provider, [
             new SharingSubjectConfig(MockObject::class),
-        ));
+        ]);
 
         $this->assertTrue($pm->hasSubjectConfig(MockObject::class));
     }
 
     public function testHasIdentityConfig()
     {
-        $pm = new SharingManager($this->provider, array(), array(
+        $pm = new SharingManager($this->provider, [], [
             new SharingIdentityConfig(MockRole::class),
-        ));
+        ]);
 
         $this->assertTrue($pm->hasIdentityConfig(MockRole::class));
     }
@@ -178,7 +178,7 @@ class SharingManagerTest extends TestCase
         $config = new SharingSubjectConfig(MockRole::class);
         $this->sm->addSubjectConfig($config);
 
-        $this->assertSame(array($config), $this->sm->getSubjectConfigs());
+        $this->assertSame([$config], $this->sm->getSubjectConfigs());
     }
 
     public function testGetIdentityConfigs()
@@ -186,7 +186,7 @@ class SharingManagerTest extends TestCase
         $config = new SharingIdentityConfig(MockRole::class);
         $this->sm->addIdentityConfig($config);
 
-        $this->assertSame(array($config), $this->sm->getIdentityConfigs());
+        $this->assertSame([$config], $this->sm->getIdentityConfigs());
     }
 
     public function testHasIdentityRoleable()
@@ -222,11 +222,11 @@ class SharingManagerTest extends TestCase
 
     public function getSharingVisibilities()
     {
-        return array(
-            array(SharingVisibilities::TYPE_NONE, false),
-            array(SharingVisibilities::TYPE_PUBLIC, true),
-            array(SharingVisibilities::TYPE_PRIVATE, true),
-        );
+        return [
+            [SharingVisibilities::TYPE_NONE, false],
+            [SharingVisibilities::TYPE_PUBLIC, true],
+            [SharingVisibilities::TYPE_PRIVATE, true],
+        ];
     }
 
     /**
@@ -252,14 +252,14 @@ class SharingManagerTest extends TestCase
     public function testResetPreloadPermissions()
     {
         $object = new MockObject('foo', 42);
-        $sm = $this->sm->resetPreloadPermissions(array($object));
+        $sm = $this->sm->resetPreloadPermissions([$object]);
 
         $this->assertSame($sm, $this->sm);
     }
 
     public function testResetPreloadPermissionsWithInvalidSubjectIdentity()
     {
-        $sm = $this->sm->resetPreloadPermissions(array(42));
+        $sm = $this->sm->resetPreloadPermissions([42]);
 
         $this->assertSame($sm, $this->sm);
     }
@@ -292,12 +292,12 @@ class SharingManagerTest extends TestCase
         $sharing2->setSubjectId(42);
         $sharing2->setIdentityClass(MockUserRoleable::class);
         $sharing2->setIdentityName('user.test');
-        $sharing2->setRoles(array('ROLE_TEST'));
+        $sharing2->setRoles(['ROLE_TEST']);
 
         $this->provider->expects($this->once())
             ->method('getSharingEntries')
-            ->with(array(SubjectIdentity::fromObject($object)))
-            ->willReturn(array($sharing, $sharing2));
+            ->with([SubjectIdentity::fromObject($object)])
+            ->willReturn([$sharing, $sharing2]);
 
         $roleTest = new MockRole('ROLE_TEST');
         $perm2 = new MockPermission();
@@ -306,8 +306,8 @@ class SharingManagerTest extends TestCase
 
         $this->provider->expects($this->once())
             ->method('getPermissionRoles')
-            ->with(array('ROLE_TEST'))
-            ->willReturn(array($roleTest));
+            ->with(['ROLE_TEST'])
+            ->willReturn([$roleTest]);
 
         $sConfig = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
         $this->sm->addSubjectConfig($sConfig);
@@ -317,8 +317,8 @@ class SharingManagerTest extends TestCase
         $iConfig2 = new SharingIdentityConfig(MockUserRoleable::class, 'user', true);
         $this->sm->addIdentityConfig($iConfig2);
 
-        $this->sm->preloadPermissions(array($object));
-        $this->sm->preloadRolePermissions(array($subject));
+        $this->sm->preloadPermissions([$object]);
+        $this->sm->preloadRolePermissions([$subject]);
 
         $this->assertTrue($this->sm->isGranted($operation, $subject, $field));
     }
@@ -351,8 +351,8 @@ class SharingManagerTest extends TestCase
 
         $this->provider->expects($this->once())
             ->method('getSharingEntries')
-            ->with(array(SubjectIdentity::fromObject($object)))
-            ->willReturn(array($sharing));
+            ->with([SubjectIdentity::fromObject($object)])
+            ->willReturn([$sharing]);
 
         $sConfig = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
         $this->sm->addSubjectConfig($sConfig);
@@ -360,7 +360,7 @@ class SharingManagerTest extends TestCase
         $iConfig = new SharingIdentityConfig(MockRole::class, 'role', false, true);
         $this->sm->addIdentityConfig($iConfig);
 
-        $this->sm->preloadPermissions(array($object));
+        $this->sm->preloadPermissions([$object]);
 
         $this->assertTrue($this->sm->isGranted($operation, $subject, $field));
     }
@@ -377,7 +377,7 @@ class SharingManagerTest extends TestCase
 
     public function testDeletes()
     {
-        $ids = array(42, 50);
+        $ids = [42, 50];
 
         $this->provider->expects($this->once())
             ->method('deletes')

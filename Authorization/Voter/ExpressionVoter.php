@@ -101,10 +101,10 @@ class ExpressionVoter implements VoterInterface
         $event = new GetExpressionVariablesEvent($token);
         $this->dispatcher->dispatch(ExpressionVariableEvents::GET, $event);
 
-        $variables = array_merge($event->getVariables(), array(
+        $variables = array_merge($event->getVariables(), [
             'object' => $subject,
             'subject' => $subject,
-        ));
+        ]);
 
         if ($subject instanceof Request) {
             $variables['request'] = $subject;

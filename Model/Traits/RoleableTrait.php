@@ -24,7 +24,7 @@ trait RoleableTrait
     /**
      * @var string[]
      */
-    protected $roles = array();
+    protected $roles = [];
 
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ trait RoleableTrait
      */
     public function setRoles(array $roles)
     {
-        $this->roles = array();
+        $this->roles = [];
 
         foreach ($roles as $role) {
             $this->addRole($role);
@@ -55,7 +55,7 @@ trait RoleableTrait
     {
         $role = strtoupper($role);
 
-        if (!in_array($role, $this->roles, true) && !in_array($role, array('ROLE_USER', 'ROLE_ORGANIZATION_USER'))) {
+        if (!in_array($role, $this->roles, true) && !in_array($role, ['ROLE_USER', 'ROLE_ORGANIZATION_USER'])) {
             $this->roles[] = $role;
         }
 

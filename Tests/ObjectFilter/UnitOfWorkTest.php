@@ -92,12 +92,12 @@ class UnitOfWorkTest extends TestCase
 
         $obj->setName('bar');
 
-        $valid = array(
-            'name' => array(
+        $valid = [
+            'name' => [
                 'old' => 'foo',
                 'new' => 'bar',
-            ),
-        );
+            ],
+        ];
 
         $this->assertSame($valid, $uow->getObjectChangeSet($obj));
     }
@@ -108,6 +108,6 @@ class UnitOfWorkTest extends TestCase
         $obj = new MockObject('foo');
 
         $this->assertCount(0, $uow->getObjectIdentifiers());
-        $this->assertSame(array(), $uow->getObjectChangeSet($obj));
+        $this->assertSame([], $uow->getObjectChangeSet($obj));
     }
 }

@@ -73,7 +73,7 @@ class PrivateSharingSubscriberTest extends TestCase
         $this->connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
         $this->targetEntity = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $this->sharingMeta = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
-        $this->filter = $this->getMockForAbstractClass(SQLFilter::class, array($this->entityManager));
+        $this->filter = $this->getMockForAbstractClass(SQLFilter::class, [$this->entityManager]);
         $this->event = new GetFilterEvent(
             $this->filter,
             $this->entityManager,
@@ -116,7 +116,7 @@ class PrivateSharingSubscriberTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function injectParameters($sharingEnabled = true, $userId = 42, array $mapSids = array())
+    protected function injectParameters($sharingEnabled = true, $userId = 42, array $mapSids = [])
     {
         $this->filter->setParameter('has_security_identities', !empty($mapSids), 'boolean');
         $this->filter->setParameter('map_security_identities', $mapSids, 'array');
@@ -126,10 +126,10 @@ class PrivateSharingSubscriberTest extends TestCase
 
     public function testGetFilter()
     {
-        $this->injectParameters(true, 42, array(
+        $this->injectParameters(true, 42, [
             MockRole::class => '\'ROLE_USER\'',
             MockUserRoleable::class => '\'user.test\'',
-        ));
+        ]);
 
         $this->targetEntity->expects($this->any())
             ->method('getName')
@@ -142,7 +142,7 @@ class PrivateSharingSubscriberTest extends TestCase
         $this->sharingMeta->expects($this->atLeastOnce())
             ->method('getColumnName')
             ->willReturnCallback(function ($value) {
-                $map = array(
+                $map = [
                     'subjectClass' => 'subject_class',
                     'subjectId' => 'subject_id',
                     'identityClass' => 'identity_class',
@@ -151,7 +151,7 @@ class PrivateSharingSubscriberTest extends TestCase
                     'startedAt' => 'started_at',
                     'endedAt' => 'ended_at',
                     'id' => 'id',
-                );
+                ];
 
                 return isset($map[$value]) ? $map[$value] : null;
             });
@@ -177,12 +177,12 @@ SELECTCLAUSE;
 
     public function getCurrentUserValues()
     {
-        return array(
-            array(MockObjectOwnerable::class, false),
-            array(MockObjectOwnerable::class, true),
-            array(MockObjectOwnerableOptional::class, false),
-            array(MockObjectOwnerableOptional::class, true),
-        );
+        return [
+            [MockObjectOwnerable::class, false],
+            [MockObjectOwnerable::class, true],
+            [MockObjectOwnerableOptional::class, false],
+            [MockObjectOwnerableOptional::class, true],
+        ];
     }
 
     /**
@@ -196,10 +196,10 @@ SELECTCLAUSE;
         $this->injectParameters(
             true,
             $withCurrentUser ? 50 : null,
-            array(
+            [
                 MockRole::class => '\'ROLE_USER\'',
                 MockUserRoleable::class => '\'user.test\'',
-            )
+            ]
         );
 
         $this->targetEntity->expects($this->atLeastOnce())
@@ -209,13 +209,13 @@ SELECTCLAUSE;
         $this->targetEntity->expects($this->atLeastOnce())
             ->method('getAssociationMapping')
             ->willReturnCallback(function ($value) {
-                $map = array(
-                    'owner' => array(
-                        'joinColumnFieldNames' => array(
+                $map = [
+                    'owner' => [
+                        'joinColumnFieldNames' => [
                             'owner' => 'owner_id',
-                        ),
-                    ),
-                );
+                        ],
+                    ],
+                ];
 
                 return isset($map[$value]) ? $map[$value] : null;
             });
@@ -227,7 +227,7 @@ SELECTCLAUSE;
         $this->sharingMeta->expects($this->atLeastOnce())
             ->method('getColumnName')
             ->willReturnCallback(function ($value) {
-                $map = array(
+                $map = [
                     'subjectClass' => 'subject_class',
                     'subjectId' => 'subject_id',
                     'identityClass' => 'identity_class',
@@ -236,7 +236,7 @@ SELECTCLAUSE;
                     'startedAt' => 'started_at',
                     'endedAt' => 'ended_at',
                     'id' => 'id',
-                );
+                ];
 
                 return isset($map[$value]) ? $map[$value] : null;
             });

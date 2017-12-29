@@ -80,26 +80,26 @@ class SharingProviderTest extends TestCase
 
         $this->query = $this->getMockForAbstractClass(
             AbstractQuery::class,
-            array(),
+            [],
             '',
             false,
             false,
             true,
-            array(
+            [
                 'getResult',
                 'execute',
-            )
+            ]
         );
     }
 
     public function testGetPermissionRoles()
     {
-        $roles = array(
+        $roles = [
             'ROLE_USER',
-        );
-        $result = array(
+        ];
+        $result = [
             new MockRole('ROLE_USER'),
-        );
+        ];
 
         $this->roleRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -159,16 +159,16 @@ class SharingProviderTest extends TestCase
             ->method('createQueryBuilder');
 
         $provider = $this->createProvider();
-        $this->assertSame(array(), $provider->getPermissionRoles(array()));
+        $this->assertSame([], $provider->getPermissionRoles([]));
     }
 
     public function testGetSharingEntries()
     {
-        $subjects = array(
+        $subjects = [
             SubjectIdentity::fromObject(new MockObject('foo', 42)),
             SubjectIdentity::fromObject(new MockObject('bar', 23)),
-        );
-        $result = array();
+        ];
+        $result = [];
 
         $this->sharingRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -248,20 +248,20 @@ class SharingProviderTest extends TestCase
             ->method('createQueryBuilder');
 
         $provider = $this->createProvider();
-        $this->assertSame(array(), $provider->getSharingEntries(array()));
+        $this->assertSame([], $provider->getSharingEntries([]));
     }
 
     public function testGetPermissionRolesWithSecurityIdentities()
     {
-        $sids = array(
+        $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
             new UserSecurityIdentity(MockUserRoleable::class, 'user.test'),
-        );
-        $subjects = array(
+        ];
+        $subjects = [
             SubjectIdentity::fromObject(new MockObject('foo', 42)),
             SubjectIdentity::fromObject(new MockObject('bar', 23)),
-        );
-        $result = array();
+        ];
+        $result = [];
 
         $this->sharingManager->expects($this->at(0))
             ->method('getIdentityConfig')
@@ -325,7 +325,7 @@ class SharingProviderTest extends TestCase
 
         $this->qb->expects($this->at(9))
             ->method('setParameter')
-            ->with('sid0_ids', array('ROLE_USER'))
+            ->with('sid0_ids', ['ROLE_USER'])
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(10))
@@ -335,7 +335,7 @@ class SharingProviderTest extends TestCase
 
         $this->qb->expects($this->at(11))
             ->method('setParameter')
-            ->with('sid1_ids', array('user.test'))
+            ->with('sid1_ids', ['user.test'])
             ->willReturn($this->qb);
 
         $this->qb->expects($this->at(12))
@@ -372,14 +372,14 @@ class SharingProviderTest extends TestCase
 
     public function testGetPermissionRolesWithEmptySecurityIdentities()
     {
-        $sids = array(
+        $sids = [
             new RoleSecurityIdentity(MockRole::class, 'IS_AUTHENTICATED_ANONYMOUSLY'),
-        );
-        $subjects = array(
+        ];
+        $subjects = [
             SubjectIdentity::fromObject(new MockObject('foo', 42)),
             SubjectIdentity::fromObject(new MockObject('bar', 23)),
-        );
-        $result = array();
+        ];
+        $result = [];
 
         $this->sharingManager->expects($this->never())
             ->method('getIdentityConfig');
@@ -462,14 +462,14 @@ class SharingProviderTest extends TestCase
      */
     public function testGetSharingEntriesWithoutSharingManager()
     {
-        $sids = array(
+        $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
             new UserSecurityIdentity(MockUserRoleable::class, 'user.test'),
-        );
-        $subjects = array(
+        ];
+        $subjects = [
             SubjectIdentity::fromObject(new MockObject('foo', 42)),
             SubjectIdentity::fromObject(new MockObject('bar', 23)),
-        );
+        ];
 
         $this->sharingRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -590,7 +590,7 @@ class SharingProviderTest extends TestCase
 
     public function testDeletes()
     {
-        $ids = array(42, 50);
+        $ids = [42, 50];
 
         $this->sharingRepo->expects($this->once())
             ->method('createQueryBuilder')

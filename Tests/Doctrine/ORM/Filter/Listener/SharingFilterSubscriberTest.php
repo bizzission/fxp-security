@@ -123,9 +123,9 @@ class SharingFilterSubscriberTest extends TestCase
     {
         $this->filterCollection->expects($this->once())
             ->method('getEnabledFilters')
-            ->willReturn(array(
+            ->willReturn([
                 'sharing' => $this->filter,
-            ));
+            ]);
 
         $this->sharingManager->expects($this->once())
             ->method('isEnabled')
@@ -142,9 +142,9 @@ class SharingFilterSubscriberTest extends TestCase
 
         $this->filterCollection->expects($this->once())
             ->method('getEnabledFilters')
-            ->willReturn(array(
+            ->willReturn([
                 'sharing' => $this->filter,
-            ));
+            ]);
 
         $this->tokenStorage->expects($this->atLeastOnce())
             ->method('getToken')
@@ -153,7 +153,7 @@ class SharingFilterSubscriberTest extends TestCase
         $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($token)
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->assertFalse($this->filter->hasParameter('has_security_identities'));
         $this->assertFalse($this->filter->hasParameter('map_security_identities'));
@@ -168,7 +168,7 @@ class SharingFilterSubscriberTest extends TestCase
         $this->assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
 
         $this->assertFalse($this->filter->getParameter('has_security_identities'));
-        $this->assertSame(array(), $this->filter->getParameter('map_security_identities'));
+        $this->assertSame([], $this->filter->getParameter('map_security_identities'));
         $this->assertNull($this->filter->getParameter('user_id'));
         $this->assertTrue($this->filter->getParameter('sharing_manager_enabled'));
     }
@@ -179,9 +179,9 @@ class SharingFilterSubscriberTest extends TestCase
 
         $this->filterCollection->expects($this->once())
             ->method('getEnabledFilters')
-            ->willReturn(array(
+            ->willReturn([
                 'sharing' => $this->filter,
-            ));
+            ]);
 
         $this->tokenStorage->expects($this->atLeastOnce())
             ->method('getToken')
@@ -190,10 +190,10 @@ class SharingFilterSubscriberTest extends TestCase
         $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($token)
-            ->willReturn(array(
+            ->willReturn([
                 new RoleSecurityIdentity('role', 'ROLE_USER'),
                 new RoleSecurityIdentity('role', 'ROLE_ADMIN'),
-            ));
+            ]);
 
         $this->sharingManager->expects($this->any())
             ->method('getIdentityConfig')
@@ -232,9 +232,9 @@ class SharingFilterSubscriberTest extends TestCase
         $this->assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
 
         $this->assertTrue($this->filter->getParameter('has_security_identities'));
-        $this->assertSame(array(
+        $this->assertSame([
             MockRole::class => 'ROLE_USER, ROLE_ADMIN',
-        ), $this->filter->getParameter('map_security_identities'));
+        ], $this->filter->getParameter('map_security_identities'));
         $this->assertSame(50, $this->filter->getParameter('user_id'));
         $this->assertTrue($this->filter->getParameter('sharing_manager_enabled'));
     }

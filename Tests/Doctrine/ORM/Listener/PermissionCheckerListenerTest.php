@@ -79,11 +79,11 @@ class PermissionCheckerListenerTest extends TestCase
 
     public function getInvalidInitMethods()
     {
-        return array(
-            array('setTokenStorage', array()),
-            array('setAuthorizationChecker', array('tokenStorage')),
-            array('setPermissionManager', array('tokenStorage', 'authChecker')),
-        );
+        return [
+            ['setTokenStorage', []],
+            ['setAuthorizationChecker', ['tokenStorage']],
+            ['setPermissionManager', ['tokenStorage', 'authChecker']],
+        ];
     }
 
     /**
@@ -123,7 +123,7 @@ class PermissionCheckerListenerTest extends TestCase
     {
         $this->permissionManager->expects($this->once())
             ->method('resetPreloadPermissions')
-            ->with(array());
+            ->with([]);
 
         $this->listener->postFlush();
     }
@@ -195,19 +195,19 @@ class PermissionCheckerListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array($object));
+            ->willReturn([$object]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with(array($object));
+            ->with([$object]);
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
@@ -242,19 +242,19 @@ class PermissionCheckerListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array($object));
+            ->willReturn([$object]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with(array($object));
+            ->with([$object]);
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
@@ -289,19 +289,19 @@ class PermissionCheckerListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array($object));
+            ->willReturn([$object]);
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with(array($object));
+            ->with([$object]);
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
@@ -331,19 +331,19 @@ class PermissionCheckerListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with(array());
+            ->with([]);
 
         $this->listener->onFlush($args);
     }

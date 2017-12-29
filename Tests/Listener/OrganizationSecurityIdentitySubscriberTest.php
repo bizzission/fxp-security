@@ -75,7 +75,7 @@ class OrganizationSecurityIdentitySubscriberTest extends TestCase
     {
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $sids = array();
+        $sids = [];
         $event = new AddSecurityIdentityEvent($token, $sids);
 
         $this->listener->addOrganizationSecurityIdentities($event);
@@ -87,7 +87,7 @@ class OrganizationSecurityIdentitySubscriberTest extends TestCase
     {
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $sids = array();
+        $sids = [];
         $event = new AddSecurityIdentityEvent($token, $sids);
 
         $token->expects($this->once())

@@ -36,10 +36,10 @@ class PermissionCheckerListener extends AbstractPermissionListener
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::onFlush,
             Events::postFlush,
-        );
+        ];
     }
 
     /**
@@ -117,10 +117,10 @@ class PermissionCheckerListener extends AbstractPermissionListener
      */
     protected function getInitProperties()
     {
-        return array(
+        return [
             'tokenStorage' => 'setTokenStorage',
             'authChecker' => 'setAuthorizationChecker',
             'permissionManager' => 'setPermissionManager',
-        );
+        ];
     }
 }

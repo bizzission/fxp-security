@@ -23,24 +23,24 @@ class PermissionConfigTest extends TestCase
 {
     public function testPermissionConfigByDefault()
     {
-        $operations = array('create', 'view', 'update', 'delete');
+        $operations = ['create', 'view', 'update', 'delete'];
         $config = new PermissionConfig(MockObject::class, $operations);
 
         $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame(array(), $config->getFields());
+        $this->assertSame([], $config->getFields());
         $this->assertNull($config->getMaster());
     }
 
     public function testPermissionConfig()
     {
-        $operations = array('invite', 'view', 'update', 'revoke');
-        $alias = array(
+        $operations = ['invite', 'view', 'update', 'revoke'];
+        $alias = [
             'create' => 'invite',
             'delete' => 'revoke',
-        );
-        $fields = array(
+        ];
+        $fields = [
             'name' => new PermissionFieldConfig('name'),
-        );
+        ];
         $master = 'foo';
         $config = new PermissionConfig(MockObject::class, $operations, $alias, array_values($fields), $master);
 

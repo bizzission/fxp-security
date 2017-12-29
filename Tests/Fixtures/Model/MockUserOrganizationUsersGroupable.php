@@ -22,7 +22,7 @@ class MockUserOrganizationUsersGroupable extends MockUserOrganizationUsers imple
     /**
      * @var array
      */
-    protected $groups = array();
+    protected $groups = [];
 
     /**
      * Add a group.

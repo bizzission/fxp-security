@@ -22,10 +22,10 @@ class PostReachableRoleEventTest extends TestCase
 {
     public function testEvent()
     {
-        $roles = array(
+        $roles = [
             new Role('ROLE_FOO'),
             new Role('ROLE_BAR'),
-        );
+        ];
 
         $event = new PostReachableRoleEvent($roles);
         $this->assertSame($roles, $event->getReachableRoles());

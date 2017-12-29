@@ -24,14 +24,14 @@ class PostLoadPermissionsEventTest extends TestCase
 {
     public function testEvent()
     {
-        $sids = array(
+        $sids = [
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
-        );
-        $roles = array(
+        ];
+        $roles = [
             'ROLE_USER',
-        );
-        $permissionMap = array();
+        ];
+        $permissionMap = [];
 
         $event = new PostLoadPermissionsEvent($sids, $roles, $permissionMap);
 
@@ -39,11 +39,11 @@ class PostLoadPermissionsEventTest extends TestCase
         $this->assertSame($roles, $event->getRoles());
         $this->assertSame($permissionMap, $event->getPermissionMap());
 
-        $permissionMap2 = array(
-            '_global' => array(
+        $permissionMap2 = [
+            '_global' => [
                 'test' => true,
-            ),
-        );
+            ],
+        ];
         $event->setPermissionMap($permissionMap2);
 
         $this->assertSame($permissionMap2, $event->getPermissionMap());

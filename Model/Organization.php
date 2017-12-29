@@ -116,7 +116,7 @@ abstract class Organization implements OrganizationInterface
      */
     public function getOrganizationUserNames()
     {
-        $names = array();
+        $names = [];
         foreach ($this->getOrganizationUsers() as $orgUser) {
             $names[] = $orgUser->getUser()->getUsername();
         }

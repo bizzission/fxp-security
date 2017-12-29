@@ -72,7 +72,7 @@ class RoleHierarchyListener implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(Events::onFlush);
+        return [Events::onFlush];
     }
 
     /**
@@ -84,7 +84,7 @@ class RoleHierarchyListener implements EventSubscriber
     {
         $uow = $args->getEntityManager()->getUnitOfWork();
         $collection = $this->getAllCollections($uow);
-        $invalidates = array();
+        $invalidates = [];
 
         // check all scheduled insertions
         foreach ($collection as $object) {
@@ -166,10 +166,10 @@ class RoleHierarchyListener implements EventSubscriber
     private function invalidateCacheableObject(UnitOfWork $uow, $object)
     {
         $fields = array_keys($uow->getEntityChangeSet($object));
-        $checkFields = array('roles');
+        $checkFields = ['roles'];
 
         if ($object instanceof RoleHierarchicalInterface || $object instanceof OrganizationUserInterface) {
-            $checkFields = array_merge($checkFields, array('name'));
+            $checkFields = array_merge($checkFields, ['name']);
         }
 
         foreach ($fields as $field) {

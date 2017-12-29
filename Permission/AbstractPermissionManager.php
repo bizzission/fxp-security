@@ -47,7 +47,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * @var array
      */
-    protected $cache = array();
+    protected $cache = [];
 
     /**
      * Constructor.
@@ -56,10 +56,10 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      * @param PermissionConfigInterface[]  $configs        The permission configs
      */
     public function __construct(SharingManagerInterface $sharingManager = null,
-                                array $configs = array())
+                                array $configs = [])
     {
         $this->sharingManager = $sharingManager;
-        $this->configs = array();
+        $this->configs = [];
 
         foreach ($configs as $config) {
             $this->addConfig($config);
@@ -227,7 +227,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     public function clear()
     {
-        $this->cache = array();
+        $this->cache = [];
 
         if (null !== $this->sharingManager) {
             $this->sharingManager->clear();
@@ -248,7 +248,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         $contexts = null;
 
         if ($role instanceof OrganizationalInterface) {
-            $contexts = array(null !== $role->getOrganization() ? PermissionContexts::ORGANIZATION_ROLE : PermissionContexts::ROLE);
+            $contexts = [null !== $role->getOrganization() ? PermissionContexts::ORGANIZATION_ROLE : PermissionContexts::ROLE];
         }
 
         return $contexts;
@@ -302,7 +302,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
             $field = null;
         }
 
-        return array($permissions, $subject, $field);
+        return [$permissions, $subject, $field];
     }
 
     /**

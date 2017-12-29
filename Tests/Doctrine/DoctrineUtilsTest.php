@@ -34,10 +34,10 @@ class DoctrineUtilsTest extends TestCase
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
-            ->willReturn(array(
+            ->willReturn([
                 'identifier',
                 'next',
-            ));
+            ]);
 
         $this->assertSame('identifier', DoctrineUtils::getIdentifier($targetClass));
         DoctrineUtils::clearCaches();
@@ -53,7 +53,7 @@ class DoctrineUtilsTest extends TestCase
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->assertSame('id', DoctrineUtils::getIdentifier($targetClass));
         DoctrineUtils::clearCaches();
@@ -61,18 +61,18 @@ class DoctrineUtilsTest extends TestCase
 
     public function getFieldTypes()
     {
-        return array(
-            array(Type::GUID, '00000000-0000-0000-0000-000000000000'),
-            array(Type::STRING, ''),
-            array(Type::TEXT, ''),
-            array(Type::INTEGER, 0),
-            array(Type::SMALLINT, 0),
-            array(Type::BIGINT, 0),
-            array(Type::DECIMAL, 0),
-            array(Type::FLOAT, 0),
-            array(Type::BINARY, null),
-            array(Type::BLOB, null),
-        );
+        return [
+            [Type::GUID, '00000000-0000-0000-0000-000000000000'],
+            [Type::STRING, ''],
+            [Type::TEXT, ''],
+            [Type::INTEGER, 0],
+            [Type::SMALLINT, 0],
+            [Type::BIGINT, 0],
+            [Type::DECIMAL, 0],
+            [Type::FLOAT, 0],
+            [Type::BINARY, null],
+            [Type::BLOB, null],
+        ];
     }
 
     /**
@@ -91,9 +91,9 @@ class DoctrineUtilsTest extends TestCase
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
-            ->willReturn(array(
+            ->willReturn([
                 'id',
-            ));
+            ]);
 
         $targetClass->expects($this->once())
             ->method('getTypeOfField')
@@ -114,9 +114,9 @@ class DoctrineUtilsTest extends TestCase
 
         $targetClass->expects($this->atLeastOnce())
             ->method('getIdentifierFieldNames')
-            ->willReturn(array(
+            ->willReturn([
                 'id',
-            ));
+            ]);
 
         $targetClass->expects($this->once())
             ->method('getTypeOfField')
@@ -125,18 +125,18 @@ class DoctrineUtilsTest extends TestCase
 
         $dbPlatform = $this->getMockForAbstractClass(
             AbstractPlatform::class,
-            array(),
+            [],
             '',
             true,
             true,
             true,
-            array(
+            [
                 'getGuidTypeDeclarationSQL',
-            )
+            ]
         );
         $dbPlatform->expects($this->once())
             ->method('getGuidTypeDeclarationSQL')
-            ->with(array('id'))
+            ->with(['id'])
             ->willReturn('UUID');
 
         /* @var Connection|\PHPUnit_Framework_MockObject_MockObject $conn */
@@ -162,9 +162,9 @@ class DoctrineUtilsTest extends TestCase
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
-            ->willReturn(array(
+            ->willReturn([
                 'id',
-            ));
+            ]);
 
         $type = Type::getType(Type::GUID);
 
@@ -187,9 +187,9 @@ class DoctrineUtilsTest extends TestCase
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
-            ->willReturn(array(
+            ->willReturn([
                 'id',
-            ));
+            ]);
 
         $type = Type::getType(Type::GUID);
 
@@ -216,9 +216,9 @@ class DoctrineUtilsTest extends TestCase
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
-            ->willReturn(array(
+            ->willReturn([
                 'id',
-            ));
+            ]);
 
         $this->assertSame(42, DoctrineUtils::getIdentifierType($targetClass));
         DoctrineUtils::clearCaches();

@@ -30,7 +30,7 @@ class PreSecurityIdentityEvent extends AbstractEditableSecurityEvent
      * @param TokenInterface              $token              The token
      * @param SecurityIdentityInterface[] $securityIdentities The security identities
      */
-    public function __construct(TokenInterface $token, array $securityIdentities = array())
+    public function __construct(TokenInterface $token, array $securityIdentities = [])
     {
         $this->token = $token;
         $this->securityIdentities = $securityIdentities;

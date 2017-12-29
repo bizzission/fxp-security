@@ -77,14 +77,14 @@ class SharingFilterTest extends TestCase
         $this->sharingClass = Sharing::class;
         $this->targetEntity = $this->getMockForAbstractClass(
             ClassMetadata::class,
-            array(),
+            [],
             '',
             false,
             true,
             true,
-            array(
+            [
                 'getName',
-            )
+            ]
         );
         $this->filter = new SharingFilter($this->em);
 
@@ -128,7 +128,7 @@ class SharingFilterTest extends TestCase
         $this->filter->setSharingClass($this->sharingClass);
         $this->filter->setEventDispatcher($this->eventDispatcher);
         $this->filter->setParameter('has_security_identities', true, 'boolean');
-        $this->filter->setParameter('map_security_identities', array(), 'array');
+        $this->filter->setParameter('map_security_identities', [], 'array');
         $this->filter->setParameter('user_id', 42, 'integer');
         $this->filter->setParameter('sharing_manager_enabled', true, 'boolean');
 

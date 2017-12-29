@@ -23,12 +23,12 @@ class DoctrineOrmCollectionValueTest extends TestCase
 {
     public function getValues()
     {
-        return array(
-            array($this->getMockBuilder(Collection::class)->getMock(), true),
-            array($this->getMockBuilder(\stdClass::class)->getMock(), false),
-            array('string', false),
-            array(42, false),
-        );
+        return [
+            [$this->getMockBuilder(Collection::class)->getMock(), true],
+            [$this->getMockBuilder(\stdClass::class)->getMock(), false],
+            ['string', false],
+            [42, false],
+        ];
     }
 
     /**

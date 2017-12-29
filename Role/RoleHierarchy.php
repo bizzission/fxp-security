@@ -74,7 +74,7 @@ class RoleHierarchy extends BaseRoleHierarchy
 
         $this->registry = $registry;
         $this->roleClassname = $roleClassname;
-        $this->cacheExec = array();
+        $this->cacheExec = [];
         $this->cache = $cache;
     }
 
@@ -164,7 +164,7 @@ class RoleHierarchy extends BaseRoleHierarchy
     {
         $name = $role instanceof Role ? $role->getRole() : (string) $role;
 
-        return array($name, new Role($name));
+        return [$name, new Role($name)];
     }
 
     /**
@@ -278,7 +278,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      */
     private function formatRoles(array $roles)
     {
-        $nRoles = array();
+        $nRoles = [];
 
         foreach ($roles as $role) {
             if (!is_string($role) && !($role instanceof Role)) {
@@ -302,15 +302,15 @@ class RoleHierarchy extends BaseRoleHierarchy
      */
     private function findRecords(array $reachableRoles, array $roles)
     {
-        $recordRoles = array();
+        $recordRoles = [];
         $om = $this->registry->getManagerForClass($this->roleClassname);
         $repo = $om->getRepository($this->roleClassname);
 
-        $filters = SqlFilterUtil::findFilters($om, array(), true);
+        $filters = SqlFilterUtil::findFilters($om, [], true);
         SqlFilterUtil::disableFilters($om, $filters);
 
         if (count($roles) > 0) {
-            $recordRoles = $repo->findBy(array('name' => $this->cleanRoleNames(array_keys($roles))));
+            $recordRoles = $repo->findBy(['name' => $this->cleanRoleNames(array_keys($roles))]);
         }
 
         /* @var RoleHierarchicalInterface $eRole */
@@ -334,8 +334,8 @@ class RoleHierarchy extends BaseRoleHierarchy
      */
     private function getCleanedRoles(array $reachableRoles, $suffix = '')
     {
-        $existingRoles = array();
-        $finalRoles = array();
+        $existingRoles = [];
+        $finalRoles = [];
 
         foreach ($reachableRoles as $role) {
             $name = $this->formatCleanedRoleName($role->getRole());

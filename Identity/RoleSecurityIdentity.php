@@ -64,7 +64,7 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
         $user = $token->getUser();
 
         if ($user instanceof RoleableInterface) {
-            $sids = array();
+            $sids = [];
             $roles = $user->getRoles();
 
             foreach ($roles as $role) {

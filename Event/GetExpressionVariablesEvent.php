@@ -37,7 +37,7 @@ class GetExpressionVariablesEvent extends Event
      * @param TokenInterface       $token     The token
      * @param array<string, mixed> $variables The variables
      */
-    public function __construct(TokenInterface $token, array $variables = array())
+    public function __construct(TokenInterface $token, array $variables = [])
     {
         $this->token = $token;
         $this->variables = $variables;

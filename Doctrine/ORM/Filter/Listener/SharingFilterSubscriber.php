@@ -88,17 +88,17 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
      */
     public static function getSubscribedEvents()
     {
-        return array_merge(parent::getSubscribedEvents(), array(
-            OrganizationalContextEvents::SET_CURRENT_ORGANIZATION => array(
-                array('onEvent', 0),
-            ),
-            SharingEvents::ENABLED => array(
-                array('onSharingManagerChange', 0),
-            ),
-            SharingEvents::DISABLED => array(
-                array('onSharingManagerChange', 0),
-            ),
-        ));
+        return array_merge(parent::getSubscribedEvents(), [
+            OrganizationalContextEvents::SET_CURRENT_ORGANIZATION => [
+                ['onEvent', 0],
+            ],
+            SharingEvents::ENABLED => [
+                ['onSharingManagerChange', 0],
+            ],
+            SharingEvents::DISABLED => [
+                ['onSharingManagerChange', 0],
+            ],
+        ]);
     }
 
     /**
@@ -144,7 +144,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     private function buildSecurityIdentities()
     {
         $tSids = $this->sidManager->getSecurityIdentities($this->tokenStorage->getToken());
-        $sids = array();
+        $sids = [];
 
         foreach ($tSids as $sid) {
             if (IdentityUtils::isValid($sid)) {
@@ -165,7 +165,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     private function getMapSecurityIdentities(array $sids)
     {
         $connection = $this->entityManager->getConnection();
-        $mapSids = array();
+        $mapSids = [];
 
         foreach ($sids as $sid) {
             $type = $this->sharingManager->getIdentityConfig($sid->getType())->getType();

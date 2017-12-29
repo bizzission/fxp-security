@@ -62,25 +62,25 @@ class PermissionProviderTest extends TestCase
 
         $this->query = $this->getMockForAbstractClass(
             AbstractQuery::class,
-            array(),
+            [],
             '',
             false,
             false,
             true,
-            array(
+            [
                 'getResult',
-            )
+            ]
         );
     }
 
     public function testGetPermissions()
     {
-        $roles = array(
+        $roles = [
             'ROLE_USER',
-        );
-        $result = array(
+        ];
+        $result = [
             new MockPermission(),
-        );
+        ];
 
         $this->permissionRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -135,7 +135,7 @@ class PermissionProviderTest extends TestCase
             ->method('createQueryBuilder');
 
         $provider = $this->createProvider();
-        $this->assertSame(array(), $provider->getPermissions(array()));
+        $this->assertSame([], $provider->getPermissions([]));
     }
 
     public function testGetMasterClass()
@@ -220,9 +220,9 @@ class PermissionProviderTest extends TestCase
     public function testGetPermissionsBySubject()
     {
         $subject = new FieldVote(MockObject::class, 'name');
-        $expected = array(
+        $expected = [
             new MockPermission(),
-        );
+        ];
 
         $this->permissionRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -281,9 +281,9 @@ class PermissionProviderTest extends TestCase
     public function testGetPermissionsBySubjectAndContexts()
     {
         $subject = new FieldVote(MockObject::class, 'name');
-        $expected = array(
+        $expected = [
             new MockPermission(),
-        );
+        ];
 
         $this->permissionRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -354,11 +354,11 @@ class PermissionProviderTest extends TestCase
             ->willReturn($expected);
 
         $provider = $this->createProvider();
-        $res = $provider->getPermissionsBySubject($subject, array(
+        $res = $provider->getPermissionsBySubject($subject, [
             PermissionContexts::ROLE,
             PermissionContexts::ORGANIZATION_ROLE,
             PermissionContexts::SHARING,
-        ));
+        ]);
 
         $this->assertSame($expected, $res);
     }
@@ -366,9 +366,9 @@ class PermissionProviderTest extends TestCase
     public function testGetPermissionsBySubjectWithoutSubject()
     {
         $subject = null;
-        $expected = array(
+        $expected = [
             new MockPermission(),
-        );
+        ];
 
         $this->permissionRepo->expects($this->once())
             ->method('createQueryBuilder')
@@ -416,9 +416,9 @@ class PermissionProviderTest extends TestCase
 
     public function testGetConfigPermissions()
     {
-        $expected = array(
+        $expected = [
             new MockPermission(),
-        );
+        ];
 
         $this->permissionRepo->expects($this->once())
             ->method('createQueryBuilder')

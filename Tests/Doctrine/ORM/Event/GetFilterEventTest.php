@@ -55,7 +55,7 @@ class GetFilterEventTest extends TestCase
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->connection = $this->getMockBuilder(Connection::class)->getMock();
         $this->targetEntity = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
-        $this->filter = $this->getMockForAbstractClass(SQLFilter::class, array($this->entityManager));
+        $this->filter = $this->getMockForAbstractClass(SQLFilter::class, [$this->entityManager]);
 
         $this->entityManager->expects($this->any())
             ->method('getFilters')

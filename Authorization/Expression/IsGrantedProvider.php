@@ -26,12 +26,12 @@ class IsGrantedProvider implements ExpressionFunctionProviderInterface
      */
     public function getFunctions()
     {
-        return array(
+        return [
             new ExpressionFunction('is_granted', function ($attributes, $object = 'null') {
                 return sprintf('$auth_checker && $auth_checker->isGranted(%s, %s)', $attributes, $object);
             }, function (array $variables, $attributes, $object = null) {
                 return isset($variables['auth_checker']) && $variables['auth_checker']->isGranted($attributes, $object);
             }),
-        );
+        ];
     }
 }

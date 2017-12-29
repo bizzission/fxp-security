@@ -42,11 +42,11 @@ class GroupableVoterTest extends TestCase
 
     public function getAccessResults()
     {
-        return array(
-            array(array('GROUP_FOO'), VoterInterface::ACCESS_GRANTED),
-            array(array('GROUP_BAR'), VoterInterface::ACCESS_DENIED),
-            array(array('TEST_FOO'), VoterInterface::ACCESS_ABSTAIN),
-        );
+        return [
+            [['GROUP_FOO'], VoterInterface::ACCESS_GRANTED],
+            [['GROUP_BAR'], VoterInterface::ACCESS_DENIED],
+            [['TEST_FOO'], VoterInterface::ACCESS_ABSTAIN],
+        ];
     }
 
     /**
@@ -60,9 +60,9 @@ class GroupableVoterTest extends TestCase
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $sids = array(
+        $sids = [
             new GroupSecurityIdentity(MockGroup::class, 'FOO'),
-        );
+        ];
 
         if (VoterInterface::ACCESS_ABSTAIN !== $access) {
             $this->sidManager->expects($this->atLeast(2))

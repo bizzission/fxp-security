@@ -27,7 +27,7 @@ class IsBasicAuthProvider implements ExpressionFunctionProviderInterface
      */
     public function getFunctions()
     {
-        return array(
+        return [
             new ExpressionFunction('is_basic_auth', function () {
                 $class = '\\'.UsernamePasswordToken::class;
 
@@ -37,6 +37,6 @@ class IsBasicAuthProvider implements ExpressionFunctionProviderInterface
                     && $variables['token'] instanceof UsernamePasswordToken
                     && !$variables['trust_resolver']->isAnonymous($variables['token']);
             }),
-        );
+        ];
     }
 }

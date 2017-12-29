@@ -31,15 +31,15 @@ class IsGrantedProviderTest extends TestCase
             ->with('perm_view', $object)
             ->willReturn(true);
 
-        $expressionLanguage = new ExpressionLanguage(null, array(new IsGrantedProvider()));
-        $variables = array(
+        $expressionLanguage = new ExpressionLanguage(null, [new IsGrantedProvider()]);
+        $variables = [
             'object' => $object,
             'auth_checker' => $authChecker,
-        );
+        ];
 
         $this->assertTrue($expressionLanguage->evaluate('is_granted("perm_view", object)', $variables));
 
         $compiled = '$auth_checker && $auth_checker->isGranted("perm_view", $object)';
-        $this->assertEquals($compiled, $expressionLanguage->compile('is_granted("perm_view", object)', array('object')));
+        $this->assertEquals($compiled, $expressionLanguage->compile('is_granted("perm_view", object)', ['object']));
     }
 }

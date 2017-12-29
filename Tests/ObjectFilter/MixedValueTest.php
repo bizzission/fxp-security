@@ -21,16 +21,16 @@ class MixedValueTest extends TestCase
 {
     public function getValues()
     {
-        return array(
-            array('string', null),
-            array(42, null),
-            array(42.5, null),
-            array(true, null),
-            array(false, null),
-            array(null, null),
-            array(new \stdClass(), null),
-            array(array('42'), array()),
-        );
+        return [
+            ['string', null],
+            [42, null],
+            [42.5, null],
+            [true, null],
+            [false, null],
+            [null, null],
+            [new \stdClass(), null],
+            [['42'], []],
+        ];
     }
 
     /**

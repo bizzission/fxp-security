@@ -34,7 +34,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * @var array<string, mixed>
      */
-    private $variables = array();
+    private $variables = [];
 
     /**
      * Constructor.
@@ -42,7 +42,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
      * @param array<string, mixed>                  $variables The expression variables
      * @param SecurityIdentityManagerInterface|null $sim       The security identity manager
      */
-    public function __construct(array $variables = array(),
+    public function __construct(array $variables = [],
                                 SecurityIdentityManagerInterface $sim = null)
     {
         $this->sim = $sim;
@@ -57,9 +57,9 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            ExpressionVariableEvents::GET => array('inject', 0),
-        );
+        return [
+            ExpressionVariableEvents::GET => ['inject', 0],
+        ];
     }
 
     /**
@@ -115,11 +115,11 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     {
         $token = $event->getToken();
 
-        $event->addVariables(array_merge($this->variables, array(
+        $event->addVariables(array_merge($this->variables, [
             'token' => $token,
             'user' => $token->getUser(),
             'roles' => $this->getAllRoles($token),
-        )));
+        ]));
     }
 
     /**

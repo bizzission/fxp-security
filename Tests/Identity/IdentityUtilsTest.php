@@ -28,9 +28,9 @@ class IdentityUtilsTest extends TestCase
         $role3 = new RoleSecurityIdentity(MockRole::class, 'ROLE_USER');
         $role4 = new RoleSecurityIdentity(MockRole::class, 'ROLE_FOO');
 
-        $sids = array($role1, $role2);
-        $newSids = array($role3, $role4);
-        $valid = array($role1, $role2, $role4);
+        $sids = [$role1, $role2];
+        $newSids = [$role3, $role4];
+        $valid = [$role1, $role2, $role4];
 
         $sids = IdentityUtils::merge($sids, $newSids);
 

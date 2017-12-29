@@ -55,9 +55,9 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            SecurityIdentityEvents::RETRIEVAL_ADD => array('addOrganizationSecurityIdentities', 0),
-        );
+        return [
+            SecurityIdentityEvents::RETRIEVAL_ADD => ['addOrganizationSecurityIdentities', 0],
+        ];
     }
 
     /**

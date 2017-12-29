@@ -30,7 +30,7 @@ abstract class SharingUtils
      */
     public static function buildOperations(SharingInterface $sharing)
     {
-        $operations = array();
+        $operations = [];
 
         foreach ($sharing->getPermissions() as $permission) {
             $operations[] = $permission->getOperation();

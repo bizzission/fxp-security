@@ -26,7 +26,7 @@ class MockOrganizationUserRoleableGroupable extends MockOrganizationUser impleme
     /**
      * @var array
      */
-    protected $groups = array();
+    protected $groups = [];
 
     /**
      * Add a group.

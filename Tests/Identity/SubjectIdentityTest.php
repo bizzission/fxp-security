@@ -71,12 +71,12 @@ class SubjectIdentityTest extends TestCase
 
     public function getIdentities()
     {
-        return array(
-            array(new SubjectIdentity(MockObject::class, '42'), true),
-            array(new SubjectIdentity(\stdClass::class, '42'), false),
-            array(new SubjectIdentity(MockObject::class, '42', new MockObject('foo')), true),
-            array(new SubjectIdentity(MockObject::class, '50', new MockObject('foo', 50)), false),
-        );
+        return [
+            [new SubjectIdentity(MockObject::class, '42'), true],
+            [new SubjectIdentity(\stdClass::class, '42'), false],
+            [new SubjectIdentity(MockObject::class, '42', new MockObject('foo')), true],
+            [new SubjectIdentity(MockObject::class, '50', new MockObject('foo', 50)), false],
+        ];
     }
 
     /**
