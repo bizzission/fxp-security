@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Identity;
 
-use Doctrine\Common\Util\ClassUtils;
+use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Model\GroupInterface;
 use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Model\OrganizationUserInterface;

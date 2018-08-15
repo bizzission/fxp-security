@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Identity;
 
-use Doctrine\Common\Util\ClassUtils;
+use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Exception\InvalidArgumentException;
 use Fxp\Component\Security\Exception\InvalidSubjectIdentityException;
 use Fxp\Component\Security\Exception\UnexpectedTypeException;

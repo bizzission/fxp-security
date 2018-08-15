@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Permission;
 
-use Doctrine\Common\Util\ClassUtils;
+use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Exception\InvalidSubjectIdentityException;
 use Fxp\Component\Security\Exception\PermissionConfigNotFoundException;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;

@@ -12,13 +12,13 @@
 namespace Fxp\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Exception\SecurityException;
 use Fxp\Component\Security\Identity\SubjectIdentity;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;

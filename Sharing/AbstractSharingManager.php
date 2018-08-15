@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Sharing;
 
-use Doctrine\Common\Util\ClassUtils;
+use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Exception\AlreadyConfigurationAliasExistingException;
 use Fxp\Component\Security\Exception\SharingIdentityConfigNotFoundException;
 use Fxp\Component\Security\Exception\SharingSubjectConfigNotFoundException;

@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Permission;
 
-use Doctrine\Common\Util\ClassUtils;
+use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Event\CheckPermissionEvent;
 use Fxp\Component\Security\Event\PostLoadPermissionsEvent;
 use Fxp\Component\Security\Event\PreLoadPermissionsEvent;
