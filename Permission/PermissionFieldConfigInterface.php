@@ -42,6 +42,13 @@ interface PermissionFieldConfigInterface
     public function getOperations();
 
     /**
+     * Check if the field permission is editable.
+     *
+     * @return bool
+     */
+    public function isEditable();
+
+    /**
      * Get the real permission associated with the alias permission.
      *
      * Example: [

@@ -26,6 +26,7 @@ class PermissionFieldConfigTest extends TestCase
         $this->assertSame('foo', $config->getField());
         $this->assertSame([], $config->getOperations());
         $this->assertFalse($config->hasOperation('foo'));
+        $this->assertTrue($config->isEditable());
     }
 
     public function testPermissionFieldConfig()
@@ -42,5 +43,6 @@ class PermissionFieldConfigTest extends TestCase
         $this->assertFalse($config->hasOperation('foo'));
         $this->assertSame($alias, $config->getMappingPermissions());
         $this->assertTrue($config->hasOperation('test'));
+        $this->assertFalse($config->isEditable());
     }
 }
