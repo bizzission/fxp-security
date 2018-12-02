@@ -116,7 +116,7 @@ class PermissionVoterTest extends TestCase
                 ->with($this->token)
                 ->willReturn($sids);
 
-            if (is_array($subject) && isset($subject[0]) && isset($subject[1])) {
+            if (\is_array($subject) && isset($subject[0]) && isset($subject[1])) {
                 $this->permManager->expects($this->once())
                     ->method('isGranted')
                     ->with($sids, substr($attributes[0], 5), new FieldVote($subject[0], $subject[1]))

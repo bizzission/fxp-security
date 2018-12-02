@@ -238,7 +238,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
             foreach ($org->getRoles() as $orgRole) {
                 $roleName = $orgRole instanceof Role ? $orgRole->getRole() : $orgRole;
 
-                if (!in_array($roleName, $existingRoles)) {
+                if (!\in_array($roleName, $existingRoles)) {
                     $roles[] = new Role($roleName.'__'.$orgName);
                     $existingRoles[] = $roleName;
                 }

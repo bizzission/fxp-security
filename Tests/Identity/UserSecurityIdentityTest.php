@@ -76,7 +76,7 @@ class UserSecurityIdentityTest extends TestCase
         $sid = UserSecurityIdentity::fromAccount($user);
 
         $this->assertInstanceOf(UserSecurityIdentity::class, $sid);
-        $this->assertSame(get_class($user), $sid->getType());
+        $this->assertSame(\get_class($user), $sid->getType());
         $this->assertSame('user.test', $sid->getIdentifier());
     }
 
@@ -97,7 +97,7 @@ class UserSecurityIdentityTest extends TestCase
         $sid = UserSecurityIdentity::fromToken($token);
 
         $this->assertInstanceOf(UserSecurityIdentity::class, $sid);
-        $this->assertSame(get_class($user), $sid->getType());
+        $this->assertSame(\get_class($user), $sid->getType());
         $this->assertSame('user.test', $sid->getIdentifier());
     }
 

@@ -73,7 +73,7 @@ class AnonymousRoleListener extends AbstractRoleListener
     private function hasRole()
     {
         return isset($this->config['role'])
-            && is_string($this->config['role'])
+            && \is_string($this->config['role'])
             && 0 === strpos($this->config['role'], 'ROLE_');
     }
 

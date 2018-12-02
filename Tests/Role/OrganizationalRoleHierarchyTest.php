@@ -225,7 +225,7 @@ class OrganizationalRoleHierarchyTest extends TestCase
     {
         $org = null;
 
-        if (in_array($orgContextType, ['user', 'organization'])) {
+        if (\in_array($orgContextType, ['user', 'organization'])) {
             $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
             $org->expects($this->once())
                 ->method('isUserOrganization')

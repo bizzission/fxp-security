@@ -51,7 +51,7 @@ abstract class AbstractIdentityVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        return is_string($attribute) && 0 === strpos($attribute, $this->prefix);
+        return \is_string($attribute) && 0 === strpos($attribute, $this->prefix);
     }
 
     /**
@@ -80,8 +80,8 @@ abstract class AbstractIdentityVoter extends Voter
      */
     protected function isValidIdentity($attribute, SecurityIdentityInterface $sid)
     {
-        return ($this->getValidType() === $sid->getType() || in_array($this->getValidType(), class_implements($sid->getType())))
-            && substr($attribute, strlen($this->prefix)) === OrganizationalUtil::format($sid->getIdentifier());
+        return ($this->getValidType() === $sid->getType() || \in_array($this->getValidType(), class_implements($sid->getType())))
+            && substr($attribute, \strlen($this->prefix)) === OrganizationalUtil::format($sid->getIdentifier());
     }
 
     /**

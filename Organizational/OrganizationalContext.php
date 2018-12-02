@@ -170,7 +170,7 @@ class OrganizationalContext implements OrganizationalContextInterface
      */
     public function isOptionalFilterType($type)
     {
-        return is_string($this->optionalFilterType) && $type === $this->optionalFilterType;
+        return \is_string($this->optionalFilterType) && $type === $this->optionalFilterType;
     }
 
     /**

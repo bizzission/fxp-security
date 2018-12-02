@@ -77,7 +77,7 @@ class GroupSecurityIdentityTest extends TestCase
         $sid = GroupSecurityIdentity::fromAccount($group);
 
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sid);
-        $this->assertSame(get_class($group), $sid->getType());
+        $this->assertSame(\get_class($group), $sid->getType());
         $this->assertSame('GROUP_TEST', $sid->getIdentifier());
     }
 
@@ -105,7 +105,7 @@ class GroupSecurityIdentityTest extends TestCase
 
         $this->assertCount(1, $sids);
         $this->assertInstanceOf(GroupSecurityIdentity::class, $sids[0]);
-        $this->assertSame(get_class($group), $sids[0]->getType());
+        $this->assertSame(\get_class($group), $sids[0]->getType());
         $this->assertSame('GROUP_TEST', $sids[0]->getIdentifier());
     }
 

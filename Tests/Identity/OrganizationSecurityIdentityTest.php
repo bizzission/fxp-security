@@ -83,7 +83,7 @@ class OrganizationSecurityIdentityTest extends TestCase
         $sid = OrganizationSecurityIdentity::fromAccount($org);
 
         $this->assertInstanceOf(OrganizationSecurityIdentity::class, $sid);
-        $this->assertSame(get_class($org), $sid->getType());
+        $this->assertSame(\get_class($org), $sid->getType());
         $this->assertSame('foo', $sid->getIdentifier());
     }
 

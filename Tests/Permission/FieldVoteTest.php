@@ -30,7 +30,7 @@ class FieldVoteTest extends TestCase
 
         $this->assertInstanceOf(SubjectIdentityInterface::class, $fv->getSubject());
         $this->assertSame($object, $fv->getSubject()->getObject());
-        $this->assertSame(get_class($object), $fv->getSubject()->getType());
+        $this->assertSame(\get_class($object), $fv->getSubject()->getType());
         $this->assertSame($field, $fv->getField());
     }
 

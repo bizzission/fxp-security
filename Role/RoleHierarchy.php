@@ -114,7 +114,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      */
     public function doGetReachableRoles(array $roles, $suffix = '')
     {
-        if (0 === count($roles)) {
+        if (0 === \count($roles)) {
             return $roles;
         }
 
@@ -281,7 +281,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         $nRoles = [];
 
         foreach ($roles as $role) {
-            if (!is_string($role) && !($role instanceof Role)) {
+            if (!\is_string($role) && !($role instanceof Role)) {
                 throw new SecurityException(sprintf('The Role class must be an instance of "%s"', Role::class));
             }
 
@@ -309,7 +309,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         $filters = SqlFilterUtil::findFilters($om, [], true);
         SqlFilterUtil::disableFilters($om, $filters);
 
-        if (count($roles) > 0) {
+        if (\count($roles) > 0) {
             $recordRoles = $repo->findBy(['name' => $this->cleanRoleNames(array_keys($roles))]);
         }
 
@@ -340,7 +340,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         foreach ($reachableRoles as $role) {
             $name = $this->formatCleanedRoleName($role->getRole());
 
-            if (!in_array($name, $existingRoles)) {
+            if (!\in_array($name, $existingRoles)) {
                 $rSuffix = 'ROLE_USER' !== $name ? $suffix : '';
                 $role = new Role($role->getRole().$rSuffix);
                 $existingRoles[] = $name;

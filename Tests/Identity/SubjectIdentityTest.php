@@ -26,7 +26,7 @@ class SubjectIdentityTest extends TestCase
     {
         $object = new MockObject('foo');
 
-        $si = new SubjectIdentity(get_class($object), (string) $object->getId(), $object);
+        $si = new SubjectIdentity(\get_class($object), (string) $object->getId(), $object);
 
         $this->assertSame('SubjectIdentity(Fxp\Component\Security\Tests\Fixtures\Model\MockObject, 42)', (string) $si);
     }
@@ -35,7 +35,7 @@ class SubjectIdentityTest extends TestCase
     {
         $object = new MockObject('foo');
 
-        $si = new SubjectIdentity(get_class($object), (string) $object->getId(), $object);
+        $si = new SubjectIdentity(\get_class($object), (string) $object->getId(), $object);
 
         $this->assertSame((string) $object->getId(), $si->getIdentifier());
         $this->assertSame(MockObject::class, $si->getType());
@@ -88,7 +88,7 @@ class SubjectIdentityTest extends TestCase
     public function testEquals($value, $result)
     {
         $object = new MockObject('foo');
-        $si = new SubjectIdentity(get_class($object), (string) $object->getId(), $object);
+        $si = new SubjectIdentity(\get_class($object), (string) $object->getId(), $object);
 
         $this->assertSame($result, $si->equals($value));
     }

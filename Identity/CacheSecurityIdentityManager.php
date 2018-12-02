@@ -88,7 +88,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
             $listeners = $this->dispatcher->getListeners(SecurityIdentityEvents::RETRIEVAL_ADD);
 
             foreach ($listeners as $listener) {
-                $listener = is_array($listener) && count($listener) > 1 ? $listener[0] : $listener;
+                $listener = \is_array($listener) && \count($listener) > 1 ? $listener[0] : $listener;
 
                 if ($listener instanceof CacheSecurityIdentityListenerInterface) {
                     $this->cacheIdentityListeners[] = $listener;

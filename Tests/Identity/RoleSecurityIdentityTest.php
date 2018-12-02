@@ -77,7 +77,7 @@ class RoleSecurityIdentityTest extends TestCase
         $sid = RoleSecurityIdentity::fromAccount($role);
 
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sid);
-        $this->assertSame(get_class($role), $sid->getType());
+        $this->assertSame(\get_class($role), $sid->getType());
         $this->assertSame('ROLE_TEST', $sid->getIdentifier());
     }
 
@@ -105,7 +105,7 @@ class RoleSecurityIdentityTest extends TestCase
 
         $this->assertCount(1, $sids);
         $this->assertInstanceOf(RoleSecurityIdentity::class, $sids[0]);
-        $this->assertSame(get_class($role), $sids[0]->getType());
+        $this->assertSame(\get_class($role), $sids[0]->getType());
         $this->assertSame('ROLE_TEST', $sids[0]->getIdentifier());
     }
 

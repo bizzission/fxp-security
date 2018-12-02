@@ -187,7 +187,7 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
             $id = SharingUtils::getCacheId($subject);
 
             return isset($this->cacheSubjectSharing[$id]['operations'])
-            && in_array($operation, $this->cacheSubjectSharing[$id]['operations']);
+            && \in_array($operation, $this->cacheSubjectSharing[$id]['operations']);
         }
 
         return false;

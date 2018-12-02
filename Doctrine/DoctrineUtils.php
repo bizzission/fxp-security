@@ -68,7 +68,7 @@ abstract class DoctrineUtils
     {
         if (!isset(self::$cacheIdentifiers[$targetEntity->getName()])) {
             $identifier = $targetEntity->getIdentifierFieldNames();
-            self::$cacheIdentifiers[$targetEntity->getName()] = 0 < count($identifier)
+            self::$cacheIdentifiers[$targetEntity->getName()] = 0 < \count($identifier)
                 ? $identifier[0]
                 : 'id';
         }
@@ -136,7 +136,7 @@ abstract class DoctrineUtils
             return $type;
         }
 
-        if (is_string($type)) {
+        if (\is_string($type)) {
             return Type::getType($type);
         }
 

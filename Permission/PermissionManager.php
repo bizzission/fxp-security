@@ -90,10 +90,10 @@ class PermissionManager extends AbstractPermissionManager
                 $config = $this->getConfig($subject->getType());
 
                 if (null !== $config->getMaster()) {
-                    if (is_object($subject->getObject())) {
+                    if (\is_object($subject->getObject())) {
                         $value = $this->propertyAccessor->getValue($subject->getObject(), $config->getMaster());
 
-                        if (is_object($value)) {
+                        if (\is_object($value)) {
                             $subject = SubjectIdentity::fromObject($value);
                         }
                     } else {
@@ -283,7 +283,7 @@ class PermissionManager extends AbstractPermissionManager
         $event = new CheckPermissionEvent($sids, $this->cache[$id], $operation, $subject, $field);
         $this->dispatcher->dispatch(PermissionEvents::CHECK_PERMISSION, $event);
 
-        if (is_bool($event->isGranted())) {
+        if (\is_bool($event->isGranted())) {
             return $event->isGranted();
         }
 

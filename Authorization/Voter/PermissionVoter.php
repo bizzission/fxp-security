@@ -64,7 +64,7 @@ class PermissionVoter extends Voter
      */
     protected function isAttributeSupported($attribute)
     {
-        return is_string($attribute) && 0 === strpos(strtolower($attribute), 'perm_');
+        return \is_string($attribute) && 0 === strpos(strtolower($attribute), 'perm_');
     }
 
     /**
@@ -76,15 +76,15 @@ class PermissionVoter extends Voter
      */
     protected function isSubjectSupported($subject)
     {
-        if (null === $subject || is_string($subject) || $subject instanceof FieldVote || is_object($subject)) {
+        if (null === $subject || \is_string($subject) || $subject instanceof FieldVote || \is_object($subject)) {
             return true;
         }
 
-        return is_array($subject)
+        return \is_array($subject)
             && isset($subject[0])
             && isset($subject[1])
-            && (is_string($subject[0]) || is_object($subject[0]))
-            && is_string($subject[1]);
+            && (\is_string($subject[0]) || \is_object($subject[0]))
+            && \is_string($subject[1]);
     }
 
     /**
@@ -95,7 +95,7 @@ class PermissionVoter extends Voter
         $sids = $this->sim->getSecurityIdentities($token);
         $attribute = substr($attribute, 5);
 
-        if (is_array($subject) && isset($subject[0]) && isset($subject[1])) {
+        if (\is_array($subject) && isset($subject[0]) && isset($subject[1])) {
             $subject = new FieldVote($subject[0], $subject[1]);
         }
 

@@ -43,7 +43,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
     {
         parent::__construct($type, $identifier);
 
-        if (null !== $subject && !is_object($subject)) {
+        if (null !== $subject && !\is_object($subject)) {
             throw new UnexpectedTypeException($subject, 'object|null');
         }
 
@@ -64,7 +64,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
     public static function fromObject($object)
     {
         try {
-            if (!is_object($object)) {
+            if (!\is_object($object)) {
                 throw new UnexpectedTypeException($object, 'object');
             }
 

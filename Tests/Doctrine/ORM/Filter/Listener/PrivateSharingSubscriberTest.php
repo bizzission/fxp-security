@@ -103,7 +103,7 @@ class PrivateSharingSubscriberTest extends TestCase
         $this->connection->expects($this->any())
             ->method('quote')
             ->willReturnCallback(function ($v) {
-                if (is_array($v)) {
+                if (\is_array($v)) {
                     return implode(', ', $v);
                 }
 

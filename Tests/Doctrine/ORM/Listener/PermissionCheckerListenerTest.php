@@ -101,15 +101,15 @@ class PermissionCheckerListenerTest extends TestCase
 
         $listener = new PermissionCheckerListener();
 
-        if (in_array('tokenStorage', $setters)) {
+        if (\in_array('tokenStorage', $setters)) {
             $listener->setTokenStorage($this->tokenStorage);
         }
 
-        if (in_array('authChecker', $setters)) {
+        if (\in_array('authChecker', $setters)) {
             $listener->setAuthorizationChecker($this->authChecker);
         }
 
-        if (in_array('permissionManager', $setters)) {
+        if (\in_array('permissionManager', $setters)) {
             $listener->setPermissionManager($this->permissionManager);
         }
 

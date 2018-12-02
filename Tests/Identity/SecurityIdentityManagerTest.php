@@ -131,14 +131,14 @@ class SecurityIdentityManagerTest extends TestCase
             ->with($tokenRoles)
             ->willReturn($tokenRoles);
 
-        if (in_array($trustMethod, ['isRememberMe', 'isAnonymous'])) {
+        if (\in_array($trustMethod, ['isRememberMe', 'isAnonymous'])) {
             $this->authenticationTrustResolver->expects($this->once())
                 ->method('isFullFledged')
                 ->with($token)
                 ->willReturn(false);
         }
 
-        if (in_array($trustMethod, ['isAnonymous'])) {
+        if (\in_array($trustMethod, ['isAnonymous'])) {
             $this->authenticationTrustResolver->expects($this->once())
                 ->method('isRememberMe')
                 ->with($token)

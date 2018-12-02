@@ -117,7 +117,7 @@ abstract class AbstractViewGrantedEvent extends Event
     {
         $object = $fieldVote->getSubject()->getObject();
 
-        if (!is_object($object)) {
+        if (!\is_object($object)) {
             throw new UnexpectedTypeException($object, 'object');
         }
 

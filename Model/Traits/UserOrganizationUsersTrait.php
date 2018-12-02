@@ -52,7 +52,7 @@ trait UserOrganizationUsersTrait
      */
     public function hasUserOrganization($name)
     {
-        return in_array($name, $this->getUserOrganizationNames());
+        return \in_array($name, $this->getUserOrganizationNames());
     }
 
     /**

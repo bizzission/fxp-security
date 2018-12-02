@@ -90,7 +90,7 @@ class RoleHierarchyListener implements EventSubscriber
         foreach ($collection as $object) {
             $invalidate = $this->invalidateCache($uow, $object);
 
-            if (is_string($invalidate)) {
+            if (\is_string($invalidate)) {
                 $invalidates[] = $invalidate;
             }
         }
@@ -105,7 +105,7 @@ class RoleHierarchyListener implements EventSubscriber
      */
     protected function flushCache(array $invalidates)
     {
-        if (count($invalidates) > 0) {
+        if (\count($invalidates) > 0) {
             if ($this->cache instanceof AdapterInterface && null !== $this->context) {
                 $this->cache->clearByPrefixes($invalidates);
             } elseif (null !== $this->cache) {
@@ -173,7 +173,7 @@ class RoleHierarchyListener implements EventSubscriber
         }
 
         foreach ($fields as $field) {
-            if (in_array($field, $checkFields)) {
+            if (\in_array($field, $checkFields)) {
                 return $this->getPrefix($object);
             }
         }
@@ -204,10 +204,10 @@ class RoleHierarchyListener implements EventSubscriber
     {
         $ref = new \ReflectionClass($mapping['sourceEntity']);
 
-        if (in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames())
+        if (\in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames())
                 && 'children' === $mapping['fieldName']) {
             return true;
-        } elseif (in_array(GroupableInterface::class, $ref->getInterfaceNames())
+        } elseif (\in_array(GroupableInterface::class, $ref->getInterfaceNames())
                 && 'groups' === $mapping['fieldName']) {
             return true;
         }

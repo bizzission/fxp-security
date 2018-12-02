@@ -279,7 +279,7 @@ class RoleHierarchyListenerTest extends TestCase
         $persistCollection->setOwner($object, [
             'inversedBy' => '',
             'mappedBy' => '',
-            'sourceEntity' => get_class($object),
+            'sourceEntity' => \get_class($object),
             'fieldName' => $fieldName,
         ]);
 
@@ -313,7 +313,7 @@ class RoleHierarchyListenerTest extends TestCase
         $persistCollection->setOwner($object, [
             'inversedBy' => '',
             'mappedBy' => '',
-            'sourceEntity' => get_class($object),
+            'sourceEntity' => \get_class($object),
         ]);
 
         $args->expects($this->once())

@@ -143,7 +143,7 @@ abstract class Role extends BaseRole implements RoleHierarchicalInterface
      */
     public function hasParent($name)
     {
-        return in_array($name, $this->getParentNames());
+        return \in_array($name, $this->getParentNames());
     }
 
     /**
@@ -196,7 +196,7 @@ abstract class Role extends BaseRole implements RoleHierarchicalInterface
      */
     public function hasChild($name)
     {
-        return in_array($name, $this->getChildrenNames());
+        return \in_array($name, $this->getChildrenNames());
     }
 
     /**
