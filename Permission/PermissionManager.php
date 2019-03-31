@@ -114,11 +114,9 @@ class PermissionManager extends AbstractPermissionManager
         if ($this->hasConfig($subject->getType())) {
             if (null === $field) {
                 return true;
-            } else {
-                $config = $this->getConfig($subject->getType());
-
-                return $config->hasField($field);
             }
+
+            return $this->getConfig($subject->getType())->hasField($field);
         }
 
         return false;
@@ -318,7 +316,7 @@ class PermissionManager extends AbstractPermissionManager
         $roles = IdentityUtils::filterRolesIdentities($sids);
         $id = implode('|', $roles);
 
-        if (!array_key_exists($id, $this->cache)) {
+        if (!\array_key_exists($id, $this->cache)) {
             $this->cache[$id] = [];
             $preEvent = new PreLoadPermissionsEvent($sids, $roles);
             $this->dispatcher->dispatch(PermissionEvents::PRE_LOAD, $preEvent);
@@ -389,7 +387,7 @@ class PermissionManager extends AbstractPermissionManager
     {
         $id = '_config';
 
-        if (!array_key_exists($id, $this->cache)) {
+        if (!\array_key_exists($id, $this->cache)) {
             $this->cache[$id] = [];
             $this->buildSystemPermissions($id);
         }

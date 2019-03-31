@@ -182,7 +182,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     {
         $type = $subject->getType();
 
-        if (!array_key_exists($type, $this->cacheSubjectVisibilities)) {
+        if (!\array_key_exists($type, $this->cacheSubjectVisibilities)) {
             $sharingVisibility = SharingVisibilities::TYPE_NONE;
 
             if ($this->hasSubjectConfig($type)) {
@@ -231,9 +231,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function getIdentityConfig($class)
     {
-        $class = isset($this->identityAliases[$class])
-            ? $this->identityAliases[$class]
-            : ClassUtils::getRealClass($class);
+        $class = $this->identityAliases[$class] ?? ClassUtils::getRealClass($class);
 
         if (!$this->hasIdentityConfig($class)) {
             throw new SharingIdentityConfigNotFoundException($class);

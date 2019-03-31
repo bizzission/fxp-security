@@ -31,9 +31,13 @@ abstract class SubjectUtils
     {
         if ($subject instanceof SubjectIdentityInterface) {
             return $subject;
-        } elseif (\is_string($subject)) {
+        }
+
+        if (\is_string($subject)) {
             return SubjectIdentity::fromClassname($subject);
-        } elseif (\is_object($subject)) {
+        }
+
+        if (\is_object($subject)) {
             return SubjectIdentity::fromObject($subject);
         }
 

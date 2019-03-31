@@ -32,9 +32,7 @@ abstract class PermissionUtils
      */
     public static function getMapAction($action = null, $default = '_global')
     {
-        return null !== $action
-            ? $action
-            : $default;
+        return $action ?? $default;
     }
 
     /**

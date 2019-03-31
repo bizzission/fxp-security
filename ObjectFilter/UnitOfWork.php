@@ -41,7 +41,7 @@ class UnitOfWork implements UnitOfWorkInterface
     {
         $oid = spl_object_hash($object);
 
-        if (array_key_exists($oid, $this->originalObjectData)) {
+        if (\array_key_exists($oid, $this->originalObjectData)) {
             return;
         }
 
@@ -63,7 +63,7 @@ class UnitOfWork implements UnitOfWorkInterface
     {
         $oid = spl_object_hash($object);
 
-        if (!array_key_exists($oid, $this->originalObjectData)) {
+        if (!\array_key_exists($oid, $this->originalObjectData)) {
             return;
         }
 
@@ -77,7 +77,7 @@ class UnitOfWork implements UnitOfWorkInterface
     {
         $oid = spl_object_hash($object);
 
-        if (!array_key_exists($oid, $this->originalObjectData)) {
+        if (!\array_key_exists($oid, $this->originalObjectData)) {
             return [];
         }
 

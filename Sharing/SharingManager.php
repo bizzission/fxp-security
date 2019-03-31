@@ -23,7 +23,7 @@ use Fxp\Component\Security\Permission\PermissionUtils;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class SharingManager extends AbstractSharingManager implements SharingManagerInterface
+class SharingManager extends AbstractSharingManager
 {
     /**
      * @var array
@@ -67,9 +67,7 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
         foreach ($subjects as $id => $subject) {
             if (isset($entries[$id])) {
                 foreach ($entries[$id] as $entrySharing) {
-                    $operations = isset($this->cacheSubjectSharing[$id]['operations'])
-                        ? $this->cacheSubjectSharing[$id]['operations']
-                        : [];
+                    $operations = $this->cacheSubjectSharing[$id]['operations'] ?? [];
 
                     $this->cacheSubjectSharing[$id]['sharings'][] = $entrySharing;
                     $this->cacheSubjectSharing[$id]['operations'] = array_unique(array_merge($operations,
@@ -96,14 +94,14 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
             $subjectId = SharingUtils::getCacheId($subject);
             $idSubjects[$subjectId] = $subject;
 
-            if (!array_key_exists($subjectId, $this->cacheSharing)
+            if (!\array_key_exists($subjectId, $this->cacheSharing)
                     && isset($this->cacheRoleSharing[$subjectId])) {
-                $roles = array_merge($roles, $this->cacheRoleSharing[$subjectId]);
+                $roles[] = $this->cacheRoleSharing[$subjectId];
                 $this->cacheSharing[$subjectId] = [];
             }
         }
 
-        $roles = array_unique($roles);
+        $roles = \count($roles) > 0 ? array_unique(array_merge(...$roles)) : $roles;
 
         if (!empty($roles)) {
             $this->doLoadSharingPermissions($idSubjects, $roles);
@@ -119,9 +117,7 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
             try {
                 $subject = SubjectIdentity::fromObject($object);
                 $id = SharingUtils::getCacheId($subject);
-                unset($this->cacheSharing[$id]);
-                unset($this->cacheRoleSharing[$id]);
-                unset($this->cacheSubjectSharing[$id]);
+                unset($this->cacheSharing[$id], $this->cacheRoleSharing[$id], $this->cacheSubjectSharing[$id]);
             } catch (InvalidSubjectIdentityException $e) {
                 // do nothing
             }
@@ -208,10 +204,10 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
             $subject = SubjectIdentity::fromObject($object);
             $id = SharingUtils::getCacheId($subject);
 
-            if ($this->hasSubjectConfig($subject->getType())
+            if (!\array_key_exists($id, $this->cacheSubjectSharing)
                     && $this->hasIdentityPermissible()
                     && $this->hasSharingVisibility($subject)
-                    && !array_key_exists($id, $this->cacheSubjectSharing)) {
+                    && $this->hasSubjectConfig($subject->getType())) {
                 $subjects[$id] = $subject;
                 $this->cacheSubjectSharing[$id] = false;
             }
@@ -321,9 +317,9 @@ class SharingManager extends AbstractSharingManager implements SharingManagerInt
 
         /* @var SubjectIdentityInterface $subject */
         foreach ($idSubjects as $id => $subject) {
-            foreach ($this->cacheRoleSharing[$id] as $role) {
-                if (isset($mapRoles[$role])) {
-                    $cRole = $mapRoles[$role];
+            foreach ($this->cacheRoleSharing[$id] as $roleId) {
+                if (isset($mapRoles[$roleId])) {
+                    $cRole = $mapRoles[$roleId];
 
                     foreach ($cRole->getPermissions() as $perm) {
                         $class = $subject->getType();

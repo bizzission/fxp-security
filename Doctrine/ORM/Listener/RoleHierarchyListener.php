@@ -148,7 +148,9 @@ class RoleHierarchyListener implements EventSubscriber
     {
         if ($this->isCacheableObject($object)) {
             return $this->invalidateCacheableObject($uow, $object);
-        } elseif ($object instanceof PersistentCollection && $this->isRequireAssociation($object->getMapping())) {
+        }
+
+        if ($object instanceof PersistentCollection && $this->isRequireAssociation($object->getMapping())) {
             return $this->getPrefix($object->getOwner());
         }
 
@@ -207,7 +209,9 @@ class RoleHierarchyListener implements EventSubscriber
         if (\in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames())
                 && 'children' === $mapping['fieldName']) {
             return true;
-        } elseif (\in_array(GroupableInterface::class, $ref->getInterfaceNames())
+        }
+
+        if (\in_array(GroupableInterface::class, $ref->getInterfaceNames())
                 && 'groups' === $mapping['fieldName']) {
             return true;
         }

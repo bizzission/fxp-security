@@ -97,7 +97,7 @@ class ObjectFilter implements ObjectFilterInterface
                                 EventDispatcherInterface $dispatcher,
                                 UnitOfWorkInterface $uow = null)
     {
-        $this->uow = null !== $uow ? $uow : new UnitOfWork();
+        $this->uow = $uow ?? new UnitOfWork();
         $this->ofe = $ofe;
         $this->pm = $pm;
         $this->ac = $ac;
@@ -321,13 +321,9 @@ class ObjectFilter implements ObjectFilterInterface
      */
     protected function isIdentifier(FieldVote $fieldVote, $value)
     {
-        if ((\is_int($value) || \is_string($value))
+        return (\is_int($value) || \is_string($value))
                 && (string) $value === $fieldVote->getSubject()->getIdentifier()
-                && \in_array($fieldVote->getField(), ['id', 'subjectIdentifier'])) {
-            return true;
-        }
-
-        return false;
+                && \in_array($fieldVote->getField(), ['id', 'subjectIdentifier']);
     }
 
     /**

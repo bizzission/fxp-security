@@ -96,8 +96,6 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
      */
     private function buildAlias($classname, $alias)
     {
-        return null !== $alias
-            ? $alias
-            : strtolower(substr(strrchr($classname, '\\'), 1));
+        return $alias ?? strtolower(substr(strrchr($classname, '\\'), 1));
     }
 }
