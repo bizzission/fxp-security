@@ -9,55 +9,51 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Model;
+namespace Fxp\Component\Security\Model\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Fxp\Component\Security\Model\OrganizationUserInterface;
+use Fxp\Component\Security\Model\UserInterface;
 
 /**
- * This is the domain class for the Organization object.
+ * Trait for organization model.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class Organization implements OrganizationInterface
+trait OrganizationTrait
 {
     /**
-     * @var int|string|null
-     */
-    protected $id;
-
-    /**
      * @var string
+     *
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     protected $name;
 
     /**
      * @var UserInterface|null
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Fxp\Component\Security\Model\UserInterface",
+     *     inversedBy="organization",
+     *     cascade={"persist", "remove"}
+     * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
 
     /**
      * @var Collection|OrganizationUserInterface[]|null
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Fxp\Component\Security\Model\OrganizationUserInterface",
+     *     mappedBy="organization",
+     *     fetch="EXTRA_LAZY",
+     *     cascade={"persist", "remove"}
+     * )
      */
     protected $organizationUsers;
-
-    /**
-     * Constructor.
-     *
-     * @param string $name The unique name
-     */
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * {@inheritdoc}

@@ -14,13 +14,13 @@ namespace Fxp\Component\Security\Identity;
 use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
 use Fxp\Component\Security\Event\PostSecurityIdentityEvent;
 use Fxp\Component\Security\Event\PreSecurityIdentityEvent;
+use Fxp\Component\Security\Role\RoleUtil;
 use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -46,7 +46,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
     protected $authenticationTrustResolver;
 
     /**
-     * @var Role[]
+     * @var string[]
      */
     protected $roles = [];
 
@@ -69,10 +69,10 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addSpecialRole(Role $role)
+    public function addSpecialRole($role)
     {
-        if (!isset($this->roles[$role->getRole()])) {
-            $this->roles[$role->getRole()] = $role;
+        if (!isset($this->roles[$role])) {
+            $this->roles[$role] = $role;
         }
 
         return $this;
@@ -144,8 +144,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
     protected function addReachableRoles(TokenInterface $token, array $sids)
     {
         foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
-            /* @var Role $role */
-            $sids[] = RoleSecurityIdentity::fromAccount($role);
+            $sids[] = RoleSecurityIdentity::fromAccount(RoleUtil::formatName($role));
         }
 
         return $sids;
@@ -164,14 +163,14 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
         $sids = $this->injectSpecialRoles($sids);
 
         if ($this->authenticationTrustResolver->isFullFledged($token)) {
-            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_FULLY);
-            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
+            $sids[] = new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_FULLY);
+            $sids[] = new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+            $sids[] = new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
         } elseif ($this->authenticationTrustResolver->isRememberMe($token)) {
-            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
+            $sids[] = new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+            $sids[] = new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
         } elseif ($this->authenticationTrustResolver->isAnonymous($token)) {
-            $sids[] = new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
+            $sids[] = new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY);
         }
 
         return $sids;
@@ -189,7 +188,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
         $roles = $this->getRoleNames($sids);
 
         foreach ($this->roles as $role) {
-            if (!\in_array($role->getRole(), $roles)) {
+            if (!\in_array($role, $roles)) {
                 $sids[] = RoleSecurityIdentity::fromAccount($role);
             }
         }

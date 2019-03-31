@@ -19,12 +19,12 @@ use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
 use Fxp\Component\Security\Model\RoleHierarchicalInterface;
 use Fxp\Component\Security\Role\RoleHierarchy;
+use Fxp\Component\Security\Role\RoleUtil;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -86,7 +86,7 @@ class RoleHierarchyTest extends TestCase
                 'ROLE_USER',
             ],
         ];
-        $this->roleHierarchy = new RoleHierarchy($hierarchy, $this->registry, $this->roleClassname, $this->cache);
+        $this->roleHierarchy = new RoleHierarchy($hierarchy, $this->registry, $this->cache, $this->roleClassname);
 
         $this->roleHierarchy->setEventDispatcher($this->eventDispatcher);
 
@@ -110,10 +110,10 @@ class RoleHierarchyTest extends TestCase
         $roles = [
             new MockRole('ROLE_ADMIN'),
         ];
-        $validRoles = [
-            new Role('ROLE_ADMIN'),
-            new Role('ROLE_USER'),
-        ];
+        $validRoles = RoleUtil::formatRoles([
+            'ROLE_ADMIN',
+            'ROLE_USER',
+        ]);
 
         $cacheItem = $this->getMockBuilder(CacheItemInterface::class)->getMock();
 
@@ -148,10 +148,6 @@ class RoleHierarchyTest extends TestCase
 
         $dbRole = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $dbRoleChildren = $this->getMockBuilder(Collection::class)->getMock();
-
-        $dbRole->expects($this->any())
-            ->method('getRole')
-            ->willReturn('ROLE_ADMIN');
 
         $dbRole->expects($this->any())
             ->method('getName')
@@ -196,10 +192,10 @@ class RoleHierarchyTest extends TestCase
         $roles = [
             new MockRole('ROLE_ADMIN'),
         ];
-        $validRoles = [
-            new Role('ROLE_ADMIN'),
-            new Role('ROLE_USER'),
-        ];
+        $validRoles = RoleUtil::formatRoles([
+            'ROLE_ADMIN',
+            'ROLE_USER',
+        ]);
 
         $cacheItem = $this->getMockBuilder(CacheItemInterface::class)->getMock();
 
@@ -211,8 +207,8 @@ class RoleHierarchyTest extends TestCase
             ->method('get')
             ->with()
             ->willReturn([
-                new Role('ROLE_ADMIN'),
-                new Role('ROLE_USER'),
+                'ROLE_ADMIN',
+                'ROLE_USER',
             ]);
 
         $cacheItem->expects($this->once())
@@ -224,18 +220,5 @@ class RoleHierarchyTest extends TestCase
 
         $this->assertCount(2, $fullRoles);
         $this->assertEquals($validRoles, $fullRoles);
-    }
-
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\SecurityException
-     * @expectedExceptionMessage The Role class must be an instance of "Symfony\Component\Security\Core\Role\Role"
-     */
-    public function testInvalidRoleClassName()
-    {
-        $roles = [
-            $this->getMockBuilder(\stdClass::class)->getMock(),
-        ];
-
-        $this->roleHierarchy->getReachableRoles($roles);
     }
 }

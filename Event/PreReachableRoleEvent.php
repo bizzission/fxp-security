@@ -25,7 +25,7 @@ class PreReachableRoleEvent extends AbstractEditableSecurityEvent
     /**
      * Constructor.
      *
-     * @param \Symfony\Component\Security\Core\Role\Role[] $reachableRoles The reachable roles
+     * @param string[] $reachableRoles The reachable roles
      */
     public function __construct(array $reachableRoles)
     {

@@ -11,11 +11,26 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Model\Sharing;
+use Fxp\Component\Security\Model\SharingInterface;
+use Fxp\Component\Security\Model\Traits\SharingTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockSharing extends Sharing
+class MockSharing implements SharingInterface
 {
+    use SharingTrait;
+
+    /**
+     * @var int|null
+     */
+    protected $id;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

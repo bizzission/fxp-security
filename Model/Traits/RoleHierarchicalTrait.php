@@ -9,94 +9,58 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Model;
+namespace Fxp\Component\Security\Model\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Fxp\Component\Security\Model\Traits\PermissionsTrait;
-use Symfony\Component\Security\Core\Role\Role as BaseRole;
+use Doctrine\ORM\Mapping as ORM;
+use Fxp\Component\Security\Model\RoleHierarchicalInterface;
+use Fxp\Component\Security\Model\RoleInterface;
 
 /**
- * This is the domain class for the Role object.
+ * Trait of hierarchical for role model.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class Role extends BaseRole implements RoleHierarchicalInterface
+trait RoleHierarchicalTrait
 {
-    use PermissionsTrait;
-
-    /**
-     * @var int|string|null
-     */
-    protected $id;
-
-    /**
-     * @var string
-     */
-    protected $name;
-
     /**
      * @var Collection|null
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Fxp\Component\Security\Model\RoleInterface",
+     *     mappedBy="children"
+     * )
      */
     protected $parents;
 
     /**
      * @var Collection|null
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Fxp\Component\Security\Model\RoleInterface",
+     *     inversedBy="parents"
+     * )
+     * @ORM\JoinTable(
+     *     name="role_children",
+     *     joinColumns={
+     *         @ORM\JoinColumn(onDelete="CASCADE")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(onDelete="CASCADE", name="children_role_id")
+     *     }
+     * )
      */
     protected $children;
-
-    /**
-     * Constructor.
-     *
-     * @param string $name The role name
-     */
-    public function __construct($name)
-    {
-        parent::__construct('');
-
-        $this->name = $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRole()
-    {
-        return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setName($name = null)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     /**
      * {@inheritdoc}
      */
     public function addParent(RoleHierarchicalInterface $role)
     {
-        $role->addChild($this);
+        /* @var RoleHierarchicalInterface $self */
+        $self = $this;
+        $role->addChild($self);
         $this->getParents()->add($role);
 
         return $this;
@@ -197,21 +161,5 @@ abstract class Role extends BaseRole implements RoleHierarchicalInterface
     public function hasChild($name)
     {
         return \in_array($name, $this->getChildrenNames());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return $this->getRole();
-    }
-
-    /**
-     * Clone the role.
-     */
-    public function __clone()
-    {
-        $this->id = null;
     }
 }

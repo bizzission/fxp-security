@@ -13,12 +13,11 @@ namespace Fxp\Component\Security\Tests\Identity;
 
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
+use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Model\Traits\RoleableInterface;
-use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -68,10 +67,10 @@ class RoleSecurityIdentityTest extends TestCase
 
     public function testFromAccount()
     {
-        /* @var Role|\PHPUnit_Framework_MockObject_MockObject $role */
-        $role = $this->getMockBuilder(Role::class)->disableOriginalConstructor()->getMock();
+        /* @var RoleInterface|\PHPUnit_Framework_MockObject_MockObject $role */
+        $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $role->expects($this->once())
-            ->method('getRole')
+            ->method('getName')
             ->willReturn('ROLE_TEST');
 
         $sid = RoleSecurityIdentity::fromAccount($role);
@@ -83,10 +82,10 @@ class RoleSecurityIdentityTest extends TestCase
 
     public function testFormToken()
     {
-        /* @var Role|\PHPUnit_Framework_MockObject_MockObject $role */
-        $role = $this->getMockBuilder(Role::class)->disableOriginalConstructor()->getMock();
+        /* @var RoleInterface|\PHPUnit_Framework_MockObject_MockObject $role */
+        $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $role->expects($this->once())
-            ->method('getRole')
+            ->method('getName')
             ->willReturn('ROLE_TEST');
 
         /* @var RoleableInterface|\PHPUnit_Framework_MockObject_MockObject $user */
@@ -115,8 +114,8 @@ class RoleSecurityIdentityTest extends TestCase
      */
     public function testFormTokenWithInvalidInterface()
     {
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->getMockBuilder(UserInterface::class)->getMock();
+        /* @var \Symfony\Component\Security\Core\User\UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->getMockBuilder(\Symfony\Component\Security\Core\User\UserInterface::class)->getMock();
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();

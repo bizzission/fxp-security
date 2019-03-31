@@ -28,9 +28,11 @@ interface GroupInterface extends RoleableInterface
     public function getName();
 
     /**
-     * Get the group name used by security.
+     * Set the group name.
      *
-     * @return string
+     * @param string $name The name
+     *
+     * @return static
      */
-    public function getGroup();
+    public function setName($name);
 }

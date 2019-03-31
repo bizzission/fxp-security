@@ -12,7 +12,6 @@
 namespace Fxp\Component\Security\Firewall;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Inject the host role in security identity manager.
@@ -42,7 +41,7 @@ class HostRoleListener extends AbstractRoleListener
      *
      * @param GetResponseEvent $event The response event
      *
-     * @return Role|null
+     * @return string|null
      */
     protected function getHostRole(GetResponseEvent $event)
     {
@@ -51,7 +50,7 @@ class HostRoleListener extends AbstractRoleListener
 
         foreach ($this->config as $hostPattern => $role) {
             if ($this->isValid($hostPattern, $hostname)) {
-                $hostRole = new Role($role);
+                $hostRole = $role;
                 break;
             }
         }

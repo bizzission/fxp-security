@@ -24,9 +24,9 @@ use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Model\OrganizationUserInterface;
 use Fxp\Component\Security\Model\RoleHierarchicalInterface;
 use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Invalidate the role hierarchy cache when users, roles or groups is inserted,

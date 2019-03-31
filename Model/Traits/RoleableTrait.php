@@ -11,8 +11,9 @@
 
 namespace Fxp\Component\Security\Model\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
 use Fxp\Component\Security\Model\OrganizationUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Fxp\Component\Security\Model\UserInterface;
 
 /**
  * Trait of roleable model.
@@ -23,6 +24,8 @@ trait RoleableTrait
 {
     /**
      * @var string[]
+     *
+     * @ORM\Column(type="json")
      */
     protected $roles = [];
 

@@ -19,10 +19,10 @@ use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Model\Sharing;
-use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -94,8 +94,7 @@ class SharingFilterSubscriberTest extends TestCase
             $this->dispatcher,
             $this->tokenStorage,
             $this->sidManager,
-            $this->sharingManager,
-            $this->sharingClass
+            $this->sharingManager
         );
         $connection = $this->getMockBuilder(Connection::class)->getMock();
         $connection->expects($this->any())
@@ -210,10 +209,7 @@ class SharingFilterSubscriberTest extends TestCase
                 return $config;
             });
 
-        $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->any())
-            ->method('getId')
-            ->willReturn(50);
+        $user = new MockUserRoleable();
 
         $token->expects($this->any())
             ->method('getUser')

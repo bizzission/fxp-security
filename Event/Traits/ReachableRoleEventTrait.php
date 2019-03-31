@@ -19,14 +19,14 @@ namespace Fxp\Component\Security\Event\Traits;
 trait ReachableRoleEventTrait
 {
     /**
-     * @var \Symfony\Component\Security\Core\Role\Role[]
+     * @var string[]
      */
     protected $reachableRoles;
 
     /**
      * Set reachable roles.
      *
-     * @param \Symfony\Component\Security\Core\Role\Role[] $reachableRoles
+     * @param string[] $reachableRoles
      */
     public function setReachableRoles(array $reachableRoles)
     {
@@ -36,7 +36,7 @@ trait ReachableRoleEventTrait
     /**
      * Get reachable roles.
      *
-     * @return \Symfony\Component\Security\Core\Role\Role[]
+     * @return string[]
      */
     public function getReachableRoles()
     {

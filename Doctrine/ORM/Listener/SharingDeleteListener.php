@@ -21,6 +21,7 @@ use Doctrine\ORM\QueryBuilder;
 use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Exception\SecurityException;
 use Fxp\Component\Security\Identity\SubjectIdentity;
+use Fxp\Component\Security\Model\SharingInterface;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 
 /**
@@ -60,7 +61,7 @@ class SharingDeleteListener implements EventSubscriber
      *
      * @param string $sharingClass The classname of sharing model
      */
-    public function __construct($sharingClass)
+    public function __construct($sharingClass = SharingInterface::class)
     {
         $this->sharingClass = $sharingClass;
     }

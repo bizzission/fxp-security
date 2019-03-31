@@ -12,21 +12,19 @@
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
 use Fxp\Component\Security\Model\GroupInterface;
+use Fxp\Component\Security\Model\Traits\GroupTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class MockGroup implements GroupInterface
 {
+    use GroupTrait;
+
     /**
      * @var int|null
      */
     protected $id;
-
-    /**
-     * @var string
-     */
-    protected $name;
 
     /**
      * @var array
@@ -51,22 +49,6 @@ class MockGroup implements GroupInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGroup()
-    {
-        return $this->name;
     }
 
     /**

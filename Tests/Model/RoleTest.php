@@ -27,11 +27,9 @@ class RoleTest extends TestCase
         $role = new MockRole($nameUser);
 
         $this->assertSame(23, $role->getId());
-        $this->assertSame($nameUser, $role->getRole());
         $this->assertSame($nameUser, $role->getName());
 
         $role->setName($nameAdmin);
-        $this->assertSame($nameAdmin, $role->getRole());
         $this->assertSame($nameAdmin, $role->getName());
         $this->assertSame($nameAdmin, (string) $role);
 
@@ -57,24 +55,6 @@ class RoleTest extends TestCase
 
         $role->removePermission($perm);
         $this->assertFalse($role->hasPermission($perm));
-    }
-
-    public function testClone()
-    {
-        $role = new MockRole('TEST');
-        $ref = new \ReflectionClass($role);
-
-        $prop = $ref->getProperty('id');
-        $prop->setAccessible(true);
-        $prop->setValue($role, 42);
-        $prop->setAccessible(false);
-
-        $this->assertSame(42, $role->getId());
-
-        $roleClone = clone $role;
-        $this->assertNull($roleClone->getId());
-        $this->assertSame($role->getRole(), $roleClone->getRole());
-        $this->assertSame($role->getName(), $roleClone->getName());
     }
 
     public function testParent()

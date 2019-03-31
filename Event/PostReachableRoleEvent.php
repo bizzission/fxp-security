@@ -25,8 +25,8 @@ class PostReachableRoleEvent extends AbstractSecurityEvent
     /**
      * Constructor.
      *
-     * @param \Symfony\Component\Security\Core\Role\Role[] $reachableRoles    The reachable roles
-     * @param bool                                         $permissionEnabled Check if the permission manager is enabled
+     * @param string[] $reachableRoles    The reachable roles
+     * @param bool     $permissionEnabled Check if the permission manager is enabled
      */
     public function __construct(array $reachableRoles, $permissionEnabled = true)
     {

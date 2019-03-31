@@ -19,7 +19,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -139,7 +138,7 @@ class AnonymousRoleListenerTest extends TestCase
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with(new Role('ROLE_CUSTOM_ANONYMOUS'));
+            ->with('ROLE_CUSTOM_ANONYMOUS');
 
         $this->listener->handle($this->event);
     }
@@ -159,7 +158,7 @@ class AnonymousRoleListenerTest extends TestCase
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with(new Role('ROLE_CUSTOM_ANONYMOUS'));
+            ->with('ROLE_CUSTOM_ANONYMOUS');
 
         $this->listener->handle($this->event);
     }

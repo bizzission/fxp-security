@@ -11,8 +11,6 @@
 
 namespace Fxp\Component\Security\Model\Traits;
 
-use Symfony\Component\Security\Core\Role\Role;
-
 /**
  * Interface of roleable model.
  *
@@ -61,7 +59,7 @@ interface RoleableInterface
     /**
      * Get the roles.
      *
-     * @return Role[]|string[] The user roles
+     * @return string[] The user roles
      */
     public function getRoles();
 }

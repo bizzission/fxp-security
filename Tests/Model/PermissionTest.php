@@ -34,7 +34,5 @@ class PermissionTest extends TestCase
         $this->assertSame(MockObject::class, $perm->getClass());
         $this->assertSame('name', $perm->getField());
         $this->assertSame([PermissionContexts::ROLE], $perm->getContexts());
-        $this->assertCount(0, $perm->getRoles());
-        $this->assertCount(0, $perm->getSharingEntries());
     }
 }

@@ -18,6 +18,7 @@ use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
 use Fxp\Component\Security\Identity\IdentityUtils;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Model\SharingInterface;
 use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\OrganizationalContextEvents;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
@@ -72,7 +73,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
                                 TokenStorageInterface $tokenStorage,
                                 SecurityIdentityManagerInterface $sidManager,
                                 SharingManagerInterface $sharingManager,
-                                $sharingClass)
+                                $sharingClass = SharingInterface::class)
     {
         parent::__construct($entityManager);
 

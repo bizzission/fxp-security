@@ -13,10 +13,12 @@ namespace Fxp\Component\Security\Doctrine\ORM\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Fxp\Component\Security\Exception\InvalidArgumentException;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Model\PermissionInterface;
 use Fxp\Component\Security\Permission\PermissionConfigInterface;
 use Fxp\Component\Security\Permission\PermissionProviderInterface;
 use Fxp\Component\Security\Permission\PermissionUtils;
@@ -29,26 +31,23 @@ use Fxp\Component\Security\Permission\PermissionUtils;
 class PermissionProvider implements PermissionProviderInterface
 {
     /**
-     * @var EntityRepository
+     * @var EntityRepository|null
      */
     protected $permissionRepo;
 
     /**
      * @var ManagerRegistry
      */
-    protected $registry;
+    protected $doctrine;
 
     /**
      * Constructor.
      *
-     * @param EntityRepository $permissionRepository The permission repository
-     * @param ManagerRegistry  $registry             The doctrine registry
+     * @param ManagerRegistry $doctrine The doctrine registry
      */
-    public function __construct(EntityRepository $permissionRepository,
-                                ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $doctrine)
     {
-        $this->permissionRepo = $permissionRepository;
-        $this->registry = $registry;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -60,7 +59,7 @@ class PermissionProvider implements PermissionProviderInterface
             return [];
         }
 
-        $qb = $this->permissionRepo->createQueryBuilder('p')
+        $qb = $this->getPermissionRepository()->createQueryBuilder('p')
             ->leftJoin('p.roles', 'r')
             ->where('UPPER(r.name) IN (:roles)')
             ->setParameter('roles', $roles)
@@ -79,7 +78,7 @@ class PermissionProvider implements PermissionProviderInterface
         /* @var SubjectIdentityInterface|null $subject */
         list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
 
-        $qb = $this->permissionRepo->createQueryBuilder('p')
+        $qb = $this->getPermissionRepository()->createQueryBuilder('p')
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc');
@@ -96,7 +95,7 @@ class PermissionProvider implements PermissionProviderInterface
      */
     public function getConfigPermissions($contexts = null)
     {
-        $qb = $this->permissionRepo->createQueryBuilder('p')
+        $qb = $this->getPermissionRepository()->createQueryBuilder('p')
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc');
@@ -113,13 +112,15 @@ class PermissionProvider implements PermissionProviderInterface
     public function getMasterClass(PermissionConfigInterface $config)
     {
         $type = $config->getType();
-        $om = $this->registry->getManagerForClass($type);
+        $om = $this->doctrine->getManagerForClass($type);
         $this->validateMaster($config, $om);
         $masterClass = $type;
 
-        foreach (explode('.', $config->getMaster()) as $master) {
-            $meta = $om->getClassMetadata($masterClass);
-            $masterClass = $meta->getAssociationTargetClass($master);
+        if ($om instanceof ObjectManager) {
+            foreach (explode('.', $config->getMaster()) as $master) {
+                $meta = $om->getClassMetadata($masterClass);
+                $masterClass = $meta->getAssociationTargetClass($master);
+            }
         }
 
         return $masterClass;
@@ -182,5 +183,20 @@ class PermissionProvider implements PermissionProviderInterface
 
             $qb->andWhere($where);
         }
+    }
+
+    /**
+     * Get the permission repository.
+     *
+     * @return ObjectRepository|EntityRepository
+     */
+    private function getPermissionRepository()
+    {
+        if (null === $this->permissionRepo) {
+            $om = $this->doctrine->getManagerForClass(PermissionInterface::class);
+            $this->permissionRepo = null !== $om ? $om->getRepository(PermissionInterface::class) : null;
+        }
+
+        return $this->permissionRepo;
     }
 }

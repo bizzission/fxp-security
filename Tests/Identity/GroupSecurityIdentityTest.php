@@ -71,7 +71,7 @@ class GroupSecurityIdentityTest extends TestCase
         /* @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
-            ->method('getGroup')
+            ->method('getName')
             ->willReturn('GROUP_TEST');
 
         $sid = GroupSecurityIdentity::fromAccount($group);
@@ -86,7 +86,7 @@ class GroupSecurityIdentityTest extends TestCase
         /* @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
-            ->method('getGroup')
+            ->method('getName')
             ->willReturn('GROUP_TEST');
 
         /* @var GroupableInterface|\PHPUnit_Framework_MockObject_MockObject $user */

@@ -9,49 +9,43 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Model;
+namespace Fxp\Component\Security\Model\Traits;
+
+use Doctrine\ORM\Mapping as ORM;
+use Fxp\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\UserInterface;
 
 /**
- * This is the domain class for the Organization User object.
+ * Trait for organization user model.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class OrganizationUser implements OrganizationUserInterface
+trait OrganizationUserTrait
 {
     /**
-     * @var int|string|null
-     */
-    protected $id;
-
-    /**
      * @var OrganizationInterface
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Fxp\Component\Security\Model\OrganizationInterface",
+     *     fetch="EXTRA_LAZY",
+     *     inversedBy="organizationUsers"
+     * )
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
     protected $organization;
 
     /**
      * @var UserInterface
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Fxp\Component\Security\Model\UserInterface",
+     *     fetch="EXTRA_LAZY",
+     *     inversedBy="userOrganizations",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
-
-    /**
-     * Constructor.
-     *
-     * @param OrganizationInterface $organization The organization
-     * @param UserInterface         $user         The user
-     */
-    public function __construct(OrganizationInterface $organization, UserInterface $user)
-    {
-        $this->organization = $organization;
-        $this->user = $user;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * {@inheritdoc}

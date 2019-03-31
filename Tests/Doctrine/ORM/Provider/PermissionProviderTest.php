@@ -15,10 +15,12 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Fxp\Component\Security\Doctrine\ORM\Provider\PermissionProvider;
+use Fxp\Component\Security\Model\PermissionInterface;
 use Fxp\Component\Security\Permission\FieldVote;
 use Fxp\Component\Security\Permission\PermissionConfigInterface;
 use Fxp\Component\Security\Permission\PermissionProviderInterface;
@@ -464,10 +466,23 @@ class PermissionProviderTest extends TestCase
         $this->assertSame($expected, $res);
     }
 
-    protected function createProvider()
+    protected function createProvider($mockRegistry = true)
     {
+        $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
+
+        $this->registry->expects($this->any())
+            ->method('getManagerForClass')
+            ->willReturnCallback(static function ($class) use ($em) {
+                return PermissionInterface::class === $class ? $em : null;
+            });
+
+        $em->expects($this->any())
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) {
+                return PermissionInterface::class === $class ? $this->permissionRepo : null;
+            });
+
         return new PermissionProvider(
-            $this->permissionRepo,
             $this->registry
         );
     }

@@ -14,9 +14,9 @@ namespace Fxp\Component\Security\Authorization\Voter;
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Organizational\OrganizationalUtil;
+use Fxp\Component\Security\Role\RoleUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * RoleSecurityIdentityVoter uses a SecurityIdentityManager to
@@ -66,11 +66,10 @@ class RoleSecurityIdentityVoter extends RoleVoter
 
         foreach ($sids as $sid) {
             if ($sid instanceof RoleSecurityIdentity) {
-                $role = OrganizationalUtil::format($sid->getIdentifier());
-                $roles[] = new Role($role);
+                $roles[] = OrganizationalUtil::format($sid->getIdentifier());
             }
         }
 
-        return $this->cacheExec[$id] = $roles;
+        return $this->cacheExec[$id] = RoleUtil::formatRoles($roles);
     }
 }

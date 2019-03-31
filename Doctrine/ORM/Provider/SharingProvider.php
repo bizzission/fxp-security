@@ -11,6 +11,8 @@
 
 namespace Fxp\Component\Security\Doctrine\ORM\Provider;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Fxp\Component\Security\Exception\InvalidArgumentException;
@@ -18,6 +20,8 @@ use Fxp\Component\Security\Identity\IdentityUtils;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\Model\SharingInterface;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Fxp\Component\Security\Sharing\SharingProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -30,12 +34,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class SharingProvider implements SharingProviderInterface
 {
     /**
-     * @var EntityRepository
+     * @var ManagerRegistry
+     */
+    protected $doctrine;
+
+    /**
+     * @var EntityRepository|null
      */
     protected $roleRepo;
 
     /**
-     * @var EntityRepository
+     * @var EntityRepository|null
      */
     protected $sharingRepo;
 
@@ -57,18 +66,15 @@ class SharingProvider implements SharingProviderInterface
     /**
      * Constructor.
      *
-     * @param EntityRepository                 $roleRepository    The role repository
-     * @param EntityRepository                 $sharingRepository The sharing repository
-     * @param SecurityIdentityManagerInterface $sidManager        The security identity manager
-     * @param TokenStorageInterface            $tokenStorage      The token storage
+     * @param ManagerRegistry                  $doctrine     The doctrine
+     * @param SecurityIdentityManagerInterface $sidManager   The security identity manager
+     * @param TokenStorageInterface            $tokenStorage The token storage
      */
-    public function __construct(EntityRepository $roleRepository,
-                                EntityRepository $sharingRepository,
+    public function __construct(ManagerRegistry $doctrine,
                                 SecurityIdentityManagerInterface $sidManager,
                                 TokenStorageInterface $tokenStorage)
     {
-        $this->roleRepo = $roleRepository;
-        $this->sharingRepo = $sharingRepository;
+        $this->doctrine = $doctrine;
         $this->sidManager = $sidManager;
         $this->tokenStorage = $tokenStorage;
     }
@@ -92,7 +98,7 @@ class SharingProvider implements SharingProviderInterface
             return [];
         }
 
-        $qb = $this->roleRepo->createQueryBuilder('r')
+        $qb = $this->getRoleRepository()->createQueryBuilder('r')
             ->addSelect('p')
             ->leftJoin('r.permissions', 'p');
 
@@ -113,12 +119,12 @@ class SharingProvider implements SharingProviderInterface
      */
     public function getSharingEntries(array $subjects, $sids = null)
     {
-        if (empty($subjects) || null === $this->sharingRepo) {
+        if (empty($subjects) || null === $this->getSharingRepository()) {
             return [];
         }
 
         $sids = $this->getSecurityIdentities($sids);
-        $qb = $this->sharingRepo->createQueryBuilder('s')
+        $qb = $this->getSharingRepository()->createQueryBuilder('s')
             ->addSelect('p')
             ->leftJoin('s.permissions', 'p');
 
@@ -138,8 +144,8 @@ class SharingProvider implements SharingProviderInterface
      */
     public function renameIdentity($type, $oldName, $newName)
     {
-        $this->sharingRepo->createQueryBuilder('s')
-            ->update($this->sharingRepo->getClassName(), 's')
+        $this->getSharingRepository()->createQueryBuilder('s')
+            ->update($this->getSharingRepository()->getClassName(), 's')
             ->set('s.identityName', ':newName')
             ->where('s.identityClass = :type')
             ->andWhere('s.identityName = :oldName')
@@ -157,8 +163,8 @@ class SharingProvider implements SharingProviderInterface
      */
     public function deleteIdentity($type, $name)
     {
-        $this->sharingRepo->createQueryBuilder('s')
-            ->delete($this->sharingRepo->getClassName(), 's')
+        $this->getSharingRepository()->createQueryBuilder('s')
+            ->delete($this->getSharingRepository()->getClassName(), 's')
             ->where('s.identityClass = :type')
             ->andWhere('s.identityName = :name')
             ->setParameter('type', $type)
@@ -175,8 +181,8 @@ class SharingProvider implements SharingProviderInterface
     public function deletes(array $ids)
     {
         if (!empty($ids)) {
-            $this->sharingRepo->createQueryBuilder('s')
-                ->delete($this->sharingRepo->getClassName(), 's')
+            $this->getSharingRepository()->createQueryBuilder('s')
+                ->delete($this->getSharingRepository()->getClassName(), 's')
                 ->where('s.id IN (:ids)')
                 ->setParameter('ids', $ids)
                 ->getQuery()
@@ -294,5 +300,47 @@ class SharingProvider implements SharingProviderInterface
         return null !== $sids
             ? $sids
             : [];
+    }
+
+    /**
+     * Get the role repository.
+     *
+     * @return ObjectRepository|EntityRepository
+     */
+    private function getRoleRepository()
+    {
+        if (null === $this->roleRepo) {
+            $this->roleRepo = $this->getRepository(RoleInterface::class);
+        }
+
+        return $this->roleRepo;
+    }
+
+    /**
+     * Get the sharing repository.
+     *
+     * @return ObjectRepository|EntityRepository
+     */
+    private function getSharingRepository()
+    {
+        if (null === $this->sharingRepo) {
+            $this->sharingRepo = $this->getRepository(SharingInterface::class);
+        }
+
+        return $this->sharingRepo;
+    }
+
+    /**
+     * Get the repository.
+     *
+     * @param string $classname The class name
+     *
+     * @return ObjectRepository|EntityRepository
+     */
+    private function getRepository($classname)
+    {
+        $om = $this->doctrine->getManagerForClass($classname);
+
+        return null !== $om ? $om->getRepository($classname) : null;
     }
 }

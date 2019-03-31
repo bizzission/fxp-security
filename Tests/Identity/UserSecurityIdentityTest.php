@@ -17,7 +17,6 @@ use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -107,8 +106,8 @@ class UserSecurityIdentityTest extends TestCase
      */
     public function testFormTokenWithInvalidInterface()
     {
-        /* @var AdvancedUserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->getMockBuilder(AdvancedUserInterface::class)->getMock();
+        /* @var \Symfony\Component\Security\Core\User\UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->getMockBuilder(\Symfony\Component\Security\Core\User\UserInterface::class)->getMock();
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();

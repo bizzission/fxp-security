@@ -12,14 +12,22 @@
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
 use Fxp\Component\Security\Model\OrganizationInterface;
-use Fxp\Component\Security\Model\OrganizationUser;
+use Fxp\Component\Security\Model\OrganizationUserInterface;
+use Fxp\Component\Security\Model\Traits\OrganizationUserTrait;
 use Fxp\Component\Security\Model\UserInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockOrganizationUser extends OrganizationUser
+class MockOrganizationUser implements OrganizationUserInterface
 {
+    use OrganizationUserTrait;
+
+    /**
+     * @var int|null
+     */
+    protected $id;
+
     /**
      * Constructor.
      *
@@ -29,8 +37,16 @@ class MockOrganizationUser extends OrganizationUser
      */
     public function __construct(OrganizationInterface $organization, UserInterface $user, $id = 42)
     {
-        parent::__construct($organization, $user);
-
+        $this->organization = $organization;
+        $this->user = $user;
         $this->id = $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

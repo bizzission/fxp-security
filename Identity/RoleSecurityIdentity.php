@@ -13,9 +13,9 @@ namespace Fxp\Component\Security\Identity;
 
 use Fxp\Component\DoctrineExtra\Util\ClassUtils;
 use Fxp\Component\Security\Exception\InvalidArgumentException;
+use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Model\Traits\RoleableInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -23,31 +23,17 @@ use Symfony\Component\Security\Core\Role\Role;
 final class RoleSecurityIdentity extends AbstractSecurityIdentity
 {
     /**
-     * Constructor.
-     *
-     * @param string $identifier The identifier
-     * @param string $type       The type
-     *
-     * @throws InvalidArgumentException When the identifier is empty
-     * @throws InvalidArgumentException When the type is empty
-     */
-    public function __construct($type, $identifier)
-    {
-        parent::__construct($type, $identifier);
-
-        $this->type = Role::class === $this->type ? 'role' : $this->type;
-    }
-
-    /**
      * Creates a role security identity from a RoleInterface.
      *
-     * @param Role $role The role
+     * @param RoleInterface|string $role The role
      *
      * @return self
      */
-    public static function fromAccount(Role $role)
+    public static function fromAccount($role)
     {
-        return new self(ClassUtils::getClass($role), $role->getRole());
+        return $role instanceof RoleInterface
+            ? new self(ClassUtils::getClass($role), $role->getName())
+            : new self('role', $role);
     }
 
     /**
@@ -68,7 +54,6 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
             $roles = $user->getRoles();
 
             foreach ($roles as $role) {
-                $role = $role instanceof Role ? $role : new Role($role);
                 $sids[] = self::fromAccount($role);
             }
 

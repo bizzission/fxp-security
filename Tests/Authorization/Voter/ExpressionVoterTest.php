@@ -17,6 +17,7 @@ use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
+use Fxp\Component\Security\Role\RoleUtil;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -28,7 +29,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\ExpressionLanguage;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -144,7 +144,7 @@ class ExpressionVoterTest extends TestCase
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
-            new RoleSecurityIdentity(Role::class, AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
+            new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
         ];
 
         $this->sidManager->expects($this->once())
@@ -182,7 +182,7 @@ class ExpressionVoterTest extends TestCase
     {
         $this->token->expects($this->once())
             ->method('getRoles')
-            ->willReturn([new Role('ROLE_USER')]);
+            ->willReturn([RoleUtil::formatRole('ROLE_USER')]);
 
         $this->expressionLanguage->expects($this->once())
             ->method('evaluate')

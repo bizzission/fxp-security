@@ -11,7 +11,9 @@
 
 namespace Fxp\Component\Security\Tests\Doctrine\ORM\Provider;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -20,6 +22,8 @@ use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Identity\SubjectIdentity;
 use Fxp\Component\Security\Identity\UserSecurityIdentity;
+use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\Model\SharingInterface;
 use Fxp\Component\Security\Sharing\SharingIdentityConfig;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -626,6 +630,11 @@ class SharingProviderTest extends TestCase
 
     protected function createProvider($roleClass = MockRole::class, $sharingClass = MockSharing::class, $addManager = true)
     {
+        /* @var ManagerRegistry|MockObject $registry */
+        $registry = $this->getMockBuilder(ManagerRegistry::class)->getMock();
+
+        $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
+
         $this->roleRepo->expects($this->any())
             ->method('getClassName')
             ->willReturn($roleClass);
@@ -634,9 +643,28 @@ class SharingProviderTest extends TestCase
             ->method('getClassName')
             ->willReturn($sharingClass);
 
+        $registry->expects($this->any())
+            ->method('getManagerForClass')
+            ->willReturnCallback(static function ($class) use ($em) {
+                return \in_array($class, [RoleInterface::class, SharingInterface::class]) ? $em : null;
+            });
+
+        $em->expects($this->any())
+            ->method('getRepository')
+            ->willReturnCallback(function ($class) {
+                $repo = null;
+
+                if (RoleInterface::class === $class) {
+                    $repo = $this->roleRepo;
+                } elseif (SharingInterface::class === $class) {
+                    $repo = $this->sharingRepo;
+                }
+
+                return $repo;
+            });
+
         $provider = new SharingProvider(
-            $this->roleRepo,
-            $this->sharingRepo,
+            $registry,
             $this->sidManager,
             $this->tokenStorage
         );

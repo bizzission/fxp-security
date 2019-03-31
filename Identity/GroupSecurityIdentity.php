@@ -31,7 +31,7 @@ final class GroupSecurityIdentity extends AbstractSecurityIdentity
      */
     public static function fromAccount(GroupInterface $group)
     {
-        return new self(ClassUtils::getClass($group), $group->getGroup());
+        return new self(ClassUtils::getClass($group), $group->getName());
     }
 
     /**

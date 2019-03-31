@@ -12,6 +12,8 @@
 namespace Fxp\Component\Security\Model\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Fxp\Component\Security\Model\OrganizationUserInterface;
 
 /**
@@ -22,7 +24,16 @@ use Fxp\Component\Security\Model\OrganizationUserInterface;
 trait UserOrganizationUsersTrait
 {
     /**
-     * @var \Doctrine\Common\Collections\Collection|null
+     * @var Collection|null
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Fxp\Component\Security\Model\OrganizationUserInterface",
+     *     mappedBy="user",
+     *     fetch="EXTRA_LAZY",
+     *     orphanRemoval=true,
+     *     cascade={"persist", "remove"}
+     * )
+     * @ORM\OrderBy({"organization" = "ASC"})
      */
     protected $userOrganizations;
 

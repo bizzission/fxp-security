@@ -15,9 +15,9 @@ use Fxp\Component\Security\Event\GetExpressionVariablesEvent;
 use Fxp\Component\Security\ExpressionVariableEvents;
 use Fxp\Component\Security\Identity\IdentityUtils;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Role\RoleUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Variable storage of expression.
@@ -137,8 +137,6 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
             return IdentityUtils::filterRolesIdentities($sids);
         }
 
-        return array_map(function (Role $role) {
-            return $role->getRole();
-        }, $token->getRoles());
+        return RoleUtil::formatNames($token->getRoles());
     }
 }

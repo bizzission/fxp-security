@@ -11,46 +11,16 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Model\GroupInterface;
-use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Model\Traits\EditGroupableInterface;
+use Fxp\Component\Security\Model\Traits\EditGroupableTrait;
 use Fxp\Component\Security\Model\Traits\RoleableInterface;
 use Fxp\Component\Security\Model\Traits\RoleableTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockOrganizationUserRoleableGroupable extends MockOrganizationUser implements RoleableInterface, GroupableInterface
+class MockOrganizationUserRoleableGroupable extends MockOrganizationUser implements RoleableInterface, EditGroupableInterface
 {
     use RoleableTrait;
-
-    /**
-     * @var array
-     */
-    protected $groups = [];
-
-    /**
-     * Add a group.
-     *
-     * @param GroupInterface $group The group
-     */
-    public function addGroup(GroupInterface $group)
-    {
-        $this->groups[$group->getName()] = $group;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasGroup($name)
-    {
-        return isset($this->groups[$name]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
+    use EditGroupableTrait;
 }

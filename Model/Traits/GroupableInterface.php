@@ -35,4 +35,11 @@ interface GroupableInterface
      * @return \Traversable|GroupInterface[]
      */
     public function getGroups();
+
+    /**
+     * Gets the name of the groups which includes the user.
+     *
+     * @return string[]
+     */
+    public function getGroupNames();
 }

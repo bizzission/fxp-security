@@ -12,6 +12,7 @@
 namespace Fxp\Component\Security\Role;
 
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
+use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use Fxp\Component\Security\Organizational\OrganizationalUtil;
 use Psr\Cache\CacheItemPoolInterface;
@@ -33,17 +34,17 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
      *
      * @param array                               $hierarchy     An array defining the hierarchy
      * @param ManagerRegistryInterface            $registry      The doctrine registry
-     * @param string                              $roleClassname The classname of role
      * @param CacheItemPoolInterface|null         $cache         The cache
      * @param OrganizationalContextInterface|null $context       The organizational context
+     * @param string                              $roleClassname The classname of role
      */
     public function __construct(array $hierarchy,
                                 ManagerRegistryInterface $registry,
-                                $roleClassname,
                                 CacheItemPoolInterface $cache = null,
-                                OrganizationalContextInterface $context = null)
+                                OrganizationalContextInterface $context = null,
+                                $roleClassname = RoleInterface::class)
     {
-        parent::__construct($hierarchy, $registry, $roleClassname, $cache);
+        parent::__construct($hierarchy, $registry, $cache, $roleClassname);
         $this->context = $context;
     }
 
@@ -64,12 +65,11 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
     /**
      * {@inheritdoc}
      */
-    protected function formatRoleName($role)
+    protected function formatRoles(array $roles)
     {
-        $list = parent::formatRoleName($role);
-        $list[0] = OrganizationalUtil::format($role->getRole());
-
-        return $list;
+        return array_map(static function ($role) {
+            return OrganizationalUtil::format($role);
+        }, $roles);
     }
 
     /**
@@ -77,9 +77,7 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
      */
     protected function buildRoleSuffix($role)
     {
-        return null !== $role
-            ? OrganizationalUtil::getSuffix($role->getRole())
-            : '';
+        return null !== $role ? OrganizationalUtil::getSuffix($role) : '';
     }
 
     /**
@@ -87,11 +85,9 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
      */
     protected function cleanRoleNames(array $roles)
     {
-        foreach ($roles as &$role) {
-            $role = OrganizationalUtil::format($role);
-        }
-
-        return $roles;
+        return array_map(static function ($role) {
+            return OrganizationalUtil::format($role);
+        }, $roles);
     }
 
     /**

@@ -11,52 +11,32 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Model\Traits\EditGroupableInterface;
+use Fxp\Component\Security\Model\Traits\EditGroupableTrait;
+use Fxp\Component\Security\Model\Traits\RoleableTrait;
 use Fxp\Component\Security\Model\UserInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockUserGroupable implements UserInterface, GroupableInterface
+class MockUserGroupable implements UserInterface, EditGroupableInterface
 {
+    use RoleableTrait;
+    use EditGroupableTrait;
+
+    public function __construct($mockGroups = true)
+    {
+        if ($mockGroups) {
+            $this->addGroup(new MockGroup('GROUP_TEST'));
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getId()
     {
         return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isAccountNonExpired()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isCredentialsNonExpired()
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnabled()
-    {
-        return true;
     }
 
     /**
@@ -97,23 +77,5 @@ class MockUserGroupable implements UserInterface, GroupableInterface
     public function getRoles()
     {
         return ['ROLE_TEST'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasGroup($name)
-    {
-        return 'GROUP_TEST' === $name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGroups()
-    {
-        return [
-            new MockGroup('GROUP_TEST'),
-        ];
     }
 }

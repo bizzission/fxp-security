@@ -9,60 +9,44 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Model;
+namespace Fxp\Component\Security\Model\Traits;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * This is the domain class for the Permission object.
+ * Trait of permission model.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class Permission implements PermissionInterface
+trait PermissionTrait
 {
     /**
-     * @var int|string|null
-     */
-    protected $id;
-
-    /**
      * @var string[]
+     *
+     * @ORM\Column(type="array")
      */
     protected $contexts = [];
 
     /**
      * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $class;
 
     /**
      * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $field;
 
     /**
      * @var string|null
+     *
+     * @ORM\Column(type="string", length=255)
      */
     protected $operation;
-
-    /**
-     * @var Collection|RoleInterface[]|null
-     */
-    protected $roles;
-
-    /**
-     * @var Collection|SharingInterface[]|null
-     */
-    protected $sharingEntries;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * {@inheritdoc}
@@ -134,21 +118,5 @@ abstract class Permission implements PermissionInterface
     public function getField()
     {
         return $this->field;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRoles()
-    {
-        return $this->roles ?: $this->roles = new ArrayCollection();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSharingEntries()
-    {
-        return $this->sharingEntries ?: $this->sharingEntries = new ArrayCollection();
     }
 }

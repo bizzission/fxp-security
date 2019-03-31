@@ -24,6 +24,19 @@ trait PermissionsTrait
 {
     /**
      * @var Collection|PermissionInterface[]|null
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Fxp\Component\Security\Model\PermissionInterface",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinTable(
+     *     joinColumns={
+     *         @ORM\JoinColumn(onDelete="CASCADE")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(onDelete="CASCADE", name="permission_id")
+     *     }
+     * )
      */
     protected $permissions;
 

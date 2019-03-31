@@ -43,7 +43,7 @@ abstract class AbstractIdentityVoter extends Voter
     public function __construct(SecurityIdentityManagerInterface $sim, $prefix = null)
     {
         $this->sim = $sim;
-        $this->prefix = null === $prefix ? $this->getDefaultPrefix() : $prefix;
+        $this->prefix = $prefix ?? $this->getDefaultPrefix();
     }
 
     /**

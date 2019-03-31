@@ -13,6 +13,7 @@ namespace Fxp\Component\Security\Model\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Fxp\Component\Security\Model\GroupInterface;
 
 /**
@@ -24,6 +25,13 @@ trait OrganizationGroupsTrait
 {
     /**
      * @var Collection|null
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Fxp\Component\Security\Model\GroupInterface",
+     *     mappedBy="organization",
+     *     fetch="EXTRA_LAZY",
+     *     cascade={"persist", "remove"}
+     * )
      */
     protected $organizationGroups;
 

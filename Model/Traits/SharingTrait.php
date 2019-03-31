@@ -9,68 +9,68 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Model;
+namespace Fxp\Component\Security\Model\Traits;
 
-use Fxp\Component\Security\Model\Traits\PermissionsTrait;
-use Fxp\Component\Security\Model\Traits\RoleableTrait;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Sharing model.
+ * Trait for sharing model.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class Sharing implements SharingInterface
+trait SharingTrait
 {
     use PermissionsTrait;
     use RoleableTrait;
 
     /**
-     * @var int|string|null
-     */
-    protected $id;
-
-    /**
      * @var string|null
+     *
+     * @ORM\Column(type="string", length=244)
      */
     protected $subjectClass;
 
     /**
      * @var int|string|null
+     *
+     * @ORM\Column(type="string", length=36)
      */
     protected $subjectId;
 
     /**
      * @var string|null
+     *
+     * @ORM\Column(type="string", length=244)
      */
     protected $identityClass;
 
     /**
      * @var int|string|null
+     *
+     * @ORM\Column(type="string", length=244)
      */
     protected $identityName;
 
     /**
      * @var bool
+     *
+     * @ORM\Column(type="boolean")
      */
     protected $enabled = true;
 
     /**
      * @var \DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $startedAt;
 
     /**
      * @var \DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $endedAt;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * {@inheritdoc}

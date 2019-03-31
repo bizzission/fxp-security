@@ -11,11 +11,26 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Model\Permission;
+use Fxp\Component\Security\Model\PermissionInterface;
+use Fxp\Component\Security\Model\Traits\PermissionTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockPermission extends Permission
+class MockPermission implements PermissionInterface
 {
+    use PermissionTrait;
+
+    /**
+     * @var int|null
+     */
+    protected $id;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

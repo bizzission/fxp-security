@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -103,7 +102,7 @@ class HostRoleListenerTest extends TestCase
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with(new Role('ROLE_HOST'));
+            ->with('ROLE_HOST');
 
         $this->listener->handle($this->event);
     }
@@ -120,7 +119,7 @@ class HostRoleListenerTest extends TestCase
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with(new Role('ROLE_HOST'));
+            ->with('ROLE_HOST');
 
         $this->listener->handle($this->event);
 
@@ -160,7 +159,7 @@ class HostRoleListenerTest extends TestCase
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with(new Role($validRole));
+            ->with($validRole);
 
         $this->listener->handle($this->event);
 

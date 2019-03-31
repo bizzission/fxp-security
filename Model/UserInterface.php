@@ -11,14 +11,15 @@
 
 namespace Fxp\Component\Security\Model;
 
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Fxp\Component\Security\Model\Traits\RoleableInterface;
+use Symfony\Component\Security\Core\User\UserInterface as BaseUserInterface;
 
 /**
  * User interface.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-interface UserInterface extends AdvancedUserInterface
+interface UserInterface extends BaseUserInterface, RoleableInterface
 {
     /**
      * Get id.

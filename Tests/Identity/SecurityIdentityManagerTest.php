@@ -17,12 +17,12 @@ use Fxp\Component\Security\Event\PreSecurityIdentityEvent;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Identity\SecurityIdentityManager;
 use Fxp\Component\Security\Model\UserInterface;
+use Fxp\Component\Security\Role\RoleUtil;
 use Fxp\Component\Security\SecurityIdentityEvents;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -113,7 +113,7 @@ class SecurityIdentityManagerTest extends TestCase
             ->willReturn('user.test');
 
         $tokenRoles = [
-            new Role('ROLE_TOKEN'),
+            RoleUtil::formatRole('ROLE_TOKEN'),
         ];
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
@@ -150,7 +150,7 @@ class SecurityIdentityManagerTest extends TestCase
             ->with($token)
             ->willReturn(true);
 
-        $this->sidManager->addSpecialRole(new Role('ROLE_BAZ'));
+        $this->sidManager->addSpecialRole('ROLE_BAZ');
 
         $this->sidManager->getSecurityIdentities($token);
 
@@ -164,7 +164,7 @@ class SecurityIdentityManagerTest extends TestCase
         $this->roleHierarchy->expects($this->never())
             ->method('getReachableRoles');
 
-        $sids = $this->sidManager->getSecurityIdentities(null);
+        $sids = $this->sidManager->getSecurityIdentities();
 
         $this->assertCount(0, $sids);
     }

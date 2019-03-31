@@ -312,7 +312,7 @@ class SharingManager extends AbstractSharingManager
         $cRoles = $this->provider->getPermissionRoles($roles);
 
         foreach ($cRoles as $role) {
-            $mapRoles[$role->getRole()] = $role;
+            $mapRoles[$role->getName()] = $role;
         }
 
         /* @var SubjectIdentityInterface $subject */

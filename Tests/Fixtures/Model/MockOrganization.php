@@ -11,22 +11,28 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Model\Organization;
 use Fxp\Component\Security\Model\Traits\OrganizationGroupsInterface;
 use Fxp\Component\Security\Model\Traits\OrganizationGroupsTrait;
 use Fxp\Component\Security\Model\Traits\OrganizationRolesInterface;
 use Fxp\Component\Security\Model\Traits\OrganizationRolesTrait;
+use Fxp\Component\Security\Model\Traits\OrganizationTrait;
 use Fxp\Component\Security\Model\Traits\RoleableInterface;
 use Fxp\Component\Security\Model\Traits\RoleableTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockOrganization extends Organization implements RoleableInterface, OrganizationRolesInterface, OrganizationGroupsInterface
+class MockOrganization implements RoleableInterface, OrganizationRolesInterface, OrganizationGroupsInterface
 {
+    use OrganizationTrait;
     use RoleableTrait;
     use OrganizationRolesTrait;
     use OrganizationGroupsTrait;
+
+    /**
+     * @var int|null
+     */
+    protected $id;
 
     /**
      * Constructor.
@@ -36,8 +42,15 @@ class MockOrganization extends Organization implements RoleableInterface, Organi
      */
     public function __construct($name, $id = 23)
     {
-        parent::__construct($name);
-
+        $this->name = $name;
         $this->id = $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

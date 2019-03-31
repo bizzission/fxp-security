@@ -11,14 +11,13 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Model\Traits\RoleableInterface;
 use Fxp\Component\Security\Model\Traits\RoleableTrait;
 use Fxp\Component\Security\Model\UserInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockUserRoleable implements UserInterface, RoleableInterface
+class MockUserRoleable implements UserInterface
 {
     use RoleableTrait;
 

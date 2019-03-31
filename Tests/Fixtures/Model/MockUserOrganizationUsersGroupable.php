@@ -11,42 +11,13 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Model\GroupInterface;
 use Fxp\Component\Security\Model\Traits\GroupableInterface;
+use Fxp\Component\Security\Model\Traits\GroupableTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class MockUserOrganizationUsersGroupable extends MockUserOrganizationUsers implements GroupableInterface
 {
-    /**
-     * @var array
-     */
-    protected $groups = [];
-
-    /**
-     * Add a group.
-     *
-     * @param GroupInterface $group The group
-     */
-    public function addGroup(GroupInterface $group)
-    {
-        $this->groups[$group->getName()] = $group;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasGroup($name)
-    {
-        return isset($this->groups[$name]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getGroups()
-    {
-        return array_values($this->groups);
-    }
+    use GroupableTrait;
 }

@@ -11,8 +11,6 @@
 
 namespace Fxp\Component\Security\Model;
 
-use Doctrine\Common\Collections\Collection;
-
 /**
  * Permission interface.
  *
@@ -90,9 +88,4 @@ interface PermissionInterface
      * @return string|null
      */
     public function getField();
-
-    /**
-     * @return Collection|RoleInterface[]
-     */
-    public function getRoles();
 }

@@ -17,6 +17,7 @@ use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Model\GroupInterface;
 use Fxp\Component\Security\Model\OrganizationInterface;
+use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUserRoleableGroupable;
@@ -24,7 +25,6 @@ use Fxp\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsersGroupab
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -99,9 +99,6 @@ class OrganizationSecurityIdentityTest extends TestCase
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
-            ->willReturn('GROUP_TEST');
-        $group->expects($this->once())
-            ->method('getGroup')
             ->willReturn('GROUP_ORG_USER_TEST');
 
         $orgUser->addGroup($group);
@@ -150,9 +147,6 @@ class OrganizationSecurityIdentityTest extends TestCase
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
-            ->willReturn('GROUP_TEST');
-        $group->expects($this->once())
-            ->method('getGroup')
             ->willReturn('GROUP_ORG_USER_TEST');
 
         $orgUser->addGroup($group);
@@ -240,8 +234,8 @@ class OrganizationSecurityIdentityTest extends TestCase
 
     public function testFormTokenWithInvalidInterface()
     {
-        /* @var AdvancedUserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
-        $user = $this->getMockBuilder(AdvancedUserInterface::class)->getMock();
+        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
         /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();

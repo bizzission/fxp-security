@@ -15,7 +15,6 @@ use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Inject the host role in security identity manager.
@@ -61,7 +60,7 @@ class AnonymousRoleListener extends AbstractRoleListener
     public function handle(GetResponseEvent $event)
     {
         if ($this->isEnabled() && $this->hasRole() && $this->isAnonymous()) {
-            $this->sidManager->addSpecialRole(new Role($this->config['role']));
+            $this->sidManager->addSpecialRole($this->config['role']);
         }
     }
 
