@@ -11,7 +11,10 @@
 
 namespace Fxp\Component\Security\Model\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Fxp\Component\Security\Model\PermissionInterface;
 
 /**
  * Trait for sharing model.
@@ -20,7 +23,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait SharingTrait
 {
-    use PermissionsTrait;
     use RoleableTrait;
 
     /**
@@ -71,6 +73,16 @@ trait SharingTrait
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $endedAt;
+
+    /**
+     * @var Collection|PermissionInterface[]|null
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Fxp\Component\Security\Model\PermissionInterface",
+     *     inversedBy="sharingEntries"
+     * )
+     */
+    protected $permissions;
 
     /**
      * {@inheritdoc}
@@ -196,5 +208,45 @@ trait SharingTrait
     public function getEndedAt()
     {
         return $this->endedAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPermissions()
+    {
+        return $this->permissions ?: $this->permissions = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasPermission(PermissionInterface $permission)
+    {
+        return $this->getPermissions()->contains($permission);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addPermission(PermissionInterface $permission)
+    {
+        if (!$this->getPermissions()->contains($permission)) {
+            $this->getPermissions()->add($permission);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removePermission(PermissionInterface $permission)
+    {
+        if ($this->getPermissions()->contains($permission)) {
+            $this->getPermissions()->removeElement($permission);
+        }
+
+        return $this;
     }
 }
