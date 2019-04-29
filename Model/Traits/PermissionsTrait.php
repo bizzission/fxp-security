@@ -28,6 +28,7 @@ trait PermissionsTrait
      *
      * @ORM\ManyToMany(
      *     targetEntity="Fxp\Component\Security\Model\PermissionInterface",
+     *     inversedBy="roles",
      *     cascade={"persist"}
      * )
      * @ORM\JoinTable(

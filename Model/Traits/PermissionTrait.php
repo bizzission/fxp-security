@@ -11,7 +11,10 @@
 
 namespace Fxp\Component\Security\Model\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Fxp\Component\Security\Model\RoleInterface;
 
 /**
  * Trait of permission model.
@@ -47,6 +50,13 @@ trait PermissionTrait
      * @ORM\Column(type="string", length=255)
      */
     protected $operation;
+
+    /**
+     * @var Collection|RoleInterface[]|null
+     *
+     * @ORM\ManyToMany(targetEntity="Fxp\Component\Security\Model\RoleInterface", mappedBy="permissions")
+     */
+    protected $roles;
 
     /**
      * {@inheritdoc}
@@ -118,5 +128,13 @@ trait PermissionTrait
     public function getField()
     {
         return $this->field;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
+    {
+        return $this->roles ?: $this->roles = new ArrayCollection();
     }
 }
