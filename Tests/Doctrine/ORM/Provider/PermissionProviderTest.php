@@ -189,6 +189,11 @@ class PermissionProviderTest extends TestCase
             ->willReturn(MockObject::class);
 
         $provider = $this->createProvider();
+
+        $this->registry->expects($this->once())
+            ->method('getManagers')
+            ->willReturn([]);
+
         $provider->getMasterClass($permConfig);
     }
 

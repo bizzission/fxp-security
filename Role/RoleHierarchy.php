@@ -13,6 +13,7 @@ namespace Fxp\Component\Security\Role;
 
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
 use Fxp\Component\DoctrineExtensions\Util\SqlFilterUtil;
+use Fxp\Component\DoctrineExtra\Util\ManagerUtils;
 use Fxp\Component\Security\Event\PostReachableRoleEvent;
 use Fxp\Component\Security\Event\PreReachableRoleEvent;
 use Fxp\Component\Security\Model\RoleHierarchicalInterface;
@@ -270,7 +271,7 @@ class RoleHierarchy extends BaseRoleHierarchy
     private function findRecords(array $reachableRoles, array $roles)
     {
         $recordRoles = [];
-        $om = $this->registry->getManagerForClass($this->roleClassname);
+        $om = ManagerUtils::getManager($this->registry, $this->roleClassname);
         $repo = $om->getRepository($this->roleClassname);
 
         $filters = SqlFilterUtil::findFilters($om, [], true);

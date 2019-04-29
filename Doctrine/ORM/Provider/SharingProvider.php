@@ -15,6 +15,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Fxp\Component\DoctrineExtra\Util\ManagerUtils;
 use Fxp\Component\Security\Exception\InvalidArgumentException;
 use Fxp\Component\Security\Identity\IdentityUtils;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
@@ -339,7 +340,7 @@ class SharingProvider implements SharingProviderInterface
      */
     private function getRepository($classname)
     {
-        $om = $this->doctrine->getManagerForClass($classname);
+        $om = ManagerUtils::getManager($this->doctrine, $classname);
 
         return null !== $om ? $om->getRepository($classname) : null;
     }

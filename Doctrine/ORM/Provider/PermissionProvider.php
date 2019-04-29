@@ -16,6 +16,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Fxp\Component\DoctrineExtra\Util\ManagerUtils;
+use Fxp\Component\DoctrineExtra\Util\RepositoryUtils;
 use Fxp\Component\Security\Exception\InvalidArgumentException;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Model\PermissionInterface;
@@ -112,7 +114,7 @@ class PermissionProvider implements PermissionProviderInterface
     public function getMasterClass(PermissionConfigInterface $config)
     {
         $type = $config->getType();
-        $om = $this->doctrine->getManagerForClass($type);
+        $om = ManagerUtils::getManager($this->doctrine, $type);
         $this->validateMaster($config, $om);
         $masterClass = $type;
 
@@ -193,8 +195,7 @@ class PermissionProvider implements PermissionProviderInterface
     private function getPermissionRepository()
     {
         if (null === $this->permissionRepo) {
-            $om = $this->doctrine->getManagerForClass(PermissionInterface::class);
-            $this->permissionRepo = null !== $om ? $om->getRepository(PermissionInterface::class) : null;
+            $this->permissionRepo = RepositoryUtils::getRepository($this->doctrine, PermissionInterface::class);
         }
 
         return $this->permissionRepo;
