@@ -13,7 +13,6 @@ namespace Fxp\Component\Security\Doctrine\ORM\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Fxp\Component\DoctrineExtra\Util\ManagerUtils;
@@ -190,12 +189,14 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * Get the permission repository.
      *
-     * @return ObjectRepository|EntityRepository
+     * @return EntityRepository
      */
     private function getPermissionRepository()
     {
         if (null === $this->permissionRepo) {
-            $this->permissionRepo = RepositoryUtils::getRepository($this->doctrine, PermissionInterface::class);
+            /* @var EntityRepository $repo */
+            $repo = RepositoryUtils::getRepository($this->doctrine, PermissionInterface::class);
+            $this->permissionRepo = $repo;
         }
 
         return $this->permissionRepo;
