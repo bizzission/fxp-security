@@ -24,7 +24,7 @@ final class ReachableRoleEvents
      *
      * @var string
      */
-    const PRE = 'fxp_security.reachable_roles.pre';
+    public const PRE = 'fxp_security.reachable_roles.pre';
 
     /**
      * The ReachableRoleEvents::RETRIEVAL_POST event occurs after the research of all
@@ -34,5 +34,5 @@ final class ReachableRoleEvents
      *
      * @var string
      */
-    const POST = 'fxp_security.reachable_roles.post';
+    public const POST = 'fxp_security.reachable_roles.post';
 }

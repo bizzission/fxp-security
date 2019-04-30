@@ -24,8 +24,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionVoterTest extends TestCase
+final class PermissionVoterTest extends TestCase
 {
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -33,7 +36,7 @@ class PermissionVoterTest extends TestCase
     protected $permManager;
 
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -47,7 +50,7 @@ class PermissionVoterTest extends TestCase
      */
     protected $voter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->permManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
@@ -55,7 +58,8 @@ class PermissionVoterTest extends TestCase
 
         $this->permManager->expects($this->any())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->voter = new PermissionVoter(
             $this->permManager,
@@ -102,9 +106,9 @@ class PermissionVoterTest extends TestCase
      * @param array     $attributes        The attributes
      * @param mixed     $subject           The subject
      * @param int       $result            The expected result
-     * @param bool|null $permManagerResult The result of permission manager
+     * @param null|bool $permManagerResult The result of permission manager
      */
-    public function testVote(array $attributes, $subject, $result, $permManagerResult = null)
+    public function testVote(array $attributes, $subject, $result, $permManagerResult = null): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -114,18 +118,21 @@ class PermissionVoterTest extends TestCase
             $this->sidManager->expects($this->once())
                 ->method('getSecurityIdentities')
                 ->with($this->token)
-                ->willReturn($sids);
+                ->willReturn($sids)
+            ;
 
-            if (\is_array($subject) && isset($subject[0]) && isset($subject[1])) {
+            if (\is_array($subject) && isset($subject[0], $subject[1])) {
                 $this->permManager->expects($this->once())
                     ->method('isGranted')
                     ->with($sids, substr($attributes[0], 5), new FieldVote($subject[0], $subject[1]))
-                    ->willReturn($permManagerResult);
+                    ->willReturn($permManagerResult)
+                ;
             } else {
                 $this->permManager->expects($this->once())
                     ->method('isGranted')
                     ->with($sids, substr($attributes[0], 5), $subject)
-                    ->willReturn($permManagerResult);
+                    ->willReturn($permManagerResult)
+                ;
             }
         }
 

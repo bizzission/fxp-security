@@ -44,9 +44,10 @@ class ExpressionVoter implements VoterInterface
      * @param EventDispatcherInterface $dispatcher         The event dispatcher
      * @param ExpressionLanguage       $expressionLanguage The expression language
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                ExpressionLanguage $expressionLanguage)
-    {
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        ExpressionLanguage $expressionLanguage
+    ) {
         $this->dispatcher = $dispatcher;
         $this->expressionLanguage = $expressionLanguage;
     }
@@ -56,7 +57,7 @@ class ExpressionVoter implements VoterInterface
      *
      * @param ExpressionFunctionProviderInterface $provider The expression function provider
      */
-    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
+    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider): void
     {
         $this->expressionLanguage->registerProvider($provider);
     }

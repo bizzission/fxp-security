@@ -16,8 +16,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class MixedValueTest extends TestCase
+final class MixedValueTest extends TestCase
 {
     public function getValues()
     {
@@ -39,7 +42,7 @@ class MixedValueTest extends TestCase
      * @param mixed $value    The value
      * @param mixed $expected The expected value
      */
-    public function test($value, $expected)
+    public function test($value, $expected): void
     {
         $mv = new MixedValue();
 

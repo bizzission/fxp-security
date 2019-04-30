@@ -32,6 +32,14 @@ trait RoleTrait
     /**
      * {@inheritdoc}
      */
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return $this->name;
@@ -45,13 +53,5 @@ trait RoleTrait
         $this->name = $name;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return $this->name;
     }
 }

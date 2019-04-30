@@ -93,13 +93,13 @@ abstract class AbstractListener implements EventSubscriber
     /**
      * Init listener.
      */
-    protected function init()
+    protected function init(): void
     {
         if (!$this->initialized) {
             $msg = 'The "%s()" method must be called before the init of the "%s" class';
 
             foreach ($this->getInitProperties() as $property => $setterMethod) {
-                if (null === $this->$property) {
+                if (null === $this->{$property}) {
                     throw new SecurityException(sprintf($msg, $setterMethod, \get_class($this)));
                 }
             }

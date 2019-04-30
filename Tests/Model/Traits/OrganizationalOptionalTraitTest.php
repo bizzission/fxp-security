@@ -17,15 +17,18 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OrganizationalOptionalTraitTest extends TestCase
+final class OrganizationalOptionalTraitTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
-        /* @var OrganizationInterface $org */
+        /** @var OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
-        /* @var OrganizationalOptionalTrait $model */
+        /** @var OrganizationalOptionalTrait $model */
         $model = $this->getMockForTrait(OrganizationalOptionalTrait::class);
         $model->setOrganization($org);
 

@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class ObjectViewGrantedEventTest extends TestCase
+final class ObjectViewGrantedEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
         $object = new \stdClass();
         $event = new ObjectViewGrantedEvent($object);

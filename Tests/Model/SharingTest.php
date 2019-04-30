@@ -18,10 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingTest extends TestCase
+final class SharingTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $startDate = new \DateTime('now');
         $endDate = new \DateTime('now + 1 day');

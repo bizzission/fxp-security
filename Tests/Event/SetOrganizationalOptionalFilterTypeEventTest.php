@@ -17,10 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SetOrganizationalOptionalFilterTypeEventTest extends TestCase
+final class SetOrganizationalOptionalFilterTypeEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
         $type = OrganizationalTypes::OPTIONAL_FILTER_ALL;
 

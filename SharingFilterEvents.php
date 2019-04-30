@@ -23,7 +23,7 @@ final class SharingFilterEvents
      *
      * @var string
      */
-    const DOCTRINE_ORM_FILTER = 'fxp_security.sharing.doctrine_orm.filter';
+    public const DOCTRINE_ORM_FILTER = 'fxp_security.sharing.doctrine_orm.filter';
 
     /**
      * Build the event of sharing filter with visibility.

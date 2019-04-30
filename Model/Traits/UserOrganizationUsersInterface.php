@@ -49,7 +49,7 @@ interface UserOrganizationUsersInterface
      *
      * @param string $name The name of organization
      *
-     * @return OrganizationUserInterface|null
+     * @return null|OrganizationUserInterface
      */
     public function getUserOrganization($name);
 

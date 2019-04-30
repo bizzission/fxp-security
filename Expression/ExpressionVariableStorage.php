@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class ExpressionVariableStorage implements ExpressionVariableStorageInterface, EventSubscriberInterface
 {
     /**
-     * @var SecurityIdentityManagerInterface|null
+     * @var null|SecurityIdentityManagerInterface
      */
     private $sim;
 
@@ -40,11 +40,12 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
      * Constructor.
      *
      * @param array<string, mixed>                  $variables The expression variables
-     * @param SecurityIdentityManagerInterface|null $sim       The security identity manager
+     * @param null|SecurityIdentityManagerInterface $sim       The security identity manager
      */
-    public function __construct(array $variables = [],
-                                SecurityIdentityManagerInterface $sim = null)
-    {
+    public function __construct(
+        array $variables = [],
+        SecurityIdentityManagerInterface $sim = null
+    ) {
         $this->sim = $sim;
 
         foreach ($variables as $name => $value) {
@@ -111,7 +112,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * {@inheritdoc}
      */
-    public function inject(GetExpressionVariablesEvent $event)
+    public function inject(GetExpressionVariablesEvent $event): void
     {
         $token = $event->getToken();
 

@@ -17,12 +17,15 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SetCurrentOrganizationUserEventTest extends TestCase
+final class SetCurrentOrganizationUserEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
-        /* @var OrganizationUserInterface $orgUser */
+        /** @var OrganizationUserInterface $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
 
         $event = new SetCurrentOrganizationUserEvent($orgUser);

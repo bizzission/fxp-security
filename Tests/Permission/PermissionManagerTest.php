@@ -40,8 +40,11 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionManagerTest extends TestCase
+final class PermissionManagerTest extends TestCase
 {
     /**
      * @var EventDispatcher
@@ -63,7 +66,7 @@ class PermissionManagerTest extends TestCase
      */
     protected $pm;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dispatcher = new EventDispatcher();
         $this->provider = $this->getMockBuilder(PermissionProviderInterface::class)->getMock();
@@ -75,7 +78,7 @@ class PermissionManagerTest extends TestCase
         );
     }
 
-    public function testIsEnabled()
+    public function testIsEnabled(): void
     {
         $this->assertTrue($this->pm->isEnabled());
 
@@ -86,7 +89,7 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($this->pm->isEnabled());
     }
 
-    public function testSetEnabledWithSharingManager()
+    public function testSetEnabledWithSharingManager(): void
     {
         $sm = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
 
@@ -99,12 +102,13 @@ class PermissionManagerTest extends TestCase
 
         $sm->expects($this->once())
             ->method('setEnabled')
-            ->with(false);
+            ->with(false)
+        ;
 
         $this->pm->setEnabled(false);
     }
 
-    public function testHasConfig()
+    public function testHasConfig(): void
     {
         $pm = new PermissionManager(
             $this->dispatcher,
@@ -119,12 +123,12 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($pm->hasConfig(MockObject::class));
     }
 
-    public function testHasNotConfig()
+    public function testHasNotConfig(): void
     {
         $this->assertFalse($this->pm->hasConfig(MockObject::class));
     }
 
-    public function testAddConfig()
+    public function testAddConfig(): void
     {
         $this->assertFalse($this->pm->hasConfig(MockObject::class));
 
@@ -133,7 +137,7 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($this->pm->hasConfig(MockObject::class));
     }
 
-    public function testGetConfig()
+    public function testGetConfig(): void
     {
         $config = new PermissionConfig(MockObject::class);
         $this->pm->addConfig($config);
@@ -142,16 +146,15 @@ class PermissionManagerTest extends TestCase
         $this->assertSame($config, $this->pm->getConfig(MockObject::class));
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\PermissionConfigNotFoundException
-     * @expectedExceptionMessage The permission configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockObject" is not found
-     */
-    public function testGetConfigWithNotManagedClass()
+    public function testGetConfigWithNotManagedClass(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\PermissionConfigNotFoundException::class);
+        $this->expectExceptionMessage('The permission configuration for the class "Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockObject" is not found');
+
         $this->pm->getConfig(MockObject::class);
     }
 
-    public function testGetConfigs()
+    public function testGetConfigs(): void
     {
         $expected = [
             MockObject::class => new PermissionConfig(MockObject::class),
@@ -162,7 +165,7 @@ class PermissionManagerTest extends TestCase
         $this->assertSame($expected, $this->pm->getConfigs());
     }
 
-    public function testIsManaged()
+    public function testIsManaged(): void
     {
         $this->pm->addConfig(new PermissionConfig(MockObject::class));
         $object = new MockObject('foo');
@@ -170,33 +173,32 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($this->pm->isManaged($object));
     }
 
-    public function testIsManagedWithInvalidSubject()
+    public function testIsManagedWithInvalidSubject(): void
     {
         $object = new \stdClass();
 
         $this->assertFalse($this->pm->isManaged($object));
     }
 
-    public function testIsManagedWithNonExistentSubject()
+    public function testIsManagedWithNonExistentSubject(): void
     {
         $this->assertFalse($this->pm->isManaged('FooBar'));
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "FieldVote|SubjectIdentityInterface|object|string", "NULL"
-     */
-    public function testIsManagedWithUnexpectedTypeException()
+    public function testIsManagedWithUnexpectedTypeException(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type "FieldVote|SubjectIdentityInterface|object|string", "NULL"');
+
         $this->assertFalse($this->pm->isManaged(null));
     }
 
-    public function testIsManagedWithNonManagedClass()
+    public function testIsManagedWithNonManagedClass(): void
     {
         $this->assertFalse($this->pm->isManaged(MockObject::class));
     }
 
-    public function testIsFieldManaged()
+    public function testIsFieldManaged(): void
     {
         $this->pm->addConfig(new PermissionConfig(MockObject::class, [], [], [
             new PermissionFieldConfig('name'),
@@ -208,7 +210,7 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($this->pm->isFieldManaged($object, $field));
     }
 
-    public function testIsGranted()
+    public function testIsGranted(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -219,7 +221,7 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
     }
 
-    public function testIsGrantedWithNonExistentSubject()
+    public function testIsGrantedWithNonExistentSubject(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -230,7 +232,7 @@ class PermissionManagerTest extends TestCase
         $this->assertFalse($this->pm->isGranted($sids, $permission, $object));
     }
 
-    public function testIsGrantedWithGlobalPermission()
+    public function testIsGrantedWithGlobalPermission(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -243,13 +245,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER'])
-            ->willReturn([$perm]);
+            ->willReturn([$perm])
+        ;
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
         $this->pm->clear();
     }
 
-    public function testIsGrantedWithGlobalPermissionAndMaster()
+    public function testIsGrantedWithGlobalPermissionAndMaster(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -266,7 +269,8 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER'])
-            ->willReturn([$perm]);
+            ->willReturn([$perm])
+        ;
 
         $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
         $this->pm->addConfig(new PermissionConfig(MockOrganizationUser::class, [], [], [], 'organization'));
@@ -275,7 +279,7 @@ class PermissionManagerTest extends TestCase
         $this->pm->clear();
     }
 
-    public function testIsGrantedWithGlobalPermissionAndMasterWithEmptyObjectOfSubject()
+    public function testIsGrantedWithGlobalPermissionAndMasterWithEmptyObjectOfSubject(): void
     {
         $permConfigOrg = new PermissionConfig(MockOrganization::class);
         $permConfigOrgUser = new PermissionConfig(MockOrganizationUser::class, [], [], [], 'organization');
@@ -293,12 +297,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getMasterClass')
             ->with($permConfigOrgUser)
-            ->willReturn(MockOrganization::class);
+            ->willReturn(MockOrganization::class)
+        ;
 
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER'])
-            ->willReturn([$perm]);
+            ->willReturn([$perm])
+        ;
 
         $this->pm->addConfig($permConfigOrg);
         $this->pm->addConfig($permConfigOrgUser);
@@ -307,7 +313,7 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($res);
     }
 
-    public function testIsGrantedWithGlobalPermissionWithoutGrant()
+    public function testIsGrantedWithGlobalPermissionWithoutGrant(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -322,13 +328,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER', 'ROLE_ADMIN'])
-            ->willReturn([$perm]);
+            ->willReturn([$perm])
+        ;
 
         $this->assertFalse($this->pm->isGranted($sids, $permission, $object));
         $this->pm->clear();
     }
 
-    public function testIsFieldGranted()
+    public function testIsFieldGranted(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -340,7 +347,7 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($this->pm->isFieldGranted($sids, $permission, $object, $field));
     }
 
-    public function testIsGrantedWithSharingPermission()
+    public function testIsGrantedWithSharingPermission(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -351,18 +358,21 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER'])
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
-        /* @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject $sharingManager */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface $sharingManager */
         $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $sharingManager->expects($this->once())
             ->method('preloadRolePermissions')
-            ->with([SubjectIdentity::fromObject($object)]);
+            ->with([SubjectIdentity::fromObject($object)])
+        ;
 
         $sharingManager->expects($this->once())
             ->method('isGranted')
             ->with($permission, SubjectIdentity::fromObject($object))
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->pm = new PermissionManager(
             $this->dispatcher,
@@ -376,7 +386,7 @@ class PermissionManagerTest extends TestCase
         $this->pm->clear();
     }
 
-    public function testIsGrantedWithSystemPermission()
+    public function testIsGrantedWithSystemPermission(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -389,7 +399,8 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER'])
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->pm->addConfig(new PermissionConfig(
             MockOrganization::class,
@@ -440,7 +451,7 @@ class PermissionManagerTest extends TestCase
      *
      * @param MockRole $role
      */
-    public function testGetRolePermissions(MockRole $role)
+    public function testGetRolePermissions(MockRole $role): void
     {
         $subject = null;
         $permission = new MockPermission();
@@ -455,12 +466,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_TEST'])
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->provider->expects($this->once())
             ->method('getPermissionsBySubject')
             ->with($subject)
-            ->willReturn($permissions);
+            ->willReturn($permissions)
+        ;
 
         $res = $this->pm->getRolePermissions($role, $subject);
 
@@ -472,7 +485,7 @@ class PermissionManagerTest extends TestCase
      *
      * @param MockRole $role
      */
-    public function testGetRolePermissionsWithConfigPermissions(MockRole $role)
+    public function testGetRolePermissionsWithConfigPermissions(MockRole $role): void
     {
         $subject = MockOrganizationUser::class;
         $permission = new MockPermission();
@@ -487,12 +500,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_TEST'])
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->provider->expects($this->once())
             ->method('getPermissionsBySubject')
             ->with($subject)
-            ->willReturn($permissions);
+            ->willReturn($permissions)
+        ;
 
         $this->pm->addConfig(new PermissionConfig(
             MockOrganizationUser::class,
@@ -513,7 +528,7 @@ class PermissionManagerTest extends TestCase
      *
      * @param MockRole $role
      */
-    public function testGetRolePermissionsWithClassConfigPermission(MockRole $role)
+    public function testGetRolePermissionsWithClassConfigPermission(MockRole $role): void
     {
         $subject = MockOrganizationUser::class;
         $permission = new MockPermission();
@@ -529,12 +544,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissionsBySubject')
             ->with($subject)
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->provider->expects($this->once())
             ->method('getConfigPermissions')
             ->with()
-            ->willReturn($permissions);
+            ->willReturn($permissions)
+        ;
 
         $this->pm->addConfig(new PermissionConfig(
             MockOrganizationUser::class,
@@ -551,7 +568,7 @@ class PermissionManagerTest extends TestCase
      *
      * @param MockRole $role
      */
-    public function testGetRolePermissionsWithFieldConfigPermission(MockRole $role)
+    public function testGetRolePermissionsWithFieldConfigPermission(MockRole $role): void
     {
         $subject = new FieldVote(MockOrganizationUser::class, 'organization');
         $permission = new MockPermission();
@@ -568,12 +585,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissionsBySubject')
             ->with($subject)
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->provider->expects($this->once())
             ->method('getConfigPermissions')
             ->with()
-            ->willReturn($permissions);
+            ->willReturn($permissions)
+        ;
 
         $this->pm->addConfig(new PermissionConfig(
             MockOrganizationUser::class,
@@ -594,7 +613,7 @@ class PermissionManagerTest extends TestCase
      *
      * @param MockRole $role
      */
-    public function testGetRolePermissionsWithFieldConfigPermissionAndMaster(MockRole $role)
+    public function testGetRolePermissionsWithFieldConfigPermissionAndMaster(MockRole $role): void
     {
         $subject = new FieldVote(MockOrganizationUser::class, 'organization');
         $permission = new MockPermission();
@@ -611,12 +630,14 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissionsBySubject')
             ->with($subject)
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->provider->expects($this->once())
             ->method('getConfigPermissions')
             ->with()
-            ->willReturn($permissions);
+            ->willReturn($permissions)
+        ;
 
         $this->pm->addConfig(new PermissionConfig(MockOrganization::class));
         $this->pm->addConfig(new PermissionConfig(
@@ -638,24 +659,26 @@ class PermissionManagerTest extends TestCase
      * @dataProvider getRoles
      *
      * @param MockRole $role
-     *
-     * @expectedException \Fxp\Component\Security\Exception\PermissionNotFoundException
-     * @expectedExceptionMessage The permission "test" for "Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUser" is not found ant it required by the permission configuration
      */
-    public function testGetRolePermissionsWithRequiredConfigPermission(MockRole $role)
+    public function testGetRolePermissionsWithRequiredConfigPermission(MockRole $role): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\PermissionNotFoundException::class);
+        $this->expectExceptionMessage('The permission "test" for "Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockOrganizationUser" is not found ant it required by the permission configuration');
+
         $subject = MockOrganizationUser::class;
         $permissions = [];
 
         $this->provider->expects($this->once())
             ->method('getPermissionsBySubject')
             ->with($subject)
-            ->willReturn($permissions);
+            ->willReturn($permissions)
+        ;
 
         $this->provider->expects($this->once())
             ->method('getConfigPermissions')
             ->with()
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->pm->addConfig(new PermissionConfig(
             MockOrganizationUser::class,
@@ -665,7 +688,7 @@ class PermissionManagerTest extends TestCase
         $this->pm->getRolePermissions($role, $subject);
     }
 
-    public function testGetFieldRolePermissions()
+    public function testGetFieldRolePermissions(): void
     {
         $role = new MockRole('ROLE_TEST');
         $subject = MockObject::class;
@@ -684,14 +707,15 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissionsBySubject')
             ->with(new FieldVote($subject, $field))
-            ->willReturn($permissions);
+            ->willReturn($permissions)
+        ;
 
         $res = $this->pm->getRoleFieldPermissions($role, $subject, $field);
 
         $this->assertEquals($expected, $res);
     }
 
-    public function testPreloadPermissions()
+    public function testPreloadPermissions(): void
     {
         $objects = [new MockObject('foo')];
 
@@ -700,15 +724,16 @@ class PermissionManagerTest extends TestCase
         $this->assertSame($this->pm, $pm);
     }
 
-    public function testPreloadPermissionsWithSharing()
+    public function testPreloadPermissionsWithSharing(): void
     {
         $objects = [new MockObject('foo')];
 
-        /* @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject $sharingManager */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface $sharingManager */
         $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $sharingManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with($objects);
+            ->with($objects)
+        ;
 
         $this->pm = new PermissionManager(
             $this->dispatcher,
@@ -722,7 +747,7 @@ class PermissionManagerTest extends TestCase
         $this->assertSame($this->pm, $pm);
     }
 
-    public function testResetPreloadPermissions()
+    public function testResetPreloadPermissions(): void
     {
         $objects = [
             new MockObject('foo'),
@@ -733,15 +758,16 @@ class PermissionManagerTest extends TestCase
         $this->assertSame($this->pm, $pm);
     }
 
-    public function testResetPreloadPermissionsWithSharing()
+    public function testResetPreloadPermissionsWithSharing(): void
     {
         $objects = [new MockObject('foo')];
 
-        /* @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject $sharingManager */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface $sharingManager */
         $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $sharingManager->expects($this->once())
             ->method('resetPreloadPermissions')
-            ->with($objects);
+            ->with($objects)
+        ;
 
         $this->pm = new PermissionManager(
             $this->dispatcher,
@@ -755,7 +781,7 @@ class PermissionManagerTest extends TestCase
         $this->assertSame($this->pm, $pm);
     }
 
-    public function testEvents()
+    public function testEvents(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -769,17 +795,17 @@ class PermissionManagerTest extends TestCase
         $postLoad = false;
         $checkPerm = false;
 
-        $this->dispatcher->addListener(PermissionEvents::PRE_LOAD, function (PreLoadPermissionsEvent $event) use ($sids, &$preLoad) {
+        $this->dispatcher->addListener(PermissionEvents::PRE_LOAD, function (PreLoadPermissionsEvent $event) use ($sids, &$preLoad): void {
             $preLoad = true;
             $this->assertSame($sids, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(PermissionEvents::POST_LOAD, function (PostLoadPermissionsEvent $event) use ($sids, &$postLoad) {
+        $this->dispatcher->addListener(PermissionEvents::POST_LOAD, function (PostLoadPermissionsEvent $event) use ($sids, &$postLoad): void {
             $postLoad = true;
             $this->assertSame($sids, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm) {
+        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm): void {
             $checkPerm = true;
             $this->assertSame($sids, $event->getSecurityIdentities());
         });
@@ -789,7 +815,8 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER'])
-            ->willReturn([$perm]);
+            ->willReturn([$perm])
+        ;
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
         $this->assertTrue($preLoad);
@@ -797,7 +824,7 @@ class PermissionManagerTest extends TestCase
         $this->assertTrue($checkPerm);
     }
 
-    public function testOverrideGrantValueWithEvent()
+    public function testOverrideGrantValueWithEvent(): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -806,7 +833,7 @@ class PermissionManagerTest extends TestCase
         $permission = 'view';
         $checkPerm = false;
 
-        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm) {
+        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm): void {
             $checkPerm = true;
             $event->setGranted(true);
         });
@@ -816,7 +843,8 @@ class PermissionManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissions')
             ->with(['ROLE_USER'])
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->assertTrue($this->pm->isGranted($sids, $permission, $object));
         $this->assertTrue($checkPerm);

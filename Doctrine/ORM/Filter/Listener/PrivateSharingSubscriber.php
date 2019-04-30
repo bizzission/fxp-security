@@ -48,7 +48,7 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
      *
      * @param GetFilterEvent $event The event
      */
-    public function getFilter(GetFilterEvent $event)
+    public function getFilter(GetFilterEvent $event): void
     {
         $filter = $this->buildSharingFilter($event);
         $filter = $this->buildOwnerFilter($event, $filter);
@@ -72,7 +72,7 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
         $meta = $event->getSharingClassMetadata();
         $identifier = DoctrineUtils::castIdentifier($targetEntity, $connection);
 
-        $filter = <<<SELECTCLAUSE
+        return <<<SELECTCLAUSE
 {$targetTableAlias}.{$meta->getColumnName('id')} IN (SELECT
     s.{$meta->getColumnName('subjectId')}{$identifier}
 FROM
@@ -86,8 +86,6 @@ WHERE
 GROUP BY
     s.{$meta->getColumnName('subjectId')})
 SELECTCLAUSE;
-
-        return $filter;
     }
 
     /**
@@ -107,11 +105,13 @@ SELECTCLAUSE;
 
         foreach ($mapSids as $type => $stringIds) {
             $where .= '' === $where ? '' : ' OR ';
-            $where .= sprintf('(s.%s = %s AND s.%s IN (%s))',
+            $where .= sprintf(
+                '(s.%s = %s AND s.%s IN (%s))',
                 $meta->getColumnName('identityClass'),
                 $connection->quote($type),
                 $meta->getColumnName('identityName'),
-                $stringIds);
+                $stringIds
+            );
         }
 
         return $where;
@@ -161,13 +161,11 @@ SELECTCLAUSE;
             ? "{$targetTableAlias}.{$ownerColumn}{$identifier} = {$connection->quote($ownerId)}"
             : "{$platform->getIsNullExpression($targetTableAlias.'.'.$ownerColumn)}";
 
-        $filter = <<<SELECTCLAUSE
+        return <<<SELECTCLAUSE
 {$ownerFilter}
     OR
 ({$filter})
 SELECTCLAUSE;
-
-        return $filter;
     }
 
     /**
@@ -191,13 +189,11 @@ SELECTCLAUSE;
             ? "{$targetTableAlias}.{$ownerColumn}{$identifier} = {$connection->quote($ownerId)} OR "
             : '';
 
-        $filter = <<<SELECTCLAUSE
+        return <<<SELECTCLAUSE
 {$ownerFilter}{$platform->getIsNullExpression($targetTableAlias.'.'.$ownerColumn)}
     OR
 ({$filter})
 SELECTCLAUSE;
-
-        return $filter;
     }
 
     /**

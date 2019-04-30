@@ -70,7 +70,8 @@ class SharingManager extends AbstractSharingManager
                     $operations = $this->cacheSubjectSharing[$id]['operations'] ?? [];
 
                     $this->cacheSubjectSharing[$id]['sharings'][] = $entrySharing;
-                    $this->cacheSubjectSharing[$id]['operations'] = array_unique(array_merge($operations,
+                    $this->cacheSubjectSharing[$id]['operations'] = array_unique(array_merge(
+                        $operations,
                         SharingUtils::buildOperations($entrySharing)
                     ));
                 }
@@ -85,7 +86,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function preloadRolePermissions(array $subjects)
+    public function preloadRolePermissions(array $subjects): void
     {
         $roles = [];
         $idSubjects = [];
@@ -172,8 +173,8 @@ class SharingManager extends AbstractSharingManager
      * Check if the access is granted by a sharing entry.
      *
      * @param string                        $operation The operation
-     * @param SubjectIdentityInterface|null $subject   The subject
-     * @param string|null                   $field     The field of subject
+     * @param null|SubjectIdentityInterface $subject   The subject
+     * @param null|string                   $field     The field of subject
      *
      * @return bool
      */
@@ -244,7 +245,7 @@ class SharingManager extends AbstractSharingManager
      *
      * @param object[] $objects The objects
      */
-    private function preloadPermissionsOfSharingRoles(array $objects)
+    private function preloadPermissionsOfSharingRoles(array $objects): void
     {
         if (!$this->hasIdentityRoleable()) {
             return;
@@ -286,7 +287,7 @@ class SharingManager extends AbstractSharingManager
      * @param SharingInterface[] $sharings The sharing instances
      * @param string             $id       The cache id
      */
-    private function buildCacheRoleSharing(array $sharings, $id)
+    private function buildCacheRoleSharing(array $sharings, $id): void
     {
         $this->cacheRoleSharing[$id] = [];
 
@@ -305,9 +306,9 @@ class SharingManager extends AbstractSharingManager
      * @param array    $idSubjects The map of subject id and subject
      * @param string[] $roles      The roles
      */
-    private function doLoadSharingPermissions(array $idSubjects, array $roles)
+    private function doLoadSharingPermissions(array $idSubjects, array $roles): void
     {
-        /* @var RoleInterface[] $mapRoles */
+        /** @var RoleInterface[] $mapRoles */
         $mapRoles = [];
         $cRoles = $this->provider->getPermissionRoles($roles);
 
@@ -315,7 +316,7 @@ class SharingManager extends AbstractSharingManager
             $mapRoles[$role->getName()] = $role;
         }
 
-        /* @var SubjectIdentityInterface $subject */
+        /** @var SubjectIdentityInterface $subject */
         foreach ($idSubjects as $id => $subject) {
             foreach ($this->cacheRoleSharing[$id] as $roleId) {
                 if (isset($mapRoles[$roleId])) {

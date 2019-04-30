@@ -23,7 +23,7 @@ final class PermissionEvents
      *
      * @var string
      */
-    const PRE_LOAD = 'fxp_security.permission_manager.pre_load';
+    public const PRE_LOAD = 'fxp_security.permission_manager.pre_load';
 
     /**
      * The POST_LOAD event occurs after the loading of the permissions.
@@ -32,7 +32,7 @@ final class PermissionEvents
      *
      * @var string
      */
-    const POST_LOAD = 'fxp_security.permission_manager.post_load';
+    public const POST_LOAD = 'fxp_security.permission_manager.post_load';
 
     /**
      * The CHECK_PERMISSION event occurs when the permission is checked.
@@ -42,5 +42,5 @@ final class PermissionEvents
      *
      * @var string
      */
-    const CHECK_PERMISSION = 'fxp_security.permission_manager.check_permission';
+    public const CHECK_PERMISSION = 'fxp_security.permission_manager.check_permission';
 }

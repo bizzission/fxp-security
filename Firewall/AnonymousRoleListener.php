@@ -41,11 +41,12 @@ class AnonymousRoleListener extends AbstractRoleListener
      * @param AuthenticationTrustResolverInterface $trustResolver The authentication trust resolver
      * @param TokenStorageInterface                $tokenStorage  The token storage
      */
-    public function __construct(SecurityIdentityManagerInterface $sidManager,
-                                array $config,
-                                AuthenticationTrustResolverInterface $trustResolver,
-                                TokenStorageInterface $tokenStorage)
-    {
+    public function __construct(
+        SecurityIdentityManagerInterface $sidManager,
+        array $config,
+        AuthenticationTrustResolverInterface $trustResolver,
+        TokenStorageInterface $tokenStorage
+    ) {
         parent::__construct($sidManager, $config);
 
         $this->trustResolver = $trustResolver;
@@ -57,7 +58,7 @@ class AnonymousRoleListener extends AbstractRoleListener
      *
      * @param GetResponseEvent $event A GetResponseEvent instance
      */
-    public function handle(GetResponseEvent $event)
+    public function handle(GetResponseEvent $event): void
     {
         if ($this->isEnabled() && $this->hasRole() && $this->isAnonymous()) {
             $this->sidManager->addSpecialRole($this->config['role']);

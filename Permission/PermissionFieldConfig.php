@@ -34,7 +34,7 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     protected $mappingPermissions;
 
     /**
-     * @var bool|null
+     * @var null|bool
      */
     protected $editable;
 
@@ -44,13 +44,14 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
      * @param string    $field              The field name
      * @param string[]  $operations         The permission operations of this field
      * @param string[]  $mappingPermissions The map of alias permission and real permission
-     * @param bool|null $editable           Check if the permission is editable
+     * @param null|bool $editable           Check if the permission is editable
      */
-    public function __construct($field,
-                                array $operations = [],
-                                array $mappingPermissions = [],
-                                $editable = null)
-    {
+    public function __construct(
+        $field,
+        array $operations = [],
+        array $mappingPermissions = [],
+        $editable = null
+    ) {
         $this->field = $field;
         $this->operations = array_values($operations);
         $this->mappingPermissions = $mappingPermissions;

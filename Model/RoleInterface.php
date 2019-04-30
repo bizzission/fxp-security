@@ -21,9 +21,14 @@ use Fxp\Component\Security\Model\Traits\PermissionsInterface;
 interface RoleInterface extends PermissionsInterface
 {
     /**
+     * @return string
+     */
+    public function __toString();
+
+    /**
      * Get id.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getId();
 
@@ -42,9 +47,4 @@ interface RoleInterface extends PermissionsInterface
      * @return string the role name
      */
     public function getName();
-
-    /**
-     * @return string
-     */
-    public function __toString();
 }

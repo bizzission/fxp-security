@@ -41,9 +41,10 @@ class SharingValidator extends ConstraintValidator
      * @param SharingManagerInterface   $sharingManager   The sharing manager
      * @param PropertyAccessorInterface $propertyAccessor The property access
      */
-    public function __construct(SharingManagerInterface $sharingManager,
-                                PropertyAccessorInterface $propertyAccessor = null)
-    {
+    public function __construct(
+        SharingManagerInterface $sharingManager,
+        PropertyAccessorInterface $propertyAccessor = null
+    ) {
         $this->sharingManager = $sharingManager;
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
     }
@@ -51,9 +52,9 @@ class SharingValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
-        /* @var Sharing $constraint */
+        /** @var Sharing $constraint */
         $subjectClass = $this->propertyAccessor->getValue($value, $constraint->subjectClass);
         $roles = $this->propertyAccessor->getValue($value, $constraint->roles);
         $identityClass = $this->propertyAccessor->getValue($value, $constraint->identityClass);
@@ -69,7 +70,7 @@ class SharingValidator extends ConstraintValidator
      * @param Sharing $constraint   The sharing constraint
      * @param string  $subjectClass The subject class
      */
-    private function validateSubject(Sharing $constraint, $subjectClass)
+    private function validateSubject(Sharing $constraint, $subjectClass): void
     {
         $res = $this->validateClass($constraint, $subjectClass, $constraint->subjectClass);
 
@@ -78,7 +79,8 @@ class SharingValidator extends ConstraintValidator
                 ->atPath($constraint->subjectClass)
                 ->setParameter('%class_property%', $constraint->subjectClass)
                 ->setParameter('%class%', $subjectClass)
-                ->addViolation();
+                ->addViolation()
+            ;
         }
     }
 
@@ -90,7 +92,7 @@ class SharingValidator extends ConstraintValidator
      * @param string[]   $roles         The roles
      * @param Collection $permissions   The permissions
      */
-    private function validateIdentity(Sharing $constraint, $identityClass, array $roles, Collection $permissions)
+    private function validateIdentity(Sharing $constraint, $identityClass, array $roles, Collection $permissions): void
     {
         $res = $this->validateClass($constraint, $identityClass, $constraint->identityClass);
 
@@ -100,7 +102,8 @@ class SharingValidator extends ConstraintValidator
                 ->atPath($constraint->identityClass)
                 ->setParameter('%class_property%', $constraint->identityClass)
                 ->setParameter('%class%', $identityClass)
-                ->addViolation();
+                ->addViolation()
+            ;
         }
 
         if ($res) {
@@ -117,15 +120,18 @@ class SharingValidator extends ConstraintValidator
      * @param SharingIdentityConfigInterface $config     The sharing identity config
      * @param string[]                       $roles      The roles
      */
-    private function validateRoles(Sharing $constraint, SharingIdentityConfigInterface $config,
-                                   array $roles)
-    {
+    private function validateRoles(
+        Sharing $constraint,
+        SharingIdentityConfigInterface $config,
+        array $roles
+    ): void {
         if (!empty($roles) && !$config->isPermissible()) {
             $this->context->buildViolation($constraint->identityNotRoleableMessage)
                 ->atPath($constraint->roles)
                 ->setParameter('%class_property%', $constraint->identityClass)
                 ->setParameter('%class%', $config->getType())
-                ->addViolation();
+                ->addViolation()
+            ;
         }
     }
 
@@ -136,15 +142,18 @@ class SharingValidator extends ConstraintValidator
      * @param SharingIdentityConfigInterface $config      The sharing identity config
      * @param Collection                     $permissions The permissions
      */
-    private function validatePermissions(Sharing $constraint, SharingIdentityConfigInterface $config,
-                                         Collection $permissions)
-    {
+    private function validatePermissions(
+        Sharing $constraint,
+        SharingIdentityConfigInterface $config,
+        Collection $permissions
+    ): void {
         if ($permissions->count() > 0 && !$config->isPermissible()) {
             $this->context->buildViolation($constraint->identityNotPermissibleMessage)
                 ->atPath($constraint->permissions)
                 ->setParameter('%class_property%', $constraint->identityClass)
                 ->setParameter('%class%', $config->getType())
-                ->addViolation();
+                ->addViolation()
+            ;
         }
     }
 
@@ -164,7 +173,8 @@ class SharingValidator extends ConstraintValidator
                 ->atPath($propertyPath)
                 ->setParameter('%class_property%', $propertyPath)
                 ->setParameter('%class%', $class)
-                ->addViolation();
+                ->addViolation()
+            ;
 
             return false;
         }

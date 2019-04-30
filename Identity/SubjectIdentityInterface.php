@@ -35,7 +35,7 @@ interface SubjectIdentityInterface
     /**
      * Get the instance of subject.
      *
-     * @return object|null
+     * @return null|object
      */
     public function getObject();
 

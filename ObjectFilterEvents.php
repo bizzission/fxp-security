@@ -23,7 +23,7 @@ final class ObjectFilterEvents
      *
      * @var string
      */
-    const PRE_COMMIT = 'fxp_security.object_filter.pre_commit';
+    public const PRE_COMMIT = 'fxp_security.object_filter.pre_commit';
 
     /**
      * The POST_COMMIT event occurs after the filtering of objects.
@@ -32,7 +32,7 @@ final class ObjectFilterEvents
      *
      * @var string
      */
-    const POST_COMMIT = 'fxp_security.object_filter.post_commit';
+    public const POST_COMMIT = 'fxp_security.object_filter.post_commit';
 
     /**
      * The OBJECT_VIEW_GRANTED event occurs before that the object filter checks the Permission Rules
@@ -44,7 +44,7 @@ final class ObjectFilterEvents
      *
      * @var string
      */
-    const OBJECT_VIEW_GRANTED = 'fxp_security.object_filter.object_view_granted';
+    public const OBJECT_VIEW_GRANTED = 'fxp_security.object_filter.object_view_granted';
 
     /**
      * The OBJECT_FIELD_VIEW_GRANTED event occurs before that the object filter checks the Permission Rules
@@ -56,7 +56,7 @@ final class ObjectFilterEvents
      *
      * @var string
      */
-    const OBJECT_FIELD_VIEW_GRANTED = 'fxp_security.object_filter.object_field_view_granted';
+    public const OBJECT_FIELD_VIEW_GRANTED = 'fxp_security.object_filter.object_field_view_granted';
 
     /**
      * The RESTORE_VIEW_GRANTED event occurs before that the object filter checks the Permission Rules
@@ -68,5 +68,5 @@ final class ObjectFilterEvents
      *
      * @var string
      */
-    const RESTORE_VIEW_GRANTED = 'fxp_security.object_filter.restore_view_granted';
+    public const RESTORE_VIEW_GRANTED = 'fxp_security.object_filter.restore_view_granted';
 }

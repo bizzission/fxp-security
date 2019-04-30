@@ -24,7 +24,7 @@ use Fxp\Component\Security\Model\PermissionInterface;
 trait PermissionsTrait
 {
     /**
-     * @var Collection|PermissionInterface[]|null
+     * @var null|Collection|PermissionInterface[]
      *
      * @ORM\ManyToMany(
      *     targetEntity="Fxp\Component\Security\Model\PermissionInterface",

@@ -29,8 +29,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PrivateSharingSubscriberTest extends TestCase
+final class PrivateSharingSubscriberTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -53,7 +56,7 @@ class PrivateSharingSubscriberTest extends TestCase
     protected $sharingMeta;
 
     /**
-     * @var SQLFilter|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SQLFilter
      */
     protected $filter;
 
@@ -67,7 +70,7 @@ class PrivateSharingSubscriberTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
@@ -85,20 +88,24 @@ class PrivateSharingSubscriberTest extends TestCase
 
         $this->entityManager->expects($this->any())
             ->method('getFilters')
-            ->willReturn(new FilterCollection($this->entityManager));
+            ->willReturn(new FilterCollection($this->entityManager))
+        ;
 
         $this->entityManager->expects($this->any())
             ->method('getConnection')
-            ->willReturn($this->connection);
+            ->willReturn($this->connection)
+        ;
 
         $this->connection->expects($this->any())
             ->method('getDatabasePlatform')
-            ->willReturn($this->getMockForAbstractClass(AbstractPlatform::class));
+            ->willReturn($this->getMockForAbstractClass(AbstractPlatform::class))
+        ;
 
         $this->entityManager->expects($this->any())
             ->method('getClassMetadata')
             ->with(Sharing::class)
-            ->willReturn($this->sharingMeta);
+            ->willReturn($this->sharingMeta)
+        ;
 
         $this->connection->expects($this->any())
             ->method('quote')
@@ -108,23 +115,13 @@ class PrivateSharingSubscriberTest extends TestCase
                 }
 
                 return '\''.$v.'\'';
-            });
+            })
+        ;
 
         $this->assertCount(1, $this->listener->getSubscribedEvents());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function injectParameters($sharingEnabled = true, $userId = 42, array $mapSids = [])
-    {
-        $this->filter->setParameter('has_security_identities', !empty($mapSids), 'boolean');
-        $this->filter->setParameter('map_security_identities', $mapSids, 'array');
-        $this->filter->setParameter('user_id', $userId, 'integer');
-        $this->filter->setParameter('sharing_manager_enabled', $sharingEnabled, 'boolean');
-    }
-
-    public function testGetFilter()
+    public function testGetFilter(): void
     {
         $this->injectParameters(true, 42, [
             MockRole::class => '\'ROLE_USER\'',
@@ -133,11 +130,13 @@ class PrivateSharingSubscriberTest extends TestCase
 
         $this->targetEntity->expects($this->any())
             ->method('getName')
-            ->willReturn(MockObject::class);
+            ->willReturn(MockObject::class)
+        ;
 
         $this->sharingMeta->expects($this->once())
             ->method('getTableName')
-            ->willReturn('test_sharing');
+            ->willReturn('test_sharing')
+        ;
 
         $this->sharingMeta->expects($this->atLeastOnce())
             ->method('getColumnName')
@@ -153,10 +152,11 @@ class PrivateSharingSubscriberTest extends TestCase
                     'id' => 'id',
                 ];
 
-                return isset($map[$value]) ? $map[$value] : null;
-            });
+                return $map[$value] ?? null;
+            })
+        ;
 
-        $validFilter = <<<SELECTCLAUSE
+        $validFilter = <<<'SELECTCLAUSE'
 t0.id IN (SELECT
     s.subject_id
 FROM
@@ -191,7 +191,7 @@ SELECTCLAUSE;
      * @param string $objectClass
      * @param bool   $withCurrentUser
      */
-    public function testGetFilterWithOwnerableObject($objectClass, $withCurrentUser)
+    public function testGetFilterWithOwnerableObject($objectClass, $withCurrentUser): void
     {
         $this->injectParameters(
             true,
@@ -204,7 +204,8 @@ SELECTCLAUSE;
 
         $this->targetEntity->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn($objectClass);
+            ->willReturn($objectClass)
+        ;
 
         $this->targetEntity->expects($this->atLeastOnce())
             ->method('getAssociationMapping')
@@ -217,12 +218,14 @@ SELECTCLAUSE;
                     ],
                 ];
 
-                return isset($map[$value]) ? $map[$value] : null;
-            });
+                return $map[$value] ?? null;
+            })
+        ;
 
         $this->sharingMeta->expects($this->once())
             ->method('getTableName')
-            ->willReturn('test_sharing');
+            ->willReturn('test_sharing')
+        ;
 
         $this->sharingMeta->expects($this->atLeastOnce())
             ->method('getColumnName')
@@ -238,8 +241,9 @@ SELECTCLAUSE;
                     'id' => 'id',
                 ];
 
-                return isset($map[$value]) ? $map[$value] : null;
-            });
+                return $map[$value] ?? null;
+            })
+        ;
 
         $ownerFilter = $withCurrentUser
             ? 't0.owner_id = \'50\''
@@ -261,12 +265,23 @@ WHERE
     AND s.enabled IS TRUE
     AND (s.started_at IS NULL OR s.started_at <= CURRENT_TIMESTAMP)
     AND (s.ended_at IS NULL OR s.ended_at >= CURRENT_TIMESTAMP)
-    AND ((s.identity_class = 'Fxp\Component\Security\Tests\Fixtures\Model\MockRole' AND s.identity_name IN ('ROLE_USER')) OR (s.identity_class = 'Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable' AND s.identity_name IN ('user.test')))
+    AND ((s.identity_class = 'Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockRole' AND s.identity_name IN ('ROLE_USER')) OR (s.identity_class = 'Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockUserRoleable' AND s.identity_name IN ('user.test')))
 GROUP BY
     s.subject_id))
 SELECTCLAUSE;
 
         $this->listener->getFilter($this->event);
         $this->assertSame($validFilter, $this->event->getFilterConstraint());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function injectParameters($sharingEnabled = true, $userId = 42, array $mapSids = []): void
+    {
+        $this->filter->setParameter('has_security_identities', !empty($mapSids), 'boolean');
+        $this->filter->setParameter('map_security_identities', $mapSids, 'array');
+        $this->filter->setParameter('user_id', $userId, 'integer');
+        $this->filter->setParameter('sharing_manager_enabled', $sharingEnabled, 'boolean');
     }
 }

@@ -22,11 +22,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class AnonymousRoleListenerTest extends TestCase
+final class AnonymousRoleListenerTest extends TestCase
 {
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -41,12 +44,12 @@ class AnonymousRoleListenerTest extends TestCase
     protected $trustResolver;
 
     /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var Request|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Request
      */
     protected $request;
 
@@ -60,7 +63,7 @@ class AnonymousRoleListenerTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->config = [
@@ -72,7 +75,8 @@ class AnonymousRoleListenerTest extends TestCase
         $this->event = $this->getMockBuilder(GetResponseEvent::class)->disableOriginalConstructor()->getMock();
         $this->event->expects($this->any())
             ->method('getRequest')
-            ->willReturn($this->request);
+            ->willReturn($this->request)
+        ;
 
         $this->listener = new AnonymousRoleListener(
             $this->sidManager,
@@ -82,29 +86,32 @@ class AnonymousRoleListenerTest extends TestCase
         );
     }
 
-    public function testBasic()
+    public function testBasic(): void
     {
         $this->assertTrue($this->listener->isEnabled());
         $this->listener->setEnabled(false);
         $this->assertFalse($this->listener->isEnabled());
     }
 
-    public function testHandleWithDisabledListener()
+    public function testHandleWithDisabledListener(): void
     {
         $this->sidManager->expects($this->never())
-            ->method('addSpecialRole');
+            ->method('addSpecialRole')
+        ;
 
         $this->tokenStorage->expects($this->never())
-            ->method('getToken');
+            ->method('getToken')
+        ;
 
         $this->trustResolver->expects($this->never())
-            ->method('isAnonymous');
+            ->method('isAnonymous')
+        ;
 
         $this->listener->setEnabled(false);
         $this->listener->handle($this->event);
     }
 
-    public function testHandleWithoutAnonymousRole()
+    public function testHandleWithoutAnonymousRole(): void
     {
         $this->listener = new AnonymousRoleListener(
             $this->sidManager,
@@ -116,49 +123,58 @@ class AnonymousRoleListenerTest extends TestCase
         );
 
         $this->sidManager->expects($this->never())
-            ->method('addSpecialRole');
+            ->method('addSpecialRole')
+        ;
 
         $this->tokenStorage->expects($this->never())
-            ->method('getToken');
+            ->method('getToken')
+        ;
 
         $this->trustResolver->expects($this->never())
-            ->method('isAnonymous');
+            ->method('isAnonymous')
+        ;
 
         $this->listener->handle($this->event);
     }
 
-    public function testHandleWithoutToken()
+    public function testHandleWithoutToken(): void
     {
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->trustResolver->expects($this->never())
-            ->method('isAnonymous');
+            ->method('isAnonymous')
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with('ROLE_CUSTOM_ANONYMOUS');
+            ->with('ROLE_CUSTOM_ANONYMOUS')
+        ;
 
         $this->listener->handle($this->event);
     }
 
-    public function testHandleWithToken()
+    public function testHandleWithToken(): void
     {
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->trustResolver->expects($this->once())
             ->method('isAnonymous')
             ->with($token)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with('ROLE_CUSTOM_ANONYMOUS');
+            ->with('ROLE_CUSTOM_ANONYMOUS')
+        ;
 
         $this->listener->handle($this->event);
     }

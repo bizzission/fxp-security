@@ -30,11 +30,14 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingManagerTest extends TestCase
+final class SharingManagerTest extends TestCase
 {
     /**
-     * @var SharingProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SharingProviderInterface
      */
     protected $provider;
 
@@ -48,27 +51,30 @@ class SharingManagerTest extends TestCase
      */
     protected $sm;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->provider = $this->getMockBuilder(SharingProviderInterface::class)->getMock();
         $this->dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
 
         $this->provider->expects($this->atLeastOnce())
-            ->method('setSharingManager');
+            ->method('setSharingManager')
+        ;
 
         $this->sm = new SharingManager($this->provider);
         $this->sm->setEventDispatcher($this->dispatcher);
     }
 
-    public function testIsEnabled()
+    public function testIsEnabled(): void
     {
         $this->dispatcher->expects($this->at(0))
             ->method('dispatch')
-            ->with(SharingEvents::DISABLED);
+            ->with(SharingEvents::DISABLED)
+        ;
 
         $this->dispatcher->expects($this->at(1))
             ->method('dispatch')
-            ->with(SharingEvents::ENABLED);
+            ->with(SharingEvents::ENABLED)
+        ;
 
         $this->assertTrue($this->sm->isEnabled());
 
@@ -79,7 +85,7 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($this->sm->isEnabled());
     }
 
-    public function testHasSubjectConfig()
+    public function testHasSubjectConfig(): void
     {
         $pm = new SharingManager($this->provider, [
             new SharingSubjectConfig(MockObject::class),
@@ -88,7 +94,7 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($pm->hasSubjectConfig(MockObject::class));
     }
 
-    public function testHasIdentityConfig()
+    public function testHasIdentityConfig(): void
     {
         $pm = new SharingManager($this->provider, [], [
             new SharingIdentityConfig(MockRole::class),
@@ -97,17 +103,17 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($pm->hasIdentityConfig(MockRole::class));
     }
 
-    public function testHasNotSubjectConfig()
+    public function testHasNotSubjectConfig(): void
     {
         $this->assertFalse($this->sm->hasSubjectConfig(MockObject::class));
     }
 
-    public function testHasNotIdentityConfig()
+    public function testHasNotIdentityConfig(): void
     {
         $this->assertFalse($this->sm->hasIdentityConfig(MockRole::class));
     }
 
-    public function testAddSubjectConfig()
+    public function testAddSubjectConfig(): void
     {
         $this->assertFalse($this->sm->hasSubjectConfig(MockObject::class));
 
@@ -116,7 +122,7 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($this->sm->hasSubjectConfig(MockObject::class));
     }
 
-    public function testAddIdentityConfig()
+    public function testAddIdentityConfig(): void
     {
         $this->assertFalse($this->sm->hasIdentityConfig(MockRole::class));
 
@@ -125,17 +131,16 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($this->sm->hasIdentityConfig(MockRole::class));
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\AlreadyConfigurationAliasExistingException
-     * @expectedExceptionMessage The alias "foo" of sharing identity configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockGroup
-     */
-    public function testAddIdentityConfigWithAlreadyExistingAlias()
+    public function testAddIdentityConfigWithAlreadyExistingAlias(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\AlreadyConfigurationAliasExistingException::class);
+        $this->expectExceptionMessage('The alias "foo" of sharing identity configuration for the class "Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockGroup');
+
         $this->sm->addIdentityConfig(new SharingIdentityConfig(MockRole::class, 'foo'));
         $this->sm->addIdentityConfig(new SharingIdentityConfig(MockGroup::class, 'foo'));
     }
 
-    public function testGetSubjectConfig()
+    public function testGetSubjectConfig(): void
     {
         $config = new SharingSubjectConfig(MockObject::class);
         $this->sm->addSubjectConfig($config);
@@ -144,7 +149,7 @@ class SharingManagerTest extends TestCase
         $this->assertSame($config, $this->sm->getSubjectConfig(MockObject::class));
     }
 
-    public function testGetIdentityConfig()
+    public function testGetIdentityConfig(): void
     {
         $config = new SharingIdentityConfig(MockRole::class, 'role');
         $this->sm->addIdentityConfig($config);
@@ -155,25 +160,23 @@ class SharingManagerTest extends TestCase
         $this->assertSame($config, $this->sm->getIdentityConfig('role'));
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\SharingSubjectConfigNotFoundException
-     * @expectedExceptionMessage The sharing subject configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockRole" is not found
-     */
-    public function testGetSubjectConfigWithNotManagedClass()
+    public function testGetSubjectConfigWithNotManagedClass(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\SharingSubjectConfigNotFoundException::class);
+        $this->expectExceptionMessage('The sharing subject configuration for the class "Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockRole" is not found');
+
         $this->sm->getSubjectConfig(MockRole::class);
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\SharingIdentityConfigNotFoundException
-     * @expectedExceptionMessage The sharing identity configuration for the class "Fxp\Component\Security\Tests\Fixtures\Model\MockRole" is not found
-     */
-    public function testGetIdentityConfigWithNotManagedClass()
+    public function testGetIdentityConfigWithNotManagedClass(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\SharingIdentityConfigNotFoundException::class);
+        $this->expectExceptionMessage('The sharing identity configuration for the class "Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockRole" is not found');
+
         $this->sm->getIdentityConfig(MockRole::class);
     }
 
-    public function testGetSubjectConfigs()
+    public function testGetSubjectConfigs(): void
     {
         $config = new SharingSubjectConfig(MockRole::class);
         $this->sm->addSubjectConfig($config);
@@ -181,7 +184,7 @@ class SharingManagerTest extends TestCase
         $this->assertSame([$config], $this->sm->getSubjectConfigs());
     }
 
-    public function testGetIdentityConfigs()
+    public function testGetIdentityConfigs(): void
     {
         $config = new SharingIdentityConfig(MockRole::class);
         $this->sm->addIdentityConfig($config);
@@ -189,7 +192,7 @@ class SharingManagerTest extends TestCase
         $this->assertSame([$config], $this->sm->getIdentityConfigs());
     }
 
-    public function testHasIdentityRoleable()
+    public function testHasIdentityRoleable(): void
     {
         $this->assertFalse($this->sm->hasIdentityRoleable());
 
@@ -199,7 +202,7 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($this->sm->hasIdentityRoleable());
     }
 
-    public function testHasIdentityPermissible()
+    public function testHasIdentityPermissible(): void
     {
         $this->assertFalse($this->sm->hasIdentityPermissible());
 
@@ -209,13 +212,14 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($this->sm->hasIdentityPermissible());
     }
 
-    public function testHasSharingVisibilityWithoutConfig()
+    public function testHasSharingVisibilityWithoutConfig(): void
     {
-        /* @var SubjectIdentityInterface|\PHPUnit_Framework_MockObject_MockObject $subject */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SubjectIdentityInterface $subject */
         $subject = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
         $subject->expects($this->once())
             ->method('getType')
-            ->willReturn(MockObject::class);
+            ->willReturn(MockObject::class)
+        ;
 
         $this->assertFalse($this->sm->hasSharingVisibility($subject));
     }
@@ -235,13 +239,14 @@ class SharingManagerTest extends TestCase
      * @param string $visibility The sharing visibility
      * @param bool   $result     The result
      */
-    public function testHasSharingVisibility($visibility, $result)
+    public function testHasSharingVisibility($visibility, $result): void
     {
-        /* @var SubjectIdentityInterface|\PHPUnit_Framework_MockObject_MockObject $subject */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SubjectIdentityInterface $subject */
         $subject = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
         $subject->expects($this->once())
             ->method('getType')
-            ->willReturn(MockObject::class);
+            ->willReturn(MockObject::class)
+        ;
 
         $this->sm->addSubjectConfig(new SharingSubjectConfig(MockObject::class, $visibility));
         $this->sm->addSubjectConfig(new SharingSubjectConfig(MockObject::class, $visibility));
@@ -249,7 +254,7 @@ class SharingManagerTest extends TestCase
         $this->assertSame($result, $this->sm->hasSharingVisibility($subject));
     }
 
-    public function testResetPreloadPermissions()
+    public function testResetPreloadPermissions(): void
     {
         $object = new MockObject('foo', 42);
         $sm = $this->sm->resetPreloadPermissions([$object]);
@@ -257,21 +262,21 @@ class SharingManagerTest extends TestCase
         $this->assertSame($sm, $this->sm);
     }
 
-    public function testResetPreloadPermissionsWithInvalidSubjectIdentity()
+    public function testResetPreloadPermissionsWithInvalidSubjectIdentity(): void
     {
         $sm = $this->sm->resetPreloadPermissions([42]);
 
         $this->assertSame($sm, $this->sm);
     }
 
-    public function testClear()
+    public function testClear(): void
     {
         $sm = $this->sm->clear();
 
         $this->assertSame($sm, $this->sm);
     }
 
-    public function testIsGranted()
+    public function testIsGranted(): void
     {
         $operation = 'view';
         $field = null;
@@ -297,7 +302,8 @@ class SharingManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getSharingEntries')
             ->with([SubjectIdentity::fromObject($object)])
-            ->willReturn([$sharing, $sharing2]);
+            ->willReturn([$sharing, $sharing2])
+        ;
 
         $roleTest = new MockRole('ROLE_TEST');
         $perm2 = new MockPermission();
@@ -307,7 +313,8 @@ class SharingManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getPermissionRoles')
             ->with(['ROLE_TEST'])
-            ->willReturn([$roleTest]);
+            ->willReturn([$roleTest])
+        ;
 
         $sConfig = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
         $this->sm->addSubjectConfig($sConfig);
@@ -323,7 +330,7 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($this->sm->isGranted($operation, $subject, $field));
     }
 
-    public function testIsGrantedWithField()
+    public function testIsGrantedWithField(): void
     {
         $operation = 'view';
         $field = 'name';
@@ -333,7 +340,7 @@ class SharingManagerTest extends TestCase
         $this->assertFalse($this->sm->isGranted($operation, $subject, $field));
     }
 
-    public function testIsGrantedWithoutIdentityConfigRoleable()
+    public function testIsGrantedWithoutIdentityConfigRoleable(): void
     {
         $operation = 'view';
         $field = null;
@@ -352,7 +359,8 @@ class SharingManagerTest extends TestCase
         $this->provider->expects($this->once())
             ->method('getSharingEntries')
             ->with([SubjectIdentity::fromObject($object)])
-            ->willReturn([$sharing]);
+            ->willReturn([$sharing])
+        ;
 
         $sConfig = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
         $this->sm->addSubjectConfig($sConfig);
@@ -365,34 +373,37 @@ class SharingManagerTest extends TestCase
         $this->assertTrue($this->sm->isGranted($operation, $subject, $field));
     }
 
-    public function testRenameIdentity()
+    public function testRenameIdentity(): void
     {
         $this->provider->expects($this->once())
             ->method('renameIdentity')
             ->with(MockRole::class, 'ROLE_FOO', 'ROLE_BAR')
-            ->willReturn('QUERY');
+            ->willReturn('QUERY')
+        ;
 
         $this->sm->renameIdentity(MockRole::class, 'ROLE_FOO', 'ROLE_BAR');
     }
 
-    public function testDeletes()
+    public function testDeletes(): void
     {
         $ids = [42, 50];
 
         $this->provider->expects($this->once())
             ->method('deletes')
             ->with($ids)
-            ->willReturn('QUERY');
+            ->willReturn('QUERY')
+        ;
 
         $this->sm->deletes($ids);
     }
 
-    public function testDeleteIdentity()
+    public function testDeleteIdentity(): void
     {
         $this->provider->expects($this->once())
             ->method('deleteIdentity')
             ->with(MockRole::class, 'ROLE_FOO')
-            ->willReturn('QUERY');
+            ->willReturn('QUERY')
+        ;
 
         $this->sm->deleteIdentity(MockRole::class, 'ROLE_FOO');
     }

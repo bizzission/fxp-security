@@ -25,7 +25,7 @@ use Psr\Cache\CacheItemPoolInterface;
 class OrganizationalRoleHierarchy extends RoleHierarchy
 {
     /**
-     * @var OrganizationalContextInterface|null
+     * @var null|OrganizationalContextInterface
      */
     protected $context;
 
@@ -34,16 +34,17 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
      *
      * @param array                               $hierarchy     An array defining the hierarchy
      * @param ManagerRegistryInterface            $registry      The doctrine registry
-     * @param CacheItemPoolInterface|null         $cache         The cache
-     * @param OrganizationalContextInterface|null $context       The organizational context
+     * @param null|CacheItemPoolInterface         $cache         The cache
+     * @param null|OrganizationalContextInterface $context       The organizational context
      * @param string                              $roleClassname The classname of role
      */
-    public function __construct(array $hierarchy,
-                                ManagerRegistryInterface $registry,
-                                CacheItemPoolInterface $cache = null,
-                                OrganizationalContextInterface $context = null,
-                                $roleClassname = RoleInterface::class)
-    {
+    public function __construct(
+        array $hierarchy,
+        ManagerRegistryInterface $registry,
+        CacheItemPoolInterface $cache = null,
+        OrganizationalContextInterface $context = null,
+        $roleClassname = RoleInterface::class
+    ) {
         parent::__construct($hierarchy, $registry, $cache, $roleClassname);
         $this->context = $context;
     }

@@ -31,8 +31,11 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingFilterSubscriberTest extends TestCase
+final class SharingFilterSubscriberTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -50,17 +53,17 @@ class SharingFilterSubscriberTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
     /**
-     * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
@@ -79,7 +82,7 @@ class SharingFilterSubscriberTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->filterCollection = $this->getMockBuilder(FilterCollection::class)->disableOriginalConstructor()->getMock();
@@ -101,41 +104,47 @@ class SharingFilterSubscriberTest extends TestCase
             ->method('quote')
             ->willReturnCallback(function ($v) {
                 return $v;
-            });
+            })
+        ;
 
         $this->entityManager->expects($this->any())
             ->method('getFilters')
-            ->willReturn($this->filterCollection);
+            ->willReturn($this->filterCollection)
+        ;
 
         $this->entityManager->expects($this->any())
             ->method('getConnection')
-            ->willReturn($connection);
+            ->willReturn($connection)
+        ;
 
         $this->sharingManager->expects($this->any())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->assertCount(4, $this->listener->getSubscribedEvents());
     }
 
-    public function testOnSharingManagerChange()
+    public function testOnSharingManagerChange(): void
     {
         $this->filterCollection->expects($this->once())
             ->method('getEnabledFilters')
             ->willReturn([
                 'sharing' => $this->filter,
-            ]);
+            ])
+        ;
 
         $this->sharingManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
         $this->listener->onSharingManagerChange();
         $this->assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
     }
 
-    public function testOnEventWithoutSecurityIdentities()
+    public function testOnEventWithoutSecurityIdentities(): void
     {
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
@@ -143,16 +152,19 @@ class SharingFilterSubscriberTest extends TestCase
             ->method('getEnabledFilters')
             ->willReturn([
                 'sharing' => $this->filter,
-            ]);
+            ])
+        ;
 
         $this->tokenStorage->expects($this->atLeastOnce())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($token)
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->assertFalse($this->filter->hasParameter('has_security_identities'));
         $this->assertFalse($this->filter->hasParameter('map_security_identities'));
@@ -172,7 +184,7 @@ class SharingFilterSubscriberTest extends TestCase
         $this->assertTrue($this->filter->getParameter('sharing_manager_enabled'));
     }
 
-    public function testOnEvent()
+    public function testOnEvent(): void
     {
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
@@ -180,11 +192,13 @@ class SharingFilterSubscriberTest extends TestCase
             ->method('getEnabledFilters')
             ->willReturn([
                 'sharing' => $this->filter,
-            ]);
+            ])
+        ;
 
         $this->tokenStorage->expects($this->atLeastOnce())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
@@ -192,7 +206,8 @@ class SharingFilterSubscriberTest extends TestCase
             ->willReturn([
                 new RoleSecurityIdentity('role', 'ROLE_USER'),
                 new RoleSecurityIdentity('role', 'ROLE_ADMIN'),
-            ]);
+            ])
+        ;
 
         $this->sharingManager->expects($this->any())
             ->method('getIdentityConfig')
@@ -204,16 +219,19 @@ class SharingFilterSubscriberTest extends TestCase
                         return 'role' === $v
                             ? MockRole::class
                             : 'foo';
-                    });
+                    })
+                ;
 
                 return $config;
-            });
+            })
+        ;
 
         $user = new MockUserRoleable();
 
         $token->expects($this->any())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $this->assertFalse($this->filter->hasParameter('has_security_identities'));
         $this->assertFalse($this->filter->hasParameter('map_security_identities'));

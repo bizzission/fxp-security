@@ -21,14 +21,14 @@ interface PermissionInterface
     /**
      * Get the id.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getId();
 
     /**
      * Set the operation.
      *
-     * @param string|null $operation The operation
+     * @param null|string $operation The operation
      *
      * @return self
      */
@@ -37,7 +37,7 @@ interface PermissionInterface
     /**
      * Get the operation.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getOperation();
 
@@ -60,7 +60,7 @@ interface PermissionInterface
     /**
      * Set the classname.
      *
-     * @param string|null $class The classname
+     * @param null|string $class The classname
      *
      * @return self
      */
@@ -69,14 +69,14 @@ interface PermissionInterface
     /**
      * Get the classname.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getClass();
 
     /**
      * Set the field.
      *
-     * @param string|null $field The field
+     * @param null|string $field The field
      *
      * @return self
      */
@@ -85,7 +85,7 @@ interface PermissionInterface
     /**
      * Get the field.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getField();
 }

@@ -24,7 +24,7 @@ use Fxp\Component\Security\Model\GroupInterface;
 trait OrganizationGroupsTrait
 {
     /**
-     * @var Collection|null
+     * @var null|Collection
      *
      * @ORM\OneToMany(
      *     targetEntity="Fxp\Component\Security\Model\GroupInterface",

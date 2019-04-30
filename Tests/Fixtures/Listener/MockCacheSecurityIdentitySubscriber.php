@@ -41,7 +41,7 @@ class MockCacheSecurityIdentitySubscriber implements EventSubscriberInterface, C
     /**
      * Action on add identity.
      */
-    public function onAddIdentity()
+    public function onAddIdentity(): void
     {
         // do nothing
     }

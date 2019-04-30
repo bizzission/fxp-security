@@ -24,28 +24,28 @@ interface OrganizationalContextInterface
     /**
      * Set the current used organization.
      *
-     * @param OrganizationInterface|false|null $organization The current organization
+     * @param null|false|OrganizationInterface $organization The current organization
      */
     public function setCurrentOrganization($organization);
 
     /**
      * Get the current used organization.
      *
-     * @return OrganizationInterface|null
+     * @return null|OrganizationInterface
      */
     public function getCurrentOrganization();
 
     /**
      * Set the current used organization user.
      *
-     * @param OrganizationUserInterface|null $organizationUser The current organization user
+     * @param null|OrganizationUserInterface $organizationUser The current organization user
      */
     public function setCurrentOrganizationUser($organizationUser);
 
     /**
      * Get the current used organization user.
      *
-     * @return OrganizationUserInterface|null
+     * @return null|OrganizationUserInterface
      */
     public function getCurrentOrganizationUser();
 

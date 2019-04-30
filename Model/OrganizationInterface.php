@@ -21,9 +21,14 @@ use Doctrine\Common\Collections\Collection;
 interface OrganizationInterface
 {
     /**
+     * @return string
+     */
+    public function __toString();
+
+    /**
      * Get the id of model.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getId();
 
@@ -46,7 +51,7 @@ interface OrganizationInterface
     /**
      * Set the user of organization.
      *
-     * @param UserInterface|null $user The user of organization
+     * @param null|UserInterface $user The user of organization
      *
      * @return self
      */
@@ -106,9 +111,4 @@ interface OrganizationInterface
      * @return self
      */
     public function removeOrganizationUser(OrganizationUserInterface $organizationUser);
-
-    /**
-     * @return string
-     */
-    public function __toString();
 }

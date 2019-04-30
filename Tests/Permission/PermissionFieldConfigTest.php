@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionFieldConfigTest extends TestCase
+final class PermissionFieldConfigTest extends TestCase
 {
-    public function testPermissionFieldConfigByDefault()
+    public function testPermissionFieldConfigByDefault(): void
     {
         $config = new PermissionFieldConfig('foo');
 
@@ -29,7 +32,7 @@ class PermissionFieldConfigTest extends TestCase
         $this->assertTrue($config->isEditable());
     }
 
-    public function testPermissionFieldConfig()
+    public function testPermissionFieldConfig(): void
     {
         $operations = ['read', 'edit'];
         $alias = [

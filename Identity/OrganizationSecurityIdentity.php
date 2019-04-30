@@ -45,15 +45,16 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * Creates a organization security identity from a TokenInterface.
      *
      * @param TokenInterface                      $token         The token
-     * @param OrganizationalContextInterface|null $context       The organizational context
-     * @param RoleHierarchyInterface|null         $roleHierarchy The role hierarchy
+     * @param null|OrganizationalContextInterface $context       The organizational context
+     * @param null|RoleHierarchyInterface         $roleHierarchy The role hierarchy
      *
      * @return SecurityIdentityInterface[]
      */
-    public static function fromToken(TokenInterface $token,
-                                     OrganizationalContextInterface $context = null,
-                                     RoleHierarchyInterface $roleHierarchy = null)
-    {
+    public static function fromToken(
+        TokenInterface $token,
+        OrganizationalContextInterface $context = null,
+        RoleHierarchyInterface $roleHierarchy = null
+    ) {
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
@@ -69,7 +70,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * Get the security identities for all organizations of user.
      *
      * @param UserInterface               $user          The user
-     * @param RoleHierarchyInterface|null $roleHierarchy The role hierarchy
+     * @param null|RoleHierarchyInterface $roleHierarchy The role hierarchy
      *
      * @return SecurityIdentityInterface[]
      */
@@ -96,13 +97,14 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * Get the security identities for the current organization of user.
      *
      * @param OrganizationalContextInterface $context       The organizational context
-     * @param RoleHierarchyInterface|null    $roleHierarchy The role hierarchy
+     * @param null|RoleHierarchyInterface    $roleHierarchy The role hierarchy
      *
      * @return SecurityIdentityInterface[]
      */
-    protected static function getSecurityIdentityForCurrentOrganization(OrganizationalContextInterface $context,
-                                                                        $roleHierarchy = null)
-    {
+    protected static function getSecurityIdentityForCurrentOrganization(
+        OrganizationalContextInterface $context,
+        $roleHierarchy = null
+    ) {
         $sids = [];
         $org = $context->getCurrentOrganization();
         $userOrg = $context->getCurrentOrganizationUser();
@@ -153,7 +155,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * Get the organization roles.
      *
      * @param OrganizationInterface       $organization  The organization
-     * @param RoleHierarchyInterface|null $roleHierarchy The role hierarchy
+     * @param null|RoleHierarchyInterface $roleHierarchy The role hierarchy
      *
      * @return string[]
      */
@@ -176,7 +178,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
      * Get the organization roles of user.
      *
      * @param OrganizationUserInterface   $user          The organization user
-     * @param RoleHierarchyInterface|null $roleHierarchy The role hierarchy
+     * @param null|RoleHierarchyInterface $roleHierarchy The role hierarchy
      *
      * @return string[]
      */

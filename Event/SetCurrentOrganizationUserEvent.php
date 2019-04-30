@@ -22,14 +22,14 @@ use Symfony\Component\EventDispatcher\Event;
 class SetCurrentOrganizationUserEvent extends Event
 {
     /**
-     * @var OrganizationUserInterface|false|null
+     * @var null|false|OrganizationUserInterface
      */
     protected $organizationUser;
 
     /**
      * Constructor.
      *
-     * @param OrganizationUserInterface|null $organizationUser The current organization user
+     * @param null|OrganizationUserInterface $organizationUser The current organization user
      */
     public function __construct($organizationUser)
     {
@@ -39,7 +39,7 @@ class SetCurrentOrganizationUserEvent extends Event
     /**
      * Get the current organization user.
      *
-     * @return OrganizationUserInterface|false|null
+     * @return null|false|OrganizationUserInterface
      */
     public function getOrganizationUser()
     {

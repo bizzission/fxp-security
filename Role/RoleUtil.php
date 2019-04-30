@@ -61,7 +61,7 @@ abstract class RoleUtil
     /**
      * Format the role names.
      *
-     * @param RoleInterface[]|Role[]|string[] $roles The roles
+     * @param Role[]|RoleInterface[]|string[] $roles The roles
      *
      * @return string[]
      */
@@ -75,7 +75,7 @@ abstract class RoleUtil
     /**
      * Format the role name.
      *
-     * @param RoleInterface|Role|string $role The role
+     * @param Role|RoleInterface|string $role The role
      *
      * @return string
      */

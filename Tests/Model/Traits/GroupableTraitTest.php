@@ -20,10 +20,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class GroupableTraitTest extends TestCase
+final class GroupableTraitTest extends TestCase
 {
-    public function testUserModel()
+    public function testUserModel(): void
     {
         $groupable = new MockUserGroupable(false);
         $group = new MockGroup('GROUP_TEST');
@@ -44,7 +47,7 @@ class GroupableTraitTest extends TestCase
         $this->assertEquals([], $groupable->getGroups()->toArray());
     }
 
-    public function testOrganizationUserModel()
+    public function testOrganizationUserModel(): void
     {
         $org = new MockOrganization('foo');
         $user = new MockUserRoleable();

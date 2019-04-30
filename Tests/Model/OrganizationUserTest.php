@@ -18,22 +18,27 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OrganizationUserTest extends TestCase
+final class OrganizationUserTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
-        /* @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $org->expects($this->any())
             ->method('getName')
-            ->willReturn('foo');
+            ->willReturn('foo')
+        ;
 
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $user->expects($this->any())
             ->method('getUsername')
-            ->willReturn('user.test');
+            ->willReturn('user.test')
+        ;
 
         $orgUser = new MockOrganizationUser($org, $user);
 
@@ -43,7 +48,7 @@ class OrganizationUserTest extends TestCase
 
         $this->assertSame('foo:user.test', (string) $orgUser);
 
-        /* @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org2 */
+        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org2 */
         $org2 = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
         $orgUser->setOrganization($org2);
@@ -51,7 +56,7 @@ class OrganizationUserTest extends TestCase
         $this->assertNotSame($org, $orgUser->getOrganization());
         $this->assertSame($org2, $orgUser->getOrganization());
 
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user2 */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user2 */
         $user2 = $this->getMockBuilder(UserInterface::class)->getMock();
 
         $orgUser->setUser($user2);

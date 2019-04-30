@@ -17,12 +17,15 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class AnonymousRoleProviderTest extends TestCase
+final class AnonymousRoleProviderTest extends TestCase
 {
-    public function testBasic()
+    public function testBasic(): void
     {
-        /* @var TokenInterface $token */
+        /** @var TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $provider = new AnonymousRoleProvider();
 

@@ -67,9 +67,9 @@ interface PermissionManagerInterface
      *
      * @param string $class The class name
      *
-     * @return PermissionConfigInterface
-     *
      * @throws PermissionConfigNotFoundException When the configuration of permission is not found
+     *
+     * @return PermissionConfigInterface
      */
     public function getConfig($class);
 
@@ -83,7 +83,7 @@ interface PermissionManagerInterface
     /**
      * Check if the subject is managed.
      *
-     * @param SubjectIdentityInterface|FieldVote|object|string $subject The object or class name
+     * @param FieldVote|object|string|SubjectIdentityInterface $subject The object or class name
      *
      * @return bool
      */
@@ -92,7 +92,7 @@ interface PermissionManagerInterface
     /**
      * Check if the field of subject is managed.
      *
-     * @param SubjectIdentityInterface|object|string $subject The object or class name
+     * @param object|string|SubjectIdentityInterface $subject The object or class name
      * @param string                                 $field   The field
      *
      * @return bool
@@ -104,7 +104,7 @@ interface PermissionManagerInterface
      *
      * @param SecurityIdentityInterface[]                           $sids        The security identities
      * @param string|string[]                                       $permissions The permissions
-     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject     The object or class name or field vote
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject     The object or class name or field vote
      *
      * @return bool
      */
@@ -115,7 +115,7 @@ interface PermissionManagerInterface
      *
      * @param SecurityIdentityInterface[]            $sids        The security identities
      * @param string|string[]                        $permissions The permissions
-     * @param SubjectIdentityInterface|object|string $subject     The object or class name
+     * @param object|string|SubjectIdentityInterface $subject     The object or class name
      * @param string                                 $field       The field
      *
      * @return bool
@@ -126,7 +126,7 @@ interface PermissionManagerInterface
      * Get the permissions of the role and subject.
      *
      * @param RoleInterface                                         $role    The role
-     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject The object or class name or field vote
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject The object or class name or field vote
      *
      * @return PermissionChecking[]
      */
@@ -136,7 +136,7 @@ interface PermissionManagerInterface
      * Get the permissions of the role and subject field.
      *
      * @param RoleInterface                          $role    The role
-     * @param SubjectIdentityInterface|object|string $subject The object or class name
+     * @param object|string|SubjectIdentityInterface $subject The object or class name
      * @param string                                 $field   The field
      *
      * @return PermissionChecking[]

@@ -49,7 +49,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
      *
      * @throws AccessDeniedException When insufficient privilege for called action
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
         $token = $this->getTokenStorage()->getToken();
 
@@ -103,7 +103,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
      * @param object[] $objects The objects
      * @param string   $action  The action name
      */
-    protected function checkAllScheduledByAction(array $objects, $action)
+    protected function checkAllScheduledByAction(array $objects, $action): void
     {
         foreach ($objects as $object) {
             if (!$this->getAuthorizationChecker()->isGranted('perm_'.$action, $object)) {

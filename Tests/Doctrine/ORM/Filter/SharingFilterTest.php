@@ -30,8 +30,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingFilterTest extends TestCase
+final class SharingFilterTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -44,7 +47,7 @@ class SharingFilterTest extends TestCase
     protected $eventManager;
 
     /**
-     * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
@@ -68,7 +71,7 @@ class SharingFilterTest extends TestCase
      */
     protected $filter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->eventManager = new EventManager();
@@ -92,37 +95,43 @@ class SharingFilterTest extends TestCase
 
         $this->em->expects($this->any())
             ->method('getEventManager')
-            ->willReturn($this->eventManager);
+            ->willReturn($this->eventManager)
+        ;
 
         $this->em->expects($this->any())
             ->method('getFilters')
-            ->willReturn(new FilterCollection($this->em));
+            ->willReturn(new FilterCollection($this->em))
+        ;
 
         $this->em->expects($this->any())
             ->method('getConnection')
-            ->willReturn($connection);
+            ->willReturn($connection)
+        ;
 
         $connection->expects($this->any())
             ->method('quote')
             ->willReturnCallback(function ($v) {
                 return '\''.$v.'\'';
-            });
+            })
+        ;
 
         $this->targetEntity->expects($this->any())
             ->method('getName')
-            ->willReturn(MockObject::class);
+            ->willReturn(MockObject::class)
+        ;
     }
 
-    public function testAddFilterConstraintWithoutSupports()
+    public function testAddFilterConstraintWithoutSupports(): void
     {
         $this->eventDispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
         $this->eventDispatcher->expects($this->never())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $this->filter->addFilterConstraint($this->targetEntity, 't');
     }
 
-    public function testAddFilterConstraint()
+    public function testAddFilterConstraint(): void
     {
         $this->filter->setSharingManager($this->sharingManager);
         $this->filter->setSharingClass($this->sharingClass);
@@ -134,7 +143,7 @@ class SharingFilterTest extends TestCase
 
         $this->eventDispatcher->addListener(
             SharingFilterEvents::getName(SharingFilterEvents::DOCTRINE_ORM_FILTER, SharingVisibilities::TYPE_PRIVATE),
-            function (GetFilterEvent $event) use (&$eventAction) {
+            function (GetFilterEvent $event) use (&$eventAction): void {
                 $event->setFilterConstraint('FILTER_TEST');
             }
         );
@@ -142,12 +151,14 @@ class SharingFilterTest extends TestCase
         $this->sharingManager->expects($this->once())
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->sharingManager->expects($this->once())
             ->method('getSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
-            ->willReturn(SharingVisibilities::TYPE_PRIVATE);
+            ->willReturn(SharingVisibilities::TYPE_PRIVATE)
+        ;
 
         $this->assertSame('FILTER_TEST', $this->filter->addFilterConstraint($this->targetEntity, 't'));
     }

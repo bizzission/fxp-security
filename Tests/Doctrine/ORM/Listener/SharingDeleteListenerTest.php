@@ -28,11 +28,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingDeleteListenerTest extends TestCase
+final class SharingDeleteListenerTest extends TestCase
 {
     /**
-     * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
@@ -42,17 +45,17 @@ class SharingDeleteListenerTest extends TestCase
     protected $em;
 
     /**
-     * @var UnitOfWork|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWork
      */
     protected $uow;
 
     /**
-     * @var QueryBuilder|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|QueryBuilder
      */
     protected $qb;
 
     /**
-     * @var Query|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Query
      */
     protected $query;
 
@@ -61,7 +64,7 @@ class SharingDeleteListenerTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
@@ -73,7 +76,8 @@ class SharingDeleteListenerTest extends TestCase
 
         $this->em->expects($this->any())
             ->method('getUnitOfWork')
-            ->willReturn($this->uow);
+            ->willReturn($this->uow)
+        ;
 
         $this->query = $this->getMockForAbstractClass(
             AbstractQuery::class,
@@ -100,13 +104,13 @@ class SharingDeleteListenerTest extends TestCase
     /**
      * @dataProvider getInvalidInitMethods
      *
-     * @expectedException \Fxp\Component\Security\Exception\SecurityException
-     *
      * @param string   $method  The method
      * @param string[] $setters The setters
      */
-    public function testInvalidInit($method, array $setters)
+    public function testInvalidInit($method, array $setters): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\SecurityException::class);
+
         $msg = sprintf('The "%s()" method must be called before the init of the "Fxp\Component\Security\Doctrine\ORM\Listener\SharingDeleteListener" class', $method);
         $this->expectExceptionMessage($msg);
 
@@ -119,25 +123,27 @@ class SharingDeleteListenerTest extends TestCase
         $listener->getSharingManager();
     }
 
-    public function testGetSharingManager()
+    public function testGetSharingManager(): void
     {
         $this->assertSame($this->sharingManager, $this->listener->getSharingManager());
     }
 
-    public function testOnFlush()
+    public function testOnFlush(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
-        /* @var PostFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $postArgs */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|PostFlushEventArgs $postArgs */
         $postArgs = $this->getMockBuilder(PostFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
         $args->expects($this->atLeast(1))
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $postArgs->expects($this->atLeast(1))
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         // on flush
         $object = new MockObject('foo', 42);
@@ -148,76 +154,91 @@ class SharingDeleteListenerTest extends TestCase
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn($deletions);
+            ->willReturn($deletions)
+        ;
 
         $this->sharingManager->expects($this->atLeastOnce())
             ->method('hasSubjectConfig')
             ->willReturnCallback(function ($type) {
                 return MockObject::class === $type;
-            });
+            })
+        ;
 
         $this->sharingManager->expects($this->atLeastOnce())
             ->method('hasIdentityConfig')
             ->willReturnCallback(function ($type) {
                 return MockRole::class === $type || MockGroup::class === $type;
-            });
+            })
+        ;
 
         // post flush: query builder
         $this->em->expects($this->once())
             ->method('createQueryBuilder')
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(0))
             ->method('delete')
             ->with(MockSharing::class, 's')
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(1))
             ->method('andWhere')
             ->with('(s.subjectClass = :subjectClass_0 AND s.subjectId IN (:subjectIds_0))')
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(2))
             ->method('setParameter')
             ->with('subjectClass_0', MockObject::class)
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(3))
             ->method('setParameter')
             ->with('subjectIds_0', [42, 50])
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(4))
             ->method('andWhere')
             ->with('(s.identityClass = :identityClass_0 AND s.identityName IN (:identityNames_0)) OR (s.identityClass = :identityClass_1 AND s.identityName IN (:identityNames_1))')
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(5))
             ->method('setParameter')
             ->with('identityClass_0', MockRole::class)
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(6))
             ->method('setParameter')
             ->with('identityNames_0', [23])
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(7))
             ->method('setParameter')
             ->with('identityClass_1', MockGroup::class)
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(8))
             ->method('setParameter')
             ->with('identityNames_1', [32])
-            ->willReturn($this->qb);
+            ->willReturn($this->qb)
+        ;
 
         $this->qb->expects($this->at(9))
             ->method('getQuery')
-            ->willReturn($this->query);
+            ->willReturn($this->query)
+        ;
 
         $this->query->expects($this->once())
-            ->method('execute');
+            ->method('execute')
+        ;
 
         $this->listener->onFlush($args);
         $this->listener->postFlush($postArgs);

@@ -22,17 +22,20 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class GroupSecurityIdentityTest extends TestCase
+final class GroupSecurityIdentityTest extends TestCase
 {
-    public function testDebugInfo()
+    public function testDebugInfo(): void
     {
         $sid = new GroupSecurityIdentity(MockGroup::class, 'GROUP_TEST');
 
         $this->assertSame('GroupSecurityIdentity(GROUP_TEST)', (string) $sid);
     }
 
-    public function testTypeAndIdentifier()
+    public function testTypeAndIdentifier(): void
     {
         $identity = new GroupSecurityIdentity(MockGroup::class, 'identifier');
 
@@ -59,20 +62,21 @@ class GroupSecurityIdentityTest extends TestCase
      * @param mixed $value  The value
      * @param bool  $result The expected result
      */
-    public function testEquals($value, $result)
+    public function testEquals($value, $result): void
     {
         $identity = new GroupSecurityIdentity(MockGroup::class, 'identifier');
 
         $this->assertSame($result, $identity->equals($value));
     }
 
-    public function testFromAccount()
+    public function testFromAccount(): void
     {
-        /* @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
-            ->willReturn('GROUP_TEST');
+            ->willReturn('GROUP_TEST')
+        ;
 
         $sid = GroupSecurityIdentity::fromAccount($group);
 
@@ -81,25 +85,28 @@ class GroupSecurityIdentityTest extends TestCase
         $this->assertSame('GROUP_TEST', $sid->getIdentifier());
     }
 
-    public function testFormToken()
+    public function testFormToken(): void
     {
-        /* @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
-            ->willReturn('GROUP_TEST');
+            ->willReturn('GROUP_TEST')
+        ;
 
-        /* @var GroupableInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var GroupableInterface|\PHPUnit_Framework_MockObject_MockObject $user */
         $user = $this->getMockBuilder(GroupableInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getGroups')
-            ->willReturn([$group]);
+            ->willReturn([$group])
+        ;
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $sids = GroupSecurityIdentity::fromToken($token);
 
@@ -109,20 +116,20 @@ class GroupSecurityIdentityTest extends TestCase
         $this->assertSame('GROUP_TEST', $sids[0]->getIdentifier());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The user class must implement "Fxp\Component\Security\Model\Traits\GroupableInterface"
-     */
-    public function testFormTokenWithInvalidInterface()
+    public function testFormTokenWithInvalidInterface(): void
     {
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The user class must implement "Fxp\\Component\\Security\\Model\\Traits\\GroupableInterface"');
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         GroupSecurityIdentity::fromToken($token);
     }

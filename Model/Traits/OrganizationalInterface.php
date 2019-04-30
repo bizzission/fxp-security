@@ -23,14 +23,14 @@ interface OrganizationalInterface
     /**
      * Get the organization.
      *
-     * @return OrganizationInterface|null
+     * @return null|OrganizationInterface
      */
     public function getOrganization();
 
     /**
      * Get the organization id.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getOrganizationId();
 }

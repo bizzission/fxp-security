@@ -17,10 +17,13 @@ use Symfony\Component\Validator\Constraint;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionTest extends TestCase
+final class PermissionTest extends TestCase
 {
-    public function testGetTargets()
+    public function testGetTargets(): void
     {
         $constraint = new Permission();
 

@@ -41,7 +41,7 @@ class PermissionConfig implements PermissionConfigInterface
     protected $fields = [];
 
     /**
-     * @var PropertyPathInterface|string|null
+     * @var null|PropertyPathInterface|string
      */
     protected $master;
 
@@ -57,16 +57,17 @@ class PermissionConfig implements PermissionConfigInterface
      * @param string[]                          $operations                    The permission operations of this type
      * @param string[]                          $mappingPermissions            The map of alias permission and real permission
      * @param PermissionFieldConfigInterface[]  $fields                        The field configurations
-     * @param PropertyPathInterface|string|null $master                        The property path of master
+     * @param null|PropertyPathInterface|string $master                        The property path of master
      * @param array[]                           $masterFieldMappingPermissions The map of field permission of this type with the permission of master type
      */
-    public function __construct($type,
-                                array $operations = [],
-                                array $mappingPermissions = [],
-                                array $fields = [],
-                                $master = null,
-                                $masterFieldMappingPermissions = [])
-    {
+    public function __construct(
+        $type,
+        array $operations = [],
+        array $mappingPermissions = [],
+        array $fields = [],
+        $master = null,
+        $masterFieldMappingPermissions = []
+    ) {
         $this->type = $type;
         $this->operations = array_values($operations);
         $this->mappingPermissions = $mappingPermissions;

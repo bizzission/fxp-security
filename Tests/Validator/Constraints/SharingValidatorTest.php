@@ -27,11 +27,14 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingValidatorTest extends TestCase
+final class SharingValidatorTest extends TestCase
 {
     /**
-     * @var SharingManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
@@ -45,14 +48,14 @@ class SharingValidatorTest extends TestCase
      */
     protected $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $this->context = $this->getMockBuilder(ExecutionContextInterface::class)->getMock();
         $this->validator = new SharingValidator($this->sharingManager);
     }
 
-    public function testValidateWithEmptyFields()
+    public function testValidateWithEmptyFields(): void
     {
         $constraint = new Sharing();
         $sharing = new MockSharing();
@@ -71,7 +74,7 @@ class SharingValidatorTest extends TestCase
         $this->validator->validate($sharing, $constraint);
     }
 
-    public function testValidateWithNotManagedClass()
+    public function testValidateWithNotManagedClass(): void
     {
         $constraint = new Sharing();
         $sharing = new MockSharing();
@@ -81,7 +84,8 @@ class SharingValidatorTest extends TestCase
         $this->sharingManager->expects($this->at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->addViolation(0, 'sharing.class.not_managed', 'subjectClass', [
             '%class_property%' => 'subjectClass',
@@ -91,7 +95,8 @@ class SharingValidatorTest extends TestCase
         $this->sharingManager->expects($this->at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->addViolation(1, 'sharing.class.not_managed', 'identityClass', [
             '%class_property%' => 'identityClass',
@@ -102,7 +107,7 @@ class SharingValidatorTest extends TestCase
         $this->validator->validate($sharing, $constraint);
     }
 
-    public function testValidateFieldWithInvalidRole()
+    public function testValidateFieldWithInvalidRole(): void
     {
         $constraint = new Sharing();
         $sharing = new MockSharing();
@@ -113,19 +118,22 @@ class SharingValidatorTest extends TestCase
         $this->sharingManager->expects($this->at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->sharingManager->expects($this->at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $config = new SharingIdentityConfig(MockRole::class);
 
         $this->sharingManager->expects($this->at(2))
             ->method('getIdentityConfig')
             ->with(MockRole::class)
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         $this->addViolation(0, 'sharing.class.identity_not_roleable', 'roles', [
             '%class_property%' => 'identityClass',
@@ -136,7 +144,7 @@ class SharingValidatorTest extends TestCase
         $this->validator->validate($sharing, $constraint);
     }
 
-    public function testValidateFieldWithInvalidPermission()
+    public function testValidateFieldWithInvalidPermission(): void
     {
         $constraint = new Sharing();
         $sharing = new MockSharing();
@@ -147,19 +155,22 @@ class SharingValidatorTest extends TestCase
         $this->sharingManager->expects($this->at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->sharingManager->expects($this->at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $config = new SharingIdentityConfig(MockRole::class);
 
         $this->sharingManager->expects($this->at(2))
             ->method('getIdentityConfig')
             ->with(MockRole::class)
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         $this->addViolation(0, 'sharing.class.identity_not_permissible', 'permissions', [
             '%class_property%' => 'identityClass',
@@ -170,7 +181,7 @@ class SharingValidatorTest extends TestCase
         $this->validator->validate($sharing, $constraint);
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $constraint = new Sharing();
         $sharing = new MockSharing();
@@ -182,19 +193,22 @@ class SharingValidatorTest extends TestCase
         $this->sharingManager->expects($this->at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->sharingManager->expects($this->at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $config = new SharingIdentityConfig(MockRole::class, 'role', true, true);
 
         $this->sharingManager->expects($this->at(2))
             ->method('getIdentityConfig')
             ->with(MockRole::class)
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($sharing, $constraint);
@@ -208,7 +222,7 @@ class SharingValidatorTest extends TestCase
      * @param string $path       The property path
      * @param array  $parameters The violation parameters
      */
-    protected function addViolation($position, $message, $path, array $parameters = [])
+    protected function addViolation($position, $message, $path, array $parameters = []): void
     {
         $vb = $this->getMockBuilder(ConstraintViolationBuilderInterface::class)->getMock();
         $i = 0;
@@ -216,22 +230,26 @@ class SharingValidatorTest extends TestCase
         $this->context->expects($this->at($position))
             ->method('buildViolation')
             ->with($message)
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(0))
             ->method('atPath')
             ->with($path)
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         foreach ($parameters as $key => $value) {
             ++$i;
             $vb->expects($this->at($i))
                 ->method('setParameter')
                 ->with($key, $value)
-                ->willReturn($vb);
+                ->willReturn($vb)
+            ;
         }
 
         $vb->expects($this->once())
-            ->method('addViolation');
+            ->method('addViolation')
+        ;
     }
 }

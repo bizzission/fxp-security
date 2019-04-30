@@ -40,12 +40,12 @@ class SharingProvider implements SharingProviderInterface
     protected $doctrine;
 
     /**
-     * @var EntityRepository|null
+     * @var null|EntityRepository
      */
     protected $roleRepo;
 
     /**
-     * @var EntityRepository|null
+     * @var null|EntityRepository
      */
     protected $sharingRepo;
 
@@ -71,10 +71,11 @@ class SharingProvider implements SharingProviderInterface
      * @param SecurityIdentityManagerInterface $sidManager   The security identity manager
      * @param TokenStorageInterface            $tokenStorage The token storage
      */
-    public function __construct(ManagerRegistry $doctrine,
-                                SecurityIdentityManagerInterface $sidManager,
-                                TokenStorageInterface $tokenStorage)
-    {
+    public function __construct(
+        ManagerRegistry $doctrine,
+        SecurityIdentityManagerInterface $sidManager,
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->doctrine = $doctrine;
         $this->sidManager = $sidManager;
         $this->tokenStorage = $tokenStorage;
@@ -101,18 +102,18 @@ class SharingProvider implements SharingProviderInterface
 
         $qb = $this->getRoleRepository()->createQueryBuilder('r')
             ->addSelect('p')
-            ->leftJoin('r.permissions', 'p');
+            ->leftJoin('r.permissions', 'p')
+        ;
 
-        $pRoles = $qb
+        return $qb
             ->where('UPPER(r.name) IN (:roles)')
             ->setParameter('roles', $roles)
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')
             ->getQuery()
-            ->getResult();
-
-        return $pRoles;
+            ->getResult()
+        ;
     }
 
     /**
@@ -127,17 +128,17 @@ class SharingProvider implements SharingProviderInterface
         $sids = $this->getSecurityIdentities($sids);
         $qb = $this->getSharingRepository()->createQueryBuilder('s')
             ->addSelect('p')
-            ->leftJoin('s.permissions', 'p');
+            ->leftJoin('s.permissions', 'p')
+        ;
 
-        $sharingEntries = $this->addWhereForSharing($qb, $subjects, $sids)
+        return $this->addWhereForSharing($qb, $subjects, $sids)
             ->andWhere('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
             ->addOrderBy('p.operation', 'asc')
             ->getQuery()
-            ->getResult();
-
-        return $sharingEntries;
+            ->getResult()
+        ;
     }
 
     /**
@@ -154,7 +155,8 @@ class SharingProvider implements SharingProviderInterface
             ->setParameter('oldName', $oldName)
             ->setParameter('newName', $newName)
             ->getQuery()
-            ->execute();
+            ->execute()
+        ;
 
         return $this;
     }
@@ -171,7 +173,8 @@ class SharingProvider implements SharingProviderInterface
             ->setParameter('type', $type)
             ->setParameter('name', $name)
             ->getQuery()
-            ->execute();
+            ->execute()
+        ;
 
         return $this;
     }
@@ -187,7 +190,8 @@ class SharingProvider implements SharingProviderInterface
                 ->where('s.id IN (:ids)')
                 ->setParameter('ids', $ids)
                 ->getQuery()
-                ->execute();
+                ->execute()
+            ;
         }
 
         return $this;
@@ -288,7 +292,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * Get the security identities.
      *
-     * @param SecurityIdentityInterface[]|null $sids The security identities to filter the sharing entries
+     * @param null|SecurityIdentityInterface[] $sids The security identities to filter the sharing entries
      *
      * @return SecurityIdentityInterface[]
      */
@@ -306,7 +310,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * Get the role repository.
      *
-     * @return ObjectRepository|EntityRepository
+     * @return EntityRepository|ObjectRepository
      */
     private function getRoleRepository()
     {
@@ -320,7 +324,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * Get the sharing repository.
      *
-     * @return ObjectRepository|EntityRepository
+     * @return EntityRepository|ObjectRepository
      */
     private function getSharingRepository()
     {
@@ -336,7 +340,7 @@ class SharingProvider implements SharingProviderInterface
      *
      * @param string $classname The class name
      *
-     * @return ObjectRepository|EntityRepository
+     * @return EntityRepository|ObjectRepository
      */
     private function getRepository($classname)
     {

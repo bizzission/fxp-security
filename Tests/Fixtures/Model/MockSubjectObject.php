@@ -19,7 +19,7 @@ use Fxp\Component\Security\Identity\SubjectInterface;
 class MockSubjectObject implements SubjectInterface
 {
     /**
-     * @var int|string|null
+     * @var null|int|string
      */
     protected $subjectIdentifier;
 
@@ -32,7 +32,7 @@ class MockSubjectObject implements SubjectInterface
      * Constructor.
      *
      * @param string          $name              The name
-     * @param int|string|null $subjectIdentifier The subject identifier
+     * @param null|int|string $subjectIdentifier The subject identifier
      */
     public function __construct($name, $subjectIdentifier = 42)
     {
@@ -60,7 +60,7 @@ class MockSubjectObject implements SubjectInterface
      *
      * @param string $name The name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }

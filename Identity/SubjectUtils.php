@@ -23,7 +23,7 @@ abstract class SubjectUtils
     /**
      * Get the subject identity.
      *
-     * @param SubjectIdentityInterface|object|string $subject The subject instance or classname
+     * @param object|string|SubjectIdentityInterface $subject The subject instance or classname
      *
      * @return SubjectIdentityInterface
      */

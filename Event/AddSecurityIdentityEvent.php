@@ -42,7 +42,7 @@ class AddSecurityIdentityEvent extends Event
      *
      * @param SecurityIdentityInterface[] $securityIdentities The security identities
      */
-    public function setSecurityIdentities(array $securityIdentities)
+    public function setSecurityIdentities(array $securityIdentities): void
     {
         $this->securityIdentities = $securityIdentities;
     }

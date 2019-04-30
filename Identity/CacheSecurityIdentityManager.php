@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class CacheSecurityIdentityManager extends SecurityIdentityManager implements CacheSecurityIdentityManagerInterface
 {
     /**
-     * @var CacheSecurityIdentityListenerInterface[]|null
+     * @var null|CacheSecurityIdentityListenerInterface[]
      */
     private $cacheIdentityListeners;
 
@@ -34,7 +34,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
     /**
      * Invalidate the execution cache.
      */
-    public function invalidateCache()
+    public function invalidateCache(): void
     {
         $this->cacheExec = [];
     }

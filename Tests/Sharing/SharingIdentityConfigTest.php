@@ -17,10 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingIdentityConfigTest extends TestCase
+final class SharingIdentityConfigTest extends TestCase
 {
-    public function testSharingIdentityConfigByDefault()
+    public function testSharingIdentityConfigByDefault(): void
     {
         $config = new SharingIdentityConfig(MockObject::class);
 
@@ -30,7 +33,7 @@ class SharingIdentityConfigTest extends TestCase
         $this->assertFalse($config->isPermissible());
     }
 
-    public function testSharingIdentityConfig()
+    public function testSharingIdentityConfig(): void
     {
         $config = new SharingIdentityConfig(MockObject::class, 'mock_object', true, true);
 

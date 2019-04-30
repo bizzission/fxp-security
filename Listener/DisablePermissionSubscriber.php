@@ -58,7 +58,7 @@ class DisablePermissionSubscriber implements EventSubscriberInterface
      *
      * @param AbstractEditableSecurityEvent $event The event
      */
-    public function disablePermissionManager(AbstractEditableSecurityEvent $event)
+    public function disablePermissionManager(AbstractEditableSecurityEvent $event): void
     {
         $event->setPermissionEnabled($this->permManager->isEnabled());
         $this->permManager->setEnabled(false);
@@ -69,7 +69,7 @@ class DisablePermissionSubscriber implements EventSubscriberInterface
      *
      * @param AbstractSecurityEvent $event The event
      */
-    public function enablePermissionManager(AbstractSecurityEvent $event)
+    public function enablePermissionManager(AbstractSecurityEvent $event): void
     {
         $this->permManager->setEnabled($event->isPermissionEnabled());
     }

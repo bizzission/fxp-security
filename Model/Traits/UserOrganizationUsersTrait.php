@@ -24,7 +24,7 @@ use Fxp\Component\Security\Model\OrganizationUserInterface;
 trait UserOrganizationUsersTrait
 {
     /**
-     * @var Collection|null
+     * @var null|Collection
      *
      * @ORM\OneToMany(
      *     targetEntity="Fxp\Component\Security\Model\OrganizationUserInterface",
@@ -33,7 +33,7 @@ trait UserOrganizationUsersTrait
      *     orphanRemoval=true,
      *     cascade={"persist", "remove"}
      * )
-     * @ORM\OrderBy({"organization" = "ASC"})
+     * @ORM\OrderBy({"organization": "ASC"})
      */
     protected $userOrganizations;
 
@@ -76,6 +76,7 @@ trait UserOrganizationUsersTrait
         foreach ($this->getUserOrganizations() as $userOrg) {
             if ($name === $userOrg->getOrganization()->getName()) {
                 $org = $userOrg;
+
                 break;
             }
         }

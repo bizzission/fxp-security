@@ -49,7 +49,7 @@ class ObjectFilterListener extends AbstractPermissionListener
      *
      * @param LifecycleEventArgs $args
      */
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(LifecycleEventArgs $args): void
     {
         $token = $this->getTokenStorage()->getToken();
 
@@ -69,7 +69,7 @@ class ObjectFilterListener extends AbstractPermissionListener
      *
      * @throws AccessDeniedException When insufficient privilege for called action
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
         $token = $this->getTokenStorage()->getToken();
 
@@ -120,7 +120,7 @@ class ObjectFilterListener extends AbstractPermissionListener
      * @param object[] $objects The objects
      * @param string   $action  The action name
      */
-    protected function checkAllScheduledByAction(array $objects, $action)
+    protected function checkAllScheduledByAction(array $objects, $action): void
     {
         foreach ($objects as $object) {
             $this->postResetPermissions[] = $object;

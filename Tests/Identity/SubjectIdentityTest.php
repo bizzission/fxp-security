@@ -19,10 +19,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SubjectIdentityTest extends TestCase
+final class SubjectIdentityTest extends TestCase
 {
-    public function testDebugInfo()
+    public function testDebugInfo(): void
     {
         $object = new MockObject('foo');
 
@@ -31,7 +34,7 @@ class SubjectIdentityTest extends TestCase
         $this->assertSame('SubjectIdentity(Fxp\Component\Security\Tests\Fixtures\Model\MockObject, 42)', (string) $si);
     }
 
-    public function testTypeAndIdentifier()
+    public function testTypeAndIdentifier(): void
     {
         $object = new MockObject('foo');
 
@@ -42,30 +45,27 @@ class SubjectIdentityTest extends TestCase
         $this->assertSame($object, $si->getObject());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The type cannot be empty
-     */
-    public function testEmptyType()
+    public function testEmptyType(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The type cannot be empty');
+
         new SubjectIdentity(null, '42');
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The identifier cannot be empty
-     */
-    public function testEmptyIdentifier()
+    public function testEmptyIdentifier(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The identifier cannot be empty');
+
         new SubjectIdentity(MockObject::class, '');
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "object|null", "integer" given
-     */
-    public function testInvalidSubject()
+    public function testInvalidSubject(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type "object|null", "integer" given');
+
         new SubjectIdentity(MockObject::class, '42', 42);
     }
 
@@ -85,7 +85,7 @@ class SubjectIdentityTest extends TestCase
      * @param mixed $value  The value
      * @param bool  $result The expected result
      */
-    public function testEquals($value, $result)
+    public function testEquals($value, $result): void
     {
         $object = new MockObject('foo');
         $si = new SubjectIdentity(\get_class($object), (string) $object->getId(), $object);
@@ -93,7 +93,7 @@ class SubjectIdentityTest extends TestCase
         $this->assertSame($result, $si->equals($value));
     }
 
-    public function testFromClassname()
+    public function testFromClassname(): void
     {
         $si = SubjectIdentity::fromClassname(MockObject::class);
 
@@ -102,16 +102,15 @@ class SubjectIdentityTest extends TestCase
         $this->assertNull($si->getObject());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
-     * @expectedExceptionMessage The class "FooBar" does not exist
-     */
-    public function testFromClassnameWithNonExistentClass()
+    public function testFromClassnameWithNonExistentClass(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidSubjectIdentityException::class);
+        $this->expectExceptionMessage('The class "FooBar" does not exist');
+
         SubjectIdentity::fromClassname('FooBar');
     }
 
-    public function testFromObject()
+    public function testFromObject(): void
     {
         $object = new MockObject('foo');
 
@@ -122,7 +121,7 @@ class SubjectIdentityTest extends TestCase
         $this->assertSame($object, $si->getObject());
     }
 
-    public function testFromObjectWithSubjectInstance()
+    public function testFromObjectWithSubjectInstance(): void
     {
         $object = new MockSubjectObject('foo');
 
@@ -133,7 +132,7 @@ class SubjectIdentityTest extends TestCase
         $this->assertSame($object, $si->getObject());
     }
 
-    public function testFromObjectWithSubjectIdentityInstance()
+    public function testFromObjectWithSubjectIdentityInstance(): void
     {
         $object = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
 
@@ -142,35 +141,32 @@ class SubjectIdentityTest extends TestCase
         $this->assertSame($object, $si);
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
-     * @expectedExceptionMessage Expected argument of type "object", "integer" given
-     */
-    public function testFromObjectWithNonObject()
+    public function testFromObjectWithNonObject(): void
     {
-        /* @var object $object */
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidSubjectIdentityException::class);
+        $this->expectExceptionMessage('Expected argument of type "object", "integer" given');
+
+        /** @var object $object */
         $object = 42;
 
         SubjectIdentity::fromObject($object);
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
-     * @expectedExceptionMessage The identifier cannot be empty
-     */
-    public function testFromObjectWithEmptyIdentifier()
+    public function testFromObjectWithEmptyIdentifier(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidSubjectIdentityException::class);
+        $this->expectExceptionMessage('The identifier cannot be empty');
+
         $object = new MockObject('foo', null);
 
         SubjectIdentity::fromObject($object);
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidSubjectIdentityException
-     * @expectedExceptionMessage The object must either implement the SubjectInterface, or have a method named "getId"
-     */
-    public function testFromObjectWithInvalidObject()
+    public function testFromObjectWithInvalidObject(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidSubjectIdentityException::class);
+        $this->expectExceptionMessage('The object must either implement the SubjectInterface, or have a method named "getId"');
+
         $object = new \stdClass();
 
         SubjectIdentity::fromObject($object);

@@ -43,6 +43,7 @@ class ObjectFilterExtension implements ObjectFilterExtensionInterface
         foreach ($this->voters as $voter) {
             if ($voter->supports($value)) {
                 $val = $voter->getValue($value);
+
                 break;
             }
         }

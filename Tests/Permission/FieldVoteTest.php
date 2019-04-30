@@ -18,10 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class FieldVoteTest extends TestCase
+final class FieldVoteTest extends TestCase
 {
-    public function testFieldVote()
+    public function testFieldVote(): void
     {
         $object = new MockObject('foo');
         $field = 'name';
@@ -34,7 +37,7 @@ class FieldVoteTest extends TestCase
         $this->assertSame($field, $fv->getField());
     }
 
-    public function testFieldVoteWithSubjectIdentity()
+    public function testFieldVoteWithSubjectIdentity(): void
     {
         $object = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
         $field = 'name';
@@ -45,7 +48,7 @@ class FieldVoteTest extends TestCase
         $this->assertSame($field, $fv->getField());
     }
 
-    public function testFieldVoteWithClassname()
+    public function testFieldVoteWithClassname(): void
     {
         $object = \stdClass::class;
         $field = 'field';
@@ -57,12 +60,11 @@ class FieldVoteTest extends TestCase
         $this->assertSame($field, $fv->getField());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "Fxp\Component\Security\Identity\SubjectIdentityInterface|object|string", "integer" given
-     */
-    public function testFieldVoteWithInvalidSubject()
+    public function testFieldVoteWithInvalidSubject(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type "Fxp\\Component\\Security\\Identity\\SubjectIdentityInterface|object|string", "integer" given');
+
         $object = 42;
         $field = 'field';
 

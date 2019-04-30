@@ -55,7 +55,7 @@ class GetFilterEvent extends Event
     protected $filterConstraint = '';
 
     /**
-     * @var \ReflectionProperty|null
+     * @var null|\ReflectionProperty
      */
     private $refParameters;
 
@@ -68,12 +68,13 @@ class GetFilterEvent extends Event
      * @param string                 $targetTableAlias The target table alias
      * @param string                 $sharingClass     The class name of the sharing model
      */
-    public function __construct(SqlFilter $filter,
-                                EntityManagerInterface $entityManager,
-                                ClassMetadata $targetEntity,
-                                $targetTableAlias,
-                                $sharingClass)
-    {
+    public function __construct(
+        SqlFilter $filter,
+        EntityManagerInterface $entityManager,
+        ClassMetadata $targetEntity,
+        $targetTableAlias,
+        $sharingClass
+    ) {
         $this->filter = $filter;
         $this->entityManager = $entityManager;
         $this->targetEntity = $targetEntity;
@@ -128,7 +129,7 @@ class GetFilterEvent extends Event
      *
      * @param string      $name  The name of the parameter
      * @param string      $value The value of the parameter
-     * @param string|null $type  The parameter type
+     * @param null|string $type  The parameter type
      *
      * @return self
      */
@@ -168,9 +169,9 @@ class GetFilterEvent extends Event
      *
      * @param string $name The name of the parameter
      *
-     * @return string|string[]|bool|bool[]|int|int[]|float|float[]|null
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return null|bool|bool[]|float|float[]|int|int[]|string|string[]
      */
     public function getRealParameter($name)
     {

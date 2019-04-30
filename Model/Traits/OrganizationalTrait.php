@@ -21,7 +21,7 @@ use Fxp\Component\Security\Model\OrganizationInterface;
 trait OrganizationalTrait
 {
     /**
-     * @var OrganizationInterface|null
+     * @var null|OrganizationInterface
      */
     protected $organization;
 

@@ -20,17 +20,20 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class UserSecurityIdentityTest extends TestCase
+final class UserSecurityIdentityTest extends TestCase
 {
-    public function testDebugInfo()
+    public function testDebugInfo(): void
     {
         $sid = new UserSecurityIdentity(MockUserRoleable::class, 'user.test');
 
         $this->assertSame('UserSecurityIdentity(user.test)', (string) $sid);
     }
 
-    public function testTypeAndIdentifier()
+    public function testTypeAndIdentifier(): void
     {
         $identity = new UserSecurityIdentity(MockUserRoleable::class, 'identifier');
 
@@ -57,20 +60,21 @@ class UserSecurityIdentityTest extends TestCase
      * @param mixed $value  The value
      * @param bool  $result The expected result
      */
-    public function testEquals($value, $result)
+    public function testEquals($value, $result): void
     {
         $identity = new UserSecurityIdentity(MockUserRoleable::class, 'identifier');
 
         $this->assertSame($result, $identity->equals($value));
     }
 
-    public function testFromAccount()
+    public function testFromAccount(): void
     {
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getUsername')
-            ->willReturn('user.test');
+            ->willReturn('user.test')
+        ;
 
         $sid = UserSecurityIdentity::fromAccount($user);
 
@@ -79,19 +83,21 @@ class UserSecurityIdentityTest extends TestCase
         $this->assertSame('user.test', $sid->getIdentifier());
     }
 
-    public function testFormToken()
+    public function testFormToken(): void
     {
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getUsername')
-            ->willReturn('user.test');
+            ->willReturn('user.test')
+        ;
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $sid = UserSecurityIdentity::fromToken($token);
 
@@ -100,20 +106,20 @@ class UserSecurityIdentityTest extends TestCase
         $this->assertSame('user.test', $sid->getIdentifier());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The user class must implement "Fxp\Component\Security\Model\UserInterface"
-     */
-    public function testFormTokenWithInvalidInterface()
+    public function testFormTokenWithInvalidInterface(): void
     {
-        /* @var \Symfony\Component\Security\Core\User\UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The user class must implement "Fxp\\Component\\Security\\Model\\UserInterface"');
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\Security\Core\User\UserInterface $user */
         $user = $this->getMockBuilder(\Symfony\Component\Security\Core\User\UserInterface::class)->getMock();
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         UserSecurityIdentity::fromToken($token);
     }

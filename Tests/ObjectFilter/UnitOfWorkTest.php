@@ -17,17 +17,20 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class UnitOfWorkTest extends TestCase
+final class UnitOfWorkTest extends TestCase
 {
-    public function testGetObjectIdentifiers()
+    public function testGetObjectIdentifiers(): void
     {
         $uow = new UnitOfWork();
 
         $this->assertCount(0, $uow->getObjectIdentifiers());
     }
 
-    public function testAttachAndDetach()
+    public function testAttachAndDetach(): void
     {
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
@@ -41,7 +44,7 @@ class UnitOfWorkTest extends TestCase
         $this->assertCount(0, $uow->getObjectIdentifiers());
     }
 
-    public function testAttachExistingObject()
+    public function testAttachExistingObject(): void
     {
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
@@ -55,7 +58,7 @@ class UnitOfWorkTest extends TestCase
         $this->assertCount(1, $uow->getObjectIdentifiers());
     }
 
-    public function testDetachNonExistingObject()
+    public function testDetachNonExistingObject(): void
     {
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
@@ -66,7 +69,7 @@ class UnitOfWorkTest extends TestCase
         $this->assertCount(0, $uow->getObjectIdentifiers());
     }
 
-    public function testFlush()
+    public function testFlush(): void
     {
         $uow = new UnitOfWork();
         $obj1 = new MockObject('foo');
@@ -80,7 +83,7 @@ class UnitOfWorkTest extends TestCase
         $this->assertCount(0, $uow->getObjectIdentifiers());
     }
 
-    public function testGetObjectChangeSet()
+    public function testGetObjectChangeSet(): void
     {
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
@@ -102,7 +105,7 @@ class UnitOfWorkTest extends TestCase
         $this->assertSame($valid, $uow->getObjectChangeSet($obj));
     }
 
-    public function testGetObjectChangeSetWithNonExistingObject()
+    public function testGetObjectChangeSetWithNonExistingObject(): void
     {
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');

@@ -24,7 +24,7 @@ use Fxp\Component\Security\Exception\UnexpectedTypeException;
 final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdentityInterface
 {
     /**
-     * @var object|null
+     * @var null|object
      */
     private $subject;
 
@@ -33,7 +33,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
      *
      * @param string      $identifier The identifier
      * @param string      $type       The type
-     * @param object|null $subject    The instance of subject
+     * @param null|object $subject    The instance of subject
      *
      * @throws InvalidArgumentException When the identifier is empty
      * @throws InvalidArgumentException When the type is empty
@@ -50,6 +50,16 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
         $this->type = $type;
         $this->identifier = $identifier;
         $this->subject = $subject;
+    }
+
+    /**
+     * Returns a textual representation of this object identity.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('SubjectIdentity(%s, %s)', $this->type, $this->identifier);
     }
 
     /**
@@ -70,9 +80,11 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
 
             if ($object instanceof SubjectIdentityInterface) {
                 return $object;
-            } elseif ($object instanceof SubjectInterface) {
+            }
+            if ($object instanceof SubjectInterface) {
                 return new self(ClassUtils::getClass($object), (string) $object->getSubjectIdentifier(), $object);
-            } elseif (method_exists($object, 'getId')) {
+            }
+            if (method_exists($object, 'getId')) {
                 return new self(ClassUtils::getClass($object), (string) $object->getId(), $object);
             }
         } catch (InvalidArgumentException $e) {
@@ -117,15 +129,5 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
     {
         return $this->identifier === $identity->getIdentifier()
                && $this->type === $identity->getType();
-    }
-
-    /**
-     * Returns a textual representation of this object identity.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return sprintf('SubjectIdentity(%s, %s)', $this->type, $this->identifier);
     }
 }

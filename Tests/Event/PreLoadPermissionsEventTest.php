@@ -19,10 +19,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PreLoadPermissionsEventTest extends TestCase
+final class PreLoadPermissionsEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
         $sids = [
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),

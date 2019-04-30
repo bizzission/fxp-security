@@ -24,11 +24,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionCheckerListenerTest extends TestCase
+final class PermissionCheckerListenerTest extends TestCase
 {
     /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
@@ -48,7 +51,7 @@ class PermissionCheckerListenerTest extends TestCase
     protected $em;
 
     /**
-     * @var UnitOfWork|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWork
      */
     protected $uow;
 
@@ -57,7 +60,7 @@ class PermissionCheckerListenerTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->authChecker = $this->getMockBuilder(AuthorizationCheckerInterface::class)->getMock();
@@ -68,7 +71,8 @@ class PermissionCheckerListenerTest extends TestCase
 
         $this->em->expects($this->any())
             ->method('getUnitOfWork')
-            ->willReturn($this->uow);
+            ->willReturn($this->uow)
+        ;
 
         $this->listener->setTokenStorage($this->tokenStorage);
         $this->listener->setAuthorizationChecker($this->authChecker);
@@ -89,13 +93,13 @@ class PermissionCheckerListenerTest extends TestCase
     /**
      * @dataProvider getInvalidInitMethods
      *
-     * @expectedException \Fxp\Component\Security\Exception\SecurityException
-     *
      * @param string   $method  The method
      * @param string[] $setters The setters
      */
-    public function testInvalidInit($method, array $setters)
+    public function testInvalidInit($method, array $setters): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\SecurityException::class);
+
         $msg = sprintf('The "%s()" method must be called before the init of the "Fxp\Component\Security\Doctrine\ORM\Listener\PermissionCheckerListener" class', $method);
         $this->expectExceptionMessage($msg);
 
@@ -113,237 +117,270 @@ class PermissionCheckerListenerTest extends TestCase
             $listener->setPermissionManager($this->permissionManager);
         }
 
-        /* @var OnFlushEventArgs $args */
+        /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
         $listener->onFlush($args);
     }
 
-    public function testPostFlush()
+    public function testPostFlush(): void
     {
         $this->permissionManager->expects($this->once())
             ->method('resetPreloadPermissions')
-            ->with([]);
+            ->with([])
+        ;
 
         $this->listener->postFlush();
     }
 
-    public function testOnFlushWithDisabledPermissionManager()
+    public function testOnFlushWithDisabledPermissionManager(): void
     {
-        /* @var OnFlushEventArgs $args */
+        /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithEmptyToken()
+    public function testOnFlushWithEmptyToken(): void
     {
-        /* @var OnFlushEventArgs $args */
+        /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithConsoleToken()
+    public function testOnFlushWithConsoleToken(): void
     {
-        /* @var OnFlushEventArgs $args */
+        /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(ConsoleToken::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\AccessDeniedException
-     * @expectedExceptionMessage Insufficient privilege to create the entity
-     */
-    public function testOnFLushWithInsufficientPrivilegeToCreateEntity()
+    public function testOnFLushWithInsufficientPrivilegeToCreateEntity(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        $this->expectException(\Fxp\Component\Security\Exception\AccessDeniedException::class);
+        $this->expectExceptionMessage('Insufficient privilege to create the entity');
+
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([$object]);
+            ->willReturn([$object])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with([$object]);
+            ->with([$object])
+        ;
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
             ->with('perm_create', $object)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\AccessDeniedException
-     * @expectedExceptionMessage Insufficient privilege to update the entity
-     */
-    public function testOnFLushWithInsufficientPrivilegeToUpdateEntity()
+    public function testOnFLushWithInsufficientPrivilegeToUpdateEntity(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        $this->expectException(\Fxp\Component\Security\Exception\AccessDeniedException::class);
+        $this->expectExceptionMessage('Insufficient privilege to update the entity');
+
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([$object]);
+            ->willReturn([$object])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with([$object]);
+            ->with([$object])
+        ;
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
             ->with('perm_update', $object)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\AccessDeniedException
-     * @expectedExceptionMessage Insufficient privilege to delete the entity
-     */
-    public function testOnFLushWithInsufficientPrivilegeToDeleteEntity()
+    public function testOnFLushWithInsufficientPrivilegeToDeleteEntity(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        $this->expectException(\Fxp\Component\Security\Exception\AccessDeniedException::class);
+        $this->expectExceptionMessage('Insufficient privilege to delete the entity');
+
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([$object]);
+            ->willReturn([$object])
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with([$object]);
+            ->with([$object])
+        ;
 
         $this->authChecker->expects($this->once())
             ->method('isGranted')
             ->with('perm_delete', $object)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFLush()
+    public function testOnFLush(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('preloadPermissions')
-            ->with([]);
+            ->with([])
+        ;
 
         $this->listener->onFlush($args);
     }

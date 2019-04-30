@@ -29,7 +29,7 @@ class PermissionExceptionListener
      *
      * @param GetResponseForExceptionEvent $event A event object
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
 

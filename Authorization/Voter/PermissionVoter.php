@@ -40,9 +40,10 @@ class PermissionVoter extends Voter
      * @param PermissionManagerInterface       $permissionManager The permission manager
      * @param SecurityIdentityManagerInterface $sim               The security identity manager
      */
-    public function __construct(PermissionManagerInterface $permissionManager,
-                                SecurityIdentityManagerInterface $sim)
-    {
+    public function __construct(
+        PermissionManagerInterface $permissionManager,
+        SecurityIdentityManagerInterface $sim
+    ) {
         $this->permissionManager = $permissionManager;
         $this->sim = $sim;
     }
@@ -70,7 +71,7 @@ class PermissionVoter extends Voter
     /**
      * Check if the subject is supported.
      *
-     * @param FieldVote|mixed|null $subject The subject
+     * @param null|FieldVote|mixed $subject The subject
      *
      * @return bool
      */
@@ -81,8 +82,8 @@ class PermissionVoter extends Voter
         }
 
         return \is_array($subject)
-            && isset($subject[0])
-            && isset($subject[1])
+            && isset($subject[0], $subject[1])
+
             && (\is_string($subject[0]) || \is_object($subject[0]))
             && \is_string($subject[1]);
     }
@@ -95,7 +96,7 @@ class PermissionVoter extends Voter
         $sids = $this->sim->getSecurityIdentities($token);
         $attribute = substr($attribute, 5);
 
-        if (\is_array($subject) && isset($subject[0]) && isset($subject[1])) {
+        if (\is_array($subject) && isset($subject[0], $subject[1])) {
             $subject = new FieldVote($subject[0], $subject[1]);
         }
 

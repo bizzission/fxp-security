@@ -19,10 +19,13 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class IsOrganizationProviderTest extends TestCase
+final class IsOrganizationProviderTest extends TestCase
 {
-    public function testIsOrganization()
+    public function testIsOrganization(): void
     {
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $orgContext = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
@@ -30,7 +33,8 @@ class IsOrganizationProviderTest extends TestCase
         $orgContext->expects($this->once())
             ->method('isOrganization')
             ->with()
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $expressionLanguage = new ExpressionLanguage(null, [new IsOrganizationProvider()]);
         $variables = [

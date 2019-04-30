@@ -17,7 +17,7 @@ namespace Fxp\Component\Security\Tests\Fixtures\Model;
 class MockObject
 {
     /**
-     * @var int|string|null
+     * @var null|int|string
      */
     protected $id;
 
@@ -30,7 +30,7 @@ class MockObject
      * Constructor.
      *
      * @param string          $name The name
-     * @param int|string|null $id   The id
+     * @param null|int|string $id   The id
      */
     public function __construct($name, $id = 42)
     {
@@ -58,7 +58,7 @@ class MockObject
      *
      * @param string $name The name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }

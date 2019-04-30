@@ -21,7 +21,7 @@ use Fxp\Component\Security\Model\UserInterface;
 trait OwnerableOptionalTrait
 {
     /**
-     * @var UserInterface|null
+     * @var null|UserInterface
      */
     protected $owner;
 

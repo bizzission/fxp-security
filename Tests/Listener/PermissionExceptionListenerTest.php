@@ -21,8 +21,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionExceptionListenerTest extends TestCase
+final class PermissionExceptionListenerTest extends TestCase
 {
     /**
      * @var HttpKernelInterface
@@ -31,13 +34,13 @@ class PermissionExceptionListenerTest extends TestCase
 
     protected $request;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->kernel = $this->getMockBuilder(HttpKernelInterface::class)->getMock();
         $this->request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
     }
 
-    public function testKernelException()
+    public function testKernelException(): void
     {
         $e = new \Exception('Test');
         $event = new GetResponseForExceptionEvent(
@@ -53,7 +56,7 @@ class PermissionExceptionListenerTest extends TestCase
         $this->assertSame($e, $event->getException());
     }
 
-    public function testKernelExceptionWithAccessDeniedException()
+    public function testKernelExceptionWithAccessDeniedException(): void
     {
         $e = new AccessDeniedException('Test');
         $event = new GetResponseForExceptionEvent(

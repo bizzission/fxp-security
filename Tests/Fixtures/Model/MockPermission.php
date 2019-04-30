@@ -22,7 +22,7 @@ class MockPermission implements PermissionInterface
     use PermissionTrait;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     protected $id;
 

@@ -19,15 +19,18 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class GroupSecurityIdentitySubscriberTest extends TestCase
+final class GroupSecurityIdentitySubscriberTest extends TestCase
 {
-    public function testAddGroupSecurityIdentitiesWithException()
+    public function testAddGroupSecurityIdentitiesWithException(): void
     {
         $listener = new GroupSecurityIdentitySubscriber();
         $this->assertCount(1, $listener->getSubscribedEvents());
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
 
@@ -36,12 +39,12 @@ class GroupSecurityIdentitySubscriberTest extends TestCase
         $listener->addGroupSecurityIdentities($event);
     }
 
-    public function testAddGroupSecurityIdentities()
+    public function testAddGroupSecurityIdentities(): void
     {
         $listener = new GroupSecurityIdentitySubscriber();
         $this->assertCount(1, $listener->getSubscribedEvents());
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
 
@@ -49,7 +52,8 @@ class GroupSecurityIdentitySubscriberTest extends TestCase
 
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $event = new AddSecurityIdentityEvent($token, $sids);
 

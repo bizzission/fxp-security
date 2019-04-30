@@ -32,7 +32,7 @@ use Fxp\Component\Security\Permission\PermissionUtils;
 class PermissionProvider implements PermissionProviderInterface
 {
     /**
-     * @var EntityRepository|null
+     * @var null|EntityRepository
      */
     protected $permissionRepo;
 
@@ -66,7 +66,8 @@ class PermissionProvider implements PermissionProviderInterface
             ->setParameter('roles', $roles)
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
-            ->addOrderBy('p.operation', 'asc');
+            ->addOrderBy('p.operation', 'asc')
+        ;
 
         return $qb->getQuery()->getResult();
     }
@@ -76,13 +77,14 @@ class PermissionProvider implements PermissionProviderInterface
      */
     public function getPermissionsBySubject($subject = null, $contexts = null)
     {
-        /* @var SubjectIdentityInterface|null $subject */
+        /** @var null|SubjectIdentityInterface $subject */
         list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
 
         $qb = $this->getPermissionRepository()->createQueryBuilder('p')
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
-            ->addOrderBy('p.operation', 'asc');
+            ->addOrderBy('p.operation', 'asc')
+        ;
 
         $this->addWhereContexts($qb, $contexts);
         $this->addWhereOptionalField($qb, 'class', null !== $subject ? $subject->getType() : null);
@@ -99,7 +101,8 @@ class PermissionProvider implements PermissionProviderInterface
         $qb = $this->getPermissionRepository()->createQueryBuilder('p')
             ->orderBy('p.class', 'asc')
             ->addOrderBy('p.field', 'asc')
-            ->addOrderBy('p.operation', 'asc');
+            ->addOrderBy('p.operation', 'asc')
+        ;
 
         $this->addWhereContexts($qb, $contexts);
         $this->addWhereOptionalField($qb, 'class', PermissionProviderInterface::CONFIG_CLASS);
@@ -131,9 +134,9 @@ class PermissionProvider implements PermissionProviderInterface
      * Validate the master config.
      *
      * @param PermissionConfigInterface $config The permission config
-     * @param ObjectManager|null        $om     The doctrine object manager
+     * @param null|ObjectManager        $om     The doctrine object manager
      */
-    private function validateMaster(PermissionConfigInterface $config, $om)
+    private function validateMaster(PermissionConfigInterface $config, $om): void
     {
         if (null === $om) {
             $msg = 'The doctrine object manager is not found for the class "%s"';
@@ -153,9 +156,9 @@ class PermissionProvider implements PermissionProviderInterface
      *
      * @param QueryBuilder $qb    The query builder
      * @param string       $field The field name
-     * @param mixed|null   $value The value
+     * @param null|mixed   $value The value
      */
-    private function addWhereOptionalField(QueryBuilder $qb, $field, $value)
+    private function addWhereOptionalField(QueryBuilder $qb, $field, $value): void
     {
         if (null === $value) {
             $qb->andWhere('p.'.$field.' IS NULL');
@@ -168,9 +171,9 @@ class PermissionProvider implements PermissionProviderInterface
      * Add the permission contexts condition.
      *
      * @param QueryBuilder         $qb       The query builder
-     * @param string[]|string|null $contexts The contexts
+     * @param null|string|string[] $contexts The contexts
      */
-    private function addWhereContexts(QueryBuilder $qb, $contexts = null)
+    private function addWhereContexts(QueryBuilder $qb, $contexts = null): void
     {
         if (null !== $contexts) {
             $contexts = (array) $contexts;
@@ -194,7 +197,7 @@ class PermissionProvider implements PermissionProviderInterface
     private function getPermissionRepository()
     {
         if (null === $this->permissionRepo) {
-            /* @var EntityRepository $repo */
+            /** @var EntityRepository $repo */
             $repo = RepositoryUtils::getRepository($this->doctrine, PermissionInterface::class);
             $this->permissionRepo = $repo;
         }

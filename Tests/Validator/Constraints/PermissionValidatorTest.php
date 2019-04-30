@@ -22,8 +22,11 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionValidatorTest extends TestCase
+final class PermissionValidatorTest extends TestCase
 {
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -40,26 +43,27 @@ class PermissionValidatorTest extends TestCase
      */
     protected $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->permissionManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
         $this->context = $this->getMockBuilder(ExecutionContextInterface::class)->getMock();
         $this->validator = new PermissionValidator($this->permissionManager);
     }
 
-    public function testValidateWithEmptyClassAndField()
+    public function testValidateWithEmptyClassAndField(): void
     {
         $constraint = new Permission();
         $perm = new MockPermission();
 
         $this->context->expects($this->never())
-            ->method('buildViolation');
+            ->method('buildViolation')
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($perm, $constraint);
     }
 
-    public function testValidateWithEmptyField()
+    public function testValidateWithEmptyField(): void
     {
         $constraint = new Permission();
         $perm = new MockPermission();
@@ -68,54 +72,62 @@ class PermissionValidatorTest extends TestCase
         $this->permissionManager->expects($this->once())
             ->method('hasConfig')
             ->with(MockObject::class)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->context->expects($this->never())
-            ->method('buildViolation');
+            ->method('buildViolation')
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($perm, $constraint);
     }
 
-    public function testValidateWithInvalidClassName()
+    public function testValidateWithInvalidClassName(): void
     {
         $constraint = new Permission();
         $perm = new MockPermission();
         $perm->setClass('FooBar');
 
         $this->permissionManager->expects($this->never())
-            ->method('hasConfig');
+            ->method('hasConfig')
+        ;
 
         $vb = $this->getMockBuilder(ConstraintViolationBuilderInterface::class)->getMock();
 
         $this->context->expects($this->once())
             ->method('buildViolation')
             ->with('permission.class.invalid')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->once())
             ->method('atPath')
             ->with('class')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(1))
             ->method('setParameter')
             ->with('%class_property%', 'class')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(2))
             ->method('setParameter')
             ->with('%class%', 'FooBar')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->once())
-            ->method('addViolation');
+            ->method('addViolation')
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($perm, $constraint);
     }
 
-    public function testValidateWithNonManagedClass()
+    public function testValidateWithNonManagedClass(): void
     {
         $constraint = new Permission();
         $perm = new MockPermission();
@@ -124,76 +136,88 @@ class PermissionValidatorTest extends TestCase
         $this->permissionManager->expects($this->once())
             ->method('hasConfig')
             ->with(MockObject::class)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $vb = $this->getMockBuilder(ConstraintViolationBuilderInterface::class)->getMock();
 
         $this->context->expects($this->once())
             ->method('buildViolation')
             ->with('permission.class.not_managed')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->once())
             ->method('atPath')
             ->with('class')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(1))
             ->method('setParameter')
             ->with('%class_property%', 'class')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(2))
             ->method('setParameter')
             ->with('%class%', MockObject::class)
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->once())
-            ->method('addViolation');
+            ->method('addViolation')
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($perm, $constraint);
     }
 
-    public function testValidateFieldWithEmptyClass()
+    public function testValidateFieldWithEmptyClass(): void
     {
         $constraint = new Permission();
         $perm = new MockPermission();
         $perm->setField('name');
 
         $this->permissionManager->expects($this->never())
-            ->method('hasConfig');
+            ->method('hasConfig')
+        ;
 
         $vb = $this->getMockBuilder(ConstraintViolationBuilderInterface::class)->getMock();
 
         $this->context->expects($this->once())
             ->method('buildViolation')
             ->with('permission.class.required')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(0))
             ->method('atPath')
             ->with('class')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(1))
             ->method('setParameter')
             ->with('%field_property%', 'field')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(2))
             ->method('setParameter')
             ->with('%field%', 'name')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->once())
-            ->method('addViolation');
+            ->method('addViolation')
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($perm, $constraint);
     }
 
-    public function testValidateFieldWithInvalidField()
+    public function testValidateFieldWithInvalidField(): void
     {
         $constraint = new Permission();
         $perm = new MockPermission();
@@ -203,48 +227,56 @@ class PermissionValidatorTest extends TestCase
         $this->permissionManager->expects($this->once())
             ->method('hasConfig')
             ->with(MockObject::class)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $vb = $this->getMockBuilder(ConstraintViolationBuilderInterface::class)->getMock();
 
         $this->context->expects($this->once())
             ->method('buildViolation')
             ->with('permission.field.invalid')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(0))
             ->method('atPath')
             ->with('field')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(1))
             ->method('setParameter')
             ->with('%class_property%', 'class')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(2))
             ->method('setParameter')
             ->with('%field_property%', 'field')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(3))
             ->method('setParameter')
             ->with('%class%', MockObject::class)
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->at(4))
             ->method('setParameter')
             ->with('%field%', 'name2')
-            ->willReturn($vb);
+            ->willReturn($vb)
+        ;
 
         $vb->expects($this->once())
-            ->method('addViolation');
+            ->method('addViolation')
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($perm, $constraint);
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $constraint = new Permission();
         $perm = new MockPermission();
@@ -254,10 +286,12 @@ class PermissionValidatorTest extends TestCase
         $this->permissionManager->expects($this->once())
             ->method('hasConfig')
             ->with(MockObject::class)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->context->expects($this->never())
-            ->method('buildViolation');
+            ->method('buildViolation')
+        ;
 
         $this->validator->initialize($this->context);
         $this->validator->validate($perm, $constraint);

@@ -19,9 +19,14 @@ namespace Fxp\Component\Security\Model;
 interface OrganizationUserInterface
 {
     /**
+     * @return string
+     */
+    public function __toString();
+
+    /**
      * Get id.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getId();
 
@@ -56,9 +61,4 @@ interface OrganizationUserInterface
      * @return UserInterface
      */
     public function getUser();
-
-    /**
-     * @return string
-     */
-    public function __toString();
 }

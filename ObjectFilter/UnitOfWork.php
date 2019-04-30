@@ -37,7 +37,7 @@ class UnitOfWork implements UnitOfWorkInterface
     /**
      * {@inheritdoc}
      */
-    public function attach($object)
+    public function attach($object): void
     {
         $oid = spl_object_hash($object);
 
@@ -59,7 +59,7 @@ class UnitOfWork implements UnitOfWorkInterface
     /**
      * {@inheritdoc}
      */
-    public function detach($object)
+    public function detach($object): void
     {
         $oid = spl_object_hash($object);
 
@@ -91,8 +91,8 @@ class UnitOfWork implements UnitOfWorkInterface
 
             if ($newValue !== $oldValue) {
                 $changeSet[$property->getName()] = [
-                        'old' => $oldValue,
-                        'new' => $newValue,
+                    'old' => $oldValue,
+                    'new' => $newValue,
                 ];
             }
         }
@@ -103,7 +103,7 @@ class UnitOfWork implements UnitOfWorkInterface
     /**
      * {@inheritdoc}
      */
-    public function flush()
+    public function flush(): void
     {
         $this->originalObjectData = [];
     }

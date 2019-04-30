@@ -26,28 +26,28 @@ trait SharingTrait
     use RoleableTrait;
 
     /**
-     * @var string|null
+     * @var null|string
      *
      * @ORM\Column(type="string", length=244)
      */
     protected $subjectClass;
 
     /**
-     * @var int|string|null
+     * @var null|int|string
      *
      * @ORM\Column(type="string", length=36)
      */
     protected $subjectId;
 
     /**
-     * @var string|null
+     * @var null|string
      *
      * @ORM\Column(type="string", length=244)
      */
     protected $identityClass;
 
     /**
-     * @var int|string|null
+     * @var null|int|string
      *
      * @ORM\Column(type="string", length=244)
      */
@@ -61,21 +61,21 @@ trait SharingTrait
     protected $enabled = true;
 
     /**
-     * @var \DateTime|null
+     * @var null|\DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $startedAt;
 
     /**
-     * @var \DateTime|null
+     * @var null|\DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $endedAt;
 
     /**
-     * @var Collection|PermissionInterface[]|null
+     * @var null|Collection|PermissionInterface[]
      *
      * @ORM\ManyToMany(
      *     targetEntity="Fxp\Component\Security\Model\PermissionInterface",

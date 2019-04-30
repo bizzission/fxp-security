@@ -18,10 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class RestoreViewGrantedEventTest extends TestCase
+final class RestoreViewGrantedEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
         $object = new MockObject('foo');
         $fieldVote = new FieldVote($object, 'name');
@@ -42,12 +45,11 @@ class RestoreViewGrantedEventTest extends TestCase
         $this->assertFalse($event->isGranted());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "object", "NULL" given
-     */
-    public function testEventWithInvalidFieldVote()
+    public function testEventWithInvalidFieldVote(): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type "object", "NULL" given');
+
         $object = \stdClass::class;
         $fieldVote = new FieldVote($object, 'foo');
         $oldValue = 23;

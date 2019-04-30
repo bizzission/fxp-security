@@ -24,7 +24,7 @@ final class SecurityIdentityEvents
      *
      * @var string
      */
-    const RETRIEVAL_PRE = 'fxp_security.security_identity_retrieval.pre';
+    public const RETRIEVAL_PRE = 'fxp_security.security_identity_retrieval.pre';
 
     /**
      * The SecurityIdentityEvents::RETRIEVAL_ADD event occurs when the security
@@ -34,7 +34,7 @@ final class SecurityIdentityEvents
      *
      * @var string
      */
-    const RETRIEVAL_ADD = 'fxp_security.security_identity_retrieval.add';
+    public const RETRIEVAL_ADD = 'fxp_security.security_identity_retrieval.add';
 
     /**
      * The SecurityIdentityEvents::RETRIEVAL_POST event occurs after the retrieval of
@@ -44,5 +44,5 @@ final class SecurityIdentityEvents
      *
      * @var string
      */
-    const RETRIEVAL_POST = 'fxp_security.security_identity_retrieval.post';
+    public const RETRIEVAL_POST = 'fxp_security.security_identity_retrieval.post';
 }

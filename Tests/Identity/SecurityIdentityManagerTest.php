@@ -27,8 +27,11 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SecurityIdentityManagerTest extends TestCase
+final class SecurityIdentityManagerTest extends TestCase
 {
     /**
      * @var EventDispatcher
@@ -36,7 +39,7 @@ class SecurityIdentityManagerTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var RoleHierarchyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface
      */
     protected $roleHierarchy;
 
@@ -50,7 +53,7 @@ class SecurityIdentityManagerTest extends TestCase
      */
     protected $sidManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dispatcher = new EventDispatcher();
         $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
@@ -78,7 +81,7 @@ class SecurityIdentityManagerTest extends TestCase
      * @param string $trustMethod  The method for the authentication trust resolver
      * @param int    $sidFinalSize The final size of security identities list
      */
-    public function testGetSecurityIdentities($trustMethod, $sidFinalSize)
+    public function testGetSecurityIdentities($trustMethod, $sidFinalSize): void
     {
         $preEventAction = false;
         $addEventAction = false;
@@ -86,12 +89,12 @@ class SecurityIdentityManagerTest extends TestCase
 
         $customSid = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
 
-        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_PRE, function (PreSecurityIdentityEvent $event) use (&$objects, &$preEventAction) {
+        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_PRE, function (PreSecurityIdentityEvent $event) use (&$objects, &$preEventAction): void {
             $preEventAction = true;
             $this->assertCount(0, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_ADD, function (AddSecurityIdentityEvent $event) use (&$objects, &$addEventAction, $customSid) {
+        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_ADD, function (AddSecurityIdentityEvent $event) use (&$objects, &$addEventAction, $customSid): void {
             $addEventAction = true;
             $this->assertCount(2, $event->getSecurityIdentities());
 
@@ -102,7 +105,7 @@ class SecurityIdentityManagerTest extends TestCase
             $this->assertCount(3, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_POST, function (PostSecurityIdentityEvent $event) use (&$objects, &$postEventAction, $sidFinalSize) {
+        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_POST, function (PostSecurityIdentityEvent $event) use (&$objects, &$postEventAction, $sidFinalSize): void {
             $postEventAction = true;
             $this->assertCount($sidFinalSize, $event->getSecurityIdentities());
         });
@@ -110,45 +113,52 @@ class SecurityIdentityManagerTest extends TestCase
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getUsername')
-            ->willReturn('user.test');
+            ->willReturn('user.test')
+        ;
 
         $tokenRoles = [
             RoleUtil::formatRole('ROLE_TOKEN'),
         ];
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $token->expects($this->once())
             ->method('getRoles')
-            ->willReturn($tokenRoles);
+            ->willReturn($tokenRoles)
+        ;
 
         $this->roleHierarchy->expects($this->once())
             ->method('getReachableRoles')
             ->with($tokenRoles)
-            ->willReturn($tokenRoles);
+            ->willReturn($tokenRoles)
+        ;
 
         if (\in_array($trustMethod, ['isRememberMe', 'isAnonymous'], true)) {
             $this->authenticationTrustResolver->expects($this->once())
                 ->method('isFullFledged')
                 ->with($token)
-                ->willReturn(false);
+                ->willReturn(false)
+            ;
         }
 
         if (\in_array($trustMethod, ['isAnonymous'], true)) {
             $this->authenticationTrustResolver->expects($this->once())
                 ->method('isRememberMe')
                 ->with($token)
-                ->willReturn(false);
+                ->willReturn(false)
+            ;
         }
 
         $this->authenticationTrustResolver->expects($this->once())
             ->method($trustMethod)
             ->with($token)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->sidManager->addSpecialRole('ROLE_BAZ');
 
@@ -159,10 +169,11 @@ class SecurityIdentityManagerTest extends TestCase
         $this->assertTrue($postEventAction);
     }
 
-    public function testGetSecurityIdentitiesWithoutToken()
+    public function testGetSecurityIdentitiesWithoutToken(): void
     {
         $this->roleHierarchy->expects($this->never())
-            ->method('getReachableRoles');
+            ->method('getReachableRoles')
+        ;
 
         $sids = $this->sidManager->getSecurityIdentities();
 

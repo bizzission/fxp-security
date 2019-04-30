@@ -25,7 +25,7 @@ use Fxp\Component\Security\Model\RoleInterface;
 trait RoleHierarchicalTrait
 {
     /**
-     * @var Collection|null
+     * @var null|Collection
      *
      * @ORM\ManyToMany(
      *     targetEntity="Fxp\Component\Security\Model\RoleInterface",
@@ -35,7 +35,7 @@ trait RoleHierarchicalTrait
     protected $parents;
 
     /**
-     * @var Collection|null
+     * @var null|Collection
      *
      * @ORM\ManyToMany(
      *     targetEntity="Fxp\Component\Security\Model\RoleInterface",
@@ -58,7 +58,7 @@ trait RoleHierarchicalTrait
      */
     public function addParent(RoleHierarchicalInterface $role)
     {
-        /* @var RoleHierarchicalInterface $self */
+        /** @var RoleHierarchicalInterface $self */
         $self = $this;
         $role->addChild($self);
         $this->getParents()->add($role);
@@ -94,7 +94,7 @@ trait RoleHierarchicalTrait
     {
         $names = [];
 
-        /* @var RoleInterface $parent */
+        /** @var RoleInterface $parent */
         foreach ($this->getParents() as $parent) {
             $names[] = $parent->getName();
         }
@@ -147,7 +147,7 @@ trait RoleHierarchicalTrait
     {
         $names = [];
 
-        /* @var RoleInterface $child */
+        /** @var RoleInterface $child */
         foreach ($this->getChildren() as $child) {
             $names[] = $child->getName();
         }

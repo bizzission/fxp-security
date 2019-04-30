@@ -53,7 +53,7 @@ abstract class AbstractRoleListener implements ListenerInterface
      *
      * @param bool $enabled The value
      */
-    public function setEnabled($enabled)
+    public function setEnabled($enabled): void
     {
         $this->enabled = (bool) $enabled;
     }

@@ -32,7 +32,7 @@ trait OrganizationTrait
     protected $name;
 
     /**
-     * @var UserInterface|null
+     * @var null|UserInterface
      *
      * @ORM\OneToOne(
      *     targetEntity="Fxp\Component\Security\Model\UserInterface",
@@ -44,7 +44,7 @@ trait OrganizationTrait
     protected $user;
 
     /**
-     * @var Collection|OrganizationUserInterface[]|null
+     * @var null|Collection|OrganizationUserInterface[]
      *
      * @ORM\OneToMany(
      *     targetEntity="Fxp\Component\Security\Model\OrganizationUserInterface",
@@ -54,6 +54,14 @@ trait OrganizationTrait
      * )
      */
     protected $organizationUsers;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     /**
      * {@inheritdoc}
@@ -151,13 +159,5 @@ trait OrganizationTrait
         }
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return $this->getName();
     }
 }

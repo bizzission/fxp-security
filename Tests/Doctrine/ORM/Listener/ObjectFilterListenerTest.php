@@ -25,11 +25,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class ObjectFilterListenerTest extends TestCase
+final class ObjectFilterListenerTest extends TestCase
 {
     /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
@@ -49,7 +52,7 @@ class ObjectFilterListenerTest extends TestCase
     protected $em;
 
     /**
-     * @var UnitOfWork|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWork
      */
     protected $uow;
 
@@ -58,7 +61,7 @@ class ObjectFilterListenerTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->permissionManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
@@ -69,7 +72,8 @@ class ObjectFilterListenerTest extends TestCase
 
         $this->em->expects($this->any())
             ->method('getUnitOfWork')
-            ->willReturn($this->uow);
+            ->willReturn($this->uow)
+        ;
 
         $this->listener->setTokenStorage($this->tokenStorage);
         $this->listener->setPermissionManager($this->permissionManager);
@@ -90,13 +94,13 @@ class ObjectFilterListenerTest extends TestCase
     /**
      * @dataProvider getInvalidInitMethods
      *
-     * @expectedException \Fxp\Component\Security\Exception\SecurityException
-     *
      * @param string   $method  The method
      * @param string[] $setters The setters
      */
-    public function testInvalidInit($method, array $setters)
+    public function testInvalidInit($method, array $setters): void
     {
+        $this->expectException(\Fxp\Component\Security\Exception\SecurityException::class);
+
         $msg = sprintf('The "%s()" method must be called before the init of the "Fxp\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener" class', $method);
         $this->expectExceptionMessage($msg);
 
@@ -114,301 +118,351 @@ class ObjectFilterListenerTest extends TestCase
             $listener->setObjectFilter($this->objectFilter);
         }
 
-        /* @var LifecycleEventArgs $args */
+        /** @var LifecycleEventArgs $args */
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
 
         $listener->postLoad($args);
     }
 
-    public function testPostFlush()
+    public function testPostFlush(): void
     {
         $this->permissionManager->expects($this->once())
             ->method('resetPreloadPermissions')
-            ->with([]);
+            ->with([])
+        ;
 
         $this->listener->postFlush();
     }
 
-    public function testPostLoadWithDisabledPermissionManager()
+    public function testPostLoadWithDisabledPermissionManager(): void
     {
-        /* @var LifecycleEventArgs $args */
+        /** @var LifecycleEventArgs $args */
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->objectFilter->expects($this->never())
-            ->method('filter');
+            ->method('filter')
+        ;
 
         $this->listener->postLoad($args);
     }
 
-    public function testPostLoadWithEmptyToken()
+    public function testPostLoadWithEmptyToken(): void
     {
-        /* @var LifecycleEventArgs $args */
+        /** @var LifecycleEventArgs $args */
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->objectFilter->expects($this->never())
-            ->method('filter');
+            ->method('filter')
+        ;
 
         $this->listener->postLoad($args);
     }
 
-    public function testPostLoadWithConsoleToken()
+    public function testPostLoadWithConsoleToken(): void
     {
-        /* @var LifecycleEventArgs $args */
+        /** @var LifecycleEventArgs $args */
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(ConsoleToken::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->objectFilter->expects($this->never())
-            ->method('filter');
+            ->method('filter')
+        ;
 
         $this->listener->postLoad($args);
     }
 
-    public function testPostLoad()
+    public function testPostLoad(): void
     {
-        /* @var LifecycleEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var LifecycleEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $entity = new \stdClass();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntity')
-            ->willReturn($entity);
+            ->willReturn($entity)
+        ;
 
         $this->objectFilter->expects($this->once())
             ->method('filter')
-            ->with($entity);
+            ->with($entity)
+        ;
 
         $this->listener->postLoad($args);
     }
 
-    public function testOnFlushWithDisabledPermissionManager()
+    public function testOnFlushWithDisabledPermissionManager(): void
     {
-        /* @var OnFlushEventArgs $args */
+        /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->objectFilter->expects($this->never())
-            ->method('filter');
+            ->method('filter')
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithEmptyToken()
+    public function testOnFlushWithEmptyToken(): void
     {
-        /* @var OnFlushEventArgs $args */
+        /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->objectFilter->expects($this->never())
-            ->method('filter');
+            ->method('filter')
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithConsoleToken()
+    public function testOnFlushWithConsoleToken(): void
     {
-        /* @var OnFlushEventArgs $args */
+        /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(ConsoleToken::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->objectFilter->expects($this->never())
-            ->method('filter');
+            ->method('filter')
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithCreateEntity()
+    public function testOnFlushWithCreateEntity(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
+            ->method('beginTransaction')
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([$object]);
+            ->willReturn([$object])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->objectFilter->expects($this->once())
-            ->method('restore');
+            ->method('restore')
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithUpdateEntity()
+    public function testOnFlushWithUpdateEntity(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
+            ->method('beginTransaction')
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([$object]);
+            ->willReturn([$object])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->objectFilter->expects($this->once())
-            ->method('restore');
+            ->method('restore')
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFlushWithDeleteEntity()
+    public function testOnFlushWithDeleteEntity(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
+            ->method('beginTransaction')
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([$object]);
+            ->willReturn([$object])
+        ;
 
         $this->listener->onFlush($args);
     }
 
-    public function testOnFLush()
+    public function testOnFLush(): void
     {
-        /* @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn($token);
+            ->willReturn($token)
+        ;
 
         $this->permissionManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $args->expects($this->once())
             ->method('getEntityManager')
-            ->willReturn($this->em);
+            ->willReturn($this->em)
+        ;
 
         $this->objectFilter->expects($this->once())
-            ->method('beginTransaction');
+            ->method('beginTransaction')
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityInsertions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityUpdates')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->uow->expects($this->once())
             ->method('getScheduledEntityDeletions')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->objectFilter->expects($this->once())
-            ->method('commit');
+            ->method('commit')
+        ;
 
         $this->listener->onFlush($args);
     }

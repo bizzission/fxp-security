@@ -38,7 +38,7 @@ abstract class AbstractIdentityVoter extends Voter
      * Constructor.
      *
      * @param SecurityIdentityManagerInterface $sim    The security identity manager
-     * @param string|null                      $prefix The attribute prefix
+     * @param null|string                      $prefix The attribute prefix
      */
     public function __construct(SecurityIdentityManagerInterface $sim, $prefix = null)
     {

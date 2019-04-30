@@ -52,7 +52,7 @@ class PermissionManager extends AbstractPermissionManager
     protected $propertyAccessor;
 
     /**
-     * @var array|null
+     * @var null|array
      */
     protected $cacheConfigPermissions;
 
@@ -62,15 +62,16 @@ class PermissionManager extends AbstractPermissionManager
      * @param EventDispatcherInterface     $dispatcher       The event dispatcher
      * @param PermissionProviderInterface  $provider         The permission provider
      * @param PropertyAccessorInterface    $propertyAccessor The property accessor
-     * @param SharingManagerInterface|null $sharingManager   The sharing manager
+     * @param null|SharingManagerInterface $sharingManager   The sharing manager
      * @param PermissionConfigInterface[]  $configs          The permission configs
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                PermissionProviderInterface $provider,
-                                PropertyAccessorInterface $propertyAccessor,
-                                SharingManagerInterface $sharingManager = null,
-                                array $configs = [])
-    {
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        PermissionProviderInterface $provider,
+        PropertyAccessorInterface $propertyAccessor,
+        SharingManagerInterface $sharingManager = null,
+        array $configs = []
+    ) {
         parent::__construct($sharingManager, $configs);
 
         $this->dispatcher = $dispatcher;
@@ -168,9 +169,9 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @param RoleSecurityIdentity                                  $sid         The role security identity
      * @param PermissionChecking[]                                  $permissions The permission checking
-     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject     The object or class name or field vote
-     * @param string|null                                           $class       The class name
-     * @param string|null                                           $field       The field name
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject     The object or class name or field vote
+     * @param null|string                                           $class       The class name
+     * @param null|string                                           $field       The field name
      *
      * @return PermissionChecking[]
      */
@@ -182,6 +183,7 @@ class PermissionManager extends AbstractPermissionManager
             if (!isset($permissions[$configOperation])) {
                 if (null !== $sp = $this->getConfigPermission($sid, $configOperation, $subject, $class, $field)) {
                     $permissions[$sp->getPermission()->getOperation()] = $sp;
+
                     continue;
                 }
 
@@ -197,11 +199,11 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @param RoleSecurityIdentity                                  $sid       The role security identity
      * @param string                                                $operation The operation
-     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject   The object or class name or field vote
-     * @param string|null                                           $class     The class name
-     * @param string|null                                           $field     The field name
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject   The object or class name or field vote
+     * @param null|string                                           $class     The class name
+     * @param null|string                                           $field     The field name
      *
-     * @return PermissionChecking|null
+     * @return null|PermissionChecking
      */
     private function getConfigPermission(RoleSecurityIdentity $sid, $operation, $subject = null, $class = null, $field = null)
     {
@@ -223,8 +225,8 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @param RoleSecurityIdentity                                  $sid       The role security identity
      * @param string                                                $operation The operation
-     * @param SubjectIdentityInterface|FieldVote|object|string|null $subject   The object or class name or field vote
-     * @param string|null                                           $class     The class name
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject   The object or class name or field vote
+     * @param null|string                                           $class     The class name
      *
      * @return bool
      */
@@ -271,8 +273,8 @@ class PermissionManager extends AbstractPermissionManager
      * @param string                        $id        The cache id
      * @param SecurityIdentityInterface[]   $sids      The security identities
      * @param string                        $operation The operation
-     * @param SubjectIdentityInterface|null $subject   The subject
-     * @param string|null                   $field     The field of subject
+     * @param null|SubjectIdentityInterface $subject   The subject
+     * @param null|string                   $field     The field of subject
      *
      * @return bool
      */
@@ -297,7 +299,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @param SubjectIdentityInterface[] $subjects The subjects
      */
-    private function preloadSharingRolePermissions(array $subjects)
+    private function preloadSharingRolePermissions(array $subjects): void
     {
         if (null !== $this->sharingManager) {
             $this->sharingManager->preloadRolePermissions($subjects);
@@ -342,8 +344,8 @@ class PermissionManager extends AbstractPermissionManager
      * Check if the permission operation is defined by the config.
      *
      * @param string      $operation The permission operation
-     * @param string|null $class     The class name
-     * @param string|null $field     The field
+     * @param null|string $class     The class name
+     * @param null|string $field     The field
      *
      * @return bool
      */
@@ -359,8 +361,8 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * Get the config operations of the subject.
      *
-     * @param string|null $class The class name
-     * @param string|null $field The field
+     * @param null|string $class The class name
+     * @param null|string $field The field
      *
      * @return string[]
      */
@@ -400,7 +402,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @param string $id The cache id
      */
-    private function buildSystemPermissions($id)
+    private function buildSystemPermissions($id): void
     {
         foreach ($this->configs as $config) {
             foreach ($config->getOperations() as $operation) {
@@ -420,8 +422,8 @@ class PermissionManager extends AbstractPermissionManager
      * Check if the access is granted by a sharing entry.
      *
      * @param string                        $operation The operation
-     * @param SubjectIdentityInterface|null $subject   The subject
-     * @param string|null                   $field     The field of subject
+     * @param null|SubjectIdentityInterface $subject   The subject
+     * @param null|string                   $field     The field of subject
      *
      * @return bool
      */

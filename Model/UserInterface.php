@@ -24,7 +24,7 @@ interface UserInterface extends BaseUserInterface, RoleableInterface
     /**
      * Get id.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getId();
 }

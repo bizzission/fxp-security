@@ -28,16 +28,19 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OrganizationalContextTest extends TestCase
+final class OrganizationalContextTest extends TestCase
 {
     /**
-     * @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface
      */
     protected $token;
 
@@ -51,7 +54,7 @@ class OrganizationalContextTest extends TestCase
      */
     protected $context;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
@@ -60,129 +63,148 @@ class OrganizationalContextTest extends TestCase
 
         $this->tokenStorage->expects($this->any())
             ->method('getToken')
-            ->willReturn($this->token);
+            ->willReturn($this->token)
+        ;
     }
 
-    public function testSetDisabledCurrentOrganization()
+    public function testSetDisabledCurrentOrganization(): void
     {
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
-            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent(false));
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent(false))
+        ;
 
         $this->context->setCurrentOrganization(false);
 
         $this->assertNull($this->context->getCurrentOrganization());
     }
 
-    public function testSetCurrentOrganization()
+    public function testSetCurrentOrganization(): void
     {
-        /* @var OrganizationInterface $org */
+        /** @var OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
-            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org));
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org))
+        ;
 
         $this->context->setCurrentOrganization($org);
         $this->assertSame($org, $this->context->getCurrentOrganization());
     }
 
-    public function testGetCurrentOrganizationWithoutSetterAndWithTokenUser()
+    public function testGetCurrentOrganizationWithoutSetterAndWithTokenUser(): void
     {
-        /* @var OrganizationInterface $org */
+        /** @var OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $user = $this->getMockBuilder(MockUserOrganizationUsers::class)->getMock();
 
         $this->dispatcher->expects($this->never())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $this->token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $user->expects($this->once())
             ->method('getOrganization')
-            ->willReturn($org);
+            ->willReturn($org)
+        ;
 
         $this->assertSame($org, $this->context->getCurrentOrganization());
     }
 
-    public function testGetCurrentOrganizationWithoutSetterAndWithTokenUserAndEmptyOrganization()
+    public function testGetCurrentOrganizationWithoutSetterAndWithTokenUserAndEmptyOrganization(): void
     {
         $user = $this->getMockBuilder(MockUserOrganizationUsers::class)->getMock();
 
         $this->dispatcher->expects($this->never())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $this->token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $user->expects($this->once())
             ->method('getOrganization')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->assertNull($this->context->getCurrentOrganization());
     }
 
-    public function testGetCurrentOrganizationWithoutSetterAndWithTokenUserWithoutOrganizationField()
+    public function testGetCurrentOrganizationWithoutSetterAndWithTokenUserWithoutOrganizationField(): void
     {
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
         $this->dispatcher->expects($this->never())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $this->token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $this->assertNull($this->context->getCurrentOrganization());
     }
 
-    public function testGetCurrentOrganizationWithoutSetterAndWithoutTokenUser()
+    public function testGetCurrentOrganizationWithoutSetterAndWithoutTokenUser(): void
     {
         $this->dispatcher->expects($this->never())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $this->token->expects($this->once())
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->assertNull($this->context->getCurrentOrganization());
     }
 
-    public function testSetCurrentOrganizationUser()
+    public function testSetCurrentOrganizationUser(): void
     {
-        /* @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        /* @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
+        /** @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
         $this->dispatcher->expects($this->at(0))
             ->method('dispatch')
-            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org));
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org))
+        ;
 
         $this->dispatcher->expects($this->at(1))
             ->method('dispatch')
-            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER, new SetCurrentOrganizationUserEvent($orgUser));
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER, new SetCurrentOrganizationUserEvent($orgUser))
+        ;
 
         $this->token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $orgUser->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $orgUser->expects($this->once())
             ->method('getOrganization')
-            ->willReturn($org);
+            ->willReturn($org)
+        ;
 
         $user->expects($this->atLeast(2))
             ->method('getUsername')
-            ->willReturn('user.test');
+            ->willReturn('user.test')
+        ;
 
         $this->context->setCurrentOrganization($org);
         $this->context->setCurrentOrganizationUser($orgUser);
@@ -191,42 +213,49 @@ class OrganizationalContextTest extends TestCase
         $this->assertSame($org, $this->context->getCurrentOrganization());
     }
 
-    public function testIsOrganization()
+    public function testIsOrganization(): void
     {
-        /* @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        /* @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
+        /** @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
         $this->dispatcher->expects($this->at(0))
             ->method('dispatch')
-            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org));
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION, new SetCurrentOrganizationEvent($org))
+        ;
 
         $this->dispatcher->expects($this->at(1))
             ->method('dispatch')
-            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER, new SetCurrentOrganizationUserEvent($orgUser));
+            ->with(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER, new SetCurrentOrganizationUserEvent($orgUser))
+        ;
 
         $this->token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $orgUser->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $orgUser->expects($this->once())
             ->method('getOrganization')
-            ->willReturn($org);
+            ->willReturn($org)
+        ;
 
         $user->expects($this->atLeast(2))
             ->method('getUsername')
-            ->willReturn('user.test');
+            ->willReturn('user.test')
+        ;
 
         $org->expects($this->once())
             ->method('isUserOrganization')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->context->setCurrentOrganization($org);
         $this->context->setCurrentOrganizationUser($orgUser);
@@ -234,16 +263,18 @@ class OrganizationalContextTest extends TestCase
         $this->assertTrue($this->context->isOrganization());
     }
 
-    public function testSetOptionalFilterType()
+    public function testSetOptionalFilterType(): void
     {
         $this->assertSame(OrganizationalTypes::OPTIONAL_FILTER_WITH_ORG, $this->context->getOptionalFilterType());
         $this->assertFalse($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
 
         $this->dispatcher->expects($this->at(0))
             ->method('dispatch')
-            ->with(OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
+            ->with(
+                OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
                 new SetOrganizationalOptionalFilterTypeEvent(OrganizationalTypes::OPTIONAL_FILTER_ALL)
-            );
+            )
+        ;
 
         $this->context->setOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL);
 
@@ -251,71 +282,75 @@ class OrganizationalContextTest extends TestCase
         $this->assertTrue($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
     }
 
-    public function testValidEmptyTokenForUser()
+    public function testValidEmptyTokenForUser(): void
     {
-        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $tokenStorage->expects($this->atLeastOnce())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $context = new OrganizationalContext($tokenStorage);
         $context->setCurrentOrganization(null);
         $this->assertNull($context->getCurrentOrganization());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\RuntimeException
-     * @expectedExceptionMessage The current organization cannot be added in security token because the security token is empty
-     */
-    public function testInvalidTokenForUser()
+    public function testInvalidTokenForUser(): void
     {
-        /* @var OrganizationInterface $org */
+        $this->expectException(\Fxp\Component\Security\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('The current organization cannot be added in security token because the security token is empty');
+
+        /** @var OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
-        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $context = new OrganizationalContext($tokenStorage);
         $context->setCurrentOrganization($org);
     }
 
-    public function testValidEmptyTokenForOrganizationUser()
+    public function testValidEmptyTokenForOrganizationUser(): void
     {
-        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $tokenStorage->expects($this->atLeastOnce())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->dispatcher->expects($this->never())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $context = new OrganizationalContext($tokenStorage);
         $context->setCurrentOrganizationUser(null);
         $this->assertNull($context->getCurrentOrganizationUser());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\RuntimeException
-     * @expectedExceptionMessage The current organization user cannot be added in security token because the security token is empty
-     */
-    public function testInvalidTokenForOrganizationUser()
+    public function testInvalidTokenForOrganizationUser(): void
     {
-        /* @var OrganizationUserInterface $orgUser */
+        $this->expectException(\Fxp\Component\Security\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('The current organization user cannot be added in security token because the security token is empty');
+
+        /** @var OrganizationUserInterface $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
 
-        /* @var TokenStorageInterface|\PHPUnit_Framework_MockObject_MockObject $tokenStorage */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $tokenStorage->expects($this->once())
             ->method('getToken')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->dispatcher->expects($this->never())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $context = new OrganizationalContext($tokenStorage);
         $context->setCurrentOrganizationUser($orgUser);

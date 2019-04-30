@@ -21,7 +21,7 @@ final class SharingVisibilities
      *
      * @var string
      */
-    const TYPE_NONE = 'none';
+    public const TYPE_NONE = 'none';
 
     /**
      * The SharingVisibilities::TYPE_PUBLIC type defines that no record is filtered, but records
@@ -29,7 +29,7 @@ final class SharingVisibilities
      *
      * @var string
      */
-    const TYPE_PUBLIC = 'public';
+    public const TYPE_PUBLIC = 'public';
 
     /**
      * The SharingVisibilities::TYPE_PRIVATE type defines that records are filtered,
@@ -37,5 +37,5 @@ final class SharingVisibilities
      *
      * @var string
      */
-    const TYPE_PRIVATE = 'private';
+    public const TYPE_PRIVATE = 'private';
 }

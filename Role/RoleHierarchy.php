@@ -47,7 +47,7 @@ class RoleHierarchy extends BaseRoleHierarchy
     private $cacheExec;
 
     /**
-     * @var CacheItemPoolInterface|null
+     * @var null|CacheItemPoolInterface
      */
     private $cache;
 
@@ -61,14 +61,15 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @param array                       $hierarchy     An array defining the hierarchy
      * @param ManagerRegistryInterface    $registry      The doctrine registry
-     * @param CacheItemPoolInterface|null $cache         The cache
+     * @param null|CacheItemPoolInterface $cache         The cache
      * @param string                      $roleClassname The classname of role
      */
-    public function __construct(array $hierarchy,
-                                ManagerRegistryInterface $registry,
-                                CacheItemPoolInterface $cache = null,
-                                $roleClassname = RoleInterface::class)
-    {
+    public function __construct(
+        array $hierarchy,
+        ManagerRegistryInterface $registry,
+        CacheItemPoolInterface $cache = null,
+        $roleClassname = RoleInterface::class
+    ) {
         parent::__construct($hierarchy);
 
         $this->registry = $registry;
@@ -82,7 +83,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @param EventDispatcherInterface $dispatcher
      */
-    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher): void
     {
         $this->eventDispatcher = $dispatcher;
     }
@@ -118,7 +119,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         }
 
         // build hierarchy
-        /* @var string[] $reachableRoles */
+        /** @var string[] $reachableRoles */
         $reachableRoles = RoleUtil::formatNames(parent::getReachableRoles(RoleUtil::formatRoles($roles)));
         $isPermEnabled = true;
 
@@ -159,7 +160,7 @@ class RoleHierarchy extends BaseRoleHierarchy
     /**
      * Build the suffix of role.
      *
-     * @param string|null $role The role
+     * @param null|string $role The role
      *
      * @return string
      */
@@ -198,9 +199,9 @@ class RoleHierarchy extends BaseRoleHierarchy
      * @param string $id   The cache id
      * @param null   $item The cache item variable passed by reference
      *
-     * @return string[]|null
-     *
      * @throws
+     *
+     * @return null|string[]
      */
     private function getCachedReachableRoles($id, &$item)
     {
@@ -230,7 +231,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      * @param string[]                $reachableRoles The reachable roles
      * @param string[]                $roles          The roles
      * @param string                  $id             The cache item id
-     * @param CacheItemInterface|null $item           The cache item
+     * @param null|CacheItemInterface $item           The cache item
      * @param bool                    $isPermEnabled  Check if the permission manager is enabled
      * @param string                  $suffix         The role name suffix
      *
@@ -264,9 +265,9 @@ class RoleHierarchy extends BaseRoleHierarchy
      * @param string[] $reachableRoles The reachable roles
      * @param string[] $roles          The role names
      *
-     * @return string[]
-     *
      * @throws
+     *
+     * @return string[]
      */
     private function findRecords(array $reachableRoles, array $roles)
     {
@@ -283,7 +284,7 @@ class RoleHierarchy extends BaseRoleHierarchy
 
         $loopReachableRoles = [$reachableRoles];
 
-        /* @var RoleHierarchicalInterface $eRole */
+        /** @var RoleHierarchicalInterface $eRole */
         foreach ($recordRoles as $eRole) {
             $suffix = $this->buildRoleSuffix($roles[$eRole->getName()] ?? null);
             $subRoles = RoleUtil::formatNames($eRole->getChildren()->toArray());

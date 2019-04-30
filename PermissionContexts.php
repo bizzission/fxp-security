@@ -22,7 +22,7 @@ final class PermissionContexts
      *
      * @var string
      */
-    const ROLE = 'role';
+    public const ROLE = 'role';
 
     /**
      * The PermissionContexts::ORGANIZATION_ROLE context check if the permission
@@ -32,7 +32,7 @@ final class PermissionContexts
      *
      * @var string
      */
-    const ORGANIZATION_ROLE = 'organization_role';
+    public const ORGANIZATION_ROLE = 'organization_role';
 
     /**
      * The PermissionContexts::SHARING context check if the permission
@@ -40,5 +40,5 @@ final class PermissionContexts
      *
      * @var string
      */
-    const SHARING = 'sharing';
+    public const SHARING = 'sharing';
 }

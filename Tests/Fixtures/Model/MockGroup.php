@@ -22,7 +22,7 @@ class MockGroup implements GroupInterface
     use GroupTrait;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     protected $id;
 

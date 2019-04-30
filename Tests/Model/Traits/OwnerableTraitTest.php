@@ -17,10 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OwnerableTraitTest extends TestCase
+final class OwnerableTraitTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $user = new MockUserRoleable();
         $ownerable = new MockObjectOwnerable('foo');

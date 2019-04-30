@@ -18,10 +18,13 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class IsGrantedProviderTest extends TestCase
+final class IsGrantedProviderTest extends TestCase
 {
-    public function testIsBasicAuth()
+    public function testIsBasicAuth(): void
     {
         $object = new \stdClass();
         $authChecker = $this->getMockBuilder(AuthorizationCheckerInterface::class)->getMock();
@@ -29,7 +32,8 @@ class IsGrantedProviderTest extends TestCase
         $authChecker->expects($this->once())
             ->method('isGranted')
             ->with('perm_view', $object)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $expressionLanguage = new ExpressionLanguage(null, [new IsGrantedProvider()]);
         $variables = [

@@ -26,8 +26,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class ExpressionVariableStorageTest extends TestCase
+final class ExpressionVariableStorageTest extends TestCase
 {
     /**
      * @var AuthenticationTrustResolverInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -35,7 +38,7 @@ class ExpressionVariableStorageTest extends TestCase
     protected $trustResolver;
 
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -50,18 +53,18 @@ class ExpressionVariableStorageTest extends TestCase
     protected $orgRole;
 
     /**
-     * @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface
      */
     protected $token;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
     }
 
-    public function testSetVariablesWithSecurityIdentityManager()
+    public function testSetVariablesWithSecurityIdentityManager(): void
     {
         $event = new GetExpressionVariablesEvent($this->token);
         $sids = [
@@ -70,12 +73,14 @@ class ExpressionVariableStorageTest extends TestCase
         ];
 
         $this->token->expects($this->never())
-            ->method('getRoles');
+            ->method('getRoles')
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($this->token)
-            ->willReturn($sids);
+            ->willReturn($sids)
+        ;
 
         $variableStorage = new ExpressionVariableStorage(
             [
@@ -99,13 +104,14 @@ class ExpressionVariableStorageTest extends TestCase
         $this->assertCount(1, ExpressionVariableStorage::getSubscribedEvents());
     }
 
-    public function testSetVariablesWithoutSecurityIdentityManager()
+    public function testSetVariablesWithoutSecurityIdentityManager(): void
     {
         $this->token->expects($this->once())
             ->method('getRoles')
             ->willReturn([
                 RoleUtil::formatRole('ROLE_USER'),
-            ]);
+            ])
+        ;
 
         $event = new GetExpressionVariablesEvent($this->token);
         $variableStorage = new ExpressionVariableStorage();
@@ -122,7 +128,7 @@ class ExpressionVariableStorageTest extends TestCase
         $this->assertCount(1, ExpressionVariableStorage::getSubscribedEvents());
     }
 
-    public function testHasVariable()
+    public function testHasVariable(): void
     {
         $variableStorage = new ExpressionVariableStorage([
             'foo' => 'bar',
@@ -132,7 +138,7 @@ class ExpressionVariableStorageTest extends TestCase
         $this->assertTrue($variableStorage->has('foo'));
     }
 
-    public function testAddVariable()
+    public function testAddVariable(): void
     {
         $variableStorage = new ExpressionVariableStorage();
 
@@ -146,7 +152,7 @@ class ExpressionVariableStorageTest extends TestCase
         $this->assertCount(1, $variableStorage->getAll());
     }
 
-    public function testRemoveVariable()
+    public function testRemoveVariable(): void
     {
         $variableStorage = new ExpressionVariableStorage([
             'foo' => 'bar',

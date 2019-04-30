@@ -57,10 +57,11 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      * @param RoleHierarchyInterface               $roleHierarchy               The role hierarchy
      * @param AuthenticationTrustResolverInterface $authenticationTrustResolver The authentication trust resolver
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                RoleHierarchyInterface $roleHierarchy,
-                                AuthenticationTrustResolverInterface $authenticationTrustResolver)
-    {
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        RoleHierarchyInterface $roleHierarchy,
+        AuthenticationTrustResolverInterface $authenticationTrustResolver
+    ) {
         $this->dispatcher = $dispatcher;
         $this->roleHierarchy = $roleHierarchy;
         $this->authenticationTrustResolver = $authenticationTrustResolver;

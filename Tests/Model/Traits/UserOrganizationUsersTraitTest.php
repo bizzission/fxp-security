@@ -18,10 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class UserOrganizationUsersTraitTest extends TestCase
+final class UserOrganizationUsersTraitTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $user = new MockUserOrganizationUsers();
 
@@ -30,20 +33,23 @@ class UserOrganizationUsersTraitTest extends TestCase
         $this->assertFalse($user->hasUserOrganization('foo'));
         $this->assertNull($user->getUserOrganization('foo'));
 
-        /* @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $org->expects($this->any())
             ->method('getName')
-            ->willReturn('foo');
+            ->willReturn('foo')
+        ;
         $org->expects($this->once())
             ->method('isUserOrganization')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
-        /* @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
+        /** @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
         $orgUser->expects($this->any())
             ->method('getOrganization')
-            ->willReturn($org);
+            ->willReturn($org)
+        ;
 
         $user->addUserOrganization($orgUser);
 

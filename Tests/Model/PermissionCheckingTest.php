@@ -17,10 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionCheckingTest extends TestCase
+final class PermissionCheckingTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $perm = new MockPermission();
         $permChecking = new PermissionChecking($perm, true, true);

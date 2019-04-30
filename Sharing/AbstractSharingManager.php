@@ -33,7 +33,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     protected $provider;
 
     /**
-     * @var EventDispatcherInterface|null
+     * @var null|EventDispatcherInterface
      */
     protected $dispatcher;
 
@@ -79,10 +79,11 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      * @param SharingSubjectConfigInterface[]  $subjectConfigs  The subject configs
      * @param SharingIdentityConfigInterface[] $identityConfigs The identity configs
      */
-    public function __construct(SharingProviderInterface $provider,
-                                array $subjectConfigs = [],
-                                array $identityConfigs = [])
-    {
+    public function __construct(
+        SharingProviderInterface $provider,
+        array $subjectConfigs = [],
+        array $identityConfigs = []
+    ) {
         $this->provider = $provider;
         $this->provider->setSharingManager($this);
 
@@ -100,7 +101,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      *
      * @param EventDispatcherInterface $dispatcher The event dispatcher
      */
-    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
@@ -131,7 +132,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addSubjectConfig(SharingSubjectConfigInterface $config)
+    public function addSubjectConfig(SharingSubjectConfigInterface $config): void
     {
         $this->subjectConfigs[$config->getType()] = $config;
         unset($this->cacheSubjectVisibilities[$config->getType()]);
@@ -199,7 +200,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addIdentityConfig(SharingIdentityConfigInterface $config)
+    public function addIdentityConfig(SharingIdentityConfigInterface $config): void
     {
         if (isset($this->identityAliases[$config->getAlias()])) {
             throw new AlreadyConfigurationAliasExistingException($config->getAlias(), $config->getType());

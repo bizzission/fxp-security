@@ -39,11 +39,12 @@ class GroupSecurityIdentitySubscriber implements EventSubscriberInterface
      *
      * @param AddSecurityIdentityEvent $event The event
      */
-    public function addGroupSecurityIdentities(AddSecurityIdentityEvent $event)
+    public function addGroupSecurityIdentities(AddSecurityIdentityEvent $event): void
     {
         try {
             $sids = $event->getSecurityIdentities();
-            $sids = IdentityUtils::merge($sids,
+            $sids = IdentityUtils::merge(
+                $sids,
                 GroupSecurityIdentity::fromToken($event->getToken())
             );
             $event->setSecurityIdentities($sids);

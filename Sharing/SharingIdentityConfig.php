@@ -42,7 +42,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
      * Constructor.
      *
      * @param string      $type        The type, typically, this is the PHP class name
-     * @param string|null $alias       The alias of identity type
+     * @param null|string $alias       The alias of identity type
      * @param bool        $roleable    Check if the identity can be use the roles
      * @param bool        $permissible Check if the identity can be use the permissions
      */
@@ -90,7 +90,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
      * Build the alias.
      *
      * @param string      $classname The class name
-     * @param string|null $alias     The alias
+     * @param null|string $alias     The alias
      *
      * @return string
      */

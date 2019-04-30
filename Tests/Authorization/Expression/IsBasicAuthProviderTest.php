@@ -19,10 +19,13 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class IsBasicAuthProviderTest extends TestCase
+final class IsBasicAuthProviderTest extends TestCase
 {
-    public function testIsBasicAuth()
+    public function testIsBasicAuth(): void
     {
         $token = $this->getMockBuilder(UsernamePasswordToken::class)->disableOriginalConstructor()->getMock();
         $trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
@@ -30,7 +33,8 @@ class IsBasicAuthProviderTest extends TestCase
         $trustResolver->expects($this->once())
             ->method('isAnonymous')
             ->with($token)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $expressionLanguage = new ExpressionLanguage(null, [new IsBasicAuthProvider()]);
         $variables = [

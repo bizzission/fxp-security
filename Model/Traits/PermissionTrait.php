@@ -31,28 +31,28 @@ trait PermissionTrait
     protected $contexts = [];
 
     /**
-     * @var string|null
+     * @var null|string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $class;
 
     /**
-     * @var string|null
+     * @var null|string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $field;
 
     /**
-     * @var string|null
+     * @var null|string
      *
      * @ORM\Column(type="string", length=255)
      */
     protected $operation;
 
     /**
-     * @var Collection|RoleInterface[]|null
+     * @var null|Collection|RoleInterface[]
      *
      * @ORM\ManyToMany(targetEntity="Fxp\Component\Security\Model\RoleInterface", mappedBy="permissions")
      */

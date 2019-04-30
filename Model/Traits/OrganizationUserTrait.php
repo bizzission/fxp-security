@@ -50,6 +50,14 @@ trait OrganizationUserTrait
     /**
      * {@inheritdoc}
      */
+    public function __toString()
+    {
+        return $this->organization->getName().':'.$this->user->getUsername();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setOrganization(OrganizationInterface $organization)
     {
         $this->organization = $organization;
@@ -81,13 +89,5 @@ trait OrganizationUserTrait
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return $this->organization->getName().':'.$this->user->getUsername();
     }
 }

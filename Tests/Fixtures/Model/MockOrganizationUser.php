@@ -24,7 +24,7 @@ class MockOrganizationUser implements OrganizationUserInterface
     use OrganizationUserTrait;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     protected $id;
 

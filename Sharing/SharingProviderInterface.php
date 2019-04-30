@@ -45,7 +45,7 @@ interface SharingProviderInterface
      * Get all permissions of subjects.
      *
      * @param SubjectIdentityInterface[]       $subjects The subjects
-     * @param SecurityIdentityInterface[]|null $sids     The security identities to filter the sharing entries
+     * @param null|SecurityIdentityInterface[] $sids     The security identities to filter the sharing entries
      *
      * @return SharingInterface[]
      */

@@ -18,10 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class IdentityUtilsTest extends TestCase
+final class IdentityUtilsTest extends TestCase
 {
-    public function testMerge()
+    public function testMerge(): void
     {
         $role1 = new RoleSecurityIdentity(MockRole::class, 'ROLE_USER');
         $role2 = new RoleSecurityIdentity(MockRole::class, 'ROLE_ADMIN');

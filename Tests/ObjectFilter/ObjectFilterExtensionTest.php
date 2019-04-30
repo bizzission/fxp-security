@@ -17,31 +17,40 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class ObjectFilterExtensionTest extends TestCase
+final class ObjectFilterExtensionTest extends TestCase
 {
-    public function testFilterValue()
+    public function testFilterValue(): void
     {
         $voter1 = $this->getMockBuilder(ObjectFilterVoterInterface::class)->getMock();
         $voter1->expects($this->once())
             ->method('supports')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
         $voter1->expects($this->never())
-            ->method('getValue');
+            ->method('getValue')
+        ;
 
         $voter2 = $this->getMockBuilder(ObjectFilterVoterInterface::class)->getMock();
         $voter2->expects($this->once())
             ->method('supports')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $voter2->expects($this->once())
             ->method('getValue')
-            ->willReturn('TEST');
+            ->willReturn('TEST')
+        ;
 
         $voter3 = $this->getMockBuilder(ObjectFilterVoterInterface::class)->getMock();
         $voter3->expects($this->never())
-            ->method('supports');
+            ->method('supports')
+        ;
         $voter3->expects($this->never())
-            ->method('getValue');
+            ->method('getValue')
+        ;
 
         $ofe = new ObjectFilterExtension([
             $voter1,

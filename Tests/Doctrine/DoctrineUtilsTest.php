@@ -21,39 +21,46 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class DoctrineUtilsTest extends TestCase
+final class DoctrineUtilsTest extends TestCase
 {
-    public function testGetIdentifier()
+    public function testGetIdentifier(): void
     {
-        /* @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
+        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
         $targetClass->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('TestIdentifier');
+            ->willReturn('TestIdentifier')
+        ;
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'identifier',
                 'next',
-            ]);
+            ])
+        ;
 
         $this->assertSame('identifier', DoctrineUtils::getIdentifier($targetClass));
         DoctrineUtils::clearCaches();
     }
 
-    public function testGetIdentifierWithoutIdentifier()
+    public function testGetIdentifierWithoutIdentifier(): void
     {
-        /* @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
+        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
         $targetClass->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('TestIdentifier');
+            ->willReturn('TestIdentifier')
+        ;
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->assertSame('id', DoctrineUtils::getIdentifier($targetClass));
         DoctrineUtils::clearCaches();
@@ -79,49 +86,55 @@ class DoctrineUtilsTest extends TestCase
      * @dataProvider getFieldTypes
      *
      * @param string     $type       The doctrine field type
-     * @param string|int $validValue The valid value
+     * @param int|string $validValue The valid value
      */
-    public function testGetMockZeroId($type, $validValue)
+    public function testGetMockZeroId($type, $validValue): void
     {
-        /* @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
+        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
         $targetClass->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('TestIdentifier');
+            ->willReturn('TestIdentifier')
+        ;
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
-            ]);
+            ])
+        ;
 
         $targetClass->expects($this->once())
             ->method('getTypeOfField')
             ->with('id')
-            ->willReturn($type);
+            ->willReturn($type)
+        ;
 
         $this->assertSame($validValue, DoctrineUtils::getMockZeroId($targetClass));
         DoctrineUtils::clearCaches();
     }
 
-    public function testCastIdentifier()
+    public function testCastIdentifier(): void
     {
-        /* @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
+        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
         $targetClass->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('TestIdentifier');
+            ->willReturn('TestIdentifier')
+        ;
 
         $targetClass->expects($this->atLeastOnce())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
-            ]);
+            ])
+        ;
 
         $targetClass->expects($this->once())
             ->method('getTypeOfField')
             ->with('id')
-            ->willReturn(Type::GUID);
+            ->willReturn(Type::GUID)
+        ;
 
         $dbPlatform = $this->getMockForAbstractClass(
             AbstractPlatform::class,
@@ -137,88 +150,98 @@ class DoctrineUtilsTest extends TestCase
         $dbPlatform->expects($this->once())
             ->method('getGuidTypeDeclarationSQL')
             ->with(['id'])
-            ->willReturn('UUID');
+            ->willReturn('UUID')
+        ;
 
-        /* @var Connection|\PHPUnit_Framework_MockObject_MockObject $conn */
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $conn */
         $conn = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
         $conn->expects($this->atLeastOnce())
             ->method('getDatabasePlatform')
-            ->willReturn($dbPlatform);
+            ->willReturn($dbPlatform)
+        ;
         $conn->expects($this->any())
             ->method('getDriver')
-            ->willReturn($this->getMockBuilder(Driver::class)->disableOriginalConstructor()->getMock());
+            ->willReturn($this->getMockBuilder(Driver::class)->disableOriginalConstructor()->getMock())
+        ;
 
         $this->assertSame('::UUID', DoctrineUtils::castIdentifier($targetClass, $conn));
         DoctrineUtils::clearCaches();
     }
 
-    public function testGetIdentifierTypeWithTypeString()
+    public function testGetIdentifierTypeWithTypeString(): void
     {
-        /* @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
+        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
         $targetClass->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('TestIdentifier');
+            ->willReturn('TestIdentifier')
+        ;
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
-            ]);
+            ])
+        ;
 
         $type = Type::getType(Type::GUID);
 
         $targetClass->expects($this->once())
             ->method('getTypeOfField')
             ->with('id')
-            ->willReturn($type);
+            ->willReturn($type)
+        ;
 
         $this->assertEquals($type, DoctrineUtils::getIdentifierType($targetClass));
         DoctrineUtils::clearCaches();
     }
 
-    public function testGetIdentifierTypeWithTypeInstance()
+    public function testGetIdentifierTypeWithTypeInstance(): void
     {
-        /* @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
+        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
         $targetClass->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('TestIdentifier');
+            ->willReturn('TestIdentifier')
+        ;
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
-            ]);
+            ])
+        ;
 
         $type = Type::getType(Type::GUID);
 
         $targetClass->expects($this->once())
             ->method('getTypeOfField')
             ->with('id')
-            ->willReturn($type);
+            ->willReturn($type)
+        ;
 
         $this->assertSame($type, DoctrineUtils::getIdentifierType($targetClass));
         DoctrineUtils::clearCaches();
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\RuntimeException
-     * @expectedExceptionMessage The Doctrine DBAL type is not found for "TestIdentifier::id" identifier
-     */
-    public function testGetIdentifierTypeWithInvalidType()
+    public function testGetIdentifierTypeWithInvalidType(): void
     {
-        /* @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
+        $this->expectException(\Fxp\Component\Security\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('The Doctrine DBAL type is not found for "TestIdentifier::id" identifier');
+
+        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
         $targetClass->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('TestIdentifier');
+            ->willReturn('TestIdentifier')
+        ;
 
         $targetClass->expects($this->once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
-            ]);
+            ])
+        ;
 
         $this->assertSame(42, DoctrineUtils::getIdentifierType($targetClass));
         DoctrineUtils::clearCaches();

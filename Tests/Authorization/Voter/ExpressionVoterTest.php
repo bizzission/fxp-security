@@ -32,8 +32,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class ExpressionVoterTest extends TestCase
+final class ExpressionVoterTest extends TestCase
 {
     /**
      * @var EventDispatcher
@@ -51,7 +54,7 @@ class ExpressionVoterTest extends TestCase
     protected $trustResolver;
 
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -66,7 +69,7 @@ class ExpressionVoterTest extends TestCase
     protected $orgRole;
 
     /**
-     * @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface
      */
     protected $token;
 
@@ -80,7 +83,7 @@ class ExpressionVoterTest extends TestCase
      */
     protected $voter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dispatcher = new EventDispatcher();
         $this->expressionLanguage = $this->getMockBuilder(ExpressionLanguage::class)->disableOriginalConstructor()->getMock();
@@ -107,19 +110,20 @@ class ExpressionVoterTest extends TestCase
         );
     }
 
-    public function testAddExpressionLanguageProvider()
+    public function testAddExpressionLanguageProvider(): void
     {
-        /* @var ExpressionFunctionProviderInterface $provider */
+        /** @var ExpressionFunctionProviderInterface $provider */
         $provider = $this->getMockBuilder(ExpressionFunctionProviderInterface::class)->getMock();
 
         $this->expressionLanguage->expects($this->once())
             ->method('registerProvider')
-            ->with($provider);
+            ->with($provider)
+        ;
 
         $this->voter->addExpressionLanguageProvider($provider);
     }
 
-    public function testWithoutExpression()
+    public function testWithoutExpression(): void
     {
         $res = $this->voter->vote($this->token, null, [42]);
 
@@ -140,7 +144,7 @@ class ExpressionVoterTest extends TestCase
      * @param int  $resultVoter      The result of voter
      * @param bool $resultExpression The result of expression
      */
-    public function testWithExpression($resultVoter, $resultExpression)
+    public function testWithExpression($resultVoter, $resultExpression): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -150,7 +154,8 @@ class ExpressionVoterTest extends TestCase
         $this->sidManager->expects($this->once())
             ->method('getSecurityIdentities')
             ->with($this->token)
-            ->willReturn($sids);
+            ->willReturn($sids)
+        ;
 
         $this->expressionLanguage->expects($this->once())
             ->method('evaluate')
@@ -170,7 +175,8 @@ class ExpressionVoterTest extends TestCase
                 $this->assertEquals(['ROLE_USER'], $variables['roles']);
 
                 return $resultExpression;
-            });
+            })
+        ;
 
         $expression = new Expression('"ROLE_USER" in roles');
         $res = $this->voter->vote($this->token, null, [$expression]);
@@ -178,11 +184,12 @@ class ExpressionVoterTest extends TestCase
         $this->assertSame($resultVoter, $res);
     }
 
-    public function testWithoutSecurityIdentityManagerButWithRequestSubject()
+    public function testWithoutSecurityIdentityManagerButWithRequestSubject(): void
     {
         $this->token->expects($this->once())
             ->method('getRoles')
-            ->willReturn([RoleUtil::formatRole('ROLE_USER')]);
+            ->willReturn([RoleUtil::formatRole('ROLE_USER')])
+        ;
 
         $this->expressionLanguage->expects($this->once())
             ->method('evaluate')
@@ -202,7 +209,8 @@ class ExpressionVoterTest extends TestCase
                 $this->assertEquals(['ROLE_USER'], $variables['roles']);
 
                 return true;
-            });
+            })
+        ;
 
         $variableStorage = new ExpressionVariableStorage();
         $variableStorage->add('trust_resolver', $this->trustResolver);

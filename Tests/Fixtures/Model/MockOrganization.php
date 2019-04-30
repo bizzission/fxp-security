@@ -30,7 +30,7 @@ class MockOrganization implements RoleableInterface, OrganizationRolesInterface,
     use OrganizationGroupsTrait;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     protected $id;
 

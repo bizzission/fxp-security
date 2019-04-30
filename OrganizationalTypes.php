@@ -22,7 +22,7 @@ final class OrganizationalTypes
      *
      * @var string
      */
-    const OPTIONAL_FILTER_ALL = 'all';
+    public const OPTIONAL_FILTER_ALL = 'all';
 
     /**
      * The OrganizationalTypes::OPTIONAL_FILTER_WITH_ORG type check if the filter must filter the list with objects linked
@@ -30,7 +30,7 @@ final class OrganizationalTypes
      *
      * @var string
      */
-    const OPTIONAL_FILTER_WITH_ORG = 'with_org';
+    public const OPTIONAL_FILTER_WITH_ORG = 'with_org';
 
     /**
      * The OrganizationalTypes::OPTIONAL_FILTER_WITHOUT_ORG type check if the filter must filter the list with objects linked
@@ -38,5 +38,5 @@ final class OrganizationalTypes
      *
      * @var string
      */
-    const OPTIONAL_FILTER_WITHOUT_ORG = 'without_org';
+    public const OPTIONAL_FILTER_WITHOUT_ORG = 'without_org';
 }

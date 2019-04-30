@@ -34,7 +34,7 @@ class FieldVote
     /**
      * Constructor.
      *
-     * @param SubjectIdentityInterface|object|string $subject The subject instance or classname
+     * @param object|string|SubjectIdentityInterface $subject The subject instance or classname
      * @param string                                 $field   The field name
      */
     public function __construct($subject, $field)

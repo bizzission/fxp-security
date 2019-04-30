@@ -22,7 +22,7 @@ class MockSharing implements SharingInterface
     use SharingTrait;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     protected $id;
 

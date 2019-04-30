@@ -17,12 +17,15 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class HostRoleProviderTest extends TestCase
+final class HostRoleProviderTest extends TestCase
 {
-    public function testBasic()
+    public function testBasic(): void
     {
-        /* @var TokenInterface $token */
+        /** @var TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $provider = new HostRoleProvider();
 

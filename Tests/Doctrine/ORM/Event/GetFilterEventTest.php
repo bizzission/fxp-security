@@ -22,8 +22,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class GetFilterEventTest extends TestCase
+final class GetFilterEventTest extends TestCase
 {
     /**
      * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -41,7 +44,7 @@ class GetFilterEventTest extends TestCase
     protected $targetEntity;
 
     /**
-     * @var SQLFilter|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SQLFilter
      */
     protected $filter;
 
@@ -50,7 +53,7 @@ class GetFilterEventTest extends TestCase
      */
     protected $event;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
         $this->connection = $this->getMockBuilder(Connection::class)->getMock();
@@ -59,17 +62,20 @@ class GetFilterEventTest extends TestCase
 
         $this->entityManager->expects($this->any())
             ->method('getFilters')
-            ->willReturn(new FilterCollection($this->entityManager));
+            ->willReturn(new FilterCollection($this->entityManager))
+        ;
 
         $this->entityManager->expects($this->any())
             ->method('getConnection')
-            ->willReturn($this->connection);
+            ->willReturn($this->connection)
+        ;
 
         $this->connection->expects($this->any())
             ->method('quote')
             ->willReturnCallback(function ($v) {
                 return '\''.$v.'\'';
-            });
+            })
+        ;
 
         $this->event = new GetFilterEvent(
             $this->filter,
@@ -80,7 +86,7 @@ class GetFilterEventTest extends TestCase
         );
     }
 
-    public function testGetters()
+    public function testGetters(): void
     {
         $this->assertSame($this->entityManager, $this->event->getEntityManager());
         $this->assertSame($this->entityManager->getConnection(), $this->event->getConnection());
@@ -90,7 +96,7 @@ class GetFilterEventTest extends TestCase
         $this->assertSame('t0', $this->event->getTargetTableAlias());
     }
 
-    public function testSetParameter()
+    public function testSetParameter(): void
     {
         $this->assertFalse($this->event->hasParameter('foo'));
         $this->event->setParameter('foo', true, 'boolean');
@@ -98,7 +104,7 @@ class GetFilterEventTest extends TestCase
         $this->assertTrue($this->event->getRealParameter('foo'));
     }
 
-    public function testSetFilterConstraint()
+    public function testSetFilterConstraint(): void
     {
         $this->assertSame('', $this->event->getFilterConstraint());
 

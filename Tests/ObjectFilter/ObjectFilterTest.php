@@ -30,11 +30,18 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class ObjectFilterTest extends TestCase
+final class ObjectFilterTest extends TestCase
 {
     /**
-     * @var UnitOfWorkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ObjectFilter
+     */
+    protected $of;
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWorkInterface
      */
     private $uow;
 
@@ -58,12 +65,7 @@ class ObjectFilterTest extends TestCase
      */
     private $dispatcher;
 
-    /**
-     * @var ObjectFilter
-     */
-    protected $of;
-
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->uow = $this->getMockBuilder(UnitOfWorkInterface::class)->getMock();
         $this->ofe = $this->getMockBuilder(ObjectFilterExtensionInterface::class)->getMock();
@@ -74,30 +76,31 @@ class ObjectFilterTest extends TestCase
         $this->of = new ObjectFilter($this->ofe, $this->pm, $this->ac, $this->dispatcher, $this->uow);
     }
 
-    public function testGetUnitOfWork()
+    public function testGetUnitOfWork(): void
     {
         $this->assertSame($this->uow, $this->of->getUnitOfWork());
     }
 
-    public function testCommitEvents()
+    public function testCommitEvents(): void
     {
         $preEventAction = false;
         $postEventAction = false;
         $objects = [];
 
-        $this->dispatcher->addListener(ObjectFilterEvents::PRE_COMMIT, function (PreCommitObjectFilterEvent $event) use (&$objects, &$preEventAction) {
+        $this->dispatcher->addListener(ObjectFilterEvents::PRE_COMMIT, function (PreCommitObjectFilterEvent $event) use (&$objects, &$preEventAction): void {
             $preEventAction = true;
             $this->assertSame($objects, $event->getObjects());
         });
 
-        $this->dispatcher->addListener(ObjectFilterEvents::POST_COMMIT, function (PostCommitObjectFilterEvent $event) use (&$objects, &$postEventAction) {
+        $this->dispatcher->addListener(ObjectFilterEvents::POST_COMMIT, function (PostCommitObjectFilterEvent $event) use (&$objects, &$postEventAction): void {
             $postEventAction = true;
             $this->assertSame($objects, $event->getObjects());
         });
 
         $this->pm->expects($this->once())
             ->method('preloadPermissions')
-            ->with($objects);
+            ->with($objects)
+        ;
 
         $this->of->commit();
 
@@ -105,7 +108,7 @@ class ObjectFilterTest extends TestCase
         $this->assertTrue($postEventAction);
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
         $object = new MockObject('foo');
 
@@ -113,14 +116,15 @@ class ObjectFilterTest extends TestCase
 
         $this->ac->expects($this->once())
             ->method('isGranted')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->of->filter($object);
 
         $this->assertNull($object->getName());
     }
 
-    public function testFilterTransactional()
+    public function testFilterTransactional(): void
     {
         $object = new MockObject('foo');
 
@@ -128,7 +132,8 @@ class ObjectFilterTest extends TestCase
 
         $this->ac->expects($this->once())
             ->method('isGranted')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->of->beginTransaction();
         $this->of->filter($object);
@@ -138,7 +143,7 @@ class ObjectFilterTest extends TestCase
         $this->assertNull($object->getName());
     }
 
-    public function testFilterSkipAuthorizationChecker()
+    public function testFilterSkipAuthorizationChecker(): void
     {
         $eventAction = 0;
         $object = new MockObject('foo');
@@ -146,14 +151,15 @@ class ObjectFilterTest extends TestCase
         $this->prepareFilterTest($object);
 
         $this->ac->expects($this->never())
-            ->method('isGranted');
+            ->method('isGranted')
+        ;
 
-        $this->dispatcher->addListener(ObjectFilterEvents::OBJECT_VIEW_GRANTED, function (ObjectViewGrantedEvent $event) use (&$eventAction) {
+        $this->dispatcher->addListener(ObjectFilterEvents::OBJECT_VIEW_GRANTED, function (ObjectViewGrantedEvent $event) use (&$eventAction): void {
             ++$eventAction;
             $event->setGranted(true);
         });
 
-        $this->dispatcher->addListener(ObjectFilterEvents::OBJECT_FIELD_VIEW_GRANTED, function (ObjectFieldViewGrantedEvent $event) use (&$eventAction) {
+        $this->dispatcher->addListener(ObjectFilterEvents::OBJECT_FIELD_VIEW_GRANTED, function (ObjectFieldViewGrantedEvent $event) use (&$eventAction): void {
             ++$eventAction;
             $event->setGranted(false);
         });
@@ -164,19 +170,18 @@ class ObjectFilterTest extends TestCase
         $this->assertNull($object->getName());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "object", "integer" given
-     */
-    public function testFilterWithInvalidType()
+    public function testFilterWithInvalidType(): void
     {
-        /* @var object $object */
+        $this->expectException(\Fxp\Component\Security\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type "object", "integer" given');
+
+        /** @var object $object */
         $object = 42;
 
         $this->of->filter($object);
     }
 
-    public function testRestore()
+    public function testRestore(): void
     {
         $object = new MockObject('foo');
 
@@ -184,20 +189,22 @@ class ObjectFilterTest extends TestCase
 
         $this->ac->expects($this->once())
             ->method('isGranted')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->of->restore($object);
 
         $this->assertSame('bar', $object->getName());
     }
 
-    public function testRestoreTransactional()
+    public function testRestoreTransactional(): void
     {
         $object = new MockObject('foo');
 
         $this->uow->expects($this->once())
             ->method('attach')
-            ->with($object);
+            ->with($object)
+        ;
 
         $this->uow->expects($this->once())
             ->method('getObjectChangeSet')
@@ -207,15 +214,18 @@ class ObjectFilterTest extends TestCase
                     'old' => 'bar',
                     'new' => 'foo',
                 ],
-            ]);
+            ])
+        ;
 
         $this->pm->expects($this->once())
             ->method('preloadPermissions')
-            ->with([$object]);
+            ->with([$object])
+        ;
 
         $this->ac->expects($this->once())
             ->method('isGranted')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->of->beginTransaction();
         $this->of->restore($object);
@@ -224,7 +234,7 @@ class ObjectFilterTest extends TestCase
         $this->assertSame('bar', $object->getName());
     }
 
-    public function testRestoreSkipAuthorizationChecker()
+    public function testRestoreSkipAuthorizationChecker(): void
     {
         $eventAction = false;
         $object = new MockObject('foo');
@@ -232,9 +242,10 @@ class ObjectFilterTest extends TestCase
         $this->prepareRestoreTest($object);
 
         $this->ac->expects($this->never())
-            ->method('isGranted');
+            ->method('isGranted')
+        ;
 
-        $this->dispatcher->addListener(ObjectFilterEvents::RESTORE_VIEW_GRANTED, function (RestoreViewGrantedEvent $event) use (&$eventAction) {
+        $this->dispatcher->addListener(ObjectFilterEvents::RESTORE_VIEW_GRANTED, function (RestoreViewGrantedEvent $event) use (&$eventAction): void {
             $eventAction = true;
             $event->setGranted(false);
         });
@@ -271,7 +282,7 @@ class ObjectFilterTest extends TestCase
      * @param mixed $newValue   The object new value
      * @param mixed $validValue The valid object value
      */
-    public function testRestoreByAction($allowView, $allowEdit, $oldValue, $newValue, $validValue)
+    public function testRestoreByAction($allowView, $allowEdit, $oldValue, $newValue, $validValue): void
     {
         $object = new MockObject($newValue);
         $fv = new FieldVote($object, 'name');
@@ -286,13 +297,15 @@ class ObjectFilterTest extends TestCase
         $this->ac->expects($this->at(0))
             ->method('isGranted')
             ->with('perm_read', $fv)
-            ->willReturn($allowView);
+            ->willReturn($allowView)
+        ;
 
         if ($allowView) {
             $this->ac->expects($this->at(1))
                 ->method('isGranted')
                 ->with('perm_edit', $fv)
-                ->willReturn($allowEdit);
+                ->willReturn($allowEdit)
+            ;
         }
 
         $this->of->restore($object);
@@ -300,7 +313,7 @@ class ObjectFilterTest extends TestCase
         $this->assertSame($validValue, $object->getName());
     }
 
-    public function testExcludedClasses()
+    public function testExcludedClasses(): void
     {
         $this->of->setExcludedClasses([
             MockObject::class,
@@ -309,20 +322,35 @@ class ObjectFilterTest extends TestCase
         $object = new MockObject('foo');
 
         $this->uow->expects($this->never())
-            ->method('attach');
+            ->method('attach')
+        ;
 
         $this->ofe->expects($this->never())
-            ->method('filterValue');
+            ->method('filterValue')
+        ;
 
         $this->pm->expects($this->never())
-            ->method('preloadPermissions');
+            ->method('preloadPermissions')
+        ;
 
         $this->ac->expects($this->never())
-            ->method('isGranted');
+            ->method('isGranted')
+        ;
 
         $this->of->filter($object);
 
         $this->assertNotNull($object->getName());
+    }
+
+    public function testRestoreWithInvalidType(): void
+    {
+        $this->expectException(\Fxp\Component\Security\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type "object", "integer" given');
+
+        /** @var object $object */
+        $object = 42;
+
+        $this->of->restore($object);
     }
 
     /**
@@ -330,28 +358,31 @@ class ObjectFilterTest extends TestCase
      *
      * @param object $object The mock object
      */
-    protected function prepareFilterTest($object)
+    protected function prepareFilterTest($object): void
     {
         $this->uow->expects($this->once())
             ->method('attach')
-            ->with($object);
+            ->with($object)
+        ;
 
         $this->ofe->expects($this->once())
             ->method('filterValue')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->pm->expects($this->once())
             ->method('preloadPermissions')
-            ->with([$object]);
+            ->with([$object])
+        ;
     }
 
     /**
      * Prepare the restore test.
      *
      * @param object     $object    The mock object
-     * @param array|null $changeSet The field change set
+     * @param null|array $changeSet The field change set
      */
-    protected function prepareRestoreTest($object, $changeSet = null)
+    protected function prepareRestoreTest($object, $changeSet = null): void
     {
         if (null === $changeSet) {
             $changeSet = [
@@ -364,27 +395,18 @@ class ObjectFilterTest extends TestCase
 
         $this->pm->expects($this->once())
             ->method('preloadPermissions')
-            ->with([$object]);
+            ->with([$object])
+        ;
 
         $this->uow->expects($this->once())
             ->method('attach')
-            ->with($object);
+            ->with($object)
+        ;
 
         $this->uow->expects($this->once())
             ->method('getObjectChangeSet')
             ->with($object)
-            ->willReturn($changeSet);
-    }
-
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "object", "integer" given
-     */
-    public function testRestoreWithInvalidType()
-    {
-        /* @var object $object */
-        $object = 42;
-
-        $this->of->restore($object);
+            ->willReturn($changeSet)
+        ;
     }
 }

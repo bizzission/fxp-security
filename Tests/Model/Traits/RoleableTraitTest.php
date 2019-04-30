@@ -19,10 +19,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class RoleableTraitTest extends TestCase
+final class RoleableTraitTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $roleable = new MockRoleable();
 
@@ -44,7 +47,7 @@ class RoleableTraitTest extends TestCase
         $this->assertFalse($roleable->hasRole('ROLE_TEST'));
     }
 
-    public function testUserModel()
+    public function testUserModel(): void
     {
         $roleable = new MockUserRoleable();
 
@@ -59,7 +62,7 @@ class RoleableTraitTest extends TestCase
         $this->assertEquals($validRoles, $roleable->getRoles());
     }
 
-    public function testOrganizationUserModel()
+    public function testOrganizationUserModel(): void
     {
         $org = new MockOrganization('foo');
         $user = new MockUserRoleable();

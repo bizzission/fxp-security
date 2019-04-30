@@ -24,7 +24,7 @@ abstract class OrganizationalUtil
     /**
      * Format the name with the organization name in suffix.
      *
-     * @param OrganizationalInterface|object $object The organizational object
+     * @param object|OrganizationalInterface $object The organizational object
      * @param string                         $name   The name
      *
      * @return string
@@ -40,7 +40,7 @@ abstract class OrganizationalUtil
      * Format the name with the organization name in suffix.
      *
      * @param string                     $name         The name
-     * @param OrganizationInterface|null $organization The organization
+     * @param null|OrganizationInterface $organization The organization
      *
      * @return string
      */

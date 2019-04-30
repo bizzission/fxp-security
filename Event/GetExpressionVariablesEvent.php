@@ -58,7 +58,7 @@ class GetExpressionVariablesEvent extends Event
      *
      * @param array<string, mixed> $variables The variables
      */
-    public function addVariables(array $variables)
+    public function addVariables(array $variables): void
     {
         foreach ($variables as $name => $value) {
             $this->addVariable($name, $value);
@@ -71,7 +71,7 @@ class GetExpressionVariablesEvent extends Event
      * @param string $name  The name of expression variable
      * @param mixed  $value The value of expression variable
      */
-    public function addVariable($name, $value)
+    public function addVariable($name, $value): void
     {
         $this->variables[$name] = $value;
     }

@@ -68,13 +68,14 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
      * @param SharingManagerInterface          $sharingManager The sharing manager
      * @param string                           $sharingClass   The classname of sharing model
      */
-    public function __construct(EntityManagerInterface $entityManager,
-                                EventDispatcherInterface $dispatcher,
-                                TokenStorageInterface $tokenStorage,
-                                SecurityIdentityManagerInterface $sidManager,
-                                SharingManagerInterface $sharingManager,
-                                $sharingClass = SharingInterface::class)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        EventDispatcherInterface $dispatcher,
+        TokenStorageInterface $tokenStorage,
+        SecurityIdentityManagerInterface $sidManager,
+        SharingManagerInterface $sharingManager,
+        $sharingClass = SharingInterface::class
+    ) {
         parent::__construct($entityManager);
 
         $this->dispatcher = $dispatcher;
@@ -105,7 +106,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     /**
      * Action when the sharing manager is enabled or disabled.
      */
-    public function onSharingManagerChange()
+    public function onSharingManagerChange(): void
     {
         if (null !== ($filter = $this->getFilter())) {
             $filter->setParameter('sharing_manager_enabled', $this->sharingManager->isEnabled(), 'boolean');
@@ -123,7 +124,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     /**
      * {@inheritdoc}
      */
-    protected function injectParameters(SQLFilter $filter)
+    protected function injectParameters(SQLFilter $filter): void
     {
         /* @var SharingFilter $filter */
         $filter->setEventDispatcher($this->dispatcher);
@@ -183,7 +184,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     /**
      * Get the current user id.
      *
-     * @return string|int|null
+     * @return null|int|string
      */
     private function getUserId()
     {

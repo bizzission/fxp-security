@@ -19,39 +19,44 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class DisablePermissionSubscriberTest extends TestCase
+final class DisablePermissionSubscriberTest extends TestCase
 {
     /**
      * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $permManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->permManager = $this->getMockBuilder(PermissionManagerInterface::class)->getMock();
     }
 
-    public function testDisable()
+    public function testDisable(): void
     {
         $listener = new DisablePermissionSubscriber($this->permManager);
         $this->assertCount(4, $listener->getSubscribedEvents());
 
-        /* @var AbstractEditableSecurityEvent|\PHPUnit_Framework_MockObject_MockObject $event */
+        /** @var AbstractEditableSecurityEvent|\PHPUnit_Framework_MockObject_MockObject $event */
         $event = $this->getMockForAbstractClass(AbstractEditableSecurityEvent::class);
 
         $this->permManager->expects($this->once())
             ->method('isEnabled')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->permManager->expects($this->once())
             ->method('setEnabled')
-            ->with(false);
+            ->with(false)
+        ;
 
         $listener->disablePermissionManager($event);
     }
 
-    public function testEnable()
+    public function testEnable(): void
     {
         $listener = new DisablePermissionSubscriber($this->permManager);
         $this->assertCount(4, $listener->getSubscribedEvents());
@@ -60,7 +65,8 @@ class DisablePermissionSubscriberTest extends TestCase
 
         $this->permManager->expects($this->once())
             ->method('setEnabled')
-            ->with(true);
+            ->with(true)
+        ;
 
         $listener->enablePermissionManager($event);
     }

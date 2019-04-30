@@ -18,10 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class SharingSubjectConfigTest extends TestCase
+final class SharingSubjectConfigTest extends TestCase
 {
-    public function testSharingSubjectConfigByDefault()
+    public function testSharingSubjectConfigByDefault(): void
     {
         $config = new SharingSubjectConfig(MockObject::class);
 
@@ -29,7 +32,7 @@ class SharingSubjectConfigTest extends TestCase
         $this->assertSame(SharingVisibilities::TYPE_NONE, $config->getVisibility());
     }
 
-    public function testSharingSubjectConfig()
+    public function testSharingSubjectConfig(): void
     {
         $config = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
 

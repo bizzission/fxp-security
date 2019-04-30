@@ -44,7 +44,7 @@ class PostLoadPermissionsEvent extends AbstractLoadPermissionsEvent
      *
      * @param array $permissionMap The map of permissions
      */
-    public function setPermissionMap(array $permissionMap)
+    public function setPermissionMap(array $permissionMap): void
     {
         $this->permissionMap = $permissionMap;
     }

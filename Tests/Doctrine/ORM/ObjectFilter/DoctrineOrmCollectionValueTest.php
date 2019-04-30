@@ -18,8 +18,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class DoctrineOrmCollectionValueTest extends TestCase
+final class DoctrineOrmCollectionValueTest extends TestCase
 {
     public function getValues()
     {
@@ -37,7 +40,7 @@ class DoctrineOrmCollectionValueTest extends TestCase
      * @param mixed $value  The value
      * @param bool  $result The expected result
      */
-    public function testSupports($value, $result)
+    public function testSupports($value, $result): void
     {
         $collectionValue = new DoctrineOrmCollectionValue();
 
@@ -49,7 +52,7 @@ class DoctrineOrmCollectionValueTest extends TestCase
      *
      * @param mixed $value The value
      */
-    public function testGetValue($value)
+    public function testGetValue($value): void
     {
         $collectionValue = new DoctrineOrmCollectionValue();
 

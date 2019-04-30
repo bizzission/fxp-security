@@ -50,7 +50,7 @@ abstract class DoctrineUtils
     /**
      * Clear the caches.
      */
-    public static function clearCaches()
+    public static function clearCaches(): void
     {
         self::$cacheIdentifiers = [];
         self::$cacheZeroIds = [];
@@ -81,7 +81,7 @@ abstract class DoctrineUtils
      *
      * @param ClassMetadata $targetEntity The target entity
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public static function getMockZeroId(ClassMetadata $targetEntity)
     {
@@ -108,8 +108,10 @@ abstract class DoctrineUtils
 
             if ($connection->getDriver() instanceof PgSqlDriver) {
                 $type = self::getIdentifierType($targetEntity);
-                $cast = '::'.$type->getSQLDeclaration($targetEntity->getIdentifierFieldNames(),
-                                                      $connection->getDatabasePlatform());
+                $cast = '::'.$type->getSQLDeclaration(
+                    $targetEntity->getIdentifierFieldNames(),
+                    $connection->getDatabasePlatform()
+                );
             }
 
             self::$cacheCastIdentifiers[$targetEntity->getName()] = $cast;
@@ -123,9 +125,9 @@ abstract class DoctrineUtils
      *
      * @param ClassMetadata $targetEntity The target entity
      *
-     * @return Type
-     *
      * @throws RuntimeException When the doctrine dbal type is not found
+     *
+     * @return Type
      */
     public static function getIdentifierType(ClassMetadata $targetEntity)
     {
@@ -141,6 +143,7 @@ abstract class DoctrineUtils
         }
 
         $msg = 'The Doctrine DBAL type is not found for "%s::%s" identifier';
+
         throw new RuntimeException(sprintf($msg, $targetEntity->getName(), $identifier));
     }
 
@@ -149,7 +152,7 @@ abstract class DoctrineUtils
      *
      * @param Type $type The dbal identifier type
      *
-     * @return string|int|null
+     * @return null|int|string
      */
     private static function findZeroIdValue(Type $type)
     {

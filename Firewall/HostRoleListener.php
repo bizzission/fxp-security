@@ -25,7 +25,7 @@ class HostRoleListener extends AbstractRoleListener
      *
      * @param GetResponseEvent $event A GetResponseEvent instance
      */
-    public function handle(GetResponseEvent $event)
+    public function handle(GetResponseEvent $event): void
     {
         if ($this->isEnabled()) {
             $hostRole = $this->getHostRole($event);
@@ -41,7 +41,7 @@ class HostRoleListener extends AbstractRoleListener
      *
      * @param GetResponseEvent $event The response event
      *
-     * @return string|null
+     * @return null|string
      */
     protected function getHostRole(GetResponseEvent $event)
     {
@@ -51,6 +51,7 @@ class HostRoleListener extends AbstractRoleListener
         foreach ($this->config as $hostPattern => $role) {
             if ($this->isValid($hostPattern, $hostname)) {
                 $hostRole = $role;
+
                 break;
             }
         }

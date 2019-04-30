@@ -24,14 +24,14 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     /**
      * Get the id.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getId();
 
     /**
      * Set the classname of subject.
      *
-     * @param string|null $class The classname
+     * @param null|string $class The classname
      *
      * @return self
      */
@@ -40,7 +40,7 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     /**
      * Get the classname of subject.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getSubjectClass();
 
@@ -63,7 +63,7 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     /**
      * Set the classname of identity.
      *
-     * @param string|null $class The classname
+     * @param null|string $class The classname
      *
      * @return self
      */
@@ -72,7 +72,7 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     /**
      * Get the classname of identity.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getIdentityClass();
 
@@ -111,7 +111,7 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     /**
      * Set the date when the sharing entry must start.
      *
-     * @param \DateTime|null $date The date
+     * @param null|\DateTime $date The date
      *
      * @return self
      */
@@ -120,14 +120,14 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     /**
      * Get the date when the sharing entry must start.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getStartedAt();
 
     /**
      * Set the date when the sharing entry must end.
      *
-     * @param \DateTime|null $date The date
+     * @param null|\DateTime $date The date
      *
      * @return self
      */
@@ -136,7 +136,7 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
     /**
      * Get the date when the sharing entry must end.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getEndedAt();
 }

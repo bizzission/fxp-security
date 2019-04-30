@@ -67,7 +67,7 @@ class ConsoleToken extends AbstractToken
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list($this->key, $parentStr) = unserialize($serialized);
         parent::unserialize($parentStr);

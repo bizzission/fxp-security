@@ -53,7 +53,7 @@ interface ExpressionVariableStorageInterface
      *
      * @param string $name The variable name
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     public function get($name);
 

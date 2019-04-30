@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PreCommitObjectFilterEventTest extends TestCase
+final class PreCommitObjectFilterEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
         $objects = [
             new \stdClass(),

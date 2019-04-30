@@ -17,10 +17,13 @@ use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class RoleUtilTest extends TestCase
+final class RoleUtilTest extends TestCase
 {
-    public function testFormatRoles()
+    public function testFormatRoles(): void
     {
         $value = [
             'ROLE_USER',
@@ -34,7 +37,7 @@ class RoleUtilTest extends TestCase
         $this->assertEquals($expected, RoleUtil::formatRoles($value, true));
     }
 
-    public function testFormatRole()
+    public function testFormatRole(): void
     {
         $value = 'ROLE_TEST';
         $expected = new Role('ROLE_TEST');

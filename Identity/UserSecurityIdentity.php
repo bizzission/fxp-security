@@ -38,9 +38,9 @@ final class UserSecurityIdentity extends AbstractSecurityIdentity
      *
      * @param TokenInterface $token The token
      *
-     * @return self
-     *
      * @throws InvalidArgumentException When the user class not implements "Fxp\Component\Security\Model\UserInterface"
+     *
+     * @return self
      */
     public static function fromToken(TokenInterface $token)
     {

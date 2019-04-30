@@ -25,7 +25,7 @@ abstract class PermissionUtils
     /**
      * Get the action for the map of permissions.
      *
-     * @param string|null $action  The action
+     * @param null|string $action  The action
      * @param string      $default The default value
      *
      * @return string
@@ -38,7 +38,7 @@ abstract class PermissionUtils
     /**
      * Get the subject identity and field.
      *
-     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject  The subject instance or classname
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject  The subject instance or classname
      * @param bool                                                  $optional Check if the subject id optional
      *
      * @return array
@@ -65,14 +65,14 @@ abstract class PermissionUtils
     /**
      * Get the class and field.
      *
-     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject  The subject instance or classname
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject  The subject instance or classname
      * @param bool                                                  $optional Check if the subject id optional
      *
      * @return array
      */
     public static function getClassAndField($subject, $optional = false)
     {
-        /* @var SubjectIdentityInterface|null $subject */
+        /** @var null|SubjectIdentityInterface $subject */
         list($subject, $field) = static::getSubjectAndField($subject, $optional);
 
         $class = null !== $subject

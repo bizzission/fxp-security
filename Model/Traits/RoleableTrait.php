@@ -58,7 +58,7 @@ trait RoleableTrait
     {
         $role = strtoupper($role);
 
-        if (!\in_array($role, $this->roles, true) && !\in_array($role, ['ROLE_USER', 'ROLE_ORGANIZATION_USER'])) {
+        if (!\in_array($role, $this->roles, true) && !\in_array($role, ['ROLE_USER', 'ROLE_ORGANIZATION_USER'], true)) {
             $this->roles[] = $role;
         }
 

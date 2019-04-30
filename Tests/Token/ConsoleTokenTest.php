@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class ConsoleTokenTest extends TestCase
+final class ConsoleTokenTest extends TestCase
 {
-    public function testConsoleToken()
+    public function testConsoleToken(): void
     {
         $token = new ConsoleToken('key', 'username', [
             'ROLE_TEST',

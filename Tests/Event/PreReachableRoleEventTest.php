@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PreReachableRoleEventTest extends TestCase
+final class PreReachableRoleEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
         $roles = [
             'ROLE_FOO',

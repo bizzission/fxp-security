@@ -21,11 +21,14 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class RoleSecurityIdentityVoterTest extends TestCase
+final class RoleSecurityIdentityVoterTest extends TestCase
 {
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -34,7 +37,7 @@ class RoleSecurityIdentityVoterTest extends TestCase
      */
     protected $voter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->voter = new RoleSecurityIdentityVoter($this->sidManager, 'TEST_');
@@ -55,9 +58,9 @@ class RoleSecurityIdentityVoterTest extends TestCase
      * @param string[] $attributes The voter attributes
      * @param int      $access     The access status of voter
      */
-    public function testExtractRolesWithAccessGranted(array $attributes, $access)
+    public function testExtractRolesWithAccessGranted(array $attributes, $access): void
     {
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $sids = [
@@ -66,7 +69,8 @@ class RoleSecurityIdentityVoterTest extends TestCase
 
         $this->sidManager->expects($this->atLeast(2))
             ->method('getSecurityIdentities')
-            ->willReturn($sids);
+            ->willReturn($sids)
+        ;
 
         $this->assertSame($access, $this->voter->vote($token, null, $attributes));
         $this->assertSame($access, $this->voter->vote($token, null, $attributes));

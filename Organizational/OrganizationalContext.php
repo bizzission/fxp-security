@@ -43,17 +43,17 @@ class OrganizationalContext implements OrganizationalContextInterface
     protected $tokenStorage;
 
     /**
-     * @var EventDispatcherInterface|null
+     * @var null|EventDispatcherInterface
      */
     protected $dispatcher;
 
     /**
-     * @var OrganizationInterface|false|null
+     * @var null|false|OrganizationInterface
      */
     protected $organization;
 
     /**
-     * @var OrganizationUserInterface|null
+     * @var null|OrganizationUserInterface
      */
     protected $organizationUser;
 
@@ -61,7 +61,7 @@ class OrganizationalContext implements OrganizationalContextInterface
      * Constructor.
      *
      * @param TokenStorageInterface         $tokenStorage The token storage
-     * @param EventDispatcherInterface|null $dispatcher   The event dispatcher
+     * @param null|EventDispatcherInterface $dispatcher   The event dispatcher
      */
     public function __construct(TokenStorageInterface $tokenStorage, EventDispatcherInterface $dispatcher = null)
     {
@@ -72,15 +72,18 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setCurrentOrganization($organization)
+    public function setCurrentOrganization($organization): void
     {
         $this->getToken('organization', $organization instanceof OrganizationInterface);
 
         if (null === $organization || false === $organization || $organization instanceof OrganizationInterface) {
             $old = $this->organization;
             $this->organization = $organization;
-            $this->dispatch(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION,
-                SetCurrentOrganizationEvent::class, $organization, $old
+            $this->dispatch(
+                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION,
+                SetCurrentOrganizationEvent::class,
+                $organization,
+                $old
             );
         }
     }
@@ -109,7 +112,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setCurrentOrganizationUser($organizationUser)
+    public function setCurrentOrganizationUser($organizationUser): void
     {
         $token = $this->getToken('organization user', $organizationUser instanceof OrganizationUserInterface);
         $user = null !== $token ? $token->getUser() : null;
@@ -121,8 +124,11 @@ class OrganizationalContext implements OrganizationalContextInterface
             $old = $this->organizationUser;
             $this->organizationUser = $organizationUser;
             $org = $organizationUser->getOrganization();
-            $this->dispatch(OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER,
-                SetCurrentOrganizationUserEvent::class, $organizationUser, $old
+            $this->dispatch(
+                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER,
+                SetCurrentOrganizationUserEvent::class,
+                $organizationUser,
+                $old
             );
         }
         $this->setCurrentOrganization($org);
@@ -149,12 +155,16 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setOptionalFilterType($type)
+    public function setOptionalFilterType($type): void
     {
         $old = $this->optionalFilterType;
         $this->optionalFilterType = $type;
-        $this->dispatch(OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
-            SetOrganizationalOptionalFilterTypeEvent::class, $type, $old);
+        $this->dispatch(
+            OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
+            SetOrganizationalOptionalFilterTypeEvent::class,
+            $type,
+            $old
+        );
     }
 
     /**
@@ -179,9 +189,9 @@ class OrganizationalContext implements OrganizationalContextInterface
      * @param string $type          The type name
      * @param bool   $tokenRequired Check if the token is required
      *
-     * @return TokenInterface
-     *
      * @throws
+     *
+     * @return TokenInterface
      */
     protected function getToken($type, $tokenRequired = true)
     {
@@ -199,10 +209,10 @@ class OrganizationalContext implements OrganizationalContextInterface
      *
      * @param string                   $eventName  The event name
      * @param string                   $eventClass The class name of event
-     * @param object|false|string|null $subject    The event subject
-     * @param object|false|string|null $oldSubject The old event subject
+     * @param null|false|object|string $subject    The event subject
+     * @param null|false|object|string $oldSubject The old event subject
      */
-    protected function dispatch($eventName, $eventClass, $subject, $oldSubject)
+    protected function dispatch($eventName, $eventClass, $subject, $oldSubject): void
     {
         if (null !== $this->dispatcher && $oldSubject !== $subject) {
             $this->dispatcher->dispatch($eventName, new $eventClass($subject));

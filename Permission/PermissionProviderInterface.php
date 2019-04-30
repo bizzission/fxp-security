@@ -21,9 +21,9 @@ use Fxp\Component\Security\Model\PermissionInterface;
  */
 interface PermissionProviderInterface
 {
-    const CONFIG_CLASS = '_config_class';
+    public const CONFIG_CLASS = '_config_class';
 
-    const CONFIG_FIELD = '_config_field';
+    public const CONFIG_FIELD = '_config_field';
 
     /**
      * Get all permissions of roles.
@@ -37,8 +37,8 @@ interface PermissionProviderInterface
     /**
      * Get the permissions by subject.
      *
-     * @param FieldVote|SubjectIdentityInterface|object|string|null $subject  The subject instance or classname
-     * @param string[]|string|null                                  $contexts The permission contexts
+     * @param null|FieldVote|object|string|SubjectIdentityInterface $subject  The subject instance or classname
+     * @param null|string|string[]                                  $contexts The permission contexts
      *
      * @return PermissionInterface[]
      */
@@ -47,7 +47,7 @@ interface PermissionProviderInterface
     /**
      * Get the config permissions.
      *
-     * @param string[]|string|null $contexts The permission contexts
+     * @param null|string|string[] $contexts The permission contexts
      *
      * @return PermissionInterface[]
      */
@@ -58,7 +58,7 @@ interface PermissionProviderInterface
      *
      * @param PermissionConfigInterface $config The permission config
      *
-     * @return string|null
+     * @return null|string
      */
     public function getMasterClass(PermissionConfigInterface $config);
 }

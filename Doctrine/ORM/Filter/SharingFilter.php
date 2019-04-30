@@ -27,17 +27,17 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class SharingFilter extends AbstractFilter
 {
     /**
-     * @var SharingManagerInterface|null
+     * @var null|SharingManagerInterface
      */
     protected $sm;
 
     /**
-     * @var EventDispatcherInterface|null
+     * @var null|EventDispatcherInterface
      */
     protected $dispatcher;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     protected $sharingClass;
 
@@ -86,6 +86,21 @@ class SharingFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
+    public function doAddFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    {
+        $name = SharingFilterEvents::getName(
+            SharingFilterEvents::DOCTRINE_ORM_FILTER,
+            $this->sm->getSharingVisibility(SubjectUtils::getSubjectIdentity($targetEntity->getName()))
+        );
+        $event = new GetFilterEvent($this, $this->getEntityManager(), $targetEntity, $targetTableAlias, $this->sharingClass);
+        $this->dispatcher->dispatch($name, $event);
+
+        return $event->getFilterConstraint();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function supports(ClassMetadata $targetEntity)
     {
         $subject = SubjectUtils::getSubjectIdentity($targetEntity->getName());
@@ -99,20 +114,5 @@ class SharingFilter extends AbstractFilter
             && null !== $this->sm
             && null !== $this->sharingClass
             && $this->sm->hasSharingVisibility($subject);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function doAddFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
-    {
-        $name = SharingFilterEvents::getName(
-            SharingFilterEvents::DOCTRINE_ORM_FILTER,
-            $this->sm->getSharingVisibility(SubjectUtils::getSubjectIdentity($targetEntity->getName()))
-        );
-        $event = new GetFilterEvent($this, $this->getEntityManager(), $targetEntity, $targetTableAlias, $this->sharingClass);
-        $this->dispatcher->dispatch($name, $event);
-
-        return $event->getFilterConstraint();
     }
 }

@@ -21,12 +21,12 @@ final class SharingEvents
      *
      * @var string
      */
-    const ENABLED = 'fxp_security.sharing.enabled';
+    public const ENABLED = 'fxp_security.sharing.enabled';
 
     /**
      * The SharingEvents::ENABLED event occurs when the sharing manager is disabled.
      *
      * @var string
      */
-    const DISABLED = 'fxp_security.sharing.disabled';
+    public const DISABLED = 'fxp_security.sharing.disabled';
 }

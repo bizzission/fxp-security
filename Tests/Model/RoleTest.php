@@ -17,10 +17,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class RoleTest extends TestCase
+final class RoleTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $nameUser = 'ROLE_USER';
         $nameAdmin = 'ROLE_ADMIN';
@@ -42,7 +45,7 @@ class RoleTest extends TestCase
         $this->assertFalse($role->hasChild('CHILD'));
     }
 
-    public function testModelPermissions()
+    public function testModelPermissions(): void
     {
         $role = new MockRole('ROLE_USER');
         $perm = new MockPermission();
@@ -57,7 +60,7 @@ class RoleTest extends TestCase
         $this->assertFalse($role->hasPermission($perm));
     }
 
-    public function testParent()
+    public function testParent(): void
     {
         $roleUser = new MockRole('ROLE_USER');
         $roleAdmin = new MockRole('ROLE_ADMIN');
@@ -85,7 +88,7 @@ class RoleTest extends TestCase
         $this->assertCount(0, $roleAdmin->getChildren());
     }
 
-    public function testChildren()
+    public function testChildren(): void
     {
         $roleUser = new MockRole('ROLE_USER');
         $roleAdmin = new MockRole('ROLE_ADMIN');

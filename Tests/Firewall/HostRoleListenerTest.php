@@ -20,11 +20,14 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class HostRoleListenerTest extends TestCase
+final class HostRoleListenerTest extends TestCase
 {
     /**
-     * @var SecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -34,7 +37,7 @@ class HostRoleListenerTest extends TestCase
     protected $config;
 
     /**
-     * @var Request|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|Request
      */
     protected $request;
 
@@ -48,7 +51,7 @@ class HostRoleListenerTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->config = [
@@ -61,53 +64,59 @@ class HostRoleListenerTest extends TestCase
         $this->event = $this->getMockBuilder(GetResponseEvent::class)->disableOriginalConstructor()->getMock();
         $this->event->expects($this->any())
             ->method('getRequest')
-            ->willReturn($this->request);
+            ->willReturn($this->request)
+        ;
 
         $this->listener = new HostRoleListener($this->sidManager, $this->config);
     }
 
-    public function testBasic()
+    public function testBasic(): void
     {
         $this->assertTrue($this->listener->isEnabled());
         $this->listener->setEnabled(false);
         $this->assertFalse($this->listener->isEnabled());
     }
 
-    public function testHandleWithDisabledListener()
+    public function testHandleWithDisabledListener(): void
     {
         $this->sidManager->expects($this->never())
-            ->method('addSpecialRole');
+            ->method('addSpecialRole')
+        ;
 
         $this->listener->setEnabled(false);
         $this->listener->handle($this->event);
     }
 
-    public function testHandleWithoutHostRole()
+    public function testHandleWithoutHostRole(): void
     {
         $this->request->expects($this->once())
             ->method('getHttpHost')
-            ->willReturn('no.host-role.tld');
+            ->willReturn('no.host-role.tld')
+        ;
 
         $this->sidManager->expects($this->never())
-            ->method('addSpecialRole');
+            ->method('addSpecialRole')
+        ;
 
         $this->listener->handle($this->event);
     }
 
-    public function testHandleWithoutToken()
+    public function testHandleWithoutToken(): void
     {
         $this->request->expects($this->once())
             ->method('getHttpHost')
-            ->willReturn('foo.bar.tld');
+            ->willReturn('foo.bar.tld')
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with('ROLE_HOST');
+            ->with('ROLE_HOST')
+        ;
 
         $this->listener->handle($this->event);
     }
 
-    public function testHandleWithAlreadyRoleIncluded()
+    public function testHandleWithAlreadyRoleIncluded(): void
     {
         $token = new AnonymousToken('secret', 'user', [
             'ROLE_HOST',
@@ -115,11 +124,13 @@ class HostRoleListenerTest extends TestCase
 
         $this->request->expects($this->once())
             ->method('getHttpHost')
-            ->willReturn('foo.bar.tld');
+            ->willReturn('foo.bar.tld')
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with('ROLE_HOST');
+            ->with('ROLE_HOST')
+        ;
 
         $this->listener->handle($this->event);
 
@@ -147,7 +158,7 @@ class HostRoleListenerTest extends TestCase
      * @param string $host      The host name
      * @param string $validRole The valid role
      */
-    public function testHandle($host, $validRole)
+    public function testHandle($host, $validRole): void
     {
         $token = new AnonymousToken('secret', 'user', [
             'ROLE_FOO',
@@ -155,11 +166,13 @@ class HostRoleListenerTest extends TestCase
 
         $this->request->expects($this->once())
             ->method('getHttpHost')
-            ->willReturn($host);
+            ->willReturn($host)
+        ;
 
         $this->sidManager->expects($this->once())
             ->method('addSpecialRole')
-            ->with($validRole);
+            ->with($validRole)
+        ;
 
         $this->listener->handle($this->event);
 

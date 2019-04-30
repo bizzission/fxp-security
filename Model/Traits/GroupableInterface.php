@@ -32,7 +32,7 @@ interface GroupableInterface
     /**
      * Gets the groups granted to the user.
      *
-     * @return \Traversable|GroupInterface[]
+     * @return GroupInterface[]|\Traversable
      */
     public function getGroups();
 

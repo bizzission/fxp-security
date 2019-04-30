@@ -91,12 +91,13 @@ class ObjectFilter implements ObjectFilterInterface
      * @param EventDispatcherInterface       $dispatcher The event dispatcher
      * @param UnitOfWorkInterface            $uow        The unit of work
      */
-    public function __construct(ObjectFilterExtensionInterface $ofe,
-                                PermissionManagerInterface $pm,
-                                AuthorizationCheckerInterface  $ac,
-                                EventDispatcherInterface $dispatcher,
-                                UnitOfWorkInterface $uow = null)
-    {
+    public function __construct(
+        ObjectFilterExtensionInterface $ofe,
+        PermissionManagerInterface $pm,
+        AuthorizationCheckerInterface  $ac,
+        EventDispatcherInterface $dispatcher,
+        UnitOfWorkInterface $uow = null
+    ) {
         $this->uow = $uow ?? new UnitOfWork();
         $this->ofe = $ofe;
         $this->pm = $pm;
@@ -109,7 +110,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @param string[] $excludedClasses The excluded classes
      */
-    public function setExcludedClasses(array $excludedClasses)
+    public function setExcludedClasses(array $excludedClasses): void
     {
         $this->excludedClasses = $excludedClasses;
     }
@@ -125,7 +126,7 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function beginTransaction()
+    public function beginTransaction(): void
     {
         $this->isTransactional = true;
     }
@@ -133,7 +134,7 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function commit()
+    public function commit(): void
     {
         $event = new PreCommitObjectFilterEvent($this->queue);
         $this->dispatcher->dispatch(ObjectFilterEvents::PRE_COMMIT, $event);
@@ -158,7 +159,7 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function filter($object)
+    public function filter($object): void
     {
         if (!\is_object($object)) {
             throw new UnexpectedTypeException($object, 'object');
@@ -182,7 +183,7 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function restore($object)
+    public function restore($object): void
     {
         if (!\is_object($object)) {
             throw new UnexpectedTypeException($object, 'object');
@@ -201,11 +202,11 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @param object $object
      */
-    protected function doFilter($object)
+    protected function doFilter($object): void
     {
         $clearAll = false;
         $id = spl_object_hash($object);
-        array_splice($this->toFilter, array_search($id, $this->toFilter), 1);
+        array_splice($this->toFilter, array_search($id, $this->toFilter, true), 1);
 
         if (!$this->isViewGranted($object)) {
             $clearAll = true;
@@ -230,7 +231,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @param object $object
      */
-    protected function doRestore($object)
+    protected function doRestore($object): void
     {
         $changeSet = $this->uow->getObjectChangeSet($object);
         $ref = new \ReflectionClass($object);
@@ -286,7 +287,7 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * Check if the object or object field can be seen.
      *
-     * @param object|FieldVote $object The object or field vote
+     * @param FieldVote|object $object The object or field vote
      *
      * @return bool
      */

@@ -32,14 +32,14 @@ interface OwnerableInterface
     /**
      * Get the owner.
      *
-     * @return UserInterface|null
+     * @return null|UserInterface
      */
     public function getOwner();
 
     /**
      * Get the owner id.
      *
-     * @return int|string|null
+     * @return null|int|string
      */
     public function getOwnerId();
 }

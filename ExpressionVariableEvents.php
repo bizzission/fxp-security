@@ -23,5 +23,5 @@ final class ExpressionVariableEvents
      *
      * @var string
      */
-    const GET = 'fxp_security.expression.get_variables';
+    public const GET = 'fxp_security.expression.get_variables';
 }

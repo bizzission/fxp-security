@@ -20,10 +20,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OrganizationTest extends TestCase
+final class OrganizationTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $org = new MockOrganization('FOO');
 
@@ -43,7 +46,7 @@ class OrganizationTest extends TestCase
         $this->assertSame('FOO', (string) $org);
     }
 
-    public function testModelName()
+    public function testModelName(): void
     {
         $org = new MockOrganization('FOO');
 
@@ -52,9 +55,9 @@ class OrganizationTest extends TestCase
         $this->assertSame('BAR', $org->getName());
     }
 
-    public function testModelUser()
+    public function testModelUser(): void
     {
-        /* @var UserInterface $user */
+        /** @var UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $org = new MockOrganization('FOO');
 
@@ -66,7 +69,7 @@ class OrganizationTest extends TestCase
         $this->assertTrue($org->isUserOrganization());
     }
 
-    public function testModelRoles()
+    public function testModelRoles(): void
     {
         $role = new MockRole('ROLE_ADMIN');
         $org = new MockOrganization('FOO');
@@ -89,13 +92,14 @@ class OrganizationTest extends TestCase
         $this->assertFalse($org->hasOrganizationRole('ROLE_ADMIN'));
     }
 
-    public function testModelGroups()
+    public function testModelGroups(): void
     {
-        /* @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->any())
             ->method('getName')
-            ->willReturn('GROUP_DEFAULT');
+            ->willReturn('GROUP_DEFAULT')
+        ;
 
         $org = new MockOrganization('FOO');
 
@@ -117,19 +121,21 @@ class OrganizationTest extends TestCase
         $this->assertFalse($org->hasOrganizationGroup('GROUP_DEFAULT'));
     }
 
-    public function testModelUsers()
+    public function testModelUsers(): void
     {
-        /* @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $user->expects($this->any())
             ->method('getUsername')
-            ->willReturn('user.test');
+            ->willReturn('user.test')
+        ;
 
-        /* @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
+        /** @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
         $orgUser->expects($this->any())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $org = new MockOrganization('FOO');
 

@@ -24,7 +24,7 @@ final class OrganizationalContextEvents
      *
      * @var string
      */
-    const SET_CURRENT_ORGANIZATION = 'fxp_security.organizational_event.set_current_organization';
+    public const SET_CURRENT_ORGANIZATION = 'fxp_security.organizational_event.set_current_organization';
 
     /**
      * The OrganizationalContextEvents::SET_CURRENT_ORGANIZATION event occurs when the current organization user
@@ -34,7 +34,7 @@ final class OrganizationalContextEvents
      *
      * @var string
      */
-    const SET_CURRENT_ORGANIZATION_USER = 'fxp_security.organizational_event.set_current_organization_user';
+    public const SET_CURRENT_ORGANIZATION_USER = 'fxp_security.organizational_event.set_current_organization_user';
 
     /**
      * The OrganizationalContextEvents::SET_CURRENT_ORGANIZATION event occurs when the optional filter type
@@ -44,5 +44,5 @@ final class OrganizationalContextEvents
      *
      * @var string
      */
-    const SET_OPTIONAL_FILTER_TYPE = 'fxp_security.organizational_event.set_optional_filter_type';
+    public const SET_OPTIONAL_FILTER_TYPE = 'fxp_security.organizational_event.set_optional_filter_type';
 }

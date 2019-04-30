@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionNotFoundExceptionTest extends TestCase
+final class PermissionNotFoundExceptionTest extends TestCase
 {
-    public function testException()
+    public function testException(): void
     {
         $expected = 'The permission "read" for "stdClass" is not found ant it required by the permission configuration';
         $e = new PermissionNotFoundException('read', \stdClass::class);
@@ -27,7 +30,7 @@ class PermissionNotFoundExceptionTest extends TestCase
         $this->assertSame($expected, $e->getMessage());
     }
 
-    public function testExceptionWithField()
+    public function testExceptionWithField(): void
     {
         $expected = 'The permission "read" for "stdClass::foo" is not found ant it required by the permission configuration';
         $e = new PermissionNotFoundException('read', \stdClass::class, 'foo');

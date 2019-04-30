@@ -84,7 +84,7 @@ class SharingDeleteListener implements EventSubscriber
      *
      * @param OnFlushEventArgs $args The event
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
         $uow = $args->getEntityManager()->getUnitOfWork();
 
@@ -106,7 +106,7 @@ class SharingDeleteListener implements EventSubscriber
      *
      * @param PostFlushEventArgs $args The event
      */
-    public function postFlush(PostFlushEventArgs $args)
+    public function postFlush(PostFlushEventArgs $args): void
     {
         if (!empty($this->deleteSharingSubjects) || !empty($this->deleteSharingIdentities)) {
             $this->buildDeleteQuery($args->getEntityManager())->execute();
@@ -145,7 +145,7 @@ class SharingDeleteListener implements EventSubscriber
     /**
      * Init listener.
      */
-    protected function init()
+    protected function init(): void
     {
         if (!$this->initialized) {
             $msg = 'The "%s()" method must be called before the init of the "%s" class';
@@ -168,7 +168,8 @@ class SharingDeleteListener implements EventSubscriber
     private function buildDeleteQuery(EntityManagerInterface $em)
     {
         $qb = $em->createQueryBuilder()
-            ->delete($this->sharingClass, 's');
+            ->delete($this->sharingClass, 's')
+        ;
 
         $this->buildCriteria($qb, $this->deleteSharingSubjects, 'subjectClass', 'subjectId');
         $this->buildCriteria($qb, $this->deleteSharingIdentities, 'identityClass', 'identityName');
@@ -184,7 +185,7 @@ class SharingDeleteListener implements EventSubscriber
      * @param string       $fieldClass The name of field class
      * @param string       $fieldId    The name of field identifier
      */
-    private function buildCriteria(QueryBuilder $qb, array $mapIds, $fieldClass, $fieldId)
+    private function buildCriteria(QueryBuilder $qb, array $mapIds, $fieldClass, $fieldId): void
     {
         if (!empty($mapIds)) {
             $where = '';

@@ -21,17 +21,20 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class RoleSecurityIdentityTest extends TestCase
+final class RoleSecurityIdentityTest extends TestCase
 {
-    public function testDebugInfo()
+    public function testDebugInfo(): void
     {
         $sid = new RoleSecurityIdentity(MockRole::class, 'ROLE_TEST');
 
         $this->assertSame('RoleSecurityIdentity(ROLE_TEST)', (string) $sid);
     }
 
-    public function testTypeAndIdentifier()
+    public function testTypeAndIdentifier(): void
     {
         $identity = new RoleSecurityIdentity(MockRole::class, 'identifier');
 
@@ -58,20 +61,21 @@ class RoleSecurityIdentityTest extends TestCase
      * @param mixed $value  The value
      * @param bool  $result The expected result
      */
-    public function testEquals($value, $result)
+    public function testEquals($value, $result): void
     {
         $identity = new RoleSecurityIdentity(MockRole::class, 'identifier');
 
         $this->assertSame($result, $identity->equals($value));
     }
 
-    public function testFromAccount()
+    public function testFromAccount(): void
     {
-        /* @var RoleInterface|\PHPUnit_Framework_MockObject_MockObject $role */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|RoleInterface $role */
         $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $role->expects($this->once())
             ->method('getName')
-            ->willReturn('ROLE_TEST');
+            ->willReturn('ROLE_TEST')
+        ;
 
         $sid = RoleSecurityIdentity::fromAccount($role);
 
@@ -80,25 +84,28 @@ class RoleSecurityIdentityTest extends TestCase
         $this->assertSame('ROLE_TEST', $sid->getIdentifier());
     }
 
-    public function testFormToken()
+    public function testFormToken(): void
     {
-        /* @var RoleInterface|\PHPUnit_Framework_MockObject_MockObject $role */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|RoleInterface $role */
         $role = $this->getMockBuilder(RoleInterface::class)->getMock();
         $role->expects($this->once())
             ->method('getName')
-            ->willReturn('ROLE_TEST');
+            ->willReturn('ROLE_TEST')
+        ;
 
-        /* @var RoleableInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|RoleableInterface $user */
         $user = $this->getMockBuilder(RoleableInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getRoles')
-            ->willReturn([$role]);
+            ->willReturn([$role])
+        ;
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $sids = RoleSecurityIdentity::fromToken($token);
 
@@ -108,20 +115,20 @@ class RoleSecurityIdentityTest extends TestCase
         $this->assertSame('ROLE_TEST', $sids[0]->getIdentifier());
     }
 
-    /**
-     * @expectedException \Fxp\Component\Security\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The user class must implement "Fxp\Component\Security\Model\Traits\RoleableInterface"
-     */
-    public function testFormTokenWithInvalidInterface()
+    public function testFormTokenWithInvalidInterface(): void
     {
-        /* @var \Symfony\Component\Security\Core\User\UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $this->expectException(\Fxp\Component\Security\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The user class must implement "Fxp\\Component\\Security\\Model\\Traits\\RoleableInterface"');
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\Security\Core\User\UserInterface $user */
         $user = $this->getMockBuilder(\Symfony\Component\Security\Core\User\UserInterface::class)->getMock();
 
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         RoleSecurityIdentity::fromToken($token);
     }

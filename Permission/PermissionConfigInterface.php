@@ -57,7 +57,7 @@ interface PermissionConfigInterface
      *
      * @param string $field The field name
      *
-     * @return PermissionFieldConfigInterface|null
+     * @return null|PermissionFieldConfigInterface
      */
     public function getField($field);
 
@@ -71,7 +71,7 @@ interface PermissionConfigInterface
     /**
      * Get the master relation of permission.
      *
-     * @return PropertyPathInterface|string|null
+     * @return null|PropertyPathInterface|string
      */
     public function getMaster();
 

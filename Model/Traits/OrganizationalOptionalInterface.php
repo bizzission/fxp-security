@@ -23,7 +23,7 @@ interface OrganizationalOptionalInterface extends OrganizationalInterface
     /**
      * Set the organization.
      *
-     * @param OrganizationInterface|null $organization The organization
+     * @param null|OrganizationInterface $organization The organization
      *
      * @return self
      */

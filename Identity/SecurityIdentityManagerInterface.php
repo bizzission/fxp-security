@@ -32,7 +32,7 @@ interface SecurityIdentityManagerInterface
     /**
      * Retrieves the available security identities for the given token.
      *
-     * @param TokenInterface|null $token The token
+     * @param null|TokenInterface $token The token
      *
      * @return SecurityIdentityInterface[] The security identities
      */

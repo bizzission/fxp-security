@@ -19,10 +19,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OrganizationalUtilTest extends TestCase
+final class OrganizationalUtilTest extends TestCase
 {
-    public function testFormatName()
+    public function testFormatName(): void
     {
         $object = new MockObject('foo');
         $res = OrganizationalUtil::formatName($object, 'ROLE_TEST');
@@ -30,7 +33,7 @@ class OrganizationalUtilTest extends TestCase
         $this->assertSame('ROLE_TEST', $res);
     }
 
-    public function testFormatNameWithOrganization()
+    public function testFormatNameWithOrganization(): void
     {
         $object = new MockUserOrganizationUsers();
         $object->setOrganization(new MockOrganization('foo'));
@@ -39,28 +42,28 @@ class OrganizationalUtilTest extends TestCase
         $this->assertSame('ROLE_TEST__foo', $res);
     }
 
-    public function testFormat()
+    public function testFormat(): void
     {
         $res = OrganizationalUtil::format('ROLE_TEST');
 
         $this->assertSame('ROLE_TEST', $res);
     }
 
-    public function testFormatWithOrganization()
+    public function testFormatWithOrganization(): void
     {
         $res = OrganizationalUtil::format('ROLE_TEST__foo');
 
         $this->assertSame('ROLE_TEST', $res);
     }
 
-    public function testGetSuffix()
+    public function testGetSuffix(): void
     {
         $res = OrganizationalUtil::getSuffix('ROLE_TEST');
 
         $this->assertSame('', $res);
     }
 
-    public function testGetSuffixWithOrganization()
+    public function testGetSuffixWithOrganization(): void
     {
         $res = OrganizationalUtil::getSuffix('ROLE_TEST__foo');
 

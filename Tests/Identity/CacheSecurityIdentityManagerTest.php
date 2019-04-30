@@ -21,8 +21,11 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class CacheSecurityIdentityManagerTest extends TestCase
+final class CacheSecurityIdentityManagerTest extends TestCase
 {
     /**
      * @var EventDispatcher
@@ -30,7 +33,7 @@ class CacheSecurityIdentityManagerTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var RoleHierarchyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface
      */
     protected $roleHierarchy;
 
@@ -44,7 +47,7 @@ class CacheSecurityIdentityManagerTest extends TestCase
      */
     protected $sidManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dispatcher = new EventDispatcher();
         $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
@@ -57,37 +60,43 @@ class CacheSecurityIdentityManagerTest extends TestCase
         );
     }
 
-    public function testGetSecurityIdentities()
+    public function testGetSecurityIdentities(): void
     {
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->exactly(2))
             ->method('getUser')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $token->expects($this->exactly(2))
             ->method('getRoles')
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->roleHierarchy->expects($this->exactly(2))
             ->method('getReachableRoles')
             ->with([])
-            ->willReturn([]);
+            ->willReturn([])
+        ;
 
         $this->authenticationTrustResolver->expects($this->exactly(2))
             ->method('isFullFledged')
             ->with($token)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->authenticationTrustResolver->expects($this->exactly(2))
             ->method('isRememberMe')
             ->with($token)
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->authenticationTrustResolver->expects($this->exactly(2))
             ->method('isAnonymous')
             ->with($token)
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->dispatcher->addSubscriber(new MockCacheSecurityIdentitySubscriber());
 
@@ -102,10 +111,11 @@ class CacheSecurityIdentityManagerTest extends TestCase
         $this->assertEquals($sids, $newSids);
     }
 
-    public function testGetSecurityIdentitiesWithoutToken()
+    public function testGetSecurityIdentitiesWithoutToken(): void
     {
         $this->roleHierarchy->expects($this->never())
-            ->method('getReachableRoles');
+            ->method('getReachableRoles')
+        ;
 
         $sids = $this->sidManager->getSecurityIdentities(null);
 

@@ -142,8 +142,8 @@ interface SharingManagerInterface
      * Check if the access is granted by a sharing entry.
      *
      * @param string                        $operation The operation
-     * @param SubjectIdentityInterface|null $subject   The subject
-     * @param string|null                   $field     The field of subject
+     * @param null|SubjectIdentityInterface $subject   The subject
+     * @param null|string                   $field     The field of subject
      *
      * @return bool
      */

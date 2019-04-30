@@ -66,7 +66,7 @@ class MockUserGroupable implements UserInterface, EditGroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // do nothing
     }

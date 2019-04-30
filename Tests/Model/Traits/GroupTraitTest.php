@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class GroupTraitTest extends TestCase
+final class GroupTraitTest extends TestCase
 {
-    public function testGroupModel()
+    public function testGroupModel(): void
     {
         $group = new MockGroup('GROUP_TEST');
 

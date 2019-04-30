@@ -21,11 +21,14 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OrganizationSecurityIdentitySubscriberTest extends TestCase
+final class OrganizationSecurityIdentitySubscriberTest extends TestCase
 {
     /**
-     * @var RoleHierarchyInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface
      */
     protected $roleHierarchy;
 
@@ -39,7 +42,7 @@ class OrganizationSecurityIdentitySubscriberTest extends TestCase
      */
     protected $listener;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
         $this->orgContext = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
@@ -48,32 +51,35 @@ class OrganizationSecurityIdentitySubscriberTest extends TestCase
         $this->assertCount(1, $this->listener->getSubscribedEvents());
     }
 
-    public function testCacheIdWithPersonalOrganization()
+    public function testCacheIdWithPersonalOrganization(): void
     {
         $this->orgContext->expects($this->once())
             ->method('getCurrentOrganization')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $this->assertSame('', $this->listener->getCacheId());
     }
 
-    public function testCacheIdWithOrganization()
+    public function testCacheIdWithOrganization(): void
     {
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $org->expects($this->once())
             ->method('getId')
-            ->willReturn(42);
+            ->willReturn(42)
+        ;
 
         $this->orgContext->expects($this->once())
             ->method('getCurrentOrganization')
-            ->willReturn($org);
+            ->willReturn($org)
+        ;
 
         $this->assertSame('org42', $this->listener->getCacheId());
     }
 
-    public function testAddOrganizationSecurityIdentities()
+    public function testAddOrganizationSecurityIdentities(): void
     {
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
         $event = new AddSecurityIdentityEvent($token, $sids);
@@ -83,16 +89,17 @@ class OrganizationSecurityIdentitySubscriberTest extends TestCase
         $this->assertSame($sids, $event->getSecurityIdentities());
     }
 
-    public function testAddOrganizationSecurityIdentitiesWithInvalidArgument()
+    public function testAddOrganizationSecurityIdentitiesWithInvalidArgument(): void
     {
-        /* @var TokenInterface|\PHPUnit_Framework_MockObject_MockObject $token */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
         $event = new AddSecurityIdentityEvent($token, $sids);
 
         $token->expects($this->once())
             ->method('getUser')
-            ->willThrowException(new \InvalidArgumentException('Test'));
+            ->willThrowException(new \InvalidArgumentException('Test'))
+        ;
 
         $this->listener->addOrganizationSecurityIdentities($event);
 

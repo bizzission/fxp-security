@@ -42,12 +42,12 @@ class RoleHierarchyListener implements EventSubscriber
     protected $sim;
 
     /**
-     * @var CacheItemPoolInterface|null
+     * @var null|CacheItemPoolInterface
      */
     protected $cache;
 
     /**
-     * @var OrganizationalContextInterface|null
+     * @var null|OrganizationalContextInterface
      */
     protected $context;
 
@@ -55,13 +55,14 @@ class RoleHierarchyListener implements EventSubscriber
      * Constructor.
      *
      * @param SecurityIdentityManagerInterface    $sim     The security identity manager
-     * @param CacheItemPoolInterface|null         $cache   The cache
-     * @param OrganizationalContextInterface|null $context The organizational context
+     * @param null|CacheItemPoolInterface         $cache   The cache
+     * @param null|OrganizationalContextInterface $context The organizational context
      */
-    public function __construct(SecurityIdentityManagerInterface $sim,
-                                CacheItemPoolInterface $cache = null,
-                                OrganizationalContextInterface $context = null)
-    {
+    public function __construct(
+        SecurityIdentityManagerInterface $sim,
+        CacheItemPoolInterface $cache = null,
+        OrganizationalContextInterface $context = null
+    ) {
         $this->sim = $sim;
         $this->cache = $cache;
         $this->context = $context;
@@ -80,7 +81,7 @@ class RoleHierarchyListener implements EventSubscriber
      *
      * @param OnFlushEventArgs $args
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
         $uow = $args->getEntityManager()->getUnitOfWork();
         $collection = $this->getAllCollections($uow);
@@ -103,7 +104,7 @@ class RoleHierarchyListener implements EventSubscriber
      *
      * @param array $invalidates The prefix must be invalidated
      */
-    protected function flushCache(array $invalidates)
+    protected function flushCache(array $invalidates): void
     {
         if (\count($invalidates) > 0) {
             if ($this->cache instanceof AdapterInterface && null !== $this->context) {
@@ -142,7 +143,7 @@ class RoleHierarchyListener implements EventSubscriber
      * @param UnitOfWork $uow    The unit of work
      * @param object     $object The object
      *
-     * @return string|false
+     * @return false|string
      */
     protected function invalidateCache(UnitOfWork $uow, $object)
     {
@@ -152,32 +153,6 @@ class RoleHierarchyListener implements EventSubscriber
 
         if ($object instanceof PersistentCollection && $this->isRequireAssociation($object->getMapping())) {
             return $this->getPrefix($object->getOwner());
-        }
-
-        return false;
-    }
-
-    /**
-     * Check if the object cache must be invalidated.
-     *
-     * @param UnitOfWork $uow    The unit of work
-     * @param object     $object The object
-     *
-     * @return bool|string
-     */
-    private function invalidateCacheableObject(UnitOfWork $uow, $object)
-    {
-        $fields = array_keys($uow->getEntityChangeSet($object));
-        $checkFields = ['roles'];
-
-        if ($object instanceof RoleHierarchicalInterface || $object instanceof OrganizationUserInterface) {
-            $checkFields = array_merge($checkFields, ['name']);
-        }
-
-        foreach ($fields as $field) {
-            if (\in_array($field, $checkFields, true)) {
-                return $this->getPrefix($object);
-            }
         }
 
         return false;
@@ -239,5 +214,31 @@ class RoleHierarchyListener implements EventSubscriber
         }
 
         return $id.'__';
+    }
+
+    /**
+     * Check if the object cache must be invalidated.
+     *
+     * @param UnitOfWork $uow    The unit of work
+     * @param object     $object The object
+     *
+     * @return bool|string
+     */
+    private function invalidateCacheableObject(UnitOfWork $uow, $object)
+    {
+        $fields = array_keys($uow->getEntityChangeSet($object));
+        $checkFields = ['roles'];
+
+        if ($object instanceof RoleHierarchicalInterface || $object instanceof OrganizationUserInterface) {
+            $checkFields = array_merge($checkFields, ['name']);
+        }
+
+        foreach ($fields as $field) {
+            if (\in_array($field, $checkFields, true)) {
+                return $this->getPrefix($object);
+            }
+        }
+
+        return false;
     }
 }

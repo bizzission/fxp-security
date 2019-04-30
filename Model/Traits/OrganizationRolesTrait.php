@@ -24,7 +24,7 @@ use Fxp\Component\Security\Model\RoleInterface;
 trait OrganizationRolesTrait
 {
     /**
-     * @var Collection|null
+     * @var null|Collection
      *
      * @ORM\OneToMany(
      *     targetEntity="Fxp\Component\Security\Model\RoleInterface",

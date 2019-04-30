@@ -43,9 +43,10 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
      * @param RoleHierarchyInterface         $roleHierarchy The role hierarchy
      * @param OrganizationalContextInterface $context       The organizational context
      */
-    public function __construct(RoleHierarchyInterface $roleHierarchy,
-                                OrganizationalContextInterface $context)
-    {
+    public function __construct(
+        RoleHierarchyInterface $roleHierarchy,
+        OrganizationalContextInterface $context
+    ) {
         $this->roleHierarchy = $roleHierarchy;
         $this->context = $context;
     }
@@ -77,13 +78,17 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
      *
      * @param AddSecurityIdentityEvent $event The event
      */
-    public function addOrganizationSecurityIdentities(AddSecurityIdentityEvent $event)
+    public function addOrganizationSecurityIdentities(AddSecurityIdentityEvent $event): void
     {
         try {
             $sids = $event->getSecurityIdentities();
-            $sids = IdentityUtils::merge($sids,
-                OrganizationSecurityIdentity::fromToken($event->getToken(),
-                    $this->context, $this->roleHierarchy)
+            $sids = IdentityUtils::merge(
+                $sids,
+                OrganizationSecurityIdentity::fromToken(
+                    $event->getToken(),
+                    $this->context,
+                    $this->roleHierarchy
+                )
             );
             $event->setSecurityIdentities($sids);
         } catch (\InvalidArgumentException $e) {

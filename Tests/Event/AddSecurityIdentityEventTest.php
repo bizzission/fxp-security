@@ -18,12 +18,15 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class AddSecurityIdentityEventTest extends TestCase
+final class AddSecurityIdentityEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
-        /* @var TokenInterface $token */
+        /** @var TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [
             $this->getMockBuilder(SecurityIdentityInterface::class)->getMock(),

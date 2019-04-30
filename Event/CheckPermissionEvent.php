@@ -38,17 +38,17 @@ class CheckPermissionEvent extends Event
     protected $operation;
 
     /**
-     * @var SubjectIdentityInterface|null
+     * @var null|SubjectIdentityInterface
      */
     protected $subject;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     protected $field;
 
     /**
-     * @var bool|null
+     * @var null|bool
      */
     protected $granted;
 
@@ -58,15 +58,16 @@ class CheckPermissionEvent extends Event
      * @param SecurityIdentityInterface[]   $sids          The security identities
      * @param array                         $permissionMap The map of permissions
      * @param string                        $operation     The operation
-     * @param SubjectIdentityInterface|null $subject       The subject
-     * @param string|null                   $field         The field of subject
+     * @param null|SubjectIdentityInterface $subject       The subject
+     * @param null|string                   $field         The field of subject
      */
-    public function __construct(array $sids,
-                                array $permissionMap,
-                                $operation,
-                                $subject = null,
-                                $field = null)
-    {
+    public function __construct(
+        array $sids,
+        array $permissionMap,
+        $operation,
+        $subject = null,
+        $field = null
+    ) {
         $this->sids = $sids;
         $this->permissionMap = $permissionMap;
         $this->operation = $operation;
@@ -107,7 +108,7 @@ class CheckPermissionEvent extends Event
     /**
      * Get the subject.
      *
-     * @return SubjectIdentityInterface|null
+     * @return null|SubjectIdentityInterface
      */
     public function getSubject()
     {
@@ -117,7 +118,7 @@ class CheckPermissionEvent extends Event
     /**
      * Get the field.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getField()
     {
@@ -127,7 +128,7 @@ class CheckPermissionEvent extends Event
     /**
      * Define the granted value.
      *
-     * @param bool|null $granted The granted value
+     * @param null|bool $granted The granted value
      *
      * @return self
      */
@@ -141,7 +142,7 @@ class CheckPermissionEvent extends Event
     /**
      * Check if the permission is granted or not.
      *
-     * @return bool|null
+     * @return null|bool
      */
     public function isGranted()
     {

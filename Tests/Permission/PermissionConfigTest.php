@@ -18,10 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class PermissionConfigTest extends TestCase
+final class PermissionConfigTest extends TestCase
 {
-    public function testPermissionConfigByDefault()
+    public function testPermissionConfigByDefault(): void
     {
         $operations = ['create', 'view', 'update', 'delete'];
         $config = new PermissionConfig(MockObject::class, $operations);
@@ -31,7 +34,7 @@ class PermissionConfigTest extends TestCase
         $this->assertNull($config->getMaster());
     }
 
-    public function testPermissionConfig()
+    public function testPermissionConfig(): void
     {
         $operations = ['invite', 'view', 'update', 'revoke'];
         $alias = [

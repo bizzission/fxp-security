@@ -17,16 +17,20 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
+ * @coversNothing
  */
-class OrganizationalTraitTest extends TestCase
+final class OrganizationalTraitTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
-        /* @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $org->expects($this->once())
             ->method('getId')
-            ->willReturn(42);
+            ->willReturn(42)
+        ;
 
         $user = new MockUserOrganizationUsers();
 
