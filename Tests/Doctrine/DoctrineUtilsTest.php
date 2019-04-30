@@ -23,7 +23,6 @@ use PHPUnit\Framework\TestCase;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class DoctrineUtilsTest extends TestCase
 {

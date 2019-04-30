@@ -32,7 +32,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class OrganizationalRoleHierarchyTest extends TestCase
 {

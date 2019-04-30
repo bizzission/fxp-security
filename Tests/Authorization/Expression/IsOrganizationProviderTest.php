@@ -21,7 +21,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class IsOrganizationProviderTest extends TestCase
 {

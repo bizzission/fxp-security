@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\Role\Role;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class RoleUtilTest extends TestCase
 {

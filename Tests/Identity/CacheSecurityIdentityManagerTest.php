@@ -23,7 +23,6 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class CacheSecurityIdentityManagerTest extends TestCase
 {

@@ -20,7 +20,6 @@ use PHPUnit\Framework\TestCase;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class DoctrineOrmCollectionValueTest extends TestCase
 {

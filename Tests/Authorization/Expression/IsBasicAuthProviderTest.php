@@ -21,7 +21,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class IsBasicAuthProviderTest extends TestCase
 {

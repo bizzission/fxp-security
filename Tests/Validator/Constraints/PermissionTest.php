@@ -19,7 +19,6 @@ use Symfony\Component\Validator\Constraint;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class PermissionTest extends TestCase
 {

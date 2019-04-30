@@ -28,7 +28,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class ExpressionVariableStorageTest extends TestCase
 {

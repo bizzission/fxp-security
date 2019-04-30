@@ -23,7 +23,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class PermissionExceptionListenerTest extends TestCase
 {

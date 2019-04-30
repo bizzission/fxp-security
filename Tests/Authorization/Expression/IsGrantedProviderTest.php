@@ -20,7 +20,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class IsGrantedProviderTest extends TestCase
 {

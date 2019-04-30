@@ -24,7 +24,6 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class PermissionValidatorTest extends TestCase
 {

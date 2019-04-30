@@ -42,7 +42,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class PermissionManagerTest extends TestCase
 {

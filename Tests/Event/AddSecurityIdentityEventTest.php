@@ -20,7 +20,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
- * @coversNothing
  */
 final class AddSecurityIdentityEventTest extends TestCase
 {
