@@ -40,12 +40,12 @@ class SharingProvider implements SharingProviderInterface
     protected $doctrine;
 
     /**
-     * @var null|EntityRepository
+     * @var null|EntityRepository|ObjectRepository
      */
     protected $roleRepo;
 
     /**
-     * @var null|EntityRepository
+     * @var null|EntityRepository|ObjectRepository
      */
     protected $sharingRepo;
 
