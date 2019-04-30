@@ -27,7 +27,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @return self
      */
-    public function addParent(self $role);
+    public function addParent(RoleHierarchicalInterface $role);
 
     /**
      * Remove a parent on the current role.
@@ -36,7 +36,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @return self
      */
-    public function removeParent(self $parent);
+    public function removeParent(RoleHierarchicalInterface $parent);
 
     /**
      * Gets all parent.
@@ -68,7 +68,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @return self
      */
-    public function addChild(self $role);
+    public function addChild(RoleHierarchicalInterface $role);
 
     /**
      * Remove a child on the current role.
@@ -77,7 +77,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @return self
      */
-    public function removeChild(self $child);
+    public function removeChild(RoleHierarchicalInterface $child);
 
     /**
      * Gets all children.
