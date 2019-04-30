@@ -175,7 +175,7 @@ class RoleHierarchyListener implements EventSubscriber
         }
 
         foreach ($fields as $field) {
-            if (\in_array($field, $checkFields)) {
+            if (\in_array($field, $checkFields, true)) {
                 return $this->getPrefix($object);
             }
         }
@@ -206,12 +206,12 @@ class RoleHierarchyListener implements EventSubscriber
     {
         $ref = new \ReflectionClass($mapping['sourceEntity']);
 
-        if (\in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames())
+        if (\in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames(), true)
                 && 'children' === $mapping['fieldName']) {
             return true;
         }
 
-        if (\in_array(GroupableInterface::class, $ref->getInterfaceNames())
+        if (\in_array(GroupableInterface::class, $ref->getInterfaceNames(), true)
                 && 'groups' === $mapping['fieldName']) {
             return true;
         }

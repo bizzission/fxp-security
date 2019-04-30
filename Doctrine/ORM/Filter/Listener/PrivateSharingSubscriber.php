@@ -130,9 +130,9 @@ SELECTCLAUSE;
         $class = $event->getTargetEntity()->getName();
         $interfaces = class_implements($class);
 
-        if (\in_array(OwnerableInterface::class, $interfaces)) {
+        if (\in_array(OwnerableInterface::class, $interfaces, true)) {
             $filter = $this->buildRequiredOwnerFilter($event, $filter);
-        } elseif (\in_array(OwnerableOptionalInterface::class, $interfaces)) {
+        } elseif (\in_array(OwnerableOptionalInterface::class, $interfaces, true)) {
             $filter = $this->buildOptionalOwnerFilter($event, $filter);
         }
 

@@ -61,7 +61,7 @@ trait OrganizationRolesTrait
      */
     public function hasOrganizationRole($role)
     {
-        return \in_array($role, $this->getOrganizationRoleNames());
+        return \in_array($role, $this->getOrganizationRoleNames(), true);
     }
 
     /**

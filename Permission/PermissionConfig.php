@@ -91,7 +91,7 @@ class PermissionConfig implements PermissionConfigInterface
      */
     public function hasOperation($operation)
     {
-        return \in_array($this->getMappingPermission($operation), $this->operations);
+        return \in_array($this->getMappingPermission($operation), $this->operations, true);
     }
 
     /**

@@ -125,7 +125,7 @@ trait OrganizationTrait
      */
     public function hasOrganizationUser($username)
     {
-        return \in_array($username, $this->getOrganizationUserNames());
+        return \in_array($username, $this->getOrganizationUserNames(), true);
     }
 
     /**

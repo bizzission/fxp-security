@@ -188,7 +188,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
         $roles = $this->getRoleNames($sids);
 
         foreach ($this->roles as $role) {
-            if (!\in_array($role, $roles)) {
+            if (!\in_array($role, $roles, true)) {
                 $sids[] = RoleSecurityIdentity::fromAccount($role);
             }
         }

@@ -68,6 +68,6 @@ trait GroupableTrait
      */
     public function hasGroup($name)
     {
-        return \in_array($name, $this->getGroupNames());
+        return \in_array($name, $this->getGroupNames(), true);
     }
 }

@@ -237,7 +237,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
             foreach ($org->getRoles() as $orgRole) {
                 $roleName = RoleUtil::formatName($orgRole);
 
-                if (!\in_array($roleName, $existingRoles)) {
+                if (!\in_array($roleName, $existingRoles, true)) {
                     $roles[] = $roleName.'__'.$orgName;
                     $existingRoles[] = $roleName;
                 }

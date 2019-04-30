@@ -112,7 +112,7 @@ class SharingDeleteListenerTest extends TestCase
 
         $listener = new SharingDeleteListener(MockSharing::class);
 
-        if (\in_array('sharingManager', $setters)) {
+        if (\in_array('sharingManager', $setters, true)) {
             $listener->setSharingManager($this->sharingManager);
         }
 

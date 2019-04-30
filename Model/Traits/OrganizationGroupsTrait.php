@@ -61,7 +61,7 @@ trait OrganizationGroupsTrait
      */
     public function hasOrganizationGroup($group)
     {
-        return \in_array($group, $this->getOrganizationGroupNames());
+        return \in_array($group, $this->getOrganizationGroupNames(), true);
     }
 
     /**

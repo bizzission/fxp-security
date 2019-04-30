@@ -107,7 +107,7 @@ trait RoleHierarchicalTrait
      */
     public function hasParent($name)
     {
-        return \in_array($name, $this->getParentNames());
+        return \in_array($name, $this->getParentNames(), true);
     }
 
     /**
@@ -160,6 +160,6 @@ trait RoleHierarchicalTrait
      */
     public function hasChild($name)
     {
-        return \in_array($name, $this->getChildrenNames());
+        return \in_array($name, $this->getChildrenNames(), true);
     }
 }

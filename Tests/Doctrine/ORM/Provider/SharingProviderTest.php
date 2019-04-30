@@ -646,7 +646,7 @@ class SharingProviderTest extends TestCase
         $registry->expects($this->any())
             ->method('getManagerForClass')
             ->willReturnCallback(static function ($class) use ($em) {
-                return \in_array($class, [RoleInterface::class, SharingInterface::class]) ? $em : null;
+                return \in_array($class, [RoleInterface::class, SharingInterface::class], true) ? $em : null;
             });
 
         $em->expects($this->any())

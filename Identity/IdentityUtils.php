@@ -39,7 +39,7 @@ abstract class IdentityUtils
         foreach ($newSids as $sid) {
             $key = $sid->getType().'::'.$sid->getIdentifier();
 
-            if (!\in_array($key, $existingSids)) {
+            if (!\in_array($key, $existingSids, true)) {
                 $sids[] = $sid;
                 $existingSids[] = $key;
             }

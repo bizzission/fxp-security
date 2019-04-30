@@ -102,15 +102,15 @@ class ObjectFilterListenerTest extends TestCase
 
         $listener = new ObjectFilterListener();
 
-        if (\in_array('tokenStorage', $setters)) {
+        if (\in_array('tokenStorage', $setters, true)) {
             $listener->setTokenStorage($this->tokenStorage);
         }
 
-        if (\in_array('permissionManager', $setters)) {
+        if (\in_array('permissionManager', $setters, true)) {
             $listener->setPermissionManager($this->permissionManager);
         }
 
-        if (\in_array('objectFilter', $setters)) {
+        if (\in_array('objectFilter', $setters, true)) {
             $listener->setObjectFilter($this->objectFilter);
         }
 

@@ -56,7 +56,7 @@ class MockGroup implements GroupInterface
      */
     public function hasRole($role)
     {
-        return \in_array($role, $this->roles);
+        return \in_array($role, $this->roles, true);
     }
 
     /**

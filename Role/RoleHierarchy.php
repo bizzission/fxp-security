@@ -311,7 +311,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         foreach ($reachableRoles as $role) {
             $name = $this->formatCleanedRoleName($role);
 
-            if (!\in_array($name, $existingRoles)) {
+            if (!\in_array($name, $existingRoles, true)) {
                 $rSuffix = 'ROLE_USER' !== $name && 'ORGANIZATION_ROLE_USER' !== $name ? $suffix : '';
                 $existingRoles[] = $name;
                 $finalRoles[] = $role.$rSuffix;

@@ -141,7 +141,7 @@ class ObjectFilter implements ObjectFilterInterface
         $this->pm->preloadPermissions(array_values($this->queue));
 
         foreach ($this->queue as $id => $object) {
-            if (\in_array($id, $this->toFilter)) {
+            if (\in_array($id, $this->toFilter, true)) {
                 $this->doFilter($object);
             } else {
                 $this->doRestore($object);
@@ -323,7 +323,7 @@ class ObjectFilter implements ObjectFilterInterface
     {
         return (\is_int($value) || \is_string($value))
                 && (string) $value === $fieldVote->getSubject()->getIdentifier()
-                && \in_array($fieldVote->getField(), ['id', 'subjectIdentifier']);
+                && \in_array($fieldVote->getField(), ['id', 'subjectIdentifier'], true);
     }
 
     /**
