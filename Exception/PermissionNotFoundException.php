@@ -16,7 +16,7 @@ namespace Fxp\Component\Security\Exception;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class PermissionNotFoundException extends InvalidArgumentException implements ExceptionInterface
+class PermissionNotFoundException extends InvalidArgumentException
 {
     /**
      * Constructor.
@@ -25,7 +25,7 @@ class PermissionNotFoundException extends InvalidArgumentException implements Ex
      * @param string      $class     The class name
      * @param null|string $field     The field name
      */
-    public function __construct($operation, $class, $field = null)
+    public function __construct(string $operation, string $class, ?string $field = null)
     {
         $msg = 'The permission "%s" for "%s%s" is not found ant it required by the permission configuration';
         $msg = sprintf($msg, $operation, $class, null === $field ? '' : '::'.$field);

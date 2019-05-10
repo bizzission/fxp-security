@@ -44,7 +44,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
      */
     public function __construct(
         array $variables = [],
-        SecurityIdentityManagerInterface $sim = null
+        ?SecurityIdentityManagerInterface $sim = null
     ) {
         $this->sim = $sim;
 
@@ -56,7 +56,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ExpressionVariableEvents::GET => ['inject', 0],
@@ -66,7 +66,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * {@inheritdoc}
      */
-    public function add($name, $value)
+    public function add(string $name, $value): self
     {
         $this->variables[$name] = $value;
 
@@ -76,7 +76,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * {@inheritdoc}
      */
-    public function remove($name)
+    public function remove(string $name): self
     {
         unset($this->variables[$name]);
 
@@ -86,7 +86,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * {@inheritdoc}
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return isset($this->variables[$name]);
     }
@@ -94,7 +94,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get(string $name)
     {
         return $this->has($name)
             ? $this->variables[$name]
@@ -104,7 +104,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     /**
      * {@inheritdoc}
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->variables;
     }
@@ -130,7 +130,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
      *
      * @return string[]
      */
-    private function getAllRoles(TokenInterface $token)
+    private function getAllRoles(TokenInterface $token): array
     {
         if (null !== $this->sim) {
             $sids = $this->sim->getSecurityIdentities($token);

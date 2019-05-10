@@ -28,7 +28,7 @@ abstract class SharingUtils
      *
      * @return string[]
      */
-    public static function buildOperations(SharingInterface $sharing)
+    public static function buildOperations(SharingInterface $sharing): array
     {
         $operations = [];
 
@@ -46,7 +46,7 @@ abstract class SharingUtils
      *
      * @return string
      */
-    public static function getCacheId(SubjectIdentityInterface $subject)
+    public static function getCacheId(SubjectIdentityInterface $subject): string
     {
         return $subject->getType().':'.$subject->getIdentifier();
     }
@@ -58,7 +58,7 @@ abstract class SharingUtils
      *
      * @return string
      */
-    public static function getSharingCacheId(SharingInterface $sharing)
+    public static function getSharingCacheId(SharingInterface $sharing): string
     {
         return $sharing->getSubjectClass().':'.$sharing->getSubjectId();
     }

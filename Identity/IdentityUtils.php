@@ -28,7 +28,7 @@ abstract class IdentityUtils
      *
      * @return SecurityIdentityInterface[]
      */
-    public static function merge(array $sids, array $newSids)
+    public static function merge(array $sids, array $newSids): array
     {
         $existingSids = [];
 
@@ -55,7 +55,7 @@ abstract class IdentityUtils
      *
      * @return string[]
      */
-    public static function filterRolesIdentities(array $sids)
+    public static function filterRolesIdentities(array $sids): array
     {
         $roles = [];
 
@@ -75,7 +75,7 @@ abstract class IdentityUtils
      *
      * @return bool
      */
-    public static function isValid(SecurityIdentityInterface $sid)
+    public static function isValid(SecurityIdentityInterface $sid): bool
     {
         return !$sid instanceof RoleSecurityIdentity
             || ($sid instanceof RoleSecurityIdentity && false === strpos($sid->getIdentifier(), 'IS_'));

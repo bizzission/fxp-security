@@ -190,7 +190,7 @@ final class OrganizationalContextTest extends TestCase
             ->willReturn($user)
         ;
 
-        $orgUser->expects($this->once())
+        $orgUser->expects($this->atLeast(2))
             ->method('getUser')
             ->willReturn($user)
         ;
@@ -236,7 +236,7 @@ final class OrganizationalContextTest extends TestCase
             ->willReturn($user)
         ;
 
-        $orgUser->expects($this->once())
+        $orgUser->expects($this->atLeast(2))
             ->method('getUser')
             ->willReturn($user)
         ;

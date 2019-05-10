@@ -340,6 +340,7 @@ final class RoleHierarchyListenerTest extends TestCase
         $persistCollection = new PersistentCollection($this->em, $meta, $collection);
 
         $persistCollection->setOwner($object, [
+            'fieldName' => '',
             'inversedBy' => '',
             'mappedBy' => '',
             'sourceEntity' => \get_class($object),

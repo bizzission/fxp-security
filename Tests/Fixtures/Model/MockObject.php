@@ -32,7 +32,7 @@ class MockObject
      * @param string          $name The name
      * @param null|int|string $id   The id
      */
-    public function __construct($name, $id = 42)
+    public function __construct(?string $name, $id = 42)
     {
         $this->name = $name;
         $this->id = $id;
@@ -48,7 +48,7 @@ class MockObject
      *
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -58,7 +58,7 @@ class MockObject
      *
      * @param string $name The name
      */
-    public function setName($name): void
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }

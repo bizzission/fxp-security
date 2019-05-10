@@ -25,7 +25,7 @@ trait OrganizationalRequiredTrait
     /**
      * {@inheritdoc}
      */
-    public function setOrganization(OrganizationInterface $organization)
+    public function setOrganization(OrganizationInterface $organization): self
     {
         $this->organization = $organization;
 

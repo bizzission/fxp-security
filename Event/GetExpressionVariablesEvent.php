@@ -48,7 +48,7 @@ class GetExpressionVariablesEvent extends Event
      *
      * @return TokenInterface
      */
-    public function getToken()
+    public function getToken(): TokenInterface
     {
         return $this->token;
     }
@@ -71,7 +71,7 @@ class GetExpressionVariablesEvent extends Event
      * @param string $name  The name of expression variable
      * @param mixed  $value The value of expression variable
      */
-    public function addVariable($name, $value): void
+    public function addVariable(string $name, $value): void
     {
         $this->variables[$name] = $value;
     }
@@ -81,7 +81,7 @@ class GetExpressionVariablesEvent extends Event
      *
      * @return array
      */
-    public function getVariables()
+    public function getVariables(): array
     {
         return $this->variables;
     }

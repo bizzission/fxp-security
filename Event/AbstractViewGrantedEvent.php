@@ -62,11 +62,11 @@ abstract class AbstractViewGrantedEvent extends Event
      *
      * @param bool $isGranted The granted value
      *
-     * @return self
+     * @return static
      */
-    public function setGranted($isGranted)
+    public function setGranted(bool $isGranted): self
     {
-        $this->isGranted = (bool) $isGranted;
+        $this->isGranted = $isGranted;
         $this->skipAuthorizationChecker(true);
 
         return $this;
@@ -77,7 +77,7 @@ abstract class AbstractViewGrantedEvent extends Event
      *
      * @return bool
      */
-    public function isGranted()
+    public function isGranted(): bool
     {
         return $this->isGranted;
     }
@@ -87,11 +87,11 @@ abstract class AbstractViewGrantedEvent extends Event
      *
      * @param bool $skip The value
      *
-     * @return self
+     * @return static
      */
-    public function skipAuthorizationChecker($skip)
+    public function skipAuthorizationChecker(bool $skip): self
     {
-        $this->skip = (bool) $skip;
+        $this->skip = $skip;
 
         return $this;
     }
@@ -101,7 +101,7 @@ abstract class AbstractViewGrantedEvent extends Event
      *
      * @return bool
      */
-    public function isSkipAuthorizationChecker()
+    public function isSkipAuthorizationChecker(): bool
     {
         return $this->skip;
     }

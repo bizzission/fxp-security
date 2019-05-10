@@ -30,7 +30,7 @@ abstract class PermissionUtils
      *
      * @return string
      */
-    public static function getMapAction($action = null, $default = '_global')
+    public static function getMapAction(?string $action, string $default = '_global'): string
     {
         return $action ?? $default;
     }
@@ -43,7 +43,7 @@ abstract class PermissionUtils
      *
      * @return array
      */
-    public static function getSubjectAndField($subject, $optional = false)
+    public static function getSubjectAndField($subject, bool $optional = false): array
     {
         if ($subject instanceof FieldVote) {
             $field = $subject->getField();
@@ -70,7 +70,7 @@ abstract class PermissionUtils
      *
      * @return array
      */
-    public static function getClassAndField($subject, $optional = false)
+    public static function getClassAndField($subject, bool $optional = false): array
     {
         /** @var null|SubjectIdentityInterface $subject */
         list($subject, $field) = static::getSubjectAndField($subject, $optional);

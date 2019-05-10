@@ -33,7 +33,7 @@ interface UserOrganizationUsersInterface
      *
      * @return string[]
      */
-    public function getUserOrganizationNames();
+    public function getUserOrganizationNames(): array;
 
     /**
      * Check if the organization is associated with this user.
@@ -42,7 +42,7 @@ interface UserOrganizationUsersInterface
      *
      * @return bool
      */
-    public function hasUserOrganization($name);
+    public function hasUserOrganization(string $name): bool;
 
     /**
      * Get the associated organization with this user.
@@ -51,14 +51,14 @@ interface UserOrganizationUsersInterface
      *
      * @return null|OrganizationUserInterface
      */
-    public function getUserOrganization($name);
+    public function getUserOrganization(string $name): ?OrganizationUserInterface;
 
     /**
      * Associate an organization with this user.
      *
      * @param OrganizationUserInterface $organizationUser The user organization
      *
-     * @return self
+     * @return static
      */
     public function addUserOrganization(OrganizationUserInterface $organizationUser);
 
@@ -67,7 +67,7 @@ interface UserOrganizationUsersInterface
      *
      * @param OrganizationUserInterface $organizationUser The user organization
      *
-     * @return self
+     * @return static
      */
     public function removeUserOrganization(OrganizationUserInterface $organizationUser);
 }

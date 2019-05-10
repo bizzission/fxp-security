@@ -25,7 +25,7 @@ interface OrganizationalRequiredInterface extends OrganizationalInterface
      *
      * @param OrganizationInterface $organization The organization
      *
-     * @return self
+     * @return static
      */
     public function setOrganization(OrganizationInterface $organization);
 }

@@ -25,7 +25,7 @@ use Fxp\Component\Security\Model\RoleInterface;
 trait RoleHierarchicalTrait
 {
     /**
-     * @var null|Collection
+     * @var null|Collection|RoleInterface[]
      *
      * @ORM\ManyToMany(
      *     targetEntity="Fxp\Component\Security\Model\RoleInterface",
@@ -35,7 +35,7 @@ trait RoleHierarchicalTrait
     protected $parents;
 
     /**
-     * @var null|Collection
+     * @var null|Collection|RoleInterface[]
      *
      * @ORM\ManyToMany(
      *     targetEntity="Fxp\Component\Security\Model\RoleInterface",
@@ -56,7 +56,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function addParent(RoleHierarchicalInterface $role)
+    public function addParent(RoleHierarchicalInterface $role): self
     {
         /** @var RoleHierarchicalInterface $self */
         $self = $this;
@@ -69,7 +69,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function removeParent(RoleHierarchicalInterface $parent)
+    public function removeParent(RoleHierarchicalInterface $parent): self
     {
         if ($this->getParents()->contains($parent)) {
             $this->getParents()->removeElement($parent);
@@ -90,7 +90,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function getParentNames()
+    public function getParentNames(): array
     {
         $names = [];
 
@@ -105,7 +105,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function hasParent($name)
+    public function hasParent(string $name): bool
     {
         return \in_array($name, $this->getParentNames(), true);
     }
@@ -113,7 +113,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function addChild(RoleHierarchicalInterface $role)
+    public function addChild(RoleHierarchicalInterface $role): self
     {
         $this->getChildren()->add($role);
 
@@ -123,7 +123,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function removeChild(RoleHierarchicalInterface $child)
+    public function removeChild(RoleHierarchicalInterface $child): self
     {
         if ($this->getChildren()->contains($child)) {
             $this->getChildren()->removeElement($child);
@@ -143,7 +143,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function getChildrenNames()
+    public function getChildrenNames(): array
     {
         $names = [];
 
@@ -158,7 +158,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function hasChild($name)
+    public function hasChild(string $name): bool
     {
         return \in_array($name, $this->getChildrenNames(), true);
     }

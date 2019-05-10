@@ -12,6 +12,7 @@
 namespace Fxp\Component\Security\Doctrine\ORM\Listener;
 
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
@@ -61,7 +62,7 @@ class SharingDeleteListener implements EventSubscriber
      *
      * @param string $sharingClass The classname of sharing model
      */
-    public function __construct($sharingClass = SharingInterface::class)
+    public function __construct(string $sharingClass = SharingInterface::class)
     {
         $this->sharingClass = $sharingClass;
     }
@@ -71,7 +72,7 @@ class SharingDeleteListener implements EventSubscriber
      *
      * @return string[]
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::onFlush,
@@ -121,9 +122,9 @@ class SharingDeleteListener implements EventSubscriber
      *
      * @param SharingManagerInterface $sharingManager The sharing manager
      *
-     * @return self
+     * @return static
      */
-    public function setSharingManager(SharingManagerInterface $sharingManager)
+    public function setSharingManager(SharingManagerInterface $sharingManager): SharingDeleteListener
     {
         $this->sharingManager = $sharingManager;
 
@@ -133,9 +134,11 @@ class SharingDeleteListener implements EventSubscriber
     /**
      * Get the sharing manager.
      *
+     * @throws
+     *
      * @return SharingManagerInterface
      */
-    public function getSharingManager()
+    public function getSharingManager(): SharingManagerInterface
     {
         $this->init();
 
@@ -144,6 +147,8 @@ class SharingDeleteListener implements EventSubscriber
 
     /**
      * Init listener.
+     *
+     * @throws SecurityException
      */
     protected function init(): void
     {
@@ -165,7 +170,7 @@ class SharingDeleteListener implements EventSubscriber
      *
      * @return Query
      */
-    private function buildDeleteQuery(EntityManagerInterface $em)
+    private function buildDeleteQuery(EntityManagerInterface $em): AbstractQuery
     {
         $qb = $em->createQueryBuilder()
             ->delete($this->sharingClass, 's')
@@ -185,7 +190,7 @@ class SharingDeleteListener implements EventSubscriber
      * @param string       $fieldClass The name of field class
      * @param string       $fieldId    The name of field identifier
      */
-    private function buildCriteria(QueryBuilder $qb, array $mapIds, $fieldClass, $fieldId): void
+    private function buildCriteria(QueryBuilder $qb, array $mapIds, string $fieldClass, string $fieldId): void
     {
         if (!empty($mapIds)) {
             $where = '';

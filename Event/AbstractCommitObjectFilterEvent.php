@@ -40,7 +40,7 @@ abstract class AbstractCommitObjectFilterEvent extends Event
      *
      * @return object[]
      */
-    public function getObjects()
+    public function getObjects(): array
     {
         return $this->objects;
     }

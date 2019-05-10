@@ -60,8 +60,8 @@ class RoleHierarchyListener implements EventSubscriber
      */
     public function __construct(
         SecurityIdentityManagerInterface $sim,
-        CacheItemPoolInterface $cache = null,
-        OrganizationalContextInterface $context = null
+        ?CacheItemPoolInterface $cache = null,
+        ?OrganizationalContextInterface $context = null
     ) {
         $this->sim = $sim;
         $this->cache = $cache;
@@ -71,7 +71,7 @@ class RoleHierarchyListener implements EventSubscriber
     /**
      * {@inheritdoc}
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [Events::onFlush];
     }
@@ -126,7 +126,7 @@ class RoleHierarchyListener implements EventSubscriber
      *
      * @return array
      */
-    protected function getAllCollections(UnitOfWork $uow)
+    protected function getAllCollections(UnitOfWork $uow): array
     {
         return array_merge(
             $uow->getScheduledEntityInsertions(),
@@ -165,7 +165,7 @@ class RoleHierarchyListener implements EventSubscriber
      *
      * @return bool
      */
-    protected function isCacheableObject($object)
+    protected function isCacheableObject($object): bool
     {
         return $object instanceof UserInterface || $object instanceof RoleHierarchicalInterface || $object instanceof GroupInterface || $object instanceof OrganizationUserInterface;
     }
@@ -175,19 +175,21 @@ class RoleHierarchyListener implements EventSubscriber
      *
      * @param array $mapping The mapping
      *
+     * @throws
+     *
      * @return bool
      */
-    protected function isRequireAssociation(array $mapping)
+    protected function isRequireAssociation(array $mapping): bool
     {
         $ref = new \ReflectionClass($mapping['sourceEntity']);
 
-        if (\in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames(), true)
-                && 'children' === $mapping['fieldName']) {
+        if ('children' === $mapping['fieldName']
+                && \in_array(RoleHierarchicalInterface::class, $ref->getInterfaceNames(), true)) {
             return true;
         }
 
-        if (\in_array(GroupableInterface::class, $ref->getInterfaceNames(), true)
-                && 'groups' === $mapping['fieldName']) {
+        if ('groups' === $mapping['fieldName']
+                && \in_array(GroupableInterface::class, $ref->getInterfaceNames(), true)) {
             return true;
         }
 
@@ -201,7 +203,7 @@ class RoleHierarchyListener implements EventSubscriber
      *
      * @return string
      */
-    protected function getPrefix($object)
+    protected function getPrefix($object): string
     {
         $id = 'user';
 

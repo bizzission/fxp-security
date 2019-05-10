@@ -21,5 +21,5 @@ interface CacheSecurityIdentityManagerInterface extends SecurityIdentityManagerI
     /**
      * Invalidate the execution cache.
      */
-    public function invalidateCache();
+    public function invalidateCache(): void;
 }

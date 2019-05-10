@@ -29,7 +29,7 @@ abstract class OrganizationalUtil
      *
      * @return string
      */
-    public static function formatName($object, $name)
+    public static function formatName($object, string $name): string
     {
         return $object instanceof OrganizationalInterface
             ? static::formatNameWithOrg($name, $object->getOrganization())
@@ -44,7 +44,7 @@ abstract class OrganizationalUtil
      *
      * @return string
      */
-    public static function formatNameWithOrg($name, $organization = null)
+    public static function formatNameWithOrg(string $name, ?OrganizationInterface $organization = null): string
     {
         if ($organization instanceof OrganizationInterface
                 && false === strpos('__', $name)) {
@@ -61,7 +61,7 @@ abstract class OrganizationalUtil
      *
      * @return string
      */
-    public static function format($name)
+    public static function format(string $name): string
     {
         if (false !== ($pos = strrpos($name, '__'))) {
             $name = substr($name, 0, $pos);
@@ -77,7 +77,7 @@ abstract class OrganizationalUtil
      *
      * @return string
      */
-    public static function getSuffix($name)
+    public static function getSuffix(string $name): string
     {
         return false !== ($pos = strrpos($name, '__'))
             ? substr($name, $pos)

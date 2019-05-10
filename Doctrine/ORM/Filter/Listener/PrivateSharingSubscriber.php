@@ -31,7 +31,7 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         $privateFilter = SharingFilterEvents::getName(
             SharingFilterEvents::DOCTRINE_ORM_FILTER,
@@ -63,7 +63,7 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
      *
      * @return string
      */
-    private function buildSharingFilter(GetFilterEvent $event)
+    private function buildSharingFilter(GetFilterEvent $event): string
     {
         $targetEntity = $event->getTargetEntity();
         $targetTableAlias = $event->getTargetTableAlias();
@@ -94,9 +94,11 @@ SELECTCLAUSE;
      * @param GetFilterEvent $event The event
      * @param ClassMetadata  $meta  The class metadata of sharing entity
      *
+     * @throws
+     *
      * @return string
      */
-    private function addWhereSecurityIdentitiesForSharing(GetFilterEvent $event, ClassMetadata $meta)
+    private function addWhereSecurityIdentitiesForSharing(GetFilterEvent $event, ClassMetadata $meta): string
     {
         $where = '';
         $mapSids = (array) $event->getRealParameter('map_security_identities');
@@ -125,7 +127,7 @@ SELECTCLAUSE;
      *
      * @return string
      */
-    private function buildOwnerFilter(GetFilterEvent $event, $filter)
+    private function buildOwnerFilter(GetFilterEvent $event, string $filter): string
     {
         $class = $event->getTargetEntity()->getName();
         $interfaces = class_implements($class);
@@ -145,9 +147,11 @@ SELECTCLAUSE;
      * @param GetFilterEvent $event  The event
      * @param string         $filter The previous filter
      *
+     * @throws
+     *
      * @return string
      */
-    private function buildRequiredOwnerFilter(GetFilterEvent $event, $filter)
+    private function buildRequiredOwnerFilter(GetFilterEvent $event, string $filter): string
     {
         $connection = $event->getConnection();
         $platform = $connection->getDatabasePlatform();
@@ -159,7 +163,7 @@ SELECTCLAUSE;
         $ownerColumn = $this->getAssociationColumnName($targetEntity, 'owner');
         $ownerFilter = null !== $ownerId
             ? "{$targetTableAlias}.{$ownerColumn}{$identifier} = {$connection->quote($ownerId)}"
-            : "{$platform->getIsNullExpression($targetTableAlias.'.'.$ownerColumn)}";
+            : (string) $platform->getIsNullExpression($targetTableAlias.'.'.$ownerColumn);
 
         return <<<SELECTCLAUSE
 {$ownerFilter}
@@ -174,9 +178,11 @@ SELECTCLAUSE;
      * @param GetFilterEvent $event  The event
      * @param string         $filter The previous filter
      *
+     * @throws
+     *
      * @return string
      */
-    private function buildOptionalOwnerFilter(GetFilterEvent $event, $filter)
+    private function buildOptionalOwnerFilter(GetFilterEvent $event, string $filter): string
     {
         $targetEntity = $event->getTargetEntity();
         $targetTableAlias = $event->getTargetTableAlias();
@@ -202,9 +208,11 @@ SELECTCLAUSE;
      * @param ClassMetadata $meta      The class metadata
      * @param string        $fieldName The field name
      *
+     * @throws
+     *
      * @return string
      */
-    private function getAssociationColumnName(ClassMetadata $meta, $fieldName)
+    private function getAssociationColumnName(ClassMetadata $meta, string $fieldName): string
     {
         $mapping = $meta->getAssociationMapping($fieldName);
 

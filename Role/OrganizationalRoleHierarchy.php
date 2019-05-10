@@ -41,9 +41,9 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
     public function __construct(
         array $hierarchy,
         ManagerRegistryInterface $registry,
-        CacheItemPoolInterface $cache = null,
-        OrganizationalContextInterface $context = null,
-        $roleClassname = RoleInterface::class
+        ?CacheItemPoolInterface $cache = null,
+        ?OrganizationalContextInterface $context = null,
+        string $roleClassname = RoleInterface::class
     ) {
         parent::__construct($hierarchy, $registry, $cache, $roleClassname);
         $this->context = $context;
@@ -52,7 +52,7 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
     /**
      * {@inheritdoc}
      */
-    protected function getUniqueId(array $roleNames)
+    protected function getUniqueId(array $roleNames): string
     {
         $id = parent::getUniqueId($roleNames);
 
@@ -66,7 +66,7 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
     /**
      * {@inheritdoc}
      */
-    protected function formatRoles(array $roles)
+    protected function formatRoles(array $roles): array
     {
         return array_map(static function ($role) {
             return OrganizationalUtil::format($role);
@@ -76,7 +76,7 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
     /**
      * {@inheritdoc}
      */
-    protected function buildRoleSuffix($role)
+    protected function buildRoleSuffix(?string $role): string
     {
         return null !== $role ? OrganizationalUtil::getSuffix($role) : '';
     }
@@ -84,7 +84,7 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
     /**
      * {@inheritdoc}
      */
-    protected function cleanRoleNames(array $roles)
+    protected function cleanRoleNames(array $roles): array
     {
         return array_map(static function ($role) {
             return OrganizationalUtil::format($role);
@@ -94,7 +94,7 @@ class OrganizationalRoleHierarchy extends RoleHierarchy
     /**
      * {@inheritdoc}
      */
-    protected function formatCleanedRoleName($name)
+    protected function formatCleanedRoleName(string $name): string
     {
         return OrganizationalUtil::format($name);
     }

@@ -56,7 +56,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      * @param PermissionConfigInterface[]  $configs        The permission configs
      */
     public function __construct(
-        SharingManagerInterface $sharingManager = null,
+        ?SharingManagerInterface $sharingManager = null,
         array $configs = []
     ) {
         $this->sharingManager = $sharingManager;
@@ -70,7 +70,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -78,9 +78,9 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): self
     {
-        $this->enabled = (bool) $enabled;
+        $this->enabled = $enabled;
 
         if (null !== $this->sharingManager) {
             $this->sharingManager->setEnabled($enabled);
@@ -100,7 +100,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function hasConfig($class)
+    public function hasConfig(string $class): bool
     {
         return isset($this->configs[ClassUtils::getRealClass($class)]);
     }
@@ -108,7 +108,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfig($class)
+    public function getConfig(string $class): PermissionConfigInterface
     {
         $class = ClassUtils::getRealClass($class);
 
@@ -122,7 +122,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigs()
+    public function getConfigs(): array
     {
         return $this->configs;
     }
@@ -130,7 +130,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isManaged($subject)
+    public function isManaged($subject): bool
     {
         try {
             /** @var SubjectIdentityInterface $subject */
@@ -147,7 +147,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isFieldManaged($subject, $field)
+    public function isFieldManaged($subject, string $field): bool
     {
         return $this->isManaged(new FieldVote($subject, $field));
     }
@@ -155,7 +155,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isGranted(array $sids, $permissions, $subject = null)
+    public function isGranted(array $sids, $permissions, $subject = null): bool
     {
         try {
             /** @var null|SubjectIdentityInterface $subject */
@@ -181,7 +181,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isFieldGranted(array $sids, $permissions, $subject, $field)
+    public function isFieldGranted(array $sids, $permissions, $subject, string $field): bool
     {
         return $this->isGranted($sids, $permissions, new FieldVote($subject, $field));
     }
@@ -189,7 +189,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getRolePermissions(RoleInterface $role, $subject = null)
+    public function getRolePermissions(RoleInterface $role, $subject = null): array
     {
         return $this->doGetRolePermissions($role, $subject);
     }
@@ -197,7 +197,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoleFieldPermissions(RoleInterface $role, $subject, $field)
+    public function getRoleFieldPermissions(RoleInterface $role, $subject, string $field): array
     {
         return $this->getRolePermissions($role, new FieldVote($subject, $field));
     }
@@ -205,7 +205,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function preloadPermissions(array $objects)
+    public function preloadPermissions(array $objects): self
     {
         if (null !== $this->sharingManager) {
             $this->sharingManager->preloadPermissions($objects);
@@ -217,7 +217,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function resetPreloadPermissions(array $objects)
+    public function resetPreloadPermissions(array $objects): self
     {
         if (null !== $this->sharingManager) {
             $this->sharingManager->resetPreloadPermissions($objects);
@@ -229,7 +229,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): self
     {
         $this->cache = [];
 
@@ -247,7 +247,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return null|string[]
      */
-    protected function buildContexts(RoleInterface $role)
+    protected function buildContexts(RoleInterface $role): ?array
     {
         $contexts = null;
 
@@ -265,7 +265,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return null|SubjectIdentityInterface
      */
-    abstract protected function getMaster($subject);
+    abstract protected function getMaster($subject): ?SubjectIdentityInterface;
 
     /**
      * Action to check if the subject is managed.
@@ -275,7 +275,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return bool
      */
-    abstract protected function doIsManaged(SubjectIdentityInterface $subject, $field = null);
+    abstract protected function doIsManaged(SubjectIdentityInterface $subject, ?string $field = null): bool;
 
     /**
      * Action to determine whether access is granted.
@@ -287,7 +287,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return bool
      */
-    abstract protected function doIsGranted(array $sids, array $permissions, $subject = null, $field = null);
+    abstract protected function doIsGranted(array $sids, array $permissions, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool;
 
     /**
      * Action to retrieve the permissions of role and subject.
@@ -297,7 +297,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return PermissionChecking[]
      */
-    abstract protected function doGetRolePermissions(RoleInterface $role, $subject = null);
+    abstract protected function doGetRolePermissions(RoleInterface $role, $subject = null): array;
 
     /**
      * Get the real permissions.
@@ -308,7 +308,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return string[]
      */
-    private function getRealPermissions(array $permissions, $subject = null, $field = null)
+    private function getRealPermissions(array $permissions, ?SubjectIdentityInterface $subject = null, ?string $field = null): array
     {
         if (null !== $subject && $this->hasConfig($subject->getType())) {
             $config = $this->getConfig($subject->getType());
@@ -334,7 +334,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return array
      */
-    private function getMasterPermissions(array $permissions, $subject, $field)
+    private function getMasterPermissions(array $permissions, ?SubjectIdentityInterface $subject, ?string $field): array
     {
         $master = $this->getMaster($subject);
 
@@ -358,7 +358,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      *
      * @return string[]
      */
-    private function buildMasterFieldPermissions(SubjectIdentityInterface $subject, array $permissions)
+    private function buildMasterFieldPermissions(SubjectIdentityInterface $subject, array $permissions): array
     {
         if ($this->hasConfig($subject->getType())) {
             $map = $this->getConfig($subject->getType())->getMasterFieldMappingPermissions();

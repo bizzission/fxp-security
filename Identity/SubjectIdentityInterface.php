@@ -23,14 +23,14 @@ interface SubjectIdentityInterface
      *
      * @return string
      */
-    public function getType();
+    public function getType(): string;
 
     /**
      * Get the unique identifier.
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * Get the instance of subject.
@@ -52,5 +52,5 @@ interface SubjectIdentityInterface
      *
      * @return bool
      */
-    public function equals(self $identity);
+    public function equals(SubjectIdentityInterface $identity): bool;
 }

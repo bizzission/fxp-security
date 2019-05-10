@@ -109,7 +109,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -117,9 +117,9 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): self
     {
-        $this->enabled = (bool) $enabled;
+        $this->enabled = $enabled;
 
         if (null !== $this->dispatcher) {
             $name = $this->enabled ? SharingEvents::ENABLED : SharingEvents::DISABLED;
@@ -132,16 +132,18 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addSubjectConfig(SharingSubjectConfigInterface $config): void
+    public function addSubjectConfig(SharingSubjectConfigInterface $config): self
     {
         $this->subjectConfigs[$config->getType()] = $config;
         unset($this->cacheSubjectVisibilities[$config->getType()]);
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasSubjectConfig($class)
+    public function hasSubjectConfig(string $class): bool
     {
         return isset($this->subjectConfigs[ClassUtils::getRealClass($class)]);
     }
@@ -149,7 +151,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getSubjectConfig($class)
+    public function getSubjectConfig(string $class): SharingSubjectConfigInterface
     {
         $class = ClassUtils::getRealClass($class);
 
@@ -163,7 +165,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getSubjectConfigs()
+    public function getSubjectConfigs(): array
     {
         return array_values($this->subjectConfigs);
     }
@@ -171,7 +173,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function hasSharingVisibility(SubjectIdentityInterface $subject)
+    public function hasSharingVisibility(SubjectIdentityInterface $subject): bool
     {
         return SharingVisibilities::TYPE_NONE !== $this->getSharingVisibility($subject);
     }
@@ -179,7 +181,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getSharingVisibility(SubjectIdentityInterface $subject)
+    public function getSharingVisibility(SubjectIdentityInterface $subject): string
     {
         $type = $subject->getType();
 
@@ -200,7 +202,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addIdentityConfig(SharingIdentityConfigInterface $config): void
+    public function addIdentityConfig(SharingIdentityConfigInterface $config): self
     {
         if (isset($this->identityAliases[$config->getAlias()])) {
             throw new AlreadyConfigurationAliasExistingException($config->getAlias(), $config->getType());
@@ -216,12 +218,14 @@ abstract class AbstractSharingManager implements SharingManagerInterface
         if ($config->isPermissible()) {
             $this->identityPermissible = true;
         }
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasIdentityConfig($class)
+    public function hasIdentityConfig(string $class): bool
     {
         return isset($this->identityConfigs[ClassUtils::getRealClass($class)])
         || isset($this->identityAliases[$class]);
@@ -230,7 +234,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getIdentityConfig($class)
+    public function getIdentityConfig(string $class): SharingIdentityConfigInterface
     {
         $class = $this->identityAliases[$class] ?? ClassUtils::getRealClass($class);
 
@@ -244,7 +248,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getIdentityConfigs()
+    public function getIdentityConfigs(): array
     {
         return array_values($this->identityConfigs);
     }
@@ -252,7 +256,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function hasIdentityRoleable()
+    public function hasIdentityRoleable(): bool
     {
         return $this->identityRoleable;
     }
@@ -260,7 +264,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function hasIdentityPermissible()
+    public function hasIdentityPermissible(): bool
     {
         return $this->identityPermissible;
     }

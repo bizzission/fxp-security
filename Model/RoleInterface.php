@@ -23,7 +23,7 @@ interface RoleInterface extends PermissionsInterface
     /**
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * Get id.
@@ -37,14 +37,14 @@ interface RoleInterface extends PermissionsInterface
      *
      * @param string $name The role name
      *
-     * @return self
+     * @return static
      */
-    public function setName($name);
+    public function setName(?string $name);
 
     /**
      * Gets the role name.
      *
      * @return string the role name
      */
-    public function getName();
+    public function getName(): ?string;
 }

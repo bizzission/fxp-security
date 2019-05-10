@@ -37,7 +37,7 @@ abstract class AbstractBaseIdentity
      * @throws InvalidArgumentException When the identifier is empty
      * @throws InvalidArgumentException When the type is empty
      */
-    public function __construct($type, $identifier)
+    public function __construct(?string $type, ?string $identifier)
     {
         if (empty($type)) {
             throw new InvalidArgumentException('The type cannot be empty');
@@ -51,12 +51,12 @@ abstract class AbstractBaseIdentity
         $this->identifier = $identifier;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }

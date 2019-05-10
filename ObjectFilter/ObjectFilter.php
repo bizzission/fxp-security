@@ -89,14 +89,14 @@ class ObjectFilter implements ObjectFilterInterface
      * @param PermissionManagerInterface     $pm         The permission manager
      * @param AuthorizationCheckerInterface  $ac         The authorization checker
      * @param EventDispatcherInterface       $dispatcher The event dispatcher
-     * @param UnitOfWorkInterface            $uow        The unit of work
+     * @param null|UnitOfWorkInterface       $uow        The unit of work
      */
     public function __construct(
         ObjectFilterExtensionInterface $ofe,
         PermissionManagerInterface $pm,
         AuthorizationCheckerInterface  $ac,
         EventDispatcherInterface $dispatcher,
-        UnitOfWorkInterface $uow = null
+        ?UnitOfWorkInterface $uow = null
     ) {
         $this->uow = $uow ?? new UnitOfWork();
         $this->ofe = $ofe;
@@ -118,7 +118,7 @@ class ObjectFilter implements ObjectFilterInterface
     /**
      * {@inheritdoc}
      */
-    public function getUnitOfWork()
+    public function getUnitOfWork(): UnitOfWorkInterface
     {
         return $this->uow;
     }
@@ -201,6 +201,8 @@ class ObjectFilter implements ObjectFilterInterface
      * Executes the filtering.
      *
      * @param object $object
+     *
+     * @throws
      */
     protected function doFilter($object): void
     {
@@ -230,6 +232,8 @@ class ObjectFilter implements ObjectFilterInterface
      * Executes the restoring.
      *
      * @param object $object
+     *
+     * @throws
      */
     protected function doRestore($object): void
     {
@@ -256,7 +260,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @return bool
      */
-    protected function isFilterViewGranted(FieldVote $fieldVote, $value, $clearAll)
+    protected function isFilterViewGranted(FieldVote $fieldVote, $value, bool $clearAll): bool
     {
         return null !== $value
             && !$this->isIdentifier($fieldVote, $value)
@@ -271,7 +275,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @return bool
      */
-    protected function isRestoreViewGranted(FieldVote $fieldVote, array $values)
+    protected function isRestoreViewGranted(FieldVote $fieldVote, array $values): bool
     {
         $event = new RestoreViewGrantedEvent($fieldVote, $values['old'], $values['new']);
         $this->dispatcher->dispatch(ObjectFilterEvents::RESTORE_VIEW_GRANTED, $event);
@@ -291,7 +295,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @return bool
      */
-    protected function isViewGranted($object)
+    protected function isViewGranted($object): bool
     {
         if ($object instanceof FieldVote) {
             $eventName = ObjectFilterEvents::OBJECT_FIELD_VIEW_GRANTED;
@@ -320,7 +324,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @return bool
      */
-    protected function isIdentifier(FieldVote $fieldVote, $value)
+    protected function isIdentifier(FieldVote $fieldVote, $value): bool
     {
         return (\is_int($value) || \is_string($value))
                 && (string) $value === $fieldVote->getSubject()->getIdentifier()
@@ -334,7 +338,7 @@ class ObjectFilter implements ObjectFilterInterface
      *
      * @return bool
      */
-    protected function isExcludedClass($object)
+    protected function isExcludedClass($object): bool
     {
         foreach ($this->excludedClasses as $excludedClass) {
             if ($object instanceof $excludedClass) {

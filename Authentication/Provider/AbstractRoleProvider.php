@@ -24,7 +24,7 @@ abstract class AbstractRoleProvider implements AuthenticationProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function authenticate(TokenInterface $token)
+    public function authenticate(TokenInterface $token): TokenInterface
     {
         return $token;
     }
@@ -32,7 +32,7 @@ abstract class AbstractRoleProvider implements AuthenticationProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(TokenInterface $token)
+    public function supports(TokenInterface $token): bool
     {
         return false;
     }

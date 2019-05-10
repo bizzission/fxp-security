@@ -21,7 +21,7 @@ trait ReachableRoleEventTrait
     /**
      * @var string[]
      */
-    protected $reachableRoles;
+    protected $reachableRoles = [];
 
     /**
      * Set reachable roles.
@@ -38,7 +38,7 @@ trait ReachableRoleEventTrait
      *
      * @return string[]
      */
-    public function getReachableRoles()
+    public function getReachableRoles(): array
     {
         return $this->reachableRoles;
     }

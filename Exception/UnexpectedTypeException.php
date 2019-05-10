@@ -16,7 +16,7 @@ namespace Fxp\Component\Security\Exception;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class UnexpectedTypeException extends InvalidArgumentException implements ExceptionInterface
+class UnexpectedTypeException extends InvalidArgumentException
 {
     /**
      * Constructor.
@@ -24,7 +24,7 @@ class UnexpectedTypeException extends InvalidArgumentException implements Except
      * @param mixed  $value        The value
      * @param string $expectedType The expected type
      */
-    public function __construct($value, $expectedType)
+    public function __construct($value, string $expectedType)
     {
         parent::__construct(sprintf('Expected argument of type "%s", "%s" given', $expectedType, \is_object($value) ? \get_class($value) : \gettype($value)));
     }

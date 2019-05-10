@@ -23,26 +23,26 @@ interface SharingIdentityConfigInterface
      *
      * @return string
      */
-    public function getType();
+    public function getType(): string;
 
     /**
      * Get the alias.
      *
      * @return string
      */
-    public function getAlias();
+    public function getAlias(): string;
 
     /**
      * Check if the identity can be use the roles.
      *
      * @return bool
      */
-    public function isRoleable();
+    public function isRoleable(): bool;
 
     /**
      * Check if the identity can be use the permissions.
      *
      * @return bool
      */
-    public function isPermissible();
+    public function isPermissible(): bool;
 }

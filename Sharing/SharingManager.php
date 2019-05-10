@@ -43,7 +43,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function isGranted($operation, $subject = null, $field = null)
+    public function isGranted(string $operation, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool
     {
         $this->preloadPermissions([$subject]);
         $this->preloadRolePermissions([$subject]);
@@ -59,7 +59,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function preloadPermissions(array $objects)
+    public function preloadPermissions(array $objects): self
     {
         $subjects = $this->buildSubjects($objects);
         $entries = $this->buildSharingEntries($subjects);
@@ -112,7 +112,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function resetPreloadPermissions(array $objects)
+    public function resetPreloadPermissions(array $objects): self
     {
         foreach ($objects as $object) {
             try {
@@ -130,7 +130,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): self
     {
         $this->cacheSharing = [];
         $this->cacheRoleSharing = [];
@@ -142,7 +142,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function renameIdentity($type, $oldName, $newName)
+    public function renameIdentity(string $type, string $oldName, string $newName): self
     {
         $this->provider->renameIdentity($type, $oldName, $newName);
 
@@ -152,7 +152,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function deleteIdentity($type, $name)
+    public function deleteIdentity(string $type, string $name): self
     {
         $this->provider->deleteIdentity($type, $name);
 
@@ -162,7 +162,7 @@ class SharingManager extends AbstractSharingManager
     /**
      * {@inheritdoc}
      */
-    public function deletes(array $ids)
+    public function deletes(array $ids): self
     {
         $this->provider->deletes($ids);
 
@@ -178,7 +178,7 @@ class SharingManager extends AbstractSharingManager
      *
      * @return bool
      */
-    private function isSharingGranted($operation, $subject = null, $field = null)
+    private function isSharingGranted(string $operation, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool
     {
         if (null !== $subject && null === $field) {
             $id = SharingUtils::getCacheId($subject);
@@ -197,7 +197,7 @@ class SharingManager extends AbstractSharingManager
      *
      * @return SubjectIdentityInterface[]
      */
-    private function buildSubjects(array $objects)
+    private function buildSubjects(array $objects): array
     {
         $subjects = [];
 
@@ -224,7 +224,7 @@ class SharingManager extends AbstractSharingManager
      *
      * @return array The map of cache id and sharing instance
      */
-    private function buildSharingEntries(array $subjects)
+    private function buildSharingEntries(array $subjects): array
     {
         $entries = [];
 
@@ -268,7 +268,7 @@ class SharingManager extends AbstractSharingManager
      *
      * @return array The map of cache id and subject
      */
-    private function buildMapSubject(array $objects)
+    private function buildMapSubject(array $objects): array
     {
         $subjects = [];
 
@@ -287,7 +287,7 @@ class SharingManager extends AbstractSharingManager
      * @param SharingInterface[] $sharings The sharing instances
      * @param string             $id       The cache id
      */
-    private function buildCacheRoleSharing(array $sharings, $id): void
+    private function buildCacheRoleSharing(array $sharings, string $id): void
     {
         $this->cacheRoleSharing[$id] = [];
 

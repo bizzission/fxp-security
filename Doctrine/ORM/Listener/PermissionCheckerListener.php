@@ -34,7 +34,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
      *
      * @return string[]
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::onFlush,
@@ -53,8 +53,9 @@ class PermissionCheckerListener extends AbstractPermissionListener
     {
         $token = $this->getTokenStorage()->getToken();
 
-        if (!$this->getPermissionManager()->isEnabled()
-                || null === $token || $token instanceof ConsoleToken) {
+        if (null === $token
+                || $token instanceof ConsoleToken
+                || !$this->getPermissionManager()->isEnabled()) {
             return;
         }
 
@@ -76,9 +77,9 @@ class PermissionCheckerListener extends AbstractPermissionListener
      *
      * @param AuthorizationCheckerInterface $authorizationChecker The authorization checker
      *
-     * @return self
+     * @return static
      */
-    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker)
+    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker): self
     {
         $this->authChecker = $authorizationChecker;
 
@@ -88,9 +89,11 @@ class PermissionCheckerListener extends AbstractPermissionListener
     /**
      * Gets security authorization checker.
      *
+     * @throws
+     *
      * @return AuthorizationCheckerInterface
      */
-    protected function getAuthorizationChecker()
+    protected function getAuthorizationChecker(): AuthorizationCheckerInterface
     {
         $this->init();
 
@@ -103,7 +106,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
      * @param object[] $objects The objects
      * @param string   $action  The action name
      */
-    protected function checkAllScheduledByAction(array $objects, $action): void
+    protected function checkAllScheduledByAction(array $objects, string $action): void
     {
         foreach ($objects as $object) {
             if (!$this->getAuthorizationChecker()->isGranted('perm_'.$action, $object)) {
@@ -115,7 +118,7 @@ class PermissionCheckerListener extends AbstractPermissionListener
     /**
      * {@inheritdoc}
      */
-    protected function getInitProperties()
+    protected function getInitProperties(): array
     {
         return [
             'tokenStorage' => 'setTokenStorage',

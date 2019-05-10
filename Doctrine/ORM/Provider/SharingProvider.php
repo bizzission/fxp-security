@@ -12,7 +12,6 @@
 namespace Fxp\Component\Security\Doctrine\ORM\Provider;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Fxp\Component\DoctrineExtra\Util\ManagerUtils;
@@ -40,12 +39,12 @@ class SharingProvider implements SharingProviderInterface
     protected $doctrine;
 
     /**
-     * @var null|EntityRepository|ObjectRepository
+     * @var null|EntityRepository
      */
     protected $roleRepo;
 
     /**
-     * @var null|EntityRepository|ObjectRepository
+     * @var null|EntityRepository
      */
     protected $sharingRepo;
 
@@ -84,7 +83,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setSharingManager(SharingManagerInterface $sharingManager)
+    public function setSharingManager(SharingManagerInterface $sharingManager): self
     {
         $this->sharingManager = $sharingManager;
 
@@ -94,7 +93,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getPermissionRoles(array $roles)
+    public function getPermissionRoles(array $roles): array
     {
         if (empty($roles)) {
             return [];
@@ -119,7 +118,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getSharingEntries(array $subjects, $sids = null)
+    public function getSharingEntries(array $subjects, $sids = null): array
     {
         if (empty($subjects) || null === $this->getSharingRepository()) {
             return [];
@@ -144,7 +143,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renameIdentity($type, $oldName, $newName)
+    public function renameIdentity(string $type, string $oldName, string $newName): self
     {
         $this->getSharingRepository()->createQueryBuilder('s')
             ->update($this->getSharingRepository()->getClassName(), 's')
@@ -164,7 +163,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteIdentity($type, $name)
+    public function deleteIdentity(string $type, string $name): self
     {
         $this->getSharingRepository()->createQueryBuilder('s')
             ->delete($this->getSharingRepository()->getClassName(), 's')
@@ -182,7 +181,7 @@ class SharingProvider implements SharingProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function deletes(array $ids)
+    public function deletes(array $ids): self
     {
         if (!empty($ids)) {
             $this->getSharingRepository()->createQueryBuilder('s')
@@ -206,7 +205,7 @@ class SharingProvider implements SharingProviderInterface
      *
      * @return QueryBuilder
      */
-    private function addWhereForSharing(QueryBuilder $qb, array $subjects, array $sids)
+    private function addWhereForSharing(QueryBuilder $qb, array $subjects, array $sids): QueryBuilder
     {
         $where = '';
         $parameters = [];
@@ -237,7 +236,7 @@ class SharingProvider implements SharingProviderInterface
      *
      * @return QueryBuilder
      */
-    private function addWhereSecurityIdentitiesForSharing(QueryBuilder $qb, array $sids)
+    private function addWhereSecurityIdentitiesForSharing(QueryBuilder $qb, array $sids): QueryBuilder
     {
         if (!empty($sids) && !empty($groupSids = $this->groupSecurityIdentities($sids))) {
             $where = '';
@@ -271,7 +270,7 @@ class SharingProvider implements SharingProviderInterface
      *
      * @return array
      */
-    private function groupSecurityIdentities(array $sids)
+    private function groupSecurityIdentities(array $sids): array
     {
         $groupSids = [];
 
@@ -296,23 +295,21 @@ class SharingProvider implements SharingProviderInterface
      *
      * @return SecurityIdentityInterface[]
      */
-    private function getSecurityIdentities($sids = null)
+    private function getSecurityIdentities(?array $sids = null): array
     {
         if (null === $sids) {
             $sids = $this->sidManager->getSecurityIdentities($this->tokenStorage->getToken());
         }
 
-        return null !== $sids
-            ? $sids
-            : [];
+        return $sids ?? [];
     }
 
     /**
      * Get the role repository.
      *
-     * @return EntityRepository|ObjectRepository
+     * @return EntityRepository
      */
-    private function getRoleRepository()
+    private function getRoleRepository(): EntityRepository
     {
         if (null === $this->roleRepo) {
             $this->roleRepo = $this->getRepository(RoleInterface::class);
@@ -324,9 +321,9 @@ class SharingProvider implements SharingProviderInterface
     /**
      * Get the sharing repository.
      *
-     * @return EntityRepository|ObjectRepository
+     * @return EntityRepository
      */
-    private function getSharingRepository()
+    private function getSharingRepository(): EntityRepository
     {
         if (null === $this->sharingRepo) {
             $this->sharingRepo = $this->getRepository(SharingInterface::class);
@@ -340,12 +337,12 @@ class SharingProvider implements SharingProviderInterface
      *
      * @param string $classname The class name
      *
-     * @return EntityRepository|ObjectRepository
+     * @return EntityRepository
      */
-    private function getRepository($classname)
+    private function getRepository($classname): EntityRepository
     {
-        $om = ManagerUtils::getManager($this->doctrine, $classname);
-
-        return null !== $om ? $om->getRepository($classname) : null;
+        $om = ManagerUtils::getRequiredManager($this->doctrine, $classname);
+        /** @var EntityRepository $repo */
+        return $om->getRepository($classname);
     }
 }

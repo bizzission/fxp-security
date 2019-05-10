@@ -30,7 +30,7 @@ class SetOrganizationalOptionalFilterTypeEvent extends Event
      *
      * @param string $filterType The optional filter type
      */
-    public function __construct($filterType)
+    public function __construct(string $filterType)
     {
         $this->filterType = $filterType;
     }
@@ -40,7 +40,7 @@ class SetOrganizationalOptionalFilterTypeEvent extends Event
      *
      * @return string
      */
-    public function getOptionalFilterType()
+    public function getOptionalFilterType(): string
     {
         return $this->filterType;
     }

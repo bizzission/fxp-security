@@ -21,7 +21,7 @@ class MixedValue implements ObjectFilterVoterInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($value)
+    public function supports($value): bool
     {
         return true;
     }

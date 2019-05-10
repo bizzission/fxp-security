@@ -28,7 +28,7 @@ trait OrganizationalTrait
     /**
      * {@inheritdoc}
      */
-    public function getOrganization()
+    public function getOrganization(): ?OrganizationInterface
     {
         return $this->organization;
     }

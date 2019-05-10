@@ -58,15 +58,15 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getName();
+        return (string) $this->getName();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setName($name)
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -76,7 +76,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -84,7 +84,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function setUser($user)
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 
@@ -94,7 +94,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function getUser()
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
@@ -102,7 +102,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function isUserOrganization()
+    public function isUserOrganization(): bool
     {
         return null !== $this->getUser();
     }
@@ -118,7 +118,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function getOrganizationUserNames()
+    public function getOrganizationUserNames(): array
     {
         $names = [];
         foreach ($this->getOrganizationUsers() as $orgUser) {
@@ -131,7 +131,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function hasOrganizationUser($username)
+    public function hasOrganizationUser(string $username): bool
     {
         return \in_array($username, $this->getOrganizationUserNames(), true);
     }
@@ -139,7 +139,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function addOrganizationUser(OrganizationUserInterface $organizationUser)
+    public function addOrganizationUser(OrganizationUserInterface $organizationUser): self
     {
         if (!$this->isUserOrganization()
             && !$this->getOrganizationUsers()->contains($organizationUser)) {
@@ -152,7 +152,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function removeOrganizationUser(OrganizationUserInterface $organizationUser)
+    public function removeOrganizationUser(OrganizationUserInterface $organizationUser): self
     {
         if ($this->getOrganizationUsers()->contains($organizationUser)) {
             $this->getOrganizationUsers()->removeElement($organizationUser);

@@ -87,7 +87,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setSubjectClass($class)
+    public function setSubjectClass(?string $class): self
     {
         $this->subjectClass = $class;
 
@@ -97,7 +97,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function getSubjectClass()
+    public function getSubjectClass(): ?string
     {
         return $this->subjectClass;
     }
@@ -105,7 +105,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setSubjectId($id)
+    public function setSubjectId($id): self
     {
         $this->subjectId = $id;
 
@@ -123,7 +123,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setIdentityClass($class)
+    public function setIdentityClass(?string $class): self
     {
         $this->identityClass = $class;
 
@@ -133,7 +133,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function getIdentityClass()
+    public function getIdentityClass(): ?string
     {
         return $this->identityClass;
     }
@@ -141,7 +141,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setIdentityName($name)
+    public function setIdentityName($name): self
     {
         $this->identityName = $name;
 
@@ -159,7 +159,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
@@ -169,7 +169,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -177,7 +177,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setStartedAt($date)
+    public function setStartedAt(?\DateTime $date): self
     {
         $this->startedAt = $date;
 
@@ -187,7 +187,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function getStartedAt()
+    public function getStartedAt(): ?\DateTime
     {
         return $this->startedAt;
     }
@@ -195,7 +195,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setEndedAt($date)
+    public function setEndedAt(?\DateTime $date): self
     {
         $this->endedAt = $date;
 
@@ -205,7 +205,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function getEndedAt()
+    public function getEndedAt(): ?\DateTime
     {
         return $this->endedAt;
     }
@@ -221,7 +221,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function hasPermission(PermissionInterface $permission)
+    public function hasPermission(PermissionInterface $permission): bool
     {
         return $this->getPermissions()->contains($permission);
     }
@@ -229,7 +229,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function addPermission(PermissionInterface $permission)
+    public function addPermission(PermissionInterface $permission): self
     {
         if (!$this->getPermissions()->contains($permission)) {
             $this->getPermissions()->add($permission);
@@ -241,7 +241,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function removePermission(PermissionInterface $permission)
+    public function removePermission(PermissionInterface $permission): self
     {
         if ($this->getPermissions()->contains($permission)) {
             $this->getPermissions()->removeElement($permission);

@@ -25,7 +25,7 @@ interface RoleableInterface
      *
      * @return bool
      */
-    public function hasRole($role);
+    public function hasRole(string $role): bool;
 
     /**
      * Set the roles.
@@ -34,7 +34,7 @@ interface RoleableInterface
      *
      * @param string[] $roles The roles
      *
-     * @return self
+     * @return static
      */
     public function setRoles(array $roles);
 
@@ -43,18 +43,18 @@ interface RoleableInterface
      *
      * @param string $role The role name
      *
-     * @return self
+     * @return static
      */
-    public function addRole($role);
+    public function addRole(string $role);
 
     /**
      * Remove a role.
      *
      * @param string $role The role name
      *
-     * @return self
+     * @return static
      */
-    public function removeRole($role);
+    public function removeRole(string $role);
 
     /**
      * Get the roles.

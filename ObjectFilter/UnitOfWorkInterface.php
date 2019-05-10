@@ -23,21 +23,21 @@ interface UnitOfWorkInterface
      *
      * @return array The managed object ids (spl_object_hash)
      */
-    public function getObjectIdentifiers();
+    public function getObjectIdentifiers(): array;
 
     /**
      * Attaches an object from the object filter management.
      *
      * @param object $object The object to attach
      */
-    public function attach($object);
+    public function attach($object): void;
 
     /**
      * Detaches an object from the object filter management.
      *
      * @param object $object The object to detach
      */
-    public function detach($object);
+    public function detach($object): void;
 
     /**
      * Gets the changeset for an object.
@@ -46,10 +46,10 @@ interface UnitOfWorkInterface
      *
      * @return array
      */
-    public function getObjectChangeSet($object);
+    public function getObjectChangeSet($object): array;
 
     /**
      * Clears the UnitOfWork.
      */
-    public function flush();
+    public function flush(): void;
 }

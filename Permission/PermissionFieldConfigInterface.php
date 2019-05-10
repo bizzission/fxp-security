@@ -23,7 +23,7 @@ interface PermissionFieldConfigInterface
      *
      * @return string
      */
-    public function getField();
+    public function getField(): string;
 
     /**
      * Check if the operation is defined.
@@ -32,21 +32,21 @@ interface PermissionFieldConfigInterface
      *
      * @return bool
      */
-    public function hasOperation($operation);
+    public function hasOperation(string $operation): bool;
 
     /**
      * Get the available operations.
      *
      * @return string[]
      */
-    public function getOperations();
+    public function getOperations(): array;
 
     /**
      * Check if the field permission is editable.
      *
      * @return bool
      */
-    public function isEditable();
+    public function isEditable(): bool;
 
     /**
      * Get the real permission associated with the alias permission.
@@ -60,12 +60,12 @@ interface PermissionFieldConfigInterface
      *
      * @return string
      */
-    public function getMappingPermission($aliasPermission);
+    public function getMappingPermission(string $aliasPermission): string;
 
     /**
      * Get the map of alias permission and real permission.
      *
      * @return string[]
      */
-    public function getMappingPermissions();
+    public function getMappingPermissions(): array;
 }

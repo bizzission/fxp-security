@@ -23,7 +23,7 @@ use Fxp\Component\Security\Model\UserInterface;
 trait OrganizationUserTrait
 {
     /**
-     * @var OrganizationInterface
+     * @var null|OrganizationInterface
      *
      * @ORM\ManyToOne(
      *     targetEntity="Fxp\Component\Security\Model\OrganizationInterface",
@@ -35,7 +35,7 @@ trait OrganizationUserTrait
     protected $organization;
 
     /**
-     * @var UserInterface
+     * @var null|UserInterface
      *
      * @ORM\ManyToOne(
      *     targetEntity="Fxp\Component\Security\Model\UserInterface",
@@ -50,7 +50,7 @@ trait OrganizationUserTrait
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->organization->getName().':'.$this->user->getUsername();
     }
@@ -58,7 +58,7 @@ trait OrganizationUserTrait
     /**
      * {@inheritdoc}
      */
-    public function setOrganization(OrganizationInterface $organization)
+    public function setOrganization(OrganizationInterface $organization): self
     {
         $this->organization = $organization;
 
@@ -68,7 +68,7 @@ trait OrganizationUserTrait
     /**
      * {@inheritdoc}
      */
-    public function getOrganization()
+    public function getOrganization(): ?OrganizationInterface
     {
         return $this->organization;
     }
@@ -76,7 +76,7 @@ trait OrganizationUserTrait
     /**
      * {@inheritdoc}
      */
-    public function setUser(UserInterface $user)
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
 
@@ -86,7 +86,7 @@ trait OrganizationUserTrait
     /**
      * {@inheritdoc}
      */
-    public function getUser()
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }

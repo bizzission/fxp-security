@@ -63,7 +63,7 @@ class OrganizationalContext implements OrganizationalContextInterface
      * @param TokenStorageInterface         $tokenStorage The token storage
      * @param null|EventDispatcherInterface $dispatcher   The event dispatcher
      */
-    public function __construct(TokenStorageInterface $tokenStorage, EventDispatcherInterface $dispatcher = null)
+    public function __construct(TokenStorageInterface $tokenStorage, ?EventDispatcherInterface $dispatcher = null)
     {
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
@@ -91,7 +91,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getCurrentOrganization()
+    public function getCurrentOrganization(): ?OrganizationInterface
     {
         if (null === $this->organization) {
             $token = $this->tokenStorage->getToken();
@@ -112,7 +112,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setCurrentOrganizationUser($organizationUser): void
+    public function setCurrentOrganizationUser(?OrganizationUserInterface $organizationUser): void
     {
         $token = $this->getToken('organization user', $organizationUser instanceof OrganizationUserInterface);
         $user = null !== $token ? $token->getUser() : null;
@@ -120,7 +120,7 @@ class OrganizationalContext implements OrganizationalContextInterface
         $org = null;
 
         if ($user instanceof UserInterface && $organizationUser instanceof OrganizationUserInterface
-                && $user->getUsername() === $organizationUser->getUser()->getUsername()) {
+                && $this->isSameUser($user, $organizationUser)) {
             $old = $this->organizationUser;
             $this->organizationUser = $organizationUser;
             $org = $organizationUser->getOrganization();
@@ -137,7 +137,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getCurrentOrganizationUser()
+    public function getCurrentOrganizationUser(): ?OrganizationUserInterface
     {
         return $this->organizationUser;
     }
@@ -145,7 +145,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function isOrganization()
+    public function isOrganization(): bool
     {
         return null !== $this->getCurrentOrganization()
             && !$this->getCurrentOrganization()->isUserOrganization()
@@ -155,7 +155,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function setOptionalFilterType($type): void
+    public function setOptionalFilterType(string $type): void
     {
         $old = $this->optionalFilterType;
         $this->optionalFilterType = $type;
@@ -170,7 +170,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getOptionalFilterType()
+    public function getOptionalFilterType(): string
     {
         return $this->optionalFilterType;
     }
@@ -178,7 +178,7 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * {@inheritdoc}
      */
-    public function isOptionalFilterType($type)
+    public function isOptionalFilterType(string $type): bool
     {
         return \is_string($this->optionalFilterType) && $type === $this->optionalFilterType;
     }
@@ -193,7 +193,7 @@ class OrganizationalContext implements OrganizationalContextInterface
      *
      * @return TokenInterface
      */
-    protected function getToken($type, $tokenRequired = true)
+    protected function getToken(string $type, bool $tokenRequired = true): ?TokenInterface
     {
         $token = $this->tokenStorage->getToken();
 
@@ -212,10 +212,22 @@ class OrganizationalContext implements OrganizationalContextInterface
      * @param null|false|object|string $subject    The event subject
      * @param null|false|object|string $oldSubject The old event subject
      */
-    protected function dispatch($eventName, $eventClass, $subject, $oldSubject): void
+    protected function dispatch(string $eventName, string $eventClass, $subject, $oldSubject): void
     {
         if (null !== $this->dispatcher && $oldSubject !== $subject) {
             $this->dispatcher->dispatch($eventName, new $eventClass($subject));
         }
+    }
+
+    /**
+     * @param UserInterface             $user
+     * @param OrganizationUserInterface $organizationUser
+     *
+     * @return bool
+     */
+    private function isSameUser(UserInterface $user, OrganizationUserInterface $organizationUser): bool
+    {
+        return null !== $organizationUser->getUser()
+            && $user->getUsername() === $organizationUser->getUser()->getUsername();
     }
 }

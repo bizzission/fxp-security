@@ -27,9 +27,9 @@ final class GroupSecurityIdentity extends AbstractSecurityIdentity
      *
      * @param GroupInterface $group The group
      *
-     * @return self
+     * @return static
      */
-    public static function fromAccount(GroupInterface $group)
+    public static function fromAccount(GroupInterface $group): self
     {
         return new self(ClassUtils::getClass($group), $group->getName());
     }
@@ -41,9 +41,9 @@ final class GroupSecurityIdentity extends AbstractSecurityIdentity
      *
      * @throws InvalidArgumentException When the user class not implements "Fxp\Component\Security\Model\Traits\GroupableInterface"
      *
-     * @return self[]
+     * @return static[]
      */
-    public static function fromToken(TokenInterface $token)
+    public static function fromToken(TokenInterface $token): array
     {
         $user = $token->getUser();
 

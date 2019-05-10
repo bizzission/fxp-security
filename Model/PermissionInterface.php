@@ -30,23 +30,23 @@ interface PermissionInterface
      *
      * @param null|string $operation The operation
      *
-     * @return self
+     * @return static
      */
-    public function setOperation($operation);
+    public function setOperation(?string $operation);
 
     /**
      * Get the operation.
      *
      * @return null|string
      */
-    public function getOperation();
+    public function getOperation(): ?string;
 
     /**
      * Set the permission contexts.
      *
      * @param string[] $contexts The permission contexts
      *
-     * @return self
+     * @return static
      */
     public function setContexts(array $contexts);
 
@@ -55,37 +55,37 @@ interface PermissionInterface
      *
      * @return string[]
      */
-    public function getContexts();
+    public function getContexts(): array;
 
     /**
      * Set the classname.
      *
      * @param null|string $class The classname
      *
-     * @return self
+     * @return static
      */
-    public function setClass($class);
+    public function setClass(?string $class);
 
     /**
      * Get the classname.
      *
      * @return null|string
      */
-    public function getClass();
+    public function getClass(): ?string;
 
     /**
      * Set the field.
      *
      * @param null|string $field The field
      *
-     * @return self
+     * @return static
      */
-    public function setField($field);
+    public function setField(?string $field);
 
     /**
      * Get the field.
      *
      * @return null|string
      */
-    public function getField();
+    public function getField(): ?string;
 }

@@ -29,13 +29,15 @@ class UnitOfWork implements UnitOfWorkInterface
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifiers()
+    public function getObjectIdentifiers(): array
     {
         return array_keys($this->originalObjectData);
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws
      */
     public function attach($object): void
     {
@@ -72,8 +74,10 @@ class UnitOfWork implements UnitOfWorkInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws
      */
-    public function getObjectChangeSet($object)
+    public function getObjectChangeSet($object): array
     {
         $oid = spl_object_hash($object);
 

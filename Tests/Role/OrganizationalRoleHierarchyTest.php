@@ -163,12 +163,6 @@ final class OrganizationalRoleHierarchyTest extends TestCase
             ->willReturn(null)
         ;
 
-        $cacheItem->expects($this->once())
-            ->method('isHit')
-            ->with()
-            ->willReturn(false)
-        ;
-
         $this->eventDispatcher->expects($this->atLeastOnce())
             ->method('dispatch')
         ;

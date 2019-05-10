@@ -42,7 +42,7 @@ class RoleSecurityIdentityVoter extends RoleVoter
      * @param SecurityIdentityManagerInterface $sim    The security identity manager
      * @param string                           $prefix The role prefix
      */
-    public function __construct(SecurityIdentityManagerInterface $sim, $prefix = 'ROLE_')
+    public function __construct(SecurityIdentityManagerInterface $sim, string $prefix = 'ROLE_')
     {
         $this->sim = $sim;
         $this->cacheExec = [];

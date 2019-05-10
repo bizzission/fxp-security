@@ -12,7 +12,9 @@
 namespace Fxp\Component\Security\Model\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Fxp\Component\Security\Model\SharingInterface;
 
 /**
  * Trait of permission's sharing entries model.
@@ -22,6 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
 trait PermissionSharingEntryTrait
 {
     /**
+     * @var Collection|SharingInterface[]
+     *
      * @ORM\ManyToMany(targetEntity="Fxp\Component\Security\Model\SharingInterface", mappedBy="permissions")
      */
     protected $sharingEntries;

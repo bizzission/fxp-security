@@ -25,16 +25,16 @@ interface OwnerableOptionalInterface
      *
      * @param null|UserInterface $user The organization
      *
-     * @return self
+     * @return static
      */
-    public function setOwner($user);
+    public function setOwner(?UserInterface $user);
 
     /**
      * Get the owner.
      *
      * @return null|UserInterface
      */
-    public function getOwner();
+    public function getOwner(): ?UserInterface;
 
     /**
      * Get the owner id.

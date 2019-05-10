@@ -39,7 +39,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
      * @throws InvalidArgumentException When the type is empty
      * @throws UnexpectedTypeException  When the subject instance is not an object
      */
-    public function __construct($type, $identifier, $subject = null)
+    public function __construct(?string $type, ?string $identifier, $subject = null)
     {
         parent::__construct($type, $identifier);
 
@@ -57,7 +57,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('SubjectIdentity(%s, %s)', $this->type, $this->identifier);
     }
@@ -71,7 +71,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
      *
      * @return SubjectIdentityInterface
      */
-    public static function fromObject($object)
+    public static function fromObject($object): SubjectIdentityInterface
     {
         try {
             if (!\is_object($object)) {
@@ -82,7 +82,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
                 return $object;
             }
             if ($object instanceof SubjectInterface) {
-                return new self(ClassUtils::getClass($object), (string) $object->getSubjectIdentifier(), $object);
+                return new self(ClassUtils::getClass($object), $object->getSubjectIdentifier(), $object);
             }
             if (method_exists($object, 'getId')) {
                 return new self(ClassUtils::getClass($object), (string) $object->getId(), $object);
@@ -99,9 +99,9 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
      *
      * @param string $class The class name
      *
-     * @return SubjectIdentity
+     * @return static
      */
-    public static function fromClassname($class)
+    public static function fromClassname(?string $class): SubjectIdentityInterface
     {
         try {
             if (!class_exists($class)) {
@@ -125,7 +125,7 @@ final class SubjectIdentity extends AbstractBaseIdentity implements SubjectIdent
     /**
      * {@inheritdoc}
      */
-    public function equals(SubjectIdentityInterface $identity)
+    public function equals(SubjectIdentityInterface $identity): bool
     {
         return $this->identifier === $identity->getIdentifier()
                && $this->type === $identity->getType();

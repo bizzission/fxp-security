@@ -25,7 +25,7 @@ interface PermissionConfigInterface
      *
      * @return string
      */
-    public function getType();
+    public function getType(): string;
 
     /**
      * Check if the operation is defined.
@@ -34,14 +34,14 @@ interface PermissionConfigInterface
      *
      * @return bool
      */
-    public function hasOperation($operation);
+    public function hasOperation(string $operation): bool;
 
     /**
      * Get the available operations for this type.
      *
      * @return string[]
      */
-    public function getOperations();
+    public function getOperations(): array;
 
     /**
      * Check if the field configuration exists.
@@ -50,7 +50,7 @@ interface PermissionConfigInterface
      *
      * @return bool
      */
-    public function hasField($field);
+    public function hasField(string $field): bool;
 
     /**
      * Get the field configuration.
@@ -59,14 +59,14 @@ interface PermissionConfigInterface
      *
      * @return null|PermissionFieldConfigInterface
      */
-    public function getField($field);
+    public function getField(string $field): ?PermissionFieldConfigInterface;
 
     /**
      * Get the available fields.
      *
      * @return PermissionFieldConfigInterface[]
      */
-    public function getFields();
+    public function getFields(): array;
 
     /**
      * Get the master relation of permission.
@@ -86,7 +86,7 @@ interface PermissionConfigInterface
      *
      * @return array
      */
-    public function getMasterFieldMappingPermissions();
+    public function getMasterFieldMappingPermissions(): array;
 
     /**
      * Get the real permission associated with the alias permission.
@@ -100,12 +100,12 @@ interface PermissionConfigInterface
      *
      * @return string
      */
-    public function getMappingPermission($aliasPermission);
+    public function getMappingPermission(string $aliasPermission): string;
 
     /**
      * Get the map of alias permission and real permission.
      *
      * @return string[]
      */
-    public function getMappingPermissions();
+    public function getMappingPermissions(): array;
 }

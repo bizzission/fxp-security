@@ -28,7 +28,7 @@ class PostReachableRoleEvent extends AbstractSecurityEvent
      * @param string[] $reachableRoles    The reachable roles
      * @param bool     $permissionEnabled Check if the permission manager is enabled
      */
-    public function __construct(array $reachableRoles, $permissionEnabled = true)
+    public function __construct(array $reachableRoles, bool $permissionEnabled = true)
     {
         $this->reachableRoles = $reachableRoles;
         $this->permissionEnabled = $permissionEnabled;

@@ -26,54 +26,56 @@ interface OrganizationalContextInterface
      *
      * @param null|false|OrganizationInterface $organization The current organization
      */
-    public function setCurrentOrganization($organization);
+    public function setCurrentOrganization($organization): void;
 
     /**
      * Get the current used organization.
      *
      * @return null|OrganizationInterface
      */
-    public function getCurrentOrganization();
+    public function getCurrentOrganization(): ?OrganizationInterface;
 
     /**
      * Set the current used organization user.
      *
      * @param null|OrganizationUserInterface $organizationUser The current organization user
      */
-    public function setCurrentOrganizationUser($organizationUser);
+    public function setCurrentOrganizationUser(?OrganizationUserInterface $organizationUser): void;
 
     /**
      * Get the current used organization user.
      *
      * @return null|OrganizationUserInterface
      */
-    public function getCurrentOrganizationUser();
+    public function getCurrentOrganizationUser(): ?OrganizationUserInterface;
 
     /**
      * Check if the current organization is not a user organization.
      *
      * @return bool
      */
-    public function isOrganization();
+    public function isOrganization(): bool;
 
     /**
      * Set the organizational optional filter type defined in OrganizationalTypes::OPTIONAL_FILTER_*.
      *
      * @param string $type The organizational filter type
      */
-    public function setOptionalFilterType($type);
+    public function setOptionalFilterType(string $type): void;
 
     /**
      * Get the organizational optional filter type defined in OrganizationalTypes::OPTIONAL_FILTER_*.
      *
      * @return string
      */
-    public function getOptionalFilterType();
+    public function getOptionalFilterType(): string;
 
     /**
      * Check if the current filter type defined in OrganizationalTypes::OPTIONAL_FILTER_* is the same.
      *
      * @param string $type The organizational filter type
+     *
+     * @return bool
      */
-    public function isOptionalFilterType($type);
+    public function isOptionalFilterType(string $type): bool;
 }

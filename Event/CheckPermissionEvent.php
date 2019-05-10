@@ -64,9 +64,9 @@ class CheckPermissionEvent extends Event
     public function __construct(
         array $sids,
         array $permissionMap,
-        $operation,
-        $subject = null,
-        $field = null
+        string $operation,
+        ?SubjectIdentityInterface $subject = null,
+        ?string $field = null
     ) {
         $this->sids = $sids;
         $this->permissionMap = $permissionMap;
@@ -80,7 +80,7 @@ class CheckPermissionEvent extends Event
      *
      * @return SecurityIdentityInterface[]
      */
-    public function getSecurityIdentities()
+    public function getSecurityIdentities(): array
     {
         return $this->sids;
     }
@@ -90,7 +90,7 @@ class CheckPermissionEvent extends Event
      *
      * @return array
      */
-    public function getPermissionMap()
+    public function getPermissionMap(): array
     {
         return $this->permissionMap;
     }
@@ -100,7 +100,7 @@ class CheckPermissionEvent extends Event
      *
      * @return string
      */
-    public function getOperation()
+    public function getOperation(): string
     {
         return $this->operation;
     }
@@ -110,7 +110,7 @@ class CheckPermissionEvent extends Event
      *
      * @return null|SubjectIdentityInterface
      */
-    public function getSubject()
+    public function getSubject(): ?SubjectIdentityInterface
     {
         return $this->subject;
     }
@@ -120,7 +120,7 @@ class CheckPermissionEvent extends Event
      *
      * @return null|string
      */
-    public function getField()
+    public function getField(): ?string
     {
         return $this->field;
     }
@@ -130,9 +130,9 @@ class CheckPermissionEvent extends Event
      *
      * @param null|bool $granted The granted value
      *
-     * @return self
+     * @return static
      */
-    public function setGranted($granted)
+    public function setGranted(?bool $granted): self
     {
         $this->granted = $granted;
 
@@ -144,7 +144,7 @@ class CheckPermissionEvent extends Event
      *
      * @return null|bool
      */
-    public function isGranted()
+    public function isGranted(): ?bool
     {
         return $this->granted;
     }

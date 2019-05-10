@@ -13,6 +13,7 @@ namespace Fxp\Component\Security\Doctrine;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\PDOPgSql\Driver as PgSqlDriver;
 use Doctrine\DBAL\Types\BigIntType;
 use Doctrine\DBAL\Types\DecimalType;
@@ -64,7 +65,7 @@ abstract class DoctrineUtils
      *
      * @return string
      */
-    public static function getIdentifier(ClassMetadata $targetEntity)
+    public static function getIdentifier(ClassMetadata $targetEntity): string
     {
         if (!isset(self::$cacheIdentifiers[$targetEntity->getName()])) {
             $identifier = $targetEntity->getIdentifierFieldNames();
@@ -80,6 +81,8 @@ abstract class DoctrineUtils
      * Get the mock id for entity identifier.
      *
      * @param ClassMetadata $targetEntity The target entity
+     *
+     * @throws
      *
      * @return null|int|string
      */
@@ -99,9 +102,11 @@ abstract class DoctrineUtils
      * @param ClassMetadata $targetEntity The target entity
      * @param Connection    $connection   The doctrine connection
      *
+     * @throws
+     *
      * @return string
      */
-    public static function castIdentifier(ClassMetadata $targetEntity, Connection $connection)
+    public static function castIdentifier(ClassMetadata $targetEntity, Connection $connection): string
     {
         if (!isset(self::$cacheCastIdentifiers[$targetEntity->getName()])) {
             $cast = '';
@@ -126,10 +131,11 @@ abstract class DoctrineUtils
      * @param ClassMetadata $targetEntity The target entity
      *
      * @throws RuntimeException When the doctrine dbal type is not found
+     * @throws DBALException
      *
      * @return Type
      */
-    public static function getIdentifierType(ClassMetadata $targetEntity)
+    public static function getIdentifierType(ClassMetadata $targetEntity): Type
     {
         $identifier = self::getIdentifier($targetEntity);
         $type = $targetEntity->getTypeOfField($identifier);
@@ -176,7 +182,7 @@ abstract class DoctrineUtils
      *
      * @return bool
      */
-    private static function isNumberType(Type $type)
+    private static function isNumberType(Type $type): bool
     {
         return $type instanceof IntegerType || $type instanceof SmallIntType || $type instanceof BigIntType || $type instanceof DecimalType || $type instanceof FloatType;
     }
@@ -188,7 +194,7 @@ abstract class DoctrineUtils
      *
      * @return bool
      */
-    private static function isStringType(Type $type)
+    private static function isStringType(Type $type): bool
     {
         return $type instanceof StringType
             || $type instanceof TextType;

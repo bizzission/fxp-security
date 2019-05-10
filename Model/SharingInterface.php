@@ -33,23 +33,23 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
      *
      * @param null|string $class The classname
      *
-     * @return self
+     * @return static
      */
-    public function setSubjectClass($class);
+    public function setSubjectClass(?string $class);
 
     /**
      * Get the classname of subject.
      *
      * @return null|string
      */
-    public function getSubjectClass();
+    public function getSubjectClass(): ?string;
 
     /**
      * Set the id of subject.
      *
      * @param int|string $id The id
      *
-     * @return self
+     * @return static
      */
     public function setSubjectId($id);
 
@@ -65,30 +65,30 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
      *
      * @param null|string $class The classname
      *
-     * @return self
+     * @return static
      */
-    public function setIdentityClass($class);
+    public function setIdentityClass(?string $class);
 
     /**
      * Get the classname of identity.
      *
      * @return null|string
      */
-    public function getIdentityClass();
+    public function getIdentityClass(): ?string;
 
     /**
      * Set the unique name of identity.
      *
-     * @param string $name The unique name
+     * @param null|int|string $name The unique name
      *
-     * @return self
+     * @return static
      */
     public function setIdentityName($name);
 
     /**
      * Get the unique name of identity.
      *
-     * @return string
+     * @return null|int|string
      */
     public function getIdentityName();
 
@@ -97,46 +97,46 @@ interface SharingInterface extends PermissionsInterface, RoleableInterface
      *
      * @param bool $enabled The value
      *
-     * @return self
+     * @return static
      */
-    public function setEnabled($enabled);
+    public function setEnabled(bool $enabled);
 
     /**
      * Check if the sharing entry is enabled.
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled(): bool;
 
     /**
      * Set the date when the sharing entry must start.
      *
      * @param null|\DateTime $date The date
      *
-     * @return self
+     * @return static
      */
-    public function setStartedAt($date);
+    public function setStartedAt(?\DateTime $date);
 
     /**
      * Get the date when the sharing entry must start.
      *
      * @return null|\DateTime
      */
-    public function getStartedAt();
+    public function getStartedAt(): ?\DateTime;
 
     /**
      * Set the date when the sharing entry must end.
      *
      * @param null|\DateTime $date The date
      *
-     * @return self
+     * @return static
      */
-    public function setEndedAt($date);
+    public function setEndedAt(?\DateTime $date);
 
     /**
      * Get the date when the sharing entry must end.
      *
      * @return null|\DateTime
      */
-    public function getEndedAt();
+    public function getEndedAt(): ?\DateTime;
 }

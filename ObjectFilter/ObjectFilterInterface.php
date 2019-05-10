@@ -23,17 +23,17 @@ interface ObjectFilterInterface
      *
      * @return UnitOfWorkInterface
      */
-    public function getUnitOfWork();
+    public function getUnitOfWork(): UnitOfWorkInterface;
 
     /**
      * Begin the transaction.
      */
-    public function beginTransaction();
+    public function beginTransaction(): void;
 
     /**
      * Execute the transaction.
      */
-    public function commit();
+    public function commit(): void;
 
     /**
      * Filtering the object fields with null value for unauthorized access field.
@@ -42,7 +42,7 @@ interface ObjectFilterInterface
      *
      * @throws \InvalidArgumentException When $object is not a object instance
      */
-    public function filter($object);
+    public function filter($object): void;
 
     /**
      * Restoring the object fields with old value for unauthorized access field.
@@ -51,5 +51,5 @@ interface ObjectFilterInterface
      *
      * @throws \InvalidArgumentException When $object is not a object instance
      */
-    public function restore($object);
+    public function restore($object): void;
 }

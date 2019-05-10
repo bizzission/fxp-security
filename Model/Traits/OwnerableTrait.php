@@ -28,7 +28,7 @@ trait OwnerableTrait
     /**
      * {@inheritdoc}
      */
-    public function setOwner(UserInterface $user)
+    public function setOwner(UserInterface $user): self
     {
         $this->owner = $user;
 
@@ -38,7 +38,7 @@ trait OwnerableTrait
     /**
      * {@inheritdoc}
      */
-    public function getOwner()
+    public function getOwner(): ?UserInterface
     {
         return $this->owner;
     }

@@ -24,7 +24,7 @@ class IsGrantedProvider implements ExpressionFunctionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new ExpressionFunction('is_granted', static function ($attributes, $object = 'null') {

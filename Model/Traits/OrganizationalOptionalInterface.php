@@ -25,7 +25,7 @@ interface OrganizationalOptionalInterface extends OrganizationalInterface
      *
      * @param null|OrganizationInterface $organization The organization
      *
-     * @return self
+     * @return static
      */
-    public function setOrganization($organization);
+    public function setOrganization(?OrganizationInterface $organization);
 }

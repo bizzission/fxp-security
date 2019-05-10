@@ -16,7 +16,7 @@ namespace Fxp\Component\Security\Exception;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class AlreadyConfigurationAliasExistingException extends InvalidArgumentException implements ExceptionInterface
+class AlreadyConfigurationAliasExistingException extends InvalidArgumentException
 {
     /**
      * Constructor.
@@ -24,7 +24,7 @@ class AlreadyConfigurationAliasExistingException extends InvalidArgumentExceptio
      * @param string $alias The alias
      * @param string $class The class name
      */
-    public function __construct($alias, $class)
+    public function __construct(string $alias, string $class)
     {
         parent::__construct(sprintf('The alias "%s" of sharing identity configuration for the class "%s" already exist', $alias, $class));
     }

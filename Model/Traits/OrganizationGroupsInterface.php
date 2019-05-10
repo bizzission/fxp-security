@@ -25,7 +25,7 @@ interface OrganizationGroupsInterface extends OrganizationInterface
     /**
      * Get the groups of organization.
      *
-     * @return Collection
+     * @return Collection|GroupInterface[]
      */
     public function getOrganizationGroups();
 
@@ -34,7 +34,7 @@ interface OrganizationGroupsInterface extends OrganizationInterface
      *
      * @return string[]
      */
-    public function getOrganizationGroupNames();
+    public function getOrganizationGroupNames(): array;
 
     /**
      * Check the presence of group in organization.
@@ -43,14 +43,14 @@ interface OrganizationGroupsInterface extends OrganizationInterface
      *
      * @return bool
      */
-    public function hasOrganizationGroup($group);
+    public function hasOrganizationGroup(string $group): bool;
 
     /**
      * Add a group in organization.
      *
      * @param GroupInterface $group The group
      *
-     * @return self
+     * @return static
      */
     public function addOrganizationGroup(GroupInterface $group);
 
@@ -59,7 +59,7 @@ interface OrganizationGroupsInterface extends OrganizationInterface
      *
      * @param GroupInterface $group The group
      *
-     * @return self
+     * @return static
      */
     public function removeOrganizationGroup(GroupInterface $group);
 }

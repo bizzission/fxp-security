@@ -66,7 +66,7 @@ class PermissionConfig implements PermissionConfigInterface
         array $mappingPermissions = [],
         array $fields = [],
         $master = null,
-        $masterFieldMappingPermissions = []
+        array $masterFieldMappingPermissions = []
     ) {
         $this->type = $type;
         $this->operations = array_values($operations);
@@ -82,7 +82,7 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -90,7 +90,7 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function hasOperation($operation)
+    public function hasOperation(string $operation): bool
     {
         return \in_array($this->getMappingPermission($operation), $this->operations, true);
     }
@@ -98,7 +98,7 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getOperations()
+    public function getOperations(): array
     {
         return $this->operations;
     }
@@ -106,7 +106,7 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function hasField($field)
+    public function hasField(string $field): bool
     {
         return isset($this->fields[$field]);
     }
@@ -114,17 +114,15 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getField($field)
+    public function getField(string $field): ?PermissionFieldConfigInterface
     {
-        return isset($this->fields[$field])
-            ? $this->fields[$field]
-            : null;
+        return $this->fields[$field] ?? null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
@@ -140,7 +138,7 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getMasterFieldMappingPermissions()
+    public function getMasterFieldMappingPermissions(): array
     {
         return $this->masterFieldMappingPermissions;
     }
@@ -148,17 +146,15 @@ class PermissionConfig implements PermissionConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getMappingPermission($aliasPermission)
+    public function getMappingPermission(string $aliasPermission): string
     {
-        return isset($this->mappingPermissions[$aliasPermission])
-            ? $this->mappingPermissions[$aliasPermission]
-            : $aliasPermission;
+        return $this->mappingPermissions[$aliasPermission] ?? $aliasPermission;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMappingPermissions()
+    public function getMappingPermissions(): array
     {
         return $this->mappingPermissions;
     }
@@ -168,9 +164,9 @@ class PermissionConfig implements PermissionConfigInterface
      *
      * @param PermissionFieldConfigInterface $fieldConfig The permission field configuration
      *
-     * @return self
+     * @return static
      */
-    private function addField(PermissionFieldConfigInterface $fieldConfig)
+    private function addField(PermissionFieldConfigInterface $fieldConfig): PermissionConfig
     {
         $this->fields[$fieldConfig->getField()] = $fieldConfig;
 

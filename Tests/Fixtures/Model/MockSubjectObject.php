@@ -34,7 +34,7 @@ class MockSubjectObject implements SubjectInterface
      * @param string          $name              The name
      * @param null|int|string $subjectIdentifier The subject identifier
      */
-    public function __construct($name, $subjectIdentifier = 42)
+    public function __construct(string $name, $subjectIdentifier = 42)
     {
         $this->name = $name;
         $this->subjectIdentifier = $subjectIdentifier;
@@ -50,7 +50,7 @@ class MockSubjectObject implements SubjectInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -60,7 +60,7 @@ class MockSubjectObject implements SubjectInterface
      *
      * @param string $name The name
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }

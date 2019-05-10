@@ -29,7 +29,7 @@ class ConsoleToken extends AbstractToken
      * @param string   $user  The user
      * @param string[] $roles An array of roles
      */
-    public function __construct($key, $user, array $roles = [])
+    public function __construct(string $key, string $user, array $roles = [])
     {
         parent::__construct($roles);
 
@@ -41,7 +41,7 @@ class ConsoleToken extends AbstractToken
     /**
      * {@inheritdoc}
      */
-    public function getCredentials()
+    public function getCredentials(): string
     {
         return '';
     }
@@ -51,7 +51,7 @@ class ConsoleToken extends AbstractToken
      *
      * @return string The Key
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }

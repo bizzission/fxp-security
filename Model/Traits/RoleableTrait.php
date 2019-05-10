@@ -32,7 +32,7 @@ trait RoleableTrait
     /**
      * {@inheritdoc}
      */
-    public function hasRole($role)
+    public function hasRole(string $role): bool
     {
         return \in_array(strtoupper($role), $this->getRoles(), true);
     }
@@ -40,7 +40,7 @@ trait RoleableTrait
     /**
      * {@inheritdoc}
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): self
     {
         $this->roles = [];
 
@@ -54,7 +54,7 @@ trait RoleableTrait
     /**
      * {@inheritdoc}
      */
-    public function addRole($role)
+    public function addRole(string $role): self
     {
         $role = strtoupper($role);
 
@@ -68,7 +68,7 @@ trait RoleableTrait
     /**
      * {@inheritdoc}
      */
-    public function removeRole($role)
+    public function removeRole(string $role): self
     {
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
             unset($this->roles[$key]);
@@ -81,7 +81,7 @@ trait RoleableTrait
     /**
      * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = $this->roles;
 

@@ -25,7 +25,7 @@ interface ObjectFilterVoterInterface
      *
      * @return bool
      */
-    public function supports($value);
+    public function supports($value): bool;
 
     /**
      * Get the replacement value.

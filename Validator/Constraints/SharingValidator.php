@@ -38,12 +38,12 @@ class SharingValidator extends ConstraintValidator
     /**
      * Constructor.
      *
-     * @param SharingManagerInterface   $sharingManager   The sharing manager
-     * @param PropertyAccessorInterface $propertyAccessor The property access
+     * @param SharingManagerInterface        $sharingManager   The sharing manager
+     * @param null|PropertyAccessorInterface $propertyAccessor The property access
      */
     public function __construct(
         SharingManagerInterface $sharingManager,
-        PropertyAccessorInterface $propertyAccessor = null
+        ?PropertyAccessorInterface $propertyAccessor = null
     ) {
         $this->sharingManager = $sharingManager;
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
@@ -70,7 +70,7 @@ class SharingValidator extends ConstraintValidator
      * @param Sharing $constraint   The sharing constraint
      * @param string  $subjectClass The subject class
      */
-    private function validateSubject(Sharing $constraint, $subjectClass): void
+    private function validateSubject(Sharing $constraint, ?string $subjectClass): void
     {
         $res = $this->validateClass($constraint, $subjectClass, $constraint->subjectClass);
 
@@ -92,7 +92,7 @@ class SharingValidator extends ConstraintValidator
      * @param string[]   $roles         The roles
      * @param Collection $permissions   The permissions
      */
-    private function validateIdentity(Sharing $constraint, $identityClass, array $roles, Collection $permissions): void
+    private function validateIdentity(Sharing $constraint, ?string $identityClass, array $roles, Collection $permissions): void
     {
         $res = $this->validateClass($constraint, $identityClass, $constraint->identityClass);
 
@@ -166,7 +166,7 @@ class SharingValidator extends ConstraintValidator
      *
      * @return bool
      */
-    private function validateClass(Sharing $constraint, $class, $propertyPath)
+    private function validateClass(Sharing $constraint, ?string $class, string $propertyPath): bool
     {
         if (!class_exists($class)) {
             $this->context->buildViolation($constraint->invalidClassMessage)

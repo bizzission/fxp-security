@@ -21,9 +21,11 @@ abstract class AbstractSecurityIdentity extends AbstractBaseIdentity implements 
      *
      * This is not used for equality comparison, but only for debugging.
      *
+     * @throws
+     *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $name = (new \ReflectionClass($this))->getShortName();
 
@@ -33,7 +35,7 @@ abstract class AbstractSecurityIdentity extends AbstractBaseIdentity implements 
     /**
      * {@inheritdoc}
      */
-    public function equals(SecurityIdentityInterface $identity)
+    public function equals(SecurityIdentityInterface $identity): bool
     {
         if (!$identity instanceof self || $this->getType() !== $identity->getType()) {
             return false;

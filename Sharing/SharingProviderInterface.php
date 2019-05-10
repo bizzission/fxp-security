@@ -28,7 +28,7 @@ interface SharingProviderInterface
      *
      * @param SharingManagerInterface $sharingManager The sharing manager
      *
-     * @return self
+     * @return static
      */
     public function setSharingManager(SharingManagerInterface $sharingManager);
 
@@ -39,7 +39,7 @@ interface SharingProviderInterface
      *
      * @return RoleInterface[]
      */
-    public function getPermissionRoles(array $roles);
+    public function getPermissionRoles(array $roles): array;
 
     /**
      * Get all permissions of subjects.
@@ -49,7 +49,7 @@ interface SharingProviderInterface
      *
      * @return SharingInterface[]
      */
-    public function getSharingEntries(array $subjects, $sids = null);
+    public function getSharingEntries(array $subjects, $sids = null): array;
 
     /**
      * Rename the identity of sharing.
@@ -58,9 +58,9 @@ interface SharingProviderInterface
      * @param string $oldName The old identity name
      * @param string $newName The new identity name
      *
-     * @return self
+     * @return static
      */
-    public function renameIdentity($type, $oldName, $newName);
+    public function renameIdentity(string $type, string $oldName, string $newName);
 
     /**
      * Delete the identity of sharing.
@@ -68,16 +68,16 @@ interface SharingProviderInterface
      * @param string $type The identity type. Typically the PHP class name
      * @param string $name The identity name
      *
-     * @return self
+     * @return static
      */
-    public function deleteIdentity($type, $name);
+    public function deleteIdentity(string $type, string $name);
 
     /**
      * Delete the sharing entry with ids.
      *
      * @param array $ids The sharing ids
      *
-     * @return self
+     * @return static
      */
     public function deletes(array $ids);
 }

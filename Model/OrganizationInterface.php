@@ -23,7 +23,7 @@ interface OrganizationInterface
     /**
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * Get the id of model.
@@ -37,39 +37,39 @@ interface OrganizationInterface
      *
      * @param string $name The name
      *
-     * @return self
+     * @return static
      */
-    public function setName($name);
+    public function setName(?string $name);
 
     /**
      * Get the name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): ?string;
 
     /**
      * Set the user of organization.
      *
      * @param null|UserInterface $user The user of organization
      *
-     * @return self
+     * @return static
      */
-    public function setUser($user);
+    public function setUser(?UserInterface $user);
 
     /**
      * Get the user of organization.
      *
      * @return UserInterface
      */
-    public function getUser();
+    public function getUser(): ?UserInterface;
 
     /**
      * Check if the organization is a dedicated organization for the user.
      *
      * @return bool
      */
-    public function isUserOrganization();
+    public function isUserOrganization(): bool;
 
     /**
      * Get the users of organization.
@@ -83,7 +83,7 @@ interface OrganizationInterface
      *
      * @return string[]
      */
-    public function getOrganizationUserNames();
+    public function getOrganizationUserNames(): array;
 
     /**
      * Check the presence of username in organization.
@@ -92,14 +92,14 @@ interface OrganizationInterface
      *
      * @return bool
      */
-    public function hasOrganizationUser($username);
+    public function hasOrganizationUser(string $username): bool;
 
     /**
      * Add a organization user in organization.
      *
      * @param OrganizationUserInterface $organizationUser The organization user
      *
-     * @return self
+     * @return static
      */
     public function addOrganizationUser(OrganizationUserInterface $organizationUser);
 
@@ -108,7 +108,7 @@ interface OrganizationInterface
      *
      * @param OrganizationUserInterface $organizationUser The organization user
      *
-     * @return self
+     * @return static
      */
     public function removeOrganizationUser(OrganizationUserInterface $organizationUser);
 }

@@ -36,12 +36,12 @@ class PermissionValidator extends ConstraintValidator
     /**
      * Constructor.
      *
-     * @param PermissionManagerInterface $permissionManager The permission manager
-     * @param PropertyAccessorInterface  $propertyAccessor  The property access
+     * @param PermissionManagerInterface     $permissionManager The permission manager
+     * @param null|PropertyAccessorInterface $propertyAccessor  The property access
      */
     public function __construct(
         PermissionManagerInterface $permissionManager,
-        PropertyAccessorInterface $propertyAccessor = null
+        ?PropertyAccessorInterface $propertyAccessor = null
     ) {
         $this->permissionManager = $permissionManager;
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();
@@ -66,7 +66,7 @@ class PermissionValidator extends ConstraintValidator
      * @param Permission  $constraint The permission constraint
      * @param null|string $class      The class
      */
-    private function validateClass(Permission $constraint, $class): void
+    private function validateClass(Permission $constraint, ?string $class): void
     {
         if (null !== $class && PermissionProviderInterface::CONFIG_CLASS !== $class) {
             if (!class_exists($class)) {
@@ -94,7 +94,7 @@ class PermissionValidator extends ConstraintValidator
      * @param null|string $class      The class
      * @param null|string $field      The field
      */
-    private function validateField(Permission $constraint, $class, $field): void
+    private function validateField(Permission $constraint, ?string $class, ?string $field): void
     {
         if (null !== $field && PermissionProviderInterface::CONFIG_FIELD !== $field) {
             if (null === $class) {

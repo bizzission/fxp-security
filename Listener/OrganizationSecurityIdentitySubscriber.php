@@ -54,7 +54,7 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             SecurityIdentityEvents::RETRIEVAL_ADD => ['addOrganizationSecurityIdentities', 0],
@@ -64,7 +64,7 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function getCacheId()
+    public function getCacheId(): string
     {
         $org = $this->context->getCurrentOrganization();
 

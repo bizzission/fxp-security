@@ -25,7 +25,7 @@ interface OwnerableInterface
      *
      * @param UserInterface $user The user
      *
-     * @return self
+     * @return static
      */
     public function setOwner(UserInterface $user);
 
@@ -34,7 +34,7 @@ interface OwnerableInterface
      *
      * @return null|UserInterface
      */
-    public function getOwner();
+    public function getOwner(): ?UserInterface;
 
     /**
      * Get the owner id.

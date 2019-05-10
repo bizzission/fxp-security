@@ -72,8 +72,8 @@ class GetFilterEvent extends Event
         SqlFilter $filter,
         EntityManagerInterface $entityManager,
         ClassMetadata $targetEntity,
-        $targetTableAlias,
-        $sharingClass
+        string $targetTableAlias,
+        string $sharingClass
     ) {
         $this->filter = $filter;
         $this->entityManager = $entityManager;
@@ -87,7 +87,7 @@ class GetFilterEvent extends Event
      *
      * @return EntityManagerInterface
      */
-    public function getEntityManager()
+    public function getEntityManager(): EntityManagerInterface
     {
         return $this->entityManager;
     }
@@ -97,7 +97,7 @@ class GetFilterEvent extends Event
      *
      * @return Connection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         return $this->entityManager->getConnection();
     }
@@ -109,7 +109,7 @@ class GetFilterEvent extends Event
      *
      * @return ClassMetadata
      */
-    public function getClassMetadata($classname)
+    public function getClassMetadata($classname): ClassMetadata
     {
         return $this->entityManager->getClassMetadata($classname);
     }
@@ -119,7 +119,7 @@ class GetFilterEvent extends Event
      *
      * @return ClassMetadata
      */
-    public function getSharingClassMetadata()
+    public function getSharingClassMetadata(): ClassMetadata
     {
         return $this->getClassMetadata($this->sharingClass);
     }
@@ -128,12 +128,12 @@ class GetFilterEvent extends Event
      * Sets a parameter that can be used by the filter.
      *
      * @param string      $name  The name of the parameter
-     * @param string      $value The value of the parameter
+     * @param mixed       $value The value of the parameter
      * @param null|string $type  The parameter type
      *
-     * @return self
+     * @return GetFilterEvent
      */
-    public function setParameter($name, $value, $type = null)
+    public function setParameter(string $name, $value, ?string $type = null): GetFilterEvent
     {
         $this->filter->setParameter($name, $value, $type);
 
@@ -147,7 +147,7 @@ class GetFilterEvent extends Event
      *
      * @return bool
      */
-    public function hasParameter($name)
+    public function hasParameter(string $name): bool
     {
         return $this->filter->hasParameter($name);
     }
@@ -159,7 +159,7 @@ class GetFilterEvent extends Event
      *
      * @return string
      */
-    public function getParameter($name)
+    public function getParameter(string $name): string
     {
         return $this->filter->getParameter($name);
     }
@@ -170,10 +170,11 @@ class GetFilterEvent extends Event
      * @param string $name The name of the parameter
      *
      * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      *
      * @return null|bool|bool[]|float|float[]|int|int[]|string|string[]
      */
-    public function getRealParameter($name)
+    public function getRealParameter(string $name)
     {
         $this->getParameter($name);
 
@@ -192,7 +193,7 @@ class GetFilterEvent extends Event
      *
      * @return ClassMetadata
      */
-    public function getTargetEntity()
+    public function getTargetEntity(): ClassMetadata
     {
         return $this->targetEntity;
     }
@@ -202,7 +203,7 @@ class GetFilterEvent extends Event
      *
      * @return string
      */
-    public function getTargetTableAlias()
+    public function getTargetTableAlias(): string
     {
         return $this->targetTableAlias;
     }
@@ -212,9 +213,9 @@ class GetFilterEvent extends Event
      *
      * @param string $filterConstraint The filter constraint
      *
-     * @return self
+     * @return GetFilterEvent
      */
-    public function setFilterConstraint($filterConstraint)
+    public function setFilterConstraint(string $filterConstraint): GetFilterEvent
     {
         $this->filterConstraint = $filterConstraint;
 
@@ -226,7 +227,7 @@ class GetFilterEvent extends Event
      *
      * @return string
      */
-    public function getFilterConstraint()
+    public function getFilterConstraint(): string
     {
         return $this->filterConstraint;
     }

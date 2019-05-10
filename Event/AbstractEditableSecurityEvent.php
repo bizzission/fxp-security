@@ -23,8 +23,8 @@ abstract class AbstractEditableSecurityEvent extends AbstractSecurityEvent
      *
      * @param bool $enabled The value
      */
-    public function setPermissionEnabled($enabled): void
+    public function setPermissionEnabled(bool $enabled): void
     {
-        $this->permissionEnabled = (bool) $enabled;
+        $this->permissionEnabled = $enabled;
     }
 }

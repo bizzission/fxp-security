@@ -23,7 +23,7 @@ class MockCacheSecurityIdentitySubscriber implements EventSubscriberInterface, C
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             SecurityIdentityEvents::RETRIEVAL_ADD => ['onAddIdentity', 0],
@@ -33,7 +33,7 @@ class MockCacheSecurityIdentitySubscriber implements EventSubscriberInterface, C
     /**
      * {@inheritdoc}
      */
-    public function getCacheId()
+    public function getCacheId(): string
     {
         return 'cache_id';
     }

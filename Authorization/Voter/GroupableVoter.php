@@ -23,7 +23,7 @@ class GroupableVoter extends AbstractIdentityVoter
     /**
      * {@inheritdoc}
      */
-    protected function getValidType()
+    protected function getValidType(): string
     {
         return GroupInterface::class;
     }
@@ -31,7 +31,7 @@ class GroupableVoter extends AbstractIdentityVoter
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultPrefix()
+    protected function getDefaultPrefix(): string
     {
         return 'GROUP_';
     }

@@ -27,7 +27,7 @@ abstract class SubjectUtils
      *
      * @return SubjectIdentityInterface
      */
-    public static function getSubjectIdentity($subject)
+    public static function getSubjectIdentity($subject): SubjectIdentityInterface
     {
         if ($subject instanceof SubjectIdentityInterface) {
             return $subject;

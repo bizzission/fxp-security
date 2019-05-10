@@ -27,7 +27,7 @@ interface GroupableInterface
      *
      * @return bool
      */
-    public function hasGroup($name);
+    public function hasGroup(string $name): bool;
 
     /**
      * Gets the groups granted to the user.
@@ -41,5 +41,5 @@ interface GroupableInterface
      *
      * @return string[]
      */
-    public function getGroupNames();
+    public function getGroupNames(): array;
 }

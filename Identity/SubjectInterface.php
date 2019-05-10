@@ -23,7 +23,7 @@ interface SubjectInterface
     /**
      * Get the unique identifier for this subject.
      *
-     * @return string
+     * @return int|string
      */
     public function getSubjectIdentifier();
 }

@@ -25,7 +25,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @param RoleHierarchicalInterface $role
      *
-     * @return self
+     * @return static
      */
     public function addParent(RoleHierarchicalInterface $role);
 
@@ -34,7 +34,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @param RoleHierarchicalInterface $parent
      *
-     * @return self
+     * @return static
      */
     public function removeParent(RoleHierarchicalInterface $parent);
 
@@ -50,7 +50,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @return array
      */
-    public function getParentNames();
+    public function getParentNames(): array;
 
     /**
      * Check if role has parent.
@@ -59,14 +59,14 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @return bool
      */
-    public function hasParent($name);
+    public function hasParent(string $name): bool;
 
     /**
      * Add a child on the current role.
      *
      * @param RoleHierarchicalInterface $role
      *
-     * @return self
+     * @return static
      */
     public function addChild(RoleHierarchicalInterface $role);
 
@@ -75,7 +75,7 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @param RoleHierarchicalInterface $child
      *
-     * @return self
+     * @return static
      */
     public function removeChild(RoleHierarchicalInterface $child);
 
@@ -89,9 +89,9 @@ interface RoleHierarchicalInterface extends RoleInterface
     /**
      * Gets all children names.
      *
-     * @return array
+     * @return string[]
      */
-    public function getChildrenNames();
+    public function getChildrenNames(): array;
 
     /**
      * Check if role has child.
@@ -100,5 +100,5 @@ interface RoleHierarchicalInterface extends RoleInterface
      *
      * @return bool
      */
-    public function hasChild($name);
+    public function hasChild(string $name): bool;
 }

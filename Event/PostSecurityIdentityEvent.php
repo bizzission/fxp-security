@@ -31,7 +31,7 @@ class PostSecurityIdentityEvent extends AbstractSecurityEvent
      * @param SecurityIdentityInterface[] $securityIdentities The security identities
      * @param bool                        $permissionEnabled  Check if the permission manager is enabled
      */
-    public function __construct(TokenInterface $token, array $securityIdentities = [], $permissionEnabled = true)
+    public function __construct(TokenInterface $token, array $securityIdentities = [], bool $permissionEnabled = true)
     {
         $this->token = $token;
         $this->securityIdentities = $securityIdentities;

@@ -23,5 +23,5 @@ interface CacheSecurityIdentityListenerInterface
      *
      * @return string
      */
-    public function getCacheId();
+    public function getCacheId(): string;
 }

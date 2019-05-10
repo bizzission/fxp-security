@@ -25,7 +25,7 @@ class IsBasicAuthProvider implements ExpressionFunctionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new ExpressionFunction('is_basic_auth', static function () {

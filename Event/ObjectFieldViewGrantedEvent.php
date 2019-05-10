@@ -42,7 +42,7 @@ class ObjectFieldViewGrantedEvent extends AbstractViewGrantedEvent
      *
      * @return FieldVote
      */
-    public function getFieldVote()
+    public function getFieldVote(): FieldVote
     {
         return $this->fieldVote;
     }

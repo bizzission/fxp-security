@@ -18,10 +18,10 @@ use Fxp\Component\Security\Doctrine\ORM\Filter\Listener\SharingFilterSubscriber;
 use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Fxp\Component\Security\Model\Sharing;
 use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\Event;
@@ -89,7 +89,7 @@ final class SharingFilterSubscriberTest extends TestCase
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
-        $this->sharingClass = Sharing::class;
+        $this->sharingClass = MockSharing::class;
         $this->filter = new SharingFilter($this->entityManager);
         $this->listener = new SharingFilterSubscriber(
             $this->entityManager,
@@ -121,7 +121,7 @@ final class SharingFilterSubscriberTest extends TestCase
             ->willReturn(true)
         ;
 
-        $this->assertCount(4, $this->listener->getSubscribedEvents());
+        $this->assertCount(4, SharingFilterSubscriber::getSubscribedEvents());
     }
 
     public function testOnSharingManagerChange(): void

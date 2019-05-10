@@ -53,7 +53,7 @@ trait PermissionsTrait
     /**
      * {@inheritdoc}
      */
-    public function hasPermission(PermissionInterface $permission)
+    public function hasPermission(PermissionInterface $permission): bool
     {
         return $this->getPermissions()->contains($permission);
     }
@@ -61,7 +61,7 @@ trait PermissionsTrait
     /**
      * {@inheritdoc}
      */
-    public function addPermission(PermissionInterface $permission)
+    public function addPermission(PermissionInterface $permission): self
     {
         if (!$this->getPermissions()->contains($permission)) {
             $this->getPermissions()->add($permission);
@@ -73,7 +73,7 @@ trait PermissionsTrait
     /**
      * {@inheritdoc}
      */
-    public function removePermission(PermissionInterface $permission)
+    public function removePermission(PermissionInterface $permission): self
     {
         if ($this->getPermissions()->contains($permission)) {
             $this->getPermissions()->removeElement($permission);

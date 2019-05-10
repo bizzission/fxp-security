@@ -25,7 +25,7 @@ interface OrganizationRolesInterface extends OrganizationInterface
     /**
      * Get the roles of organization.
      *
-     * @return Collection
+     * @return Collection|RoleInterface[]
      */
     public function getOrganizationRoles();
 
@@ -34,7 +34,7 @@ interface OrganizationRolesInterface extends OrganizationInterface
      *
      * @return string[]
      */
-    public function getOrganizationRoleNames();
+    public function getOrganizationRoleNames(): array;
 
     /**
      * Check the presence of role in organization.
@@ -43,14 +43,14 @@ interface OrganizationRolesInterface extends OrganizationInterface
      *
      * @return bool
      */
-    public function hasOrganizationRole($role);
+    public function hasOrganizationRole(string $role): bool;
 
     /**
      * Add a role in organization.
      *
      * @param RoleInterface $role The role
      *
-     * @return self
+     * @return static
      */
     public function addOrganizationRole(RoleInterface $role);
 
@@ -59,7 +59,7 @@ interface OrganizationRolesInterface extends OrganizationInterface
      *
      * @param RoleInterface $role The role
      *
-     * @return self
+     * @return static
      */
     public function removeOrganizationRole(RoleInterface $role);
 }

@@ -16,14 +16,14 @@ namespace Fxp\Component\Security\Exception;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class PermissionConfigNotFoundException extends InvalidArgumentException implements ExceptionInterface
+class PermissionConfigNotFoundException extends InvalidArgumentException
 {
     /**
      * Constructor.
      *
      * @param string $class The class name
      */
-    public function __construct($class)
+    public function __construct(string $class)
     {
         parent::__construct(sprintf('The permission configuration for the class "%s" is not found', $class));
     }

@@ -42,7 +42,7 @@ class MockUserGroupable implements UserInterface, EditGroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return 'password';
     }
@@ -50,7 +50,7 @@ class MockUserGroupable implements UserInterface, EditGroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getSalt()
+    public function getSalt(): string
     {
         return 'salt';
     }
@@ -58,7 +58,7 @@ class MockUserGroupable implements UserInterface, EditGroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return 'user.test';
     }
@@ -74,7 +74,7 @@ class MockUserGroupable implements UserInterface, EditGroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return ['ROLE_TEST'];
     }

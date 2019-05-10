@@ -42,7 +42,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
     /**
      * {@inheritdoc}
      */
-    public function getSecurityIdentities(TokenInterface $token = null)
+    public function getSecurityIdentities(?TokenInterface $token = null): array
     {
         if (null === $token) {
             return [];
@@ -64,7 +64,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
      *
      * @return string
      */
-    protected function buildId(TokenInterface $token)
+    protected function buildId(TokenInterface $token): string
     {
         $id = spl_object_hash($token);
         $listeners = $this->getCacheIdentityListeners();
@@ -81,7 +81,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
      *
      * @return CacheSecurityIdentityListenerInterface[]
      */
-    protected function getCacheIdentityListeners()
+    protected function getCacheIdentityListeners(): array
     {
         if (null === $this->cacheIdentityListeners) {
             $this->cacheIdentityListeners = [];

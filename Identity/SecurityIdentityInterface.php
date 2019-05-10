@@ -24,7 +24,7 @@ interface SecurityIdentityInterface
      *
      * @return string
      */
-    public function getType();
+    public function getType(): string;
 
     /**
      * Get the identifier.
@@ -32,13 +32,15 @@ interface SecurityIdentityInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * This method is used to compare two security identities in order to
      * not rely on referential equality.
      *
      * @param SecurityIdentityInterface $identity
+     *
+     * @return bool
      */
-    public function equals(self $identity);
+    public function equals(SecurityIdentityInterface $identity): bool;
 }

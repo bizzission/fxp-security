@@ -61,7 +61,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function setOperation($operation)
+    public function setOperation(?string $operation): self
     {
         $this->operation = $operation;
 
@@ -71,7 +71,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function getOperation()
+    public function getOperation(): ?string
     {
         return $this->operation;
     }
@@ -79,7 +79,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function setContexts(array $contexts)
+    public function setContexts(array $contexts): self
     {
         $this->contexts = $contexts;
 
@@ -89,7 +89,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function getContexts()
+    public function getContexts(): array
     {
         return $this->contexts;
     }
@@ -97,7 +97,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function setClass($class)
+    public function setClass(?string $class): self
     {
         $this->class = $class;
 
@@ -107,7 +107,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function getClass()
+    public function getClass(): ?string
     {
         return $this->class;
     }
@@ -115,7 +115,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function setField($field)
+    public function setField(?string $field): self
     {
         $this->field = $field;
 
@@ -125,7 +125,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function getField()
+    public function getField(): ?string
     {
         return $this->field;
     }

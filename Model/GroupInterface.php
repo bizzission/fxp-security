@@ -25,7 +25,7 @@ interface GroupInterface extends RoleableInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): ?string;
 
     /**
      * Set the group name.
@@ -34,5 +34,5 @@ interface GroupInterface extends RoleableInterface
      *
      * @return static
      */
-    public function setName($name);
+    public function setName(?string $name);
 }

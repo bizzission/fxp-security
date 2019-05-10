@@ -48,7 +48,7 @@ abstract class AbstractLoadPermissionsEvent extends Event
      *
      * @return SecurityIdentityInterface[]
      */
-    public function getSecurityIdentities()
+    public function getSecurityIdentities(): array
     {
         return $this->sids;
     }
@@ -58,7 +58,7 @@ abstract class AbstractLoadPermissionsEvent extends Event
      *
      * @return string[]
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }

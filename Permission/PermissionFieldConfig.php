@@ -47,10 +47,10 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
      * @param null|bool $editable           Check if the permission is editable
      */
     public function __construct(
-        $field,
+        string $field,
         array $operations = [],
         array $mappingPermissions = [],
-        $editable = null
+        ?bool $editable = null
     ) {
         $this->field = $field;
         $this->operations = array_values($operations);
@@ -61,7 +61,7 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getField()
+    public function getField(): string
     {
         return $this->field;
     }
@@ -69,7 +69,7 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function hasOperation($operation)
+    public function hasOperation(string $operation): bool
     {
         return \in_array($this->getMappingPermission($operation), $this->operations, true);
     }
@@ -77,7 +77,7 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getOperations()
+    public function getOperations(): array
     {
         return $this->operations;
     }
@@ -85,7 +85,7 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function isEditable()
+    public function isEditable(): bool
     {
         return null !== $this->editable ? (bool) $this->editable : empty($this->getOperations());
     }
@@ -93,17 +93,15 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getMappingPermission($aliasPermission)
+    public function getMappingPermission(string $aliasPermission): string
     {
-        return isset($this->mappingPermissions[$aliasPermission])
-            ? $this->mappingPermissions[$aliasPermission]
-            : $aliasPermission;
+        return $this->mappingPermissions[$aliasPermission] ?? $aliasPermission;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMappingPermissions()
+    public function getMappingPermissions(): array
     {
         return $this->mappingPermissions;
     }

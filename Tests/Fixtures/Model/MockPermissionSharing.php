@@ -12,14 +12,17 @@
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
 use Fxp\Component\Security\Model\PermissionInterface;
+use Fxp\Component\Security\Model\Traits\PermissionSharingEntryInterface;
+use Fxp\Component\Security\Model\Traits\PermissionSharingEntryTrait;
 use Fxp\Component\Security\Model\Traits\PermissionTrait;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockPermission implements PermissionInterface
+class MockPermissionSharing implements PermissionInterface, PermissionSharingEntryInterface
 {
     use PermissionTrait;
+    use PermissionSharingEntryTrait;
 
     /**
      * @var null|int

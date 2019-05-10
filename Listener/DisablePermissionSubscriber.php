@@ -43,7 +43,7 @@ class DisablePermissionSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             SecurityIdentityEvents::RETRIEVAL_PRE => ['disablePermissionManager', -255],

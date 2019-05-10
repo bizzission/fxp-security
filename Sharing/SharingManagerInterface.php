@@ -27,23 +27,23 @@ interface SharingManagerInterface
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled(): bool;
 
     /**
      * Define if the sharing manager is enable or not.
      *
      * @param bool $enabled The value
      *
-     * @return self
+     * @return static
      */
-    public function setEnabled($enabled);
+    public function setEnabled(bool $enabled);
 
     /**
      * Add the sharing subject config.
      *
      * @param SharingSubjectConfigInterface $config The sharing subject config
      *
-     * @return self
+     * @return static
      */
     public function addSubjectConfig(SharingSubjectConfigInterface $config);
 
@@ -54,7 +54,7 @@ interface SharingManagerInterface
      *
      * @return bool
      */
-    public function hasSubjectConfig($class);
+    public function hasSubjectConfig(string $class): bool;
 
     /**
      * Get the sharing subject config.
@@ -63,14 +63,14 @@ interface SharingManagerInterface
      *
      * @return SharingSubjectConfigInterface
      */
-    public function getSubjectConfig($class);
+    public function getSubjectConfig(string $class): SharingSubjectConfigInterface;
 
     /**
      * Get the sharing subject configs.
      *
      * @return SharingSubjectConfigInterface[]
      */
-    public function getSubjectConfigs();
+    public function getSubjectConfigs(): array;
 
     /**
      * Check if the subject has sharing visibility of subject identity.
@@ -79,7 +79,7 @@ interface SharingManagerInterface
      *
      * @return bool
      */
-    public function hasSharingVisibility(SubjectIdentityInterface $subject);
+    public function hasSharingVisibility(SubjectIdentityInterface $subject): bool;
 
     /**
      * Get the sharing visibility of subject identity.
@@ -88,14 +88,14 @@ interface SharingManagerInterface
      *
      * @return string
      */
-    public function getSharingVisibility(SubjectIdentityInterface $subject);
+    public function getSharingVisibility(SubjectIdentityInterface $subject): string;
 
     /**
      * Add the sharing identity config.
      *
      * @param SharingIdentityConfigInterface $config The sharing identity config
      *
-     * @return self
+     * @return static
      */
     public function addIdentityConfig(SharingIdentityConfigInterface $config);
 
@@ -106,7 +106,7 @@ interface SharingManagerInterface
      *
      * @return bool
      */
-    public function hasIdentityConfig($class);
+    public function hasIdentityConfig(string $class): bool;
 
     /**
      * Get the sharing identity config.
@@ -115,28 +115,28 @@ interface SharingManagerInterface
      *
      * @return SharingIdentityConfigInterface
      */
-    public function getIdentityConfig($class);
+    public function getIdentityConfig(string $class): SharingIdentityConfigInterface;
 
     /**
      * Get the sharing identity configs.
      *
      * @return SharingIdentityConfigInterface[]
      */
-    public function getIdentityConfigs();
+    public function getIdentityConfigs(): array;
 
     /**
      * Check if there is an identity config with the roleable option.
      *
      * @return bool
      */
-    public function hasIdentityRoleable();
+    public function hasIdentityRoleable(): bool;
 
     /**
      * Check if there is an identity config with the permissible option.
      *
      * @return bool
      */
-    public function hasIdentityPermissible();
+    public function hasIdentityPermissible(): bool;
 
     /**
      * Check if the access is granted by a sharing entry.
@@ -147,14 +147,14 @@ interface SharingManagerInterface
      *
      * @return bool
      */
-    public function isGranted($operation, $subject = null, $field = null);
+    public function isGranted(string $operation, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool;
 
     /**
      * Preload permissions of objects.
      *
      * @param object[] $objects The objects
      *
-     * @return self
+     * @return static
      */
     public function preloadPermissions(array $objects);
 
@@ -170,14 +170,14 @@ interface SharingManagerInterface
      *
      * @param object[] $objects The objects
      *
-     * @return self
+     * @return static
      */
     public function resetPreloadPermissions(array $objects);
 
     /**
      * Clear all permission caches.
      *
-     * @return self
+     * @return static
      */
     public function clear();
 
@@ -188,9 +188,9 @@ interface SharingManagerInterface
      * @param string $oldName The old identity name
      * @param string $newName The new identity name
      *
-     * @return self
+     * @return static
      */
-    public function renameIdentity($type, $oldName, $newName);
+    public function renameIdentity(string $type, string $oldName, string $newName);
 
     /**
      * Delete the identity of sharing.
@@ -198,16 +198,16 @@ interface SharingManagerInterface
      * @param string $type The identity type. Typically the PHP class name
      * @param string $name The identity name
      *
-     * @return self
+     * @return static
      */
-    public function deleteIdentity($type, $name);
+    public function deleteIdentity(string $type, string $name);
 
     /**
      * Delete the sharing entry with ids.
      *
      * @param array $ids The sharing ids
      *
-     * @return self
+     * @return static
      */
     public function deletes(array $ids);
 }

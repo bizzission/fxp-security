@@ -70,7 +70,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addSpecialRole($role)
+    public function addSpecialRole(string $role): SecurityIdentityManagerInterface
     {
         if (!isset($this->roles[$role])) {
             $this->roles[$role] = $role;
@@ -82,7 +82,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getSecurityIdentities(TokenInterface $token = null)
+    public function getSecurityIdentities(?TokenInterface $token = null): array
     {
         $sids = [];
 
@@ -121,7 +121,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      *
      * @return SecurityIdentityInterface[]
      */
-    protected function addCurrentUser(TokenInterface $token, array $sids)
+    protected function addCurrentUser(TokenInterface $token, array $sids): array
     {
         if (!$token instanceof AnonymousToken) {
             try {
@@ -142,7 +142,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      *
      * @return SecurityIdentityInterface[]
      */
-    protected function addReachableRoles(TokenInterface $token, array $sids)
+    protected function addReachableRoles(TokenInterface $token, array $sids): array
     {
         foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
             $sids[] = RoleSecurityIdentity::fromAccount(RoleUtil::formatName($role));
@@ -159,7 +159,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      *
      * @return SecurityIdentityInterface[]
      */
-    protected function addSpecialRoles(TokenInterface $token, array $sids)
+    protected function addSpecialRoles(TokenInterface $token, array $sids): array
     {
         $sids = $this->injectSpecialRoles($sids);
 
@@ -184,7 +184,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      *
      * @return SecurityIdentityInterface[]
      */
-    private function injectSpecialRoles(array $sids)
+    private function injectSpecialRoles(array $sids): array
     {
         $roles = $this->getRoleNames($sids);
 
@@ -204,7 +204,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      *
      * @return string[]
      */
-    private function getRoleNames(array $sids)
+    private function getRoleNames(array $sids): array
     {
         $roles = [];
 

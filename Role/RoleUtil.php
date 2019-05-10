@@ -30,7 +30,7 @@ abstract class RoleUtil
      *
      * @return Role[]|string[]
      */
-    public static function formatRoles(array $roles, $force = false): array
+    public static function formatRoles(array $roles, bool $force = false): array
     {
         if ($force || version_compare(Kernel::VERSION, '4.3', '<')) {
             $roles = array_map(static function ($role) {
@@ -49,7 +49,7 @@ abstract class RoleUtil
      *
      * @return Role|string
      */
-    public static function formatRole($role, $force = false)
+    public static function formatRole($role, bool $force = false)
     {
         if ($force || version_compare(Kernel::VERSION, '4.3', '<')) {
             $role = !$role instanceof Role ? new Role((string) $role) : $role;

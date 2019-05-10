@@ -11,6 +11,8 @@
 
 namespace Fxp\Component\Security\Model\Traits;
 
+use Fxp\Component\Security\Model\OrganizationInterface;
+
 /**
  * Trait to indicate that the model is linked with an optional organization.
  *
@@ -23,7 +25,7 @@ trait OrganizationalOptionalTrait
     /**
      * {@inheritdoc}
      */
-    public function setOrganization($organization)
+    public function setOrganization(?OrganizationInterface $organization): self
     {
         $this->organization = $organization;
 

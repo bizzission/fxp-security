@@ -43,7 +43,7 @@ class HostRoleListener extends AbstractRoleListener
      *
      * @return null|string
      */
-    protected function getHostRole(GetResponseEvent $event)
+    protected function getHostRole(GetResponseEvent $event): ?string
     {
         $hostRole = null;
         $hostname = $event->getRequest()->getHttpHost();
@@ -67,7 +67,7 @@ class HostRoleListener extends AbstractRoleListener
      *
      * @return bool
      */
-    private function isValid($pattern, $hostname)
+    private function isValid(string $pattern, string $hostname): bool
     {
         return 0 === strpos($pattern, '/') && (1 + strrpos($pattern, '/')) === \strlen($pattern)
             ? (bool) preg_match($pattern, $hostname)

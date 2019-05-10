@@ -35,7 +35,7 @@ class ObjectFilterListener extends AbstractPermissionListener
      *
      * @return string[]
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::postLoad,
@@ -53,8 +53,7 @@ class ObjectFilterListener extends AbstractPermissionListener
     {
         $token = $this->getTokenStorage()->getToken();
 
-        if (!$this->getPermissionManager()->isEnabled()
-                || null === $token || $token instanceof ConsoleToken) {
+        if (null === $token || $token instanceof ConsoleToken || !$this->getPermissionManager()->isEnabled()) {
             return;
         }
 
@@ -73,8 +72,7 @@ class ObjectFilterListener extends AbstractPermissionListener
     {
         $token = $this->getTokenStorage()->getToken();
 
-        if (!$this->getPermissionManager()->isEnabled()
-                || null === $token || $token instanceof ConsoleToken) {
+        if (null === $token || $token instanceof ConsoleToken || !$this->getPermissionManager()->isEnabled()) {
             return;
         }
 
@@ -93,9 +91,9 @@ class ObjectFilterListener extends AbstractPermissionListener
      *
      * @param ObjectFilterInterface $objectFilter The object filter
      *
-     * @return self
+     * @return static
      */
-    public function setObjectFilter(ObjectFilterInterface $objectFilter)
+    public function setObjectFilter(ObjectFilterInterface $objectFilter): self
     {
         $this->objectFilter = $objectFilter;
 
@@ -105,9 +103,11 @@ class ObjectFilterListener extends AbstractPermissionListener
     /**
      * Get the Object Filter.
      *
+     * @throws
+     *
      * @return ObjectFilterInterface
      */
-    protected function getObjectFilter()
+    protected function getObjectFilter(): ObjectFilterInterface
     {
         $this->init();
 
@@ -120,7 +120,7 @@ class ObjectFilterListener extends AbstractPermissionListener
      * @param object[] $objects The objects
      * @param string   $action  The action name
      */
-    protected function checkAllScheduledByAction(array $objects, $action): void
+    protected function checkAllScheduledByAction(array $objects, string $action): void
     {
         foreach ($objects as $object) {
             $this->postResetPermissions[] = $object;
@@ -134,7 +134,7 @@ class ObjectFilterListener extends AbstractPermissionListener
     /**
      * {@inheritdoc}
      */
-    protected function getInitProperties()
+    protected function getInitProperties(): array
     {
         return [
             'tokenStorage' => 'setTokenStorage',

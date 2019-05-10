@@ -37,7 +37,7 @@ final class DisablePermissionSubscriberTest extends TestCase
     public function testDisable(): void
     {
         $listener = new DisablePermissionSubscriber($this->permManager);
-        $this->assertCount(4, $listener->getSubscribedEvents());
+        $this->assertCount(4, DisablePermissionSubscriber::getSubscribedEvents());
 
         /** @var AbstractEditableSecurityEvent|\PHPUnit_Framework_MockObject_MockObject $event */
         $event = $this->getMockForAbstractClass(AbstractEditableSecurityEvent::class);
@@ -58,7 +58,7 @@ final class DisablePermissionSubscriberTest extends TestCase
     public function testEnable(): void
     {
         $listener = new DisablePermissionSubscriber($this->permManager);
-        $this->assertCount(4, $listener->getSubscribedEvents());
+        $this->assertCount(4, DisablePermissionSubscriber::getSubscribedEvents());
 
         $event = new PostReachableRoleEvent([], true);
 

@@ -32,7 +32,7 @@ interface PermissionProviderInterface
      *
      * @return PermissionInterface[]
      */
-    public function getPermissions(array $roles);
+    public function getPermissions(array $roles): array;
 
     /**
      * Get the permissions by subject.
@@ -42,7 +42,7 @@ interface PermissionProviderInterface
      *
      * @return PermissionInterface[]
      */
-    public function getPermissionsBySubject($subject = null, $contexts = null);
+    public function getPermissionsBySubject($subject = null, $contexts = null): array;
 
     /**
      * Get the config permissions.
@@ -51,7 +51,7 @@ interface PermissionProviderInterface
      *
      * @return PermissionInterface[]
      */
-    public function getConfigPermissions($contexts = null);
+    public function getConfigPermissions($contexts = null): array;
 
     /**
      * Get the class name of association field.
@@ -60,5 +60,5 @@ interface PermissionProviderInterface
      *
      * @return null|string
      */
-    public function getMasterClass(PermissionConfigInterface $config);
+    public function getMasterClass(PermissionConfigInterface $config): ?string;
 }

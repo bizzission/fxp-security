@@ -30,7 +30,7 @@ abstract class AbstractSecurityEvent extends Event
      *
      * @return bool
      */
-    public function isPermissionEnabled()
+    public function isPermissionEnabled(): bool
     {
         return $this->permissionEnabled;
     }

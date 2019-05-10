@@ -19,11 +19,11 @@ use Doctrine\ORM\Query\FilterCollection;
 use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
 use Fxp\Component\Security\Identity\SubjectIdentity;
-use Fxp\Component\Security\Model\Sharing;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Fxp\Component\Security\SharingFilterEvents;
 use Fxp\Component\Security\SharingVisibilities;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -76,7 +76,7 @@ final class SharingFilterTest extends TestCase
         $this->eventManager = new EventManager();
         $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $this->eventDispatcher = new EventDispatcher();
-        $this->sharingClass = Sharing::class;
+        $this->sharingClass = MockSharing::class;
         $this->targetEntity = $this->getMockForAbstractClass(
             ClassMetadata::class,
             [],

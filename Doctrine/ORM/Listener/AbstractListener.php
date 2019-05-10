@@ -43,9 +43,9 @@ abstract class AbstractListener implements EventSubscriber
      *
      * @param TokenStorageInterface $tokenStorage The token storage
      *
-     * @return self
+     * @return static
      */
-    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    public function setTokenStorage(TokenStorageInterface $tokenStorage): self
     {
         $this->tokenStorage = $tokenStorage;
 
@@ -55,9 +55,11 @@ abstract class AbstractListener implements EventSubscriber
     /**
      * Gets security token storage.
      *
+     * @throws
+     *
      * @return TokenStorageInterface
      */
-    public function getTokenStorage()
+    public function getTokenStorage(): TokenStorageInterface
     {
         $this->init();
 
@@ -69,9 +71,9 @@ abstract class AbstractListener implements EventSubscriber
      *
      * @param PermissionManagerInterface $permissionManager The permission manager
      *
-     * @return self
+     * @return static
      */
-    public function setPermissionManager(PermissionManagerInterface $permissionManager)
+    public function setPermissionManager(PermissionManagerInterface $permissionManager): self
     {
         $this->permissionManager = $permissionManager;
 
@@ -81,9 +83,11 @@ abstract class AbstractListener implements EventSubscriber
     /**
      * Get the Permission Manager.
      *
+     * @throws
+     *
      * @return PermissionManagerInterface
      */
-    public function getPermissionManager()
+    public function getPermissionManager(): PermissionManagerInterface
     {
         $this->init();
 
@@ -92,6 +96,8 @@ abstract class AbstractListener implements EventSubscriber
 
     /**
      * Init listener.
+     *
+     * @throws SecurityException
      */
     protected function init(): void
     {
@@ -113,5 +119,5 @@ abstract class AbstractListener implements EventSubscriber
      *
      * @return array
      */
-    abstract protected function getInitProperties();
+    abstract protected function getInitProperties(): array;
 }

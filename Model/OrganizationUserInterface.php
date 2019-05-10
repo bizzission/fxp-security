@@ -21,7 +21,7 @@ interface OrganizationUserInterface
     /**
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * Get id.
@@ -35,7 +35,7 @@ interface OrganizationUserInterface
      *
      * @param OrganizationInterface $organization The organization
      *
-     * @return self
+     * @return static
      */
     public function setOrganization(OrganizationInterface $organization);
 
@@ -44,14 +44,14 @@ interface OrganizationUserInterface
      *
      * @return OrganizationInterface
      */
-    public function getOrganization();
+    public function getOrganization(): ?OrganizationInterface;
 
     /**
      * Set the user of organization.
      *
      * @param UserInterface $user The user of organization
      *
-     * @return self
+     * @return static
      */
     public function setUser(UserInterface $user);
 
@@ -60,5 +60,5 @@ interface OrganizationUserInterface
      *
      * @return UserInterface
      */
-    public function getUser();
+    public function getUser(): ?UserInterface;
 }

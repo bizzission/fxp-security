@@ -37,7 +37,7 @@ class FieldVote
      * @param object|string|SubjectIdentityInterface $subject The subject instance or classname
      * @param string                                 $field   The field name
      */
-    public function __construct($subject, $field)
+    public function __construct($subject, string $field)
     {
         $this->subject = SubjectUtils::getSubjectIdentity($subject);
         $this->field = $field;
@@ -48,7 +48,7 @@ class FieldVote
      *
      * @return SubjectIdentityInterface
      */
-    public function getSubject()
+    public function getSubject(): SubjectIdentityInterface
     {
         return $this->subject;
     }
@@ -58,7 +58,7 @@ class FieldVote
      *
      * @return string
      */
-    public function getField()
+    public function getField(): string
     {
         return $this->field;
     }

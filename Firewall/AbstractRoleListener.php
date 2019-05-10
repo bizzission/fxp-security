@@ -53,9 +53,9 @@ abstract class AbstractRoleListener implements ListenerInterface
      *
      * @param bool $enabled The value
      */
-    public function setEnabled($enabled): void
+    public function setEnabled(bool $enabled): void
     {
-        $this->enabled = (bool) $enabled;
+        $this->enabled = $enabled;
     }
 
     /**
@@ -63,7 +63,7 @@ abstract class AbstractRoleListener implements ListenerInterface
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }

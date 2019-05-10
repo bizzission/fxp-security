@@ -24,7 +24,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId(): int
     {
         return 50;
     }
@@ -32,7 +32,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         return false;
     }
@@ -40,7 +40,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return true;
     }
@@ -48,7 +48,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired(): bool
     {
         return true;
     }
@@ -56,7 +56,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return true;
     }
@@ -64,7 +64,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return 'password';
     }
@@ -72,7 +72,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getSalt()
+    public function getSalt(): string
     {
         return 'salt';
     }
@@ -80,7 +80,7 @@ class MockUserRoleable implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return 'user.test';
     }

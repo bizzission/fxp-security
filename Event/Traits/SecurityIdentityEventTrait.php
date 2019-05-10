@@ -29,14 +29,14 @@ trait SecurityIdentityEventTrait
     /**
      * @var SecurityIdentityInterface[]
      */
-    protected $securityIdentities;
+    protected $securityIdentities = [];
 
     /**
      * Get the token.
      *
      * @return TokenInterface
      */
-    public function getToken()
+    public function getToken(): TokenInterface
     {
         return $this->token;
     }
@@ -46,7 +46,7 @@ trait SecurityIdentityEventTrait
      *
      * @return SecurityIdentityInterface[]
      */
-    public function getSecurityIdentities()
+    public function getSecurityIdentities(): array
     {
         return $this->securityIdentities;
     }

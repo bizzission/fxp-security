@@ -34,7 +34,7 @@ class MockRole implements RoleHierarchicalInterface
      * @param string $name The unique name
      * @param int    $id   The id
      */
-    public function __construct($name, $id = 23)
+    public function __construct(string $name, int $id = 23)
     {
         $this->name = $name;
         $this->id = $id;
@@ -43,7 +43,7 @@ class MockRole implements RoleHierarchicalInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }

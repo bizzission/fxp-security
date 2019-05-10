@@ -47,7 +47,7 @@ final class OrganizationSecurityIdentitySubscriberTest extends TestCase
         $this->orgContext = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $this->listener = new OrganizationSecurityIdentitySubscriber($this->roleHierarchy, $this->orgContext);
 
-        $this->assertCount(1, $this->listener->getSubscribedEvents());
+        $this->assertCount(1, OrganizationSecurityIdentitySubscriber::getSubscribedEvents());
     }
 
     public function testCacheIdWithPersonalOrganization(): void

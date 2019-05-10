@@ -36,7 +36,7 @@ class SharingSubjectConfig implements SharingSubjectConfigInterface
      * @param string $type       The type, typically, this is the PHP class name
      * @param string $visibility The sharing visibility
      */
-    public function __construct($type, $visibility = SharingVisibilities::TYPE_NONE)
+    public function __construct(string $type, string $visibility = SharingVisibilities::TYPE_NONE)
     {
         $this->type = $type;
         $this->visibility = $visibility;
@@ -45,7 +45,7 @@ class SharingSubjectConfig implements SharingSubjectConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -53,7 +53,7 @@ class SharingSubjectConfig implements SharingSubjectConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getVisibility()
+    public function getVisibility(): string
     {
         return $this->visibility;
     }

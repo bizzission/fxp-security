@@ -25,9 +25,9 @@ interface SecurityIdentityManagerInterface
      *
      * @param string $role The special role
      *
-     * @return self
+     * @return SecurityIdentityManagerInterface
      */
-    public function addSpecialRole($role);
+    public function addSpecialRole(string $role): SecurityIdentityManagerInterface;
 
     /**
      * Retrieves the available security identities for the given token.
@@ -36,5 +36,5 @@ interface SecurityIdentityManagerInterface
      *
      * @return SecurityIdentityInterface[] The security identities
      */
-    public function getSecurityIdentities(TokenInterface $token = null);
+    public function getSecurityIdentities(?TokenInterface $token = null): array;
 }

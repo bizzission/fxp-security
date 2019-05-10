@@ -54,7 +54,7 @@ class MockGroup implements GroupInterface
     /**
      * {@inheritdoc}
      */
-    public function hasRole($role)
+    public function hasRole(string $role): bool
     {
         return \in_array($role, $this->roles, true);
     }
@@ -62,7 +62,7 @@ class MockGroup implements GroupInterface
     /**
      * {@inheritdoc}
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -72,7 +72,7 @@ class MockGroup implements GroupInterface
     /**
      * {@inheritdoc}
      */
-    public function addRole($role)
+    public function addRole(string $role): self
     {
         if (!$this->hasRole($role)) {
             $this->roles[] = $role;
@@ -84,7 +84,7 @@ class MockGroup implements GroupInterface
     /**
      * {@inheritdoc}
      */
-    public function removeRole($role)
+    public function removeRole(string $role): self
     {
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
             unset($this->roles[$key]);
@@ -97,7 +97,7 @@ class MockGroup implements GroupInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }

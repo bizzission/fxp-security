@@ -27,9 +27,9 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
      *
      * @param RoleInterface|string $role The role
      *
-     * @return self
+     * @return static
      */
-    public static function fromAccount($role)
+    public static function fromAccount($role): self
     {
         return $role instanceof RoleInterface
             ? new self(ClassUtils::getClass($role), $role->getName())
@@ -43,9 +43,9 @@ final class RoleSecurityIdentity extends AbstractSecurityIdentity
      *
      * @throws InvalidArgumentException When the user class not implements "Fxp\Component\Security\Model\Traits\RoleableInterface"
      *
-     * @return self[]
+     * @return static[]
      */
-    public static function fromToken(TokenInterface $token)
+    public static function fromToken(TokenInterface $token): array
     {
         $user = $token->getUser();
 

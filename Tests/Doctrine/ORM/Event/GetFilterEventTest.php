@@ -11,13 +11,13 @@
 
 namespace Fxp\Component\Security\Tests\Doctrine\ORM\Event;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
 use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
-use Fxp\Component\Security\Model\Sharing;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -55,7 +55,7 @@ final class GetFilterEventTest extends TestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
-        $this->connection = $this->getMockBuilder(Connection::class)->getMock();
+        $this->connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
         $this->targetEntity = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $this->filter = $this->getMockForAbstractClass(SQLFilter::class, [$this->entityManager]);
 
@@ -67,6 +67,11 @@ final class GetFilterEventTest extends TestCase
         $this->entityManager->expects($this->any())
             ->method('getConnection')
             ->willReturn($this->connection)
+        ;
+
+        $this->entityManager->expects($this->any())
+            ->method('getClassMetadata')
+            ->willReturn($this->targetEntity)
         ;
 
         $this->connection->expects($this->any())
@@ -81,7 +86,7 @@ final class GetFilterEventTest extends TestCase
             $this->entityManager,
             $this->targetEntity,
             't0',
-            Sharing::class
+            MockSharing::class
         );
     }
 
@@ -89,8 +94,8 @@ final class GetFilterEventTest extends TestCase
     {
         $this->assertSame($this->entityManager, $this->event->getEntityManager());
         $this->assertSame($this->entityManager->getConnection(), $this->event->getConnection());
-        $this->assertSame($this->entityManager->getClassMetadata(Sharing::class), $this->event->getClassMetadata(Sharing::class));
-        $this->assertSame($this->entityManager->getClassMetadata(Sharing::class), $this->event->getSharingClassMetadata());
+        $this->assertSame($this->entityManager->getClassMetadata(MockSharing::class), $this->event->getClassMetadata(MockSharing::class));
+        $this->assertSame($this->entityManager->getClassMetadata(MockSharing::class), $this->event->getSharingClassMetadata());
         $this->assertSame($this->targetEntity, $this->event->getTargetEntity());
         $this->assertSame('t0', $this->event->getTargetTableAlias());
     }

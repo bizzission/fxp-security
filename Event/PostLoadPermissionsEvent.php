@@ -54,7 +54,7 @@ class PostLoadPermissionsEvent extends AbstractLoadPermissionsEvent
      *
      * @return array
      */
-    public function getPermissionMap()
+    public function getPermissionMap(): array
     {
         return $this->permissionMap;
     }

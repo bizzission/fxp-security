@@ -35,14 +35,14 @@ interface PermissionsInterface
      *
      * @return bool
      */
-    public function hasPermission(PermissionInterface $permission);
+    public function hasPermission(PermissionInterface $permission): bool;
 
     /**
      * Add the permission.
      *
      * @param PermissionInterface $permission The permission
      *
-     * @return self
+     * @return static
      */
     public function addPermission(PermissionInterface $permission);
 
@@ -51,7 +51,7 @@ interface PermissionsInterface
      *
      * @param PermissionInterface $permission The permission
      *
-     * @return self
+     * @return static
      */
     public function removePermission(PermissionInterface $permission);
 }

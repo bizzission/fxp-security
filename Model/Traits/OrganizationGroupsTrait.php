@@ -24,7 +24,7 @@ use Fxp\Component\Security\Model\GroupInterface;
 trait OrganizationGroupsTrait
 {
     /**
-     * @var null|Collection
+     * @var null|Collection|GroupInterface[]
      *
      * @ORM\OneToMany(
      *     targetEntity="Fxp\Component\Security\Model\GroupInterface",
@@ -46,7 +46,7 @@ trait OrganizationGroupsTrait
     /**
      * {@inheritdoc}
      */
-    public function getOrganizationGroupNames()
+    public function getOrganizationGroupNames(): array
     {
         $names = [];
         foreach ($this->getOrganizationGroups() as $group) {
@@ -59,7 +59,7 @@ trait OrganizationGroupsTrait
     /**
      * {@inheritdoc}
      */
-    public function hasOrganizationGroup($group)
+    public function hasOrganizationGroup(string $group): bool
     {
         return \in_array($group, $this->getOrganizationGroupNames(), true);
     }
@@ -67,7 +67,7 @@ trait OrganizationGroupsTrait
     /**
      * {@inheritdoc}
      */
-    public function addOrganizationGroup(GroupInterface $group)
+    public function addOrganizationGroup(GroupInterface $group): self
     {
         if (!$this->isUserOrganization()
             && !$this->getOrganizationGroups()->contains($group)) {
@@ -80,7 +80,7 @@ trait OrganizationGroupsTrait
     /**
      * {@inheritdoc}
      */
-    public function removeOrganizationGroup(GroupInterface $group)
+    public function removeOrganizationGroup(GroupInterface $group): self
     {
         if ($this->getOrganizationGroups()->contains($group)) {
             $this->getOrganizationGroups()->removeElement($group);
@@ -94,5 +94,5 @@ trait OrganizationGroupsTrait
      *
      * @return bool
      */
-    abstract public function isUserOrganization();
+    abstract public function isUserOrganization(): bool;
 }

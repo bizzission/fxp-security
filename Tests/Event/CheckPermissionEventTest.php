@@ -14,7 +14,7 @@ namespace Fxp\Component\Security\Tests\Event;
 use Fxp\Component\Security\Event\CheckPermissionEvent;
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
-use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
 
@@ -37,7 +37,8 @@ final class CheckPermissionEventTest extends TestCase
             ],
         ];
         $operation = 'test';
-        $subject = MockObject::class;
+        /** @var SubjectIdentityInterface $subject */
+        $subject = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
         $field = 'name';
 
         $event = new CheckPermissionEvent($sids, $permissionMap, $operation, $subject, $field);

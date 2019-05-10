@@ -23,7 +23,7 @@ trait RoleTrait
     use PermissionsTrait;
 
     /**
-     * @var string
+     * @var null|string
      *
      * @ORM\Column(type="string", length=255, unique=true)
      */
@@ -32,7 +32,15 @@ trait RoleTrait
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
+    {
+        return (string) $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -40,15 +48,7 @@ trait RoleTrait
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setName($name = null)
+    public function setName(?string $name = null): self
     {
         $this->name = $name;
 

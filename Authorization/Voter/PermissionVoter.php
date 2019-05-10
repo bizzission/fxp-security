@@ -51,7 +51,7 @@ class PermissionVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return $this->isAttributeSupported($attribute) && $this->isSubjectSupported($subject);
     }
@@ -63,9 +63,9 @@ class PermissionVoter extends Voter
      *
      * @return bool
      */
-    protected function isAttributeSupported($attribute)
+    protected function isAttributeSupported($attribute): bool
     {
-        return \is_string($attribute) && 0 === strpos(strtolower($attribute), 'perm_');
+        return \is_string($attribute) && 0 === stripos(strtolower($attribute), 'perm_');
     }
 
     /**
@@ -75,7 +75,7 @@ class PermissionVoter extends Voter
      *
      * @return bool
      */
-    protected function isSubjectSupported($subject)
+    protected function isSubjectSupported($subject): bool
     {
         if (null === $subject || \is_string($subject) || $subject instanceof FieldVote || \is_object($subject)) {
             return true;
@@ -91,7 +91,7 @@ class PermissionVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $sids = $this->sim->getSecurityIdentities($token);
         $attribute = substr($attribute, 5);

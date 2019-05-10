@@ -52,7 +52,7 @@ trait GroupableTrait
     /**
      * {@inheritdoc}
      */
-    public function getGroupNames()
+    public function getGroupNames(): array
     {
         $names = [];
 
@@ -66,7 +66,7 @@ trait GroupableTrait
     /**
      * {@inheritdoc}
      */
-    public function hasGroup($name)
+    public function hasGroup(string $name): bool
     {
         return \in_array($name, $this->getGroupNames(), true);
     }

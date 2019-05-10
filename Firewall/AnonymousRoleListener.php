@@ -70,7 +70,7 @@ class AnonymousRoleListener extends AbstractRoleListener
      *
      * @return bool
      */
-    private function hasRole()
+    private function hasRole(): bool
     {
         return isset($this->config['role'])
             && \is_string($this->config['role'])
@@ -82,7 +82,7 @@ class AnonymousRoleListener extends AbstractRoleListener
      *
      * @return bool
      */
-    private function isAnonymous()
+    private function isAnonymous(): bool
     {
         $token = $this->tokenStorage->getToken();
 

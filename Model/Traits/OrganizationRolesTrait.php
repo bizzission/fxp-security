@@ -24,7 +24,7 @@ use Fxp\Component\Security\Model\RoleInterface;
 trait OrganizationRolesTrait
 {
     /**
-     * @var null|Collection
+     * @var null|Collection|RoleInterface[]
      *
      * @ORM\OneToMany(
      *     targetEntity="Fxp\Component\Security\Model\RoleInterface",
@@ -46,7 +46,7 @@ trait OrganizationRolesTrait
     /**
      * {@inheritdoc}
      */
-    public function getOrganizationRoleNames()
+    public function getOrganizationRoleNames(): array
     {
         $names = [];
         foreach ($this->getOrganizationRoles() as $role) {
@@ -59,7 +59,7 @@ trait OrganizationRolesTrait
     /**
      * {@inheritdoc}
      */
-    public function hasOrganizationRole($role)
+    public function hasOrganizationRole(string $role): bool
     {
         return \in_array($role, $this->getOrganizationRoleNames(), true);
     }
@@ -67,7 +67,7 @@ trait OrganizationRolesTrait
     /**
      * {@inheritdoc}
      */
-    public function addOrganizationRole(RoleInterface $role)
+    public function addOrganizationRole(RoleInterface $role): self
     {
         if (!$this->isUserOrganization()
             && !$this->getOrganizationRoles()->contains($role)) {
@@ -80,7 +80,7 @@ trait OrganizationRolesTrait
     /**
      * {@inheritdoc}
      */
-    public function removeOrganizationRole(RoleInterface $role)
+    public function removeOrganizationRole(RoleInterface $role): self
     {
         if ($this->getOrganizationRoles()->contains($role)) {
             $this->getOrganizationRoles()->removeElement($role);
@@ -94,5 +94,5 @@ trait OrganizationRolesTrait
      *
      * @return bool
      */
-    abstract public function isUserOrganization();
+    abstract public function isUserOrganization(): bool;
 }

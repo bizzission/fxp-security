@@ -12,6 +12,7 @@
 namespace Fxp\Component\Security\Tests\Model;
 
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockPermission;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
 use PHPUnit\Framework\TestCase;
@@ -46,5 +47,14 @@ final class SharingTest extends TestCase
         $this->assertSame($startDate, $sharing->getStartedAt());
         $this->assertSame($endDate, $sharing->getEndedAt());
         $this->assertCount(0, $sharing->getRoles());
+
+        $perm = new MockPermission();
+        $this->assertFalse($sharing->hasPermission($perm));
+
+        $sharing->addPermission($perm);
+        $this->assertTrue($sharing->hasPermission($perm));
+
+        $sharing->removePermission($perm);
+        $this->assertFalse($sharing->hasPermission($perm));
     }
 }

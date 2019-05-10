@@ -32,7 +32,7 @@ trait GroupTrait
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -40,7 +40,7 @@ trait GroupTrait
     /**
      * {@inheritdoc}
      */
-    public function setName($name)
+    public function setName(?string $name): self
     {
         $this->name = $name;
 

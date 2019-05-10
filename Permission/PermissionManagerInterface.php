@@ -35,23 +35,23 @@ interface PermissionManagerInterface
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled(): bool;
 
     /**
      * Define if the permission manager is enable or not.
      *
      * @param bool $enabled The value
      *
-     * @return self
+     * @return static
      */
-    public function setEnabled($enabled);
+    public function setEnabled(bool $enabled);
 
     /**
      * Add the permission config.
      *
      * @param PermissionConfigInterface $config The permission config
      */
-    public function addConfig(PermissionConfigInterface $config);
+    public function addConfig(PermissionConfigInterface $config): void;
 
     /**
      * Check if the configuration of permission is present.
@@ -60,7 +60,7 @@ interface PermissionManagerInterface
      *
      * @return bool
      */
-    public function hasConfig($class);
+    public function hasConfig(string $class): bool;
 
     /**
      * Get the configuration of permission.
@@ -71,14 +71,14 @@ interface PermissionManagerInterface
      *
      * @return PermissionConfigInterface
      */
-    public function getConfig($class);
+    public function getConfig(string $class): PermissionConfigInterface;
 
     /**
      * Get the configurations of permissions.
      *
      * @return PermissionConfigInterface[]
      */
-    public function getConfigs();
+    public function getConfigs(): array;
 
     /**
      * Check if the subject is managed.
@@ -87,7 +87,7 @@ interface PermissionManagerInterface
      *
      * @return bool
      */
-    public function isManaged($subject);
+    public function isManaged($subject): bool;
 
     /**
      * Check if the field of subject is managed.
@@ -97,7 +97,7 @@ interface PermissionManagerInterface
      *
      * @return bool
      */
-    public function isFieldManaged($subject, $field);
+    public function isFieldManaged($subject, string $field): bool;
 
     /**
      * Determines whether access is granted.
@@ -108,7 +108,7 @@ interface PermissionManagerInterface
      *
      * @return bool
      */
-    public function isGranted(array $sids, $permissions, $subject = null);
+    public function isGranted(array $sids, $permissions, $subject = null): bool;
 
     /**
      * Determines whether access is granted.
@@ -120,7 +120,7 @@ interface PermissionManagerInterface
      *
      * @return bool
      */
-    public function isFieldGranted(array $sids, $permissions, $subject, $field);
+    public function isFieldGranted(array $sids, $permissions, $subject, string $field): bool;
 
     /**
      * Get the permissions of the role and subject.
@@ -130,7 +130,7 @@ interface PermissionManagerInterface
      *
      * @return PermissionChecking[]
      */
-    public function getRolePermissions(RoleInterface $role, $subject = null);
+    public function getRolePermissions(RoleInterface $role, $subject = null): array;
 
     /**
      * Get the permissions of the role and subject field.
@@ -141,14 +141,14 @@ interface PermissionManagerInterface
      *
      * @return PermissionChecking[]
      */
-    public function getRoleFieldPermissions(RoleInterface $role, $subject, $field);
+    public function getRoleFieldPermissions(RoleInterface $role, $subject, string $field): array;
 
     /**
      * Preload permissions of objects.
      *
      * @param object[] $objects The objects
      *
-     * @return self
+     * @return static
      */
     public function preloadPermissions(array $objects);
 
@@ -157,14 +157,14 @@ interface PermissionManagerInterface
      *
      * @param object[] $objects The objects
      *
-     * @return self
+     * @return static
      */
     public function resetPreloadPermissions(array $objects);
 
     /**
      * Clear all permission caches.
      *
-     * @return self
+     * @return static
      */
     public function clear();
 }

@@ -46,7 +46,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
      * @param bool        $roleable    Check if the identity can be use the roles
      * @param bool        $permissible Check if the identity can be use the permissions
      */
-    public function __construct($type, $alias = null, $roleable = false, $permissible = false)
+    public function __construct(string $type, ?string $alias = null, bool $roleable = false, bool $permissible = false)
     {
         $this->type = $type;
         $this->alias = $this->buildAlias($type, $alias);
@@ -57,7 +57,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -65,7 +65,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->alias;
     }
@@ -73,7 +73,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function isRoleable()
+    public function isRoleable(): bool
     {
         return $this->roleable;
     }
@@ -81,7 +81,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function isPermissible()
+    public function isPermissible(): bool
     {
         return $this->permissible;
     }
@@ -94,7 +94,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
      *
      * @return string
      */
-    private function buildAlias($classname, $alias)
+    private function buildAlias(string $classname, ?string $alias): string
     {
         return $alias ?? strtolower(substr(strrchr($classname, '\\'), 1));
     }

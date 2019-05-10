@@ -25,7 +25,7 @@ class DoctrineOrmCollectionValue implements ObjectFilterVoterInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($value)
+    public function supports($value): bool
     {
         return $value instanceof Collection;
     }

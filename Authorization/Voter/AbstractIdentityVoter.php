@@ -40,7 +40,7 @@ abstract class AbstractIdentityVoter extends Voter
      * @param SecurityIdentityManagerInterface $sim    The security identity manager
      * @param null|string                      $prefix The attribute prefix
      */
-    public function __construct(SecurityIdentityManagerInterface $sim, $prefix = null)
+    public function __construct(SecurityIdentityManagerInterface $sim, ?string $prefix = null)
     {
         $this->sim = $sim;
         $this->prefix = $prefix ?? $this->getDefaultPrefix();
@@ -49,7 +49,7 @@ abstract class AbstractIdentityVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return \is_string($attribute) && 0 === strpos($attribute, $this->prefix);
     }
@@ -57,7 +57,7 @@ abstract class AbstractIdentityVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $sids = $this->sim->getSecurityIdentities($token);
 
@@ -78,7 +78,7 @@ abstract class AbstractIdentityVoter extends Voter
      *
      * @return bool
      */
-    protected function isValidIdentity($attribute, SecurityIdentityInterface $sid)
+    protected function isValidIdentity($attribute, SecurityIdentityInterface $sid): bool
     {
         return ($this->getValidType() === $sid->getType() || \in_array($this->getValidType(), class_implements($sid->getType()), true))
             && substr($attribute, \strlen($this->prefix)) === OrganizationalUtil::format($sid->getIdentifier());
@@ -89,12 +89,12 @@ abstract class AbstractIdentityVoter extends Voter
      *
      * @return string
      */
-    abstract protected function getValidType();
+    abstract protected function getValidType(): string;
 
     /**
      * Get the default prefix.
      *
      * @return string
      */
-    abstract protected function getDefaultPrefix();
+    abstract protected function getDefaultPrefix(): string;
 }

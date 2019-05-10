@@ -68,7 +68,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         array $hierarchy,
         ManagerRegistryInterface $registry,
         CacheItemPoolInterface $cache = null,
-        $roleClassname = RoleInterface::class
+        string $roleClassname = RoleInterface::class
     ) {
         parent::__construct($hierarchy);
 
@@ -91,7 +91,7 @@ class RoleHierarchy extends BaseRoleHierarchy
     /**
      * {@inheritdoc}
      */
-    public function getReachableRoles(array $roles)
+    public function getReachableRoles(array $roles): array
     {
         return RoleUtil::formatRoles($this->doGetReachableRoles(RoleUtil::formatNames($roles)));
     }
@@ -104,7 +104,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string[] An array of role instances
      */
-    protected function doGetReachableRoles(array $roles, $suffix = '')
+    protected function doGetReachableRoles(array $roles, string $suffix = ''): array
     {
         if (0 === \count($roles)) {
             return $roles;
@@ -140,7 +140,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string
      */
-    protected function getUniqueId(array $roleNames)
+    protected function getUniqueId(array $roleNames): string
     {
         return sha1(implode('|', $roleNames));
     }
@@ -152,7 +152,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string[]
      */
-    protected function formatRoles(array $roles)
+    protected function formatRoles(array $roles): array
     {
         return $roles;
     }
@@ -164,7 +164,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string
      */
-    protected function buildRoleSuffix($role)
+    protected function buildRoleSuffix(?string $role): string
     {
         return '';
     }
@@ -176,7 +176,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string[]
      */
-    protected function cleanRoleNames(array $roles)
+    protected function cleanRoleNames(array $roles): array
     {
         return $roles;
     }
@@ -188,7 +188,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string
      */
-    protected function formatCleanedRoleName($name)
+    protected function formatCleanedRoleName(string $name): string
     {
         return $name;
     }
@@ -196,14 +196,14 @@ class RoleHierarchy extends BaseRoleHierarchy
     /**
      * Get the reachable roles in cache if available.
      *
-     * @param string $id   The cache id
-     * @param null   $item The cache item variable passed by reference
+     * @param string                  $id   The cache id
+     * @param null|CacheItemInterface $item The cache item variable passed by reference
      *
      * @throws
      *
      * @return null|string[]
      */
-    private function getCachedReachableRoles($id, &$item)
+    private function getCachedReachableRoles(string $id, &$item): ?array
     {
         $roles = null;
 
@@ -217,7 +217,7 @@ class RoleHierarchy extends BaseRoleHierarchy
             $item = $this->cache->getItem($id);
             $reachableRoles = $item->get();
 
-            if ($item->isHit() && null !== $reachableRoles) {
+            if (null !== $reachableRoles && $item->isHit()) {
                 $roles = $reachableRoles;
             }
         }
@@ -237,8 +237,14 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string[]
      */
-    private function getAllRoles(array $reachableRoles, array $roles, $id, $item, $isPermEnabled, $suffix = '')
-    {
+    private function getAllRoles(
+        array $reachableRoles,
+        array $roles,
+        string $id,
+        ?CacheItemInterface $item,
+        bool $isPermEnabled,
+        string $suffix = ''
+    ): array {
         $reachableRoles = $this->findRecords($reachableRoles, $roles);
         $reachableRoles = $this->getCleanedRoles($reachableRoles, $suffix);
 
@@ -269,10 +275,10 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string[]
      */
-    private function findRecords(array $reachableRoles, array $roles)
+    private function findRecords(array $reachableRoles, array $roles): array
     {
         $recordRoles = [];
-        $om = ManagerUtils::getManager($this->registry, $this->roleClassname);
+        $om = ManagerUtils::getRequiredManager($this->registry, $this->roleClassname);
         $repo = $om->getRepository($this->roleClassname);
 
         $filters = SqlFilterUtil::findFilters($om, [], true);
@@ -304,7 +310,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string[]
      */
-    private function getCleanedRoles(array $reachableRoles, $suffix = '')
+    private function getCleanedRoles(array $reachableRoles, string $suffix = ''): array
     {
         $existingRoles = [];
         $finalRoles = [];

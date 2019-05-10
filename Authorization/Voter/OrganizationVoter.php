@@ -23,7 +23,7 @@ class OrganizationVoter extends AbstractIdentityVoter
     /**
      * {@inheritdoc}
      */
-    protected function getValidType()
+    protected function getValidType(): string
     {
         return OrganizationInterface::class;
     }
@@ -31,7 +31,7 @@ class OrganizationVoter extends AbstractIdentityVoter
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultPrefix()
+    protected function getDefaultPrefix(): string
     {
         return 'ORG_';
     }

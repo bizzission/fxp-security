@@ -46,9 +46,9 @@ class SharingFilter extends AbstractFilter
      *
      * @param SharingManagerInterface $sharingManager The sharing manager
      *
-     * @return self
+     * @return $this
      */
-    public function setSharingManager(SharingManagerInterface $sharingManager)
+    public function setSharingManager(SharingManagerInterface $sharingManager): SharingFilter
     {
         $this->sm = $sharingManager;
 
@@ -60,9 +60,9 @@ class SharingFilter extends AbstractFilter
      *
      * @param EventDispatcherInterface $dispatcher The event dispatcher
      *
-     * @return self
+     * @return $this
      */
-    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher): SharingFilter
     {
         $this->dispatcher = $dispatcher;
 
@@ -74,9 +74,9 @@ class SharingFilter extends AbstractFilter
      *
      * @param string $class The class name of sharing model
      *
-     * @return self
+     * @return $this
      */
-    public function setSharingClass($class)
+    public function setSharingClass($class): SharingFilter
     {
         $this->sharingClass = $class;
 
@@ -86,7 +86,7 @@ class SharingFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function doAddFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
+    public function doAddFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
     {
         $name = SharingFilterEvents::getName(
             SharingFilterEvents::DOCTRINE_ORM_FILTER,
@@ -100,8 +100,10 @@ class SharingFilter extends AbstractFilter
 
     /**
      * {@inheritdoc}
+     *
+     * @throws
      */
-    protected function supports(ClassMetadata $targetEntity)
+    protected function supports(ClassMetadata $targetEntity): bool
     {
         $subject = SubjectUtils::getSubjectIdentity($targetEntity->getName());
 

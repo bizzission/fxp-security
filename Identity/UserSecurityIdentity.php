@@ -26,9 +26,9 @@ final class UserSecurityIdentity extends AbstractSecurityIdentity
      *
      * @param UserInterface $user The user
      *
-     * @return self
+     * @return UserSecurityIdentity
      */
-    public static function fromAccount(UserInterface $user)
+    public static function fromAccount(UserInterface $user): UserSecurityIdentity
     {
         return new self(ClassUtils::getClass($user), $user->getUsername());
     }
@@ -40,9 +40,9 @@ final class UserSecurityIdentity extends AbstractSecurityIdentity
      *
      * @throws InvalidArgumentException When the user class not implements "Fxp\Component\Security\Model\UserInterface"
      *
-     * @return self
+     * @return UserSecurityIdentity
      */
-    public static function fromToken(TokenInterface $token)
+    public static function fromToken(TokenInterface $token): UserSecurityIdentity
     {
         $user = $token->getUser();
 

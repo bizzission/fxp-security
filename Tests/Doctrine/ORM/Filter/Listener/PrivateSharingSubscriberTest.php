@@ -19,11 +19,11 @@ use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
 use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
 use Fxp\Component\Security\Doctrine\ORM\Filter\Listener\PrivateSharingSubscriber;
-use Fxp\Component\Security\Model\Sharing;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObjectOwnerable;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObjectOwnerableOptional;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
 use PHPUnit\Framework\TestCase;
 
@@ -81,7 +81,7 @@ final class PrivateSharingSubscriberTest extends TestCase
             $this->entityManager,
             $this->targetEntity,
             't0',
-            Sharing::class
+            MockSharing::class
         );
         $this->listener = new PrivateSharingSubscriber();
 
@@ -102,7 +102,7 @@ final class PrivateSharingSubscriberTest extends TestCase
 
         $this->entityManager->expects($this->any())
             ->method('getClassMetadata')
-            ->with(Sharing::class)
+            ->with(MockSharing::class)
             ->willReturn($this->sharingMeta)
         ;
 
@@ -117,7 +117,7 @@ final class PrivateSharingSubscriberTest extends TestCase
             })
         ;
 
-        $this->assertCount(1, $this->listener->getSubscribedEvents());
+        $this->assertCount(1, PrivateSharingSubscriber::getSubscribedEvents());
     }
 
     public function testGetFilter(): void

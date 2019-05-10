@@ -69,7 +69,7 @@ class PermissionManager extends AbstractPermissionManager
         EventDispatcherInterface $dispatcher,
         PermissionProviderInterface $provider,
         PropertyAccessorInterface $propertyAccessor,
-        SharingManagerInterface $sharingManager = null,
+        ?SharingManagerInterface $sharingManager = null,
         array $configs = []
     ) {
         parent::__construct($sharingManager, $configs);
@@ -82,7 +82,7 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * {@inheritdoc}
      */
-    protected function getMaster($subject)
+    protected function getMaster($subject): ?SubjectIdentityInterface
     {
         if (null !== $subject) {
             $subject = SubjectUtils::getSubjectIdentity($subject);
@@ -110,7 +110,7 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * {@inheritdoc}
      */
-    protected function doIsManaged(SubjectIdentityInterface $subject, $field = null)
+    protected function doIsManaged(SubjectIdentityInterface $subject, ?string $field = null): bool
     {
         if ($this->hasConfig($subject->getType())) {
             if (null === $field) {
@@ -126,7 +126,7 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * {@inheritdoc}
      */
-    protected function doIsGranted(array $sids, array $permissions, $subject = null, $field = null)
+    protected function doIsGranted(array $sids, array $permissions, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool
     {
         if (null !== $subject) {
             $this->preloadPermissions([$subject]);
@@ -147,7 +147,7 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * {@inheritdoc}
      */
-    protected function doGetRolePermissions(RoleInterface $role, $subject = null)
+    protected function doGetRolePermissions(RoleInterface $role, $subject = null): array
     {
         $permissions = [];
         $sid = new RoleSecurityIdentity(ClassUtils::getClass($role), $role->getName());
@@ -175,7 +175,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return PermissionChecking[]
      */
-    private function validateRolePermissions(RoleSecurityIdentity $sid, array $permissions, $subject = null, $class = null, $field = null)
+    private function validateRolePermissions(RoleSecurityIdentity $sid, array $permissions, $subject = null, ?string $class = null, ?string $field = null): array
     {
         $configOperations = $this->getConfigPermissionOperations($class, $field);
 
@@ -205,7 +205,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return null|PermissionChecking
      */
-    private function getConfigPermission(RoleSecurityIdentity $sid, $operation, $subject = null, $class = null, $field = null)
+    private function getConfigPermission(RoleSecurityIdentity $sid, string $operation, $subject = null, ?string $class = null, ?string $field = null): ?PermissionChecking
     {
         $sps = $this->getConfigPermissions();
         $field = null !== $field ? PermissionProviderInterface::CONFIG_FIELD : null;
@@ -230,7 +230,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return bool
      */
-    private function isConfigGranted(RoleSecurityIdentity $sid, $operation, $subject = null, $class = null)
+    private function isConfigGranted(RoleSecurityIdentity $sid, string $operation, $subject = null, ?string $class = null): bool
     {
         $granted = true;
 
@@ -251,7 +251,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return array
      */
-    private function getConfigPermissions()
+    private function getConfigPermissions(): array
     {
         if (null === $this->cacheConfigPermissions) {
             $sps = $this->provider->getConfigPermissions();
@@ -278,7 +278,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return bool
      */
-    private function doIsGrantedPermission($id, array $sids, $operation, $subject = null, $field = null)
+    private function doIsGrantedPermission($id, array $sids, string $operation, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool
     {
         $event = new CheckPermissionEvent($sids, $this->cache[$id], $operation, $subject, $field);
         $this->dispatcher->dispatch(PermissionEvents::CHECK_PERMISSION, $event);
@@ -311,9 +311,9 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @param SecurityIdentityInterface[] $sids The security identities
      *
-     * @return string
+     * @return string The cache id
      */
-    private function loadPermissions(array $sids)
+    private function loadPermissions(array $sids): string
     {
         $roles = IdentityUtils::filterRolesIdentities($sids);
         $id = implode('|', $roles);
@@ -349,7 +349,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return bool
      */
-    private function isConfigPermission($operation, $class = null, $field = null)
+    private function isConfigPermission(string $operation, ?string $class = null, ?string $field = null): bool
     {
         $map = $this->getMapConfigPermissions();
         $class = PermissionUtils::getMapAction($class);
@@ -366,7 +366,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return string[]
      */
-    private function getConfigPermissionOperations($class = null, $field = null)
+    private function getConfigPermissionOperations(?string $class = null, ?string $field = null): array
     {
         $map = $this->getMapConfigPermissions();
         $class = PermissionUtils::getMapAction($class);
@@ -385,7 +385,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return array
      */
-    private function getMapConfigPermissions()
+    private function getMapConfigPermissions(): array
     {
         $id = '_config';
 
@@ -402,7 +402,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @param string $id The cache id
      */
-    private function buildSystemPermissions($id): void
+    private function buildSystemPermissions(string $id): void
     {
         foreach ($this->configs as $config) {
             foreach ($config->getOperations() as $operation) {
@@ -427,7 +427,7 @@ class PermissionManager extends AbstractPermissionManager
      *
      * @return bool
      */
-    private function isSharingGranted($operation, $subject = null, $field = null)
+    private function isSharingGranted(string $operation, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool
     {
         return null !== $this->sharingManager
             ? $this->sharingManager->isGranted($operation, $subject, $field)

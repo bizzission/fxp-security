@@ -26,18 +26,18 @@ interface ExpressionVariableStorageInterface
      * @param string $name  The name of expression variable
      * @param mixed  $value The value of expression variable
      *
-     * @return self
+     * @return static
      */
-    public function add($name, $value);
+    public function add(string $name, $value);
 
     /**
      * Remove a variable.
      *
      * @param string $name The variable name
      *
-     * @return self
+     * @return static
      */
-    public function remove($name);
+    public function remove(string $name);
 
     /**
      * Check if the variable is defined.
@@ -46,7 +46,7 @@ interface ExpressionVariableStorageInterface
      *
      * @return bool
      */
-    public function has($name);
+    public function has(string $name): bool;
 
     /**
      * Get the value of variable.
@@ -55,19 +55,19 @@ interface ExpressionVariableStorageInterface
      *
      * @return null|mixed
      */
-    public function get($name);
+    public function get(string $name);
 
     /**
      * Get all variables.
      *
      * @return array
      */
-    public function getAll();
+    public function getAll(): array;
 
     /**
      * Inject the expression variables in event.
      *
      * @param GetExpressionVariablesEvent $event The event
      */
-    public function inject(GetExpressionVariablesEvent $event);
+    public function inject(GetExpressionVariablesEvent $event): void;
 }

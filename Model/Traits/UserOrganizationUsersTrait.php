@@ -24,7 +24,7 @@ use Fxp\Component\Security\Model\OrganizationUserInterface;
 trait UserOrganizationUsersTrait
 {
     /**
-     * @var null|Collection
+     * @var null|Collection|OrganizationUserInterface[]
      *
      * @ORM\OneToMany(
      *     targetEntity="Fxp\Component\Security\Model\OrganizationUserInterface",
@@ -48,7 +48,7 @@ trait UserOrganizationUsersTrait
     /**
      * {@inheritdoc}
      */
-    public function getUserOrganizationNames()
+    public function getUserOrganizationNames(): array
     {
         $names = [];
         foreach ($this->getUserOrganizations() as $userOrg) {
@@ -61,7 +61,7 @@ trait UserOrganizationUsersTrait
     /**
      * {@inheritdoc}
      */
-    public function hasUserOrganization($name)
+    public function hasUserOrganization(string $name): bool
     {
         return \in_array($name, $this->getUserOrganizationNames(), true);
     }
@@ -69,7 +69,7 @@ trait UserOrganizationUsersTrait
     /**
      * {@inheritdoc}
      */
-    public function getUserOrganization($name)
+    public function getUserOrganization(string $name): ?OrganizationUserInterface
     {
         $org = null;
 
@@ -87,9 +87,11 @@ trait UserOrganizationUsersTrait
     /**
      * {@inheritdoc}
      */
-    public function addUserOrganization(OrganizationUserInterface $organizationUser)
+    public function addUserOrganization(OrganizationUserInterface $organizationUser): self
     {
-        if (!$organizationUser->getOrganization()->isUserOrganization()
+        $org = $organizationUser->getOrganization();
+
+        if ($org && !$org->isUserOrganization()
             && !$this->getUserOrganizations()->contains($organizationUser)) {
             $this->getUserOrganizations()->add($organizationUser);
         }
@@ -100,7 +102,7 @@ trait UserOrganizationUsersTrait
     /**
      * {@inheritdoc}
      */
-    public function removeUserOrganization(OrganizationUserInterface $organizationUser)
+    public function removeUserOrganization(OrganizationUserInterface $organizationUser): self
     {
         if ($this->getUserOrganizations()->contains($organizationUser)) {
             $this->getUserOrganizations()->removeElement($organizationUser);

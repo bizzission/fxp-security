@@ -54,7 +54,7 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getPermissions(array $roles)
+    public function getPermissions(array $roles): array
     {
         if (empty($roles)) {
             return [];
@@ -75,7 +75,7 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getPermissionsBySubject($subject = null, $contexts = null)
+    public function getPermissionsBySubject($subject = null, $contexts = null): array
     {
         /** @var null|SubjectIdentityInterface $subject */
         list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
@@ -96,7 +96,7 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigPermissions($contexts = null)
+    public function getConfigPermissions($contexts = null): array
     {
         $qb = $this->getPermissionRepository()->createQueryBuilder('p')
             ->orderBy('p.class', 'asc')
@@ -113,7 +113,7 @@ class PermissionProvider implements PermissionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getMasterClass(PermissionConfigInterface $config)
+    public function getMasterClass(PermissionConfigInterface $config): ?string
     {
         $type = $config->getType();
         $om = ManagerUtils::getManager($this->doctrine, $type);
@@ -136,7 +136,7 @@ class PermissionProvider implements PermissionProviderInterface
      * @param PermissionConfigInterface $config The permission config
      * @param null|ObjectManager        $om     The doctrine object manager
      */
-    private function validateMaster(PermissionConfigInterface $config, $om): void
+    private function validateMaster(PermissionConfigInterface $config, ?ObjectManager $om): void
     {
         if (null === $om) {
             $msg = 'The doctrine object manager is not found for the class "%s"';
@@ -158,7 +158,7 @@ class PermissionProvider implements PermissionProviderInterface
      * @param string       $field The field name
      * @param null|mixed   $value The value
      */
-    private function addWhereOptionalField(QueryBuilder $qb, $field, $value): void
+    private function addWhereOptionalField(QueryBuilder $qb, string $field, $value): void
     {
         if (null === $value) {
             $qb->andWhere('p.'.$field.' IS NULL');
@@ -194,7 +194,7 @@ class PermissionProvider implements PermissionProviderInterface
      *
      * @return EntityRepository
      */
-    private function getPermissionRepository()
+    private function getPermissionRepository(): EntityRepository
     {
         if (null === $this->permissionRepo) {
             /** @var EntityRepository $repo */

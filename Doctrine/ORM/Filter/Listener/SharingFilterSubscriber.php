@@ -74,7 +74,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
         TokenStorageInterface $tokenStorage,
         SecurityIdentityManagerInterface $sidManager,
         SharingManagerInterface $sharingManager,
-        $sharingClass = SharingInterface::class
+        string $sharingClass = SharingInterface::class
     ) {
         parent::__construct($entityManager);
 
@@ -88,7 +88,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array_merge(parent::getSubscribedEvents(), [
             OrganizationalContextEvents::SET_CURRENT_ORGANIZATION => [
@@ -116,7 +116,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     /**
      * {@inheritdoc}
      */
-    protected function supports()
+    protected function supports(): string
     {
         return SharingFilter::class;
     }
@@ -143,7 +143,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
      *
      * @return SecurityIdentityInterface[]
      */
-    private function buildSecurityIdentities()
+    private function buildSecurityIdentities(): array
     {
         $tSids = $this->sidManager->getSecurityIdentities($this->tokenStorage->getToken());
         $sids = [];
@@ -164,7 +164,7 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
      *
      * @return array
      */
-    private function getMapSecurityIdentities(array $sids)
+    private function getMapSecurityIdentities(array $sids): array
     {
         $connection = $this->entityManager->getConnection();
         $mapSids = [];
