@@ -46,9 +46,9 @@ class SharingFilter extends AbstractFilter
      *
      * @param SharingManagerInterface $sharingManager The sharing manager
      *
-     * @return $this
+     * @return static
      */
-    public function setSharingManager(SharingManagerInterface $sharingManager): SharingFilter
+    public function setSharingManager(SharingManagerInterface $sharingManager): self
     {
         $this->sm = $sharingManager;
 
@@ -60,9 +60,9 @@ class SharingFilter extends AbstractFilter
      *
      * @param EventDispatcherInterface $dispatcher The event dispatcher
      *
-     * @return $this
+     * @return static
      */
-    public function setEventDispatcher(EventDispatcherInterface $dispatcher): SharingFilter
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher): self
     {
         $this->dispatcher = $dispatcher;
 
@@ -74,9 +74,9 @@ class SharingFilter extends AbstractFilter
      *
      * @param string $class The class name of sharing model
      *
-     * @return $this
+     * @return static
      */
-    public function setSharingClass($class): SharingFilter
+    public function setSharingClass($class): self
     {
         $this->sharingClass = $class;
 
