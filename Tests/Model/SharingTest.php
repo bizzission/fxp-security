@@ -40,9 +40,9 @@ final class SharingTest extends TestCase
 
         $this->assertNull($sharing->getId());
         $this->assertSame(MockObject::class, $sharing->getSubjectClass());
-        $this->assertSame(42, $sharing->getSubjectId());
+        $this->assertSame('42', $sharing->getSubjectId());
         $this->assertSame(MockRole::class, $sharing->getIdentityClass());
-        $this->assertSame(23, $sharing->getIdentityName());
+        $this->assertSame('23', $sharing->getIdentityName());
         $this->assertTrue($sharing->isEnabled());
         $this->assertSame($startDate, $sharing->getStartedAt());
         $this->assertSame($endDate, $sharing->getEndedAt());

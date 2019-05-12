@@ -33,7 +33,7 @@ trait SharingTrait
     protected $subjectClass;
 
     /**
-     * @var null|int|string
+     * @var null|string
      *
      * @ORM\Column(type="string", length=36)
      */
@@ -47,7 +47,7 @@ trait SharingTrait
     protected $identityClass;
 
     /**
-     * @var null|int|string
+     * @var null|string
      *
      * @ORM\Column(type="string", length=244)
      */
@@ -105,7 +105,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setSubjectId($id): self
+    public function setSubjectId(?string $id): self
     {
         $this->subjectId = $id;
 
@@ -115,7 +115,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function getSubjectId()
+    public function getSubjectId(): ?string
     {
         return $this->subjectId;
     }
@@ -141,7 +141,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function setIdentityName($name): self
+    public function setIdentityName(?string $name): self
     {
         $this->identityName = $name;
 
@@ -151,7 +151,7 @@ trait SharingTrait
     /**
      * {@inheritdoc}
      */
-    public function getIdentityName()
+    public function getIdentityName(): ?string
     {
         return $this->identityName;
     }
