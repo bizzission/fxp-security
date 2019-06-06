@@ -12,6 +12,7 @@
 namespace Fxp\Component\Security\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * ConsoleToken represents an console token.
@@ -25,9 +26,9 @@ class ConsoleToken extends AbstractToken
     /**
      * Constructor.
      *
-     * @param string   $key   The key shared with the authentication provider
-     * @param string   $user  The user
-     * @param string[] $roles An array of roles
+     * @param string               $key   The key shared with the authentication provider
+     * @param string|UserInterface $user  The user
+     * @param string[]             $roles An array of roles
      */
     public function __construct(string $key, string $user, array $roles = [])
     {
@@ -36,6 +37,23 @@ class ConsoleToken extends AbstractToken
         $this->key = $key;
         $this->setUser($user);
         $this->setAuthenticated(true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __serialize(): array
+    {
+        return [$this->key, parent::__serialize()];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __unserialize(array $data): void
+    {
+        [$this->key, $parentData] = $data;
+        parent::__unserialize($parentData);
     }
 
     /**
@@ -54,22 +72,5 @@ class ConsoleToken extends AbstractToken
     public function getKey(): string
     {
         return $this->key;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize([$this->key, parent::serialize()]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized): void
-    {
-        list($this->key, $parentStr) = unserialize($serialized);
-        parent::unserialize($parentStr);
     }
 }

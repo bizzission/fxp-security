@@ -11,7 +11,6 @@
 
 namespace Fxp\Component\Security\Tests\Model\Traits;
 
-use Doctrine\Common\Collections\Collection;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockPermissionSharing;
 use PHPUnit\Framework\TestCase;
 
@@ -25,6 +24,6 @@ final class PermissionSharingEntryTraitTest extends TestCase
     public function testModel(): void
     {
         $permission = new MockPermissionSharing();
-        $this->assertInstanceOf(Collection::class, $permission->getSharingEntries());
+        $this->assertCount(0, $permission->getSharingEntries());
     }
 }

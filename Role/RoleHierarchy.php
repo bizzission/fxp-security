@@ -18,7 +18,6 @@ use Fxp\Component\Security\Event\PostReachableRoleEvent;
 use Fxp\Component\Security\Event\PreReachableRoleEvent;
 use Fxp\Component\Security\Model\RoleHierarchicalInterface;
 use Fxp\Component\Security\Model\RoleInterface;
-use Fxp\Component\Security\ReachableRoleEvents;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -91,9 +90,9 @@ class RoleHierarchy extends BaseRoleHierarchy
     /**
      * {@inheritdoc}
      */
-    public function getReachableRoles(array $roles): array
+    public function getReachableRoleNames(array $roles): array
     {
-        return RoleUtil::formatRoles($this->doGetReachableRoles(RoleUtil::formatNames($roles)));
+        return $this->doGetReachableRoleNames(RoleUtil::formatNames($roles));
     }
 
     /**
@@ -104,7 +103,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return string[] An array of role instances
      */
-    protected function doGetReachableRoles(array $roles, string $suffix = ''): array
+    protected function doGetReachableRoleNames(array $roles, string $suffix = ''): array
     {
         if (0 === \count($roles)) {
             return $roles;
@@ -114,19 +113,19 @@ class RoleHierarchy extends BaseRoleHierarchy
         $roles = $this->formatRoles($roles);
         $id = $this->getUniqueId($roles);
 
-        if (null !== ($reachableRoles = $this->getCachedReachableRoles($id, $item))) {
+        if (null !== ($reachableRoles = $this->getCachedReachableRoleNames($id, $item))) {
             return $reachableRoles;
         }
 
         // build hierarchy
         /** @var string[] $reachableRoles */
-        $reachableRoles = RoleUtil::formatNames(parent::getReachableRoles(RoleUtil::formatRoles($roles)));
+        $reachableRoles = parent::getReachableRoleNames($roles);
         $isPermEnabled = true;
 
         if (null !== $this->eventDispatcher) {
             $event = new PreReachableRoleEvent($reachableRoles);
-            $this->eventDispatcher->dispatch(ReachableRoleEvents::PRE, $event);
-            $reachableRoles = $event->getReachableRoles();
+            $this->eventDispatcher->dispatch($event);
+            $reachableRoles = $event->getReachableRoleNames();
             $isPermEnabled = $event->isPermissionEnabled();
         }
 
@@ -203,7 +202,7 @@ class RoleHierarchy extends BaseRoleHierarchy
      *
      * @return null|string[]
      */
-    private function getCachedReachableRoles(string $id, &$item): ?array
+    private function getCachedReachableRoleNames(string $id, &$item): ?array
     {
         $roles = null;
 
@@ -258,8 +257,8 @@ class RoleHierarchy extends BaseRoleHierarchy
 
         if (null !== $this->eventDispatcher) {
             $event = new PostReachableRoleEvent($reachableRoles, $isPermEnabled);
-            $this->eventDispatcher->dispatch(ReachableRoleEvents::POST, $event);
-            $reachableRoles = $event->getReachableRoles();
+            $this->eventDispatcher->dispatch($event);
+            $reachableRoles = $event->getReachableRoleNames();
         }
 
         return $reachableRoles;
@@ -294,7 +293,7 @@ class RoleHierarchy extends BaseRoleHierarchy
         foreach ($recordRoles as $eRole) {
             $suffix = $this->buildRoleSuffix($roles[$eRole->getName()] ?? null);
             $subRoles = RoleUtil::formatNames($eRole->getChildren()->toArray());
-            $loopReachableRoles[] = $this->doGetReachableRoles($subRoles, $suffix);
+            $loopReachableRoles[] = $this->doGetReachableRoleNames($subRoles, $suffix);
         }
 
         SqlFilterUtil::enableFilters($om, $filters);

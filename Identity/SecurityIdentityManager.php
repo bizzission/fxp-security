@@ -14,8 +14,6 @@ namespace Fxp\Component\Security\Identity;
 use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
 use Fxp\Component\Security\Event\PostSecurityIdentityEvent;
 use Fxp\Component\Security\Event\PreSecurityIdentityEvent;
-use Fxp\Component\Security\Role\RoleUtil;
-use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -92,7 +90,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
 
         // dispatch pre event
         $eventPre = new PreSecurityIdentityEvent($token, $sids);
-        $this->dispatcher->dispatch(SecurityIdentityEvents::RETRIEVAL_PRE, $eventPre);
+        $this->dispatcher->dispatch($eventPre);
 
         // add current user and reachable roles
         $sids = $this->addCurrentUser($token, $sids);
@@ -100,7 +98,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
 
         // dispatch add event to add custom security identities
         $eventAdd = new AddSecurityIdentityEvent($token, $sids);
-        $this->dispatcher->dispatch(SecurityIdentityEvents::RETRIEVAL_ADD, $eventAdd);
+        $this->dispatcher->dispatch($eventAdd);
         $sids = $eventAdd->getSecurityIdentities();
 
         // add special roles
@@ -108,7 +106,7 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
 
         // dispatch post event
         $eventPost = new PostSecurityIdentityEvent($token, $sids, $eventPre->isPermissionEnabled());
-        $this->dispatcher->dispatch(SecurityIdentityEvents::RETRIEVAL_POST, $eventPost);
+        $this->dispatcher->dispatch($eventPost);
 
         return $sids;
     }
@@ -144,8 +142,8 @@ class SecurityIdentityManager implements SecurityIdentityManagerInterface
      */
     protected function addReachableRoles(TokenInterface $token, array $sids): array
     {
-        foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
-            $sids[] = RoleSecurityIdentity::fromAccount(RoleUtil::formatName($role));
+        foreach ($this->roleHierarchy->getReachableRoleNames($token->getRoleNames()) as $role) {
+            $sids[] = RoleSecurityIdentity::fromAccount($role);
         }
 
         return $sids;

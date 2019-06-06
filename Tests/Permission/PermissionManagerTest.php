@@ -23,7 +23,6 @@ use Fxp\Component\Security\Permission\PermissionConfig;
 use Fxp\Component\Security\Permission\PermissionFieldConfig;
 use Fxp\Component\Security\Permission\PermissionManager;
 use Fxp\Component\Security\Permission\PermissionProviderInterface;
-use Fxp\Component\Security\PermissionEvents;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
@@ -51,7 +50,7 @@ final class PermissionManagerTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var PermissionProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var PermissionProviderInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $provider;
 
@@ -90,6 +89,7 @@ final class PermissionManagerTest extends TestCase
 
     public function testSetEnabledWithSharingManager(): void
     {
+        /** @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface $sm */
         $sm = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
 
         $this->pm = new PermissionManager(
@@ -360,7 +360,7 @@ final class PermissionManagerTest extends TestCase
             ->willReturn([])
         ;
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface $sharingManager */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface $sharingManager */
         $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $sharingManager->expects($this->once())
             ->method('preloadRolePermissions')
@@ -436,7 +436,7 @@ final class PermissionManagerTest extends TestCase
         $this->pm->clear();
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return [
             [new MockRole('ROLE_TEST')],
@@ -727,7 +727,7 @@ final class PermissionManagerTest extends TestCase
     {
         $objects = [new MockObject('foo')];
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface $sharingManager */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface $sharingManager */
         $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $sharingManager->expects($this->once())
             ->method('preloadPermissions')
@@ -761,7 +761,7 @@ final class PermissionManagerTest extends TestCase
     {
         $objects = [new MockObject('foo')];
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface $sharingManager */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface $sharingManager */
         $sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $sharingManager->expects($this->once())
             ->method('resetPreloadPermissions')
@@ -794,17 +794,17 @@ final class PermissionManagerTest extends TestCase
         $postLoad = false;
         $checkPerm = false;
 
-        $this->dispatcher->addListener(PermissionEvents::PRE_LOAD, function (PreLoadPermissionsEvent $event) use ($sids, &$preLoad): void {
+        $this->dispatcher->addListener(PreLoadPermissionsEvent::class, function (PreLoadPermissionsEvent $event) use ($sids, &$preLoad): void {
             $preLoad = true;
             $this->assertSame($sids, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(PermissionEvents::POST_LOAD, function (PostLoadPermissionsEvent $event) use ($sids, &$postLoad): void {
+        $this->dispatcher->addListener(PostLoadPermissionsEvent::class, function (PostLoadPermissionsEvent $event) use ($sids, &$postLoad): void {
             $postLoad = true;
             $this->assertSame($sids, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm): void {
+        $this->dispatcher->addListener(CheckPermissionEvent::class, function (CheckPermissionEvent $event) use ($sids, &$checkPerm): void {
             $checkPerm = true;
             $this->assertSame($sids, $event->getSecurityIdentities());
         });
@@ -832,7 +832,7 @@ final class PermissionManagerTest extends TestCase
         $permission = 'view';
         $checkPerm = false;
 
-        $this->dispatcher->addListener(PermissionEvents::CHECK_PERMISSION, function (CheckPermissionEvent $event) use ($sids, &$checkPerm): void {
+        $this->dispatcher->addListener(CheckPermissionEvent::class, static function (CheckPermissionEvent $event) use (&$checkPerm): void {
             $checkPerm = true;
             $event->setGranted(true);
         });

@@ -14,6 +14,7 @@ namespace Fxp\Component\Security\Tests\Model;
 use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,16 +26,16 @@ final class OrganizationUserTest extends TestCase
 {
     public function testModel(): void
     {
-        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var MockObject|OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        $org->expects($this->any())
+        $org->expects($this->atLeastOnce())
             ->method('getName')
             ->willReturn('foo')
         ;
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
+        /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->any())
+        $user->expects($this->atLeastOnce())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
@@ -47,7 +48,7 @@ final class OrganizationUserTest extends TestCase
 
         $this->assertSame('foo:user.test', (string) $orgUser);
 
-        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org2 */
+        /** @var MockObject|OrganizationInterface $org2 */
         $org2 = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
         $orgUser->setOrganization($org2);
@@ -55,7 +56,7 @@ final class OrganizationUserTest extends TestCase
         $this->assertNotSame($org, $orgUser->getOrganization());
         $this->assertSame($org2, $orgUser->getOrganization());
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user2 */
+        /** @var MockObject|UserInterface $user2 */
         $user2 = $this->getMockBuilder(UserInterface::class)->getMock();
 
         $orgUser->setUser($user2);

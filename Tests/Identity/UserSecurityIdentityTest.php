@@ -15,6 +15,7 @@ use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Identity\UserSecurityIdentity;
 use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -40,7 +41,7 @@ final class UserSecurityIdentityTest extends TestCase
         $this->assertSame('identifier', $identity->getIdentifier());
     }
 
-    public function getIdentities()
+    public function getIdentities(): array
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
         $id3->expects($this->any())->method('getType')->willReturn(MockUserRoleable::class);
@@ -68,7 +69,7 @@ final class UserSecurityIdentityTest extends TestCase
 
     public function testFromAccount(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
+        /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getUsername')
@@ -77,21 +78,20 @@ final class UserSecurityIdentityTest extends TestCase
 
         $sid = UserSecurityIdentity::fromAccount($user);
 
-        $this->assertInstanceOf(UserSecurityIdentity::class, $sid);
         $this->assertSame(\get_class($user), $sid->getType());
         $this->assertSame('user.test', $sid->getIdentifier());
     }
 
     public function testFormToken(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
+        /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
@@ -100,7 +100,6 @@ final class UserSecurityIdentityTest extends TestCase
 
         $sid = UserSecurityIdentity::fromToken($token);
 
-        $this->assertInstanceOf(UserSecurityIdentity::class, $sid);
         $this->assertSame(\get_class($user), $sid->getType());
         $this->assertSame('user.test', $sid->getIdentifier());
     }
@@ -110,10 +109,10 @@ final class UserSecurityIdentityTest extends TestCase
         $this->expectException(\Fxp\Component\Security\Exception\InvalidArgumentException::class);
         $this->expectExceptionMessage('The user class must implement "Fxp\\Component\\Security\\Model\\UserInterface"');
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\Security\Core\User\UserInterface $user */
+        /** @var MockObject|\Symfony\Component\Security\Core\User\UserInterface $user */
         $user = $this->getMockBuilder(\Symfony\Component\Security\Core\User\UserInterface::class)->getMock();
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')

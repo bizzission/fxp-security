@@ -17,12 +17,12 @@ use Fxp\Component\Security\Event\PreSecurityIdentityEvent;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Identity\SecurityIdentityManager;
 use Fxp\Component\Security\Model\UserInterface;
-use Fxp\Component\Security\Role\RoleUtil;
-use Fxp\Component\Security\SecurityIdentityEvents;
+use Fxp\Component\Security\Tests\Fixtures\Token\MockToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -38,12 +38,12 @@ final class SecurityIdentityManagerTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface
+     * @var MockObject|RoleHierarchyInterface
      */
     protected $roleHierarchy;
 
     /**
-     * @var AuthenticationTrustResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AuthenticationTrustResolverInterface|MockObject
      */
     protected $authenticationTrustResolver;
 
@@ -55,7 +55,7 @@ final class SecurityIdentityManagerTest extends TestCase
     protected function setUp(): void
     {
         $this->dispatcher = new EventDispatcher();
-        $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
+        $this->roleHierarchy = $this->getMockBuilder(RoleHierarchy::class)->disableOriginalConstructor()->getMock();
         $this->authenticationTrustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
 
         $this->sidManager = new SecurityIdentityManager(
@@ -65,7 +65,7 @@ final class SecurityIdentityManagerTest extends TestCase
         );
     }
 
-    public function getAuthenticationTrustResolverStatus()
+    public function getAuthenticationTrustResolverStatus(): array
     {
         return [
             ['isFullFledged', 7],
@@ -88,12 +88,12 @@ final class SecurityIdentityManagerTest extends TestCase
 
         $customSid = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
 
-        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_PRE, function (PreSecurityIdentityEvent $event) use (&$objects, &$preEventAction): void {
+        $this->dispatcher->addListener(PreSecurityIdentityEvent::class, function (PreSecurityIdentityEvent $event) use (&$preEventAction): void {
             $preEventAction = true;
             $this->assertCount(0, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_ADD, function (AddSecurityIdentityEvent $event) use (&$objects, &$addEventAction, $customSid): void {
+        $this->dispatcher->addListener(AddSecurityIdentityEvent::class, function (AddSecurityIdentityEvent $event) use (&$addEventAction, $customSid): void {
             $addEventAction = true;
             $this->assertCount(2, $event->getSecurityIdentities());
 
@@ -104,7 +104,7 @@ final class SecurityIdentityManagerTest extends TestCase
             $this->assertCount(3, $event->getSecurityIdentities());
         });
 
-        $this->dispatcher->addListener(SecurityIdentityEvents::RETRIEVAL_POST, function (PostSecurityIdentityEvent $event) use (&$objects, &$postEventAction, $sidFinalSize): void {
+        $this->dispatcher->addListener(PostSecurityIdentityEvent::class, function (PostSecurityIdentityEvent $event) use (&$postEventAction, $sidFinalSize): void {
             $postEventAction = true;
             $this->assertCount($sidFinalSize, $event->getSecurityIdentities());
         });
@@ -116,23 +116,13 @@ final class SecurityIdentityManagerTest extends TestCase
         ;
 
         $tokenRoles = [
-            RoleUtil::formatRole('ROLE_TOKEN'),
+            'ROLE_TOKEN',
         ];
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
-        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $token->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $token->expects($this->once())
-            ->method('getRoles')
-            ->willReturn($tokenRoles)
-        ;
+        $token = new MockToken($tokenRoles);
+        $token->setUser($user);
 
         $this->roleHierarchy->expects($this->once())
-            ->method('getReachableRoles')
+            ->method('getReachableRoleNames')
             ->with($tokenRoles)
             ->willReturn($tokenRoles)
         ;
@@ -145,7 +135,7 @@ final class SecurityIdentityManagerTest extends TestCase
             ;
         }
 
-        if (\in_array($trustMethod, ['isAnonymous'], true)) {
+        if ('isAnonymous' === $trustMethod) {
             $this->authenticationTrustResolver->expects($this->once())
                 ->method('isRememberMe')
                 ->with($token)

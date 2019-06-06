@@ -11,8 +11,8 @@
 
 namespace Fxp\Component\Security\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The get expression variables event.

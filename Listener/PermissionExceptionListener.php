@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Listener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -27,9 +27,9 @@ class PermissionExceptionListener
     /**
      * Method for a dependency injection.
      *
-     * @param GetResponseForExceptionEvent $event A event object
+     * @param ExceptionEvent $event A event object
      */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getException();
 

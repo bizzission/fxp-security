@@ -14,6 +14,7 @@ namespace Fxp\Component\Security\Tests\Model\Traits;
 use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Model\OrganizationUserInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsers;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,9 +33,9 @@ final class UserOrganizationUsersTraitTest extends TestCase
         $this->assertFalse($user->hasUserOrganization('foo'));
         $this->assertNull($user->getUserOrganization('foo'));
 
-        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var MockObject|OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        $org->expects($this->any())
+        $org->expects($this->atLeastOnce())
             ->method('getName')
             ->willReturn('foo')
         ;
@@ -43,9 +44,9 @@ final class UserOrganizationUsersTraitTest extends TestCase
             ->willReturn(false)
         ;
 
-        /** @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
+        /** @var MockObject|OrganizationUserInterface $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
-        $orgUser->expects($this->any())
+        $orgUser->expects($this->atLeastOnce())
             ->method('getOrganization')
             ->willReturn($org)
         ;

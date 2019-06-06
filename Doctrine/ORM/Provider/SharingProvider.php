@@ -341,8 +341,6 @@ class SharingProvider implements SharingProviderInterface
      */
     private function getRepository($classname): EntityRepository
     {
-        $om = ManagerUtils::getRequiredManager($this->doctrine, $classname);
-        /** @var EntityRepository $repo */
-        return $om->getRepository($classname);
+        return ManagerUtils::getRequiredManager($this->doctrine, $classname)->getRepository($classname);
     }
 }

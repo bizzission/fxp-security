@@ -14,24 +14,10 @@ namespace Fxp\Component\Security\Event;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * The abstract security event.
+ * The sharing enabled event.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class AbstractSecurityEvent extends Event
+class SharingEnabledEvent extends Event
 {
-    /**
-     * @var bool
-     */
-    protected $permissionEnabled = true;
-
-    /**
-     * Check if the permission manager is enabled.
-     *
-     * @return bool
-     */
-    public function isPermissionEnabled(): bool
-    {
-        return $this->permissionEnabled;
-    }
 }

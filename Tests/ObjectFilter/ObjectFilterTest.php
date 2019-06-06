@@ -19,7 +19,6 @@ use Fxp\Component\Security\Event\RestoreViewGrantedEvent;
 use Fxp\Component\Security\ObjectFilter\ObjectFilter;
 use Fxp\Component\Security\ObjectFilter\ObjectFilterExtensionInterface;
 use Fxp\Component\Security\ObjectFilter\UnitOfWorkInterface;
-use Fxp\Component\Security\ObjectFilterEvents;
 use Fxp\Component\Security\Permission\FieldVote;
 use Fxp\Component\Security\Permission\PermissionManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -40,22 +39,22 @@ final class ObjectFilterTest extends TestCase
      */
     protected $of;
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWorkInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|UnitOfWorkInterface
      */
     private $uow;
 
     /**
-     * @var ObjectFilterExtensionInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ObjectFilterExtensionInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $ofe;
 
     /**
-     * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var PermissionManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $pm;
 
     /**
-     * @var AuthorizationCheckerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AuthorizationCheckerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $ac;
 
@@ -86,12 +85,12 @@ final class ObjectFilterTest extends TestCase
         $postEventAction = false;
         $objects = [];
 
-        $this->dispatcher->addListener(ObjectFilterEvents::PRE_COMMIT, function (PreCommitObjectFilterEvent $event) use (&$objects, &$preEventAction): void {
+        $this->dispatcher->addListener(PreCommitObjectFilterEvent::class, function (PreCommitObjectFilterEvent $event) use (&$objects, &$preEventAction): void {
             $preEventAction = true;
             $this->assertSame($objects, $event->getObjects());
         });
 
-        $this->dispatcher->addListener(ObjectFilterEvents::POST_COMMIT, function (PostCommitObjectFilterEvent $event) use (&$objects, &$postEventAction): void {
+        $this->dispatcher->addListener(PostCommitObjectFilterEvent::class, function (PostCommitObjectFilterEvent $event) use (&$objects, &$postEventAction): void {
             $postEventAction = true;
             $this->assertSame($objects, $event->getObjects());
         });
@@ -153,12 +152,12 @@ final class ObjectFilterTest extends TestCase
             ->method('isGranted')
         ;
 
-        $this->dispatcher->addListener(ObjectFilterEvents::OBJECT_VIEW_GRANTED, function (ObjectViewGrantedEvent $event) use (&$eventAction): void {
+        $this->dispatcher->addListener(ObjectViewGrantedEvent::class, static function (ObjectViewGrantedEvent $event) use (&$eventAction): void {
             ++$eventAction;
             $event->setGranted(true);
         });
 
-        $this->dispatcher->addListener(ObjectFilterEvents::OBJECT_FIELD_VIEW_GRANTED, function (ObjectFieldViewGrantedEvent $event) use (&$eventAction): void {
+        $this->dispatcher->addListener(ObjectFieldViewGrantedEvent::class, static function (ObjectFieldViewGrantedEvent $event) use (&$eventAction): void {
             ++$eventAction;
             $event->setGranted(false);
         });
@@ -244,7 +243,7 @@ final class ObjectFilterTest extends TestCase
             ->method('isGranted')
         ;
 
-        $this->dispatcher->addListener(ObjectFilterEvents::RESTORE_VIEW_GRANTED, function (RestoreViewGrantedEvent $event) use (&$eventAction): void {
+        $this->dispatcher->addListener(RestoreViewGrantedEvent::class, static function (RestoreViewGrantedEvent $event) use (&$eventAction): void {
             $eventAction = true;
             $event->setGranted(false);
         });
@@ -255,7 +254,7 @@ final class ObjectFilterTest extends TestCase
         $this->assertSame('bar', $object->getName());
     }
 
-    public function getRestoreActions()
+    public function getRestoreActions(): array
     {
         return [
             [false, false, null, 'foo', null],

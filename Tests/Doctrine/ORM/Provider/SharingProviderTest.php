@@ -41,40 +41,43 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 final class SharingProviderTest extends TestCase
 {
     /**
-     * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityRepository|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $roleRepo;
 
     /**
-     * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityRepository|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $sharingRepo;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|QueryBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|QueryBuilder
      */
     protected $qb;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Query
+     * @var \PHPUnit\Framework\MockObject\MockObject|Query
      */
     protected $query;
 
+    /**
+     * @throws
+     */
     protected function setUp(): void
     {
         $this->roleRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
@@ -718,9 +721,9 @@ final class SharingProviderTest extends TestCase
         $provider->deletes($ids);
     }
 
-    protected function createProvider($roleClass = MockRole::class, $sharingClass = MockSharing::class, $addManager = true)
+    protected function createProvider($roleClass = MockRole::class, $sharingClass = MockSharing::class, $addManager = true): SharingProvider
     {
-        /** @var ManagerRegistry|MockObject $registry */
+        /** @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject $registry */
         $registry = $this->getMockBuilder(ManagerRegistry::class)->getMock();
 
         $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();

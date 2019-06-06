@@ -30,12 +30,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 final class PermissionVoterTest extends TestCase
 {
     /**
-     * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var PermissionManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $permManager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -66,7 +66,7 @@ final class PermissionVoterTest extends TestCase
         );
     }
 
-    public function getVoteAttributes()
+    public function getVoteAttributes(): array
     {
         $class = MockObject::class;
         $object = new MockObject('foo');

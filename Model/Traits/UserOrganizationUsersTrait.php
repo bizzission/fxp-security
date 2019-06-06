@@ -40,7 +40,7 @@ trait UserOrganizationUsersTrait
     /**
      * {@inheritdoc}
      */
-    public function getUserOrganizations()
+    public function getUserOrganizations(): Collection
     {
         return $this->userOrganizations ?: $this->userOrganizations = new ArrayCollection();
     }

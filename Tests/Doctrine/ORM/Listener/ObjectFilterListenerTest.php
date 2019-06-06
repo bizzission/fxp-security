@@ -19,6 +19,7 @@ use Fxp\Component\Security\Doctrine\ORM\Listener\ObjectFilterListener;
 use Fxp\Component\Security\ObjectFilter\ObjectFilterInterface;
 use Fxp\Component\Security\Permission\PermissionManagerInterface;
 use Fxp\Component\Security\Token\ConsoleToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -31,27 +32,27 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 final class ObjectFilterListenerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     * @var MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|PermissionManagerInterface
      */
     protected $permissionManager;
 
     /**
-     * @var ObjectFilterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|ObjectFilterInterface
      */
     protected $objectFilter;
 
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|MockObject
      */
     protected $em;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWork
+     * @var MockObject|UnitOfWork
      */
     protected $uow;
 
@@ -81,7 +82,7 @@ final class ObjectFilterListenerTest extends TestCase
         $this->assertCount(3, $this->listener->getSubscribedEvents());
     }
 
-    public function getInvalidInitMethods()
+    public function getInvalidInitMethods(): array
     {
         return [
             ['setTokenStorage', []],
@@ -193,7 +194,7 @@ final class ObjectFilterListenerTest extends TestCase
 
     public function testPostLoad(): void
     {
-        /** @var LifecycleEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var LifecycleEventArgs|MockObject $args */
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $entity = new \stdClass();
@@ -281,7 +282,7 @@ final class ObjectFilterListenerTest extends TestCase
 
     public function testOnFlushWithCreateEntity(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
@@ -329,7 +330,7 @@ final class ObjectFilterListenerTest extends TestCase
 
     public function testOnFlushWithUpdateEntity(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
@@ -377,7 +378,7 @@ final class ObjectFilterListenerTest extends TestCase
 
     public function testOnFlushWithDeleteEntity(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
@@ -421,7 +422,7 @@ final class ObjectFilterListenerTest extends TestCase
 
     public function testOnFLush(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 

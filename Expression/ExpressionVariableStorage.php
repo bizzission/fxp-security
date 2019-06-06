@@ -12,10 +12,8 @@
 namespace Fxp\Component\Security\Expression;
 
 use Fxp\Component\Security\Event\GetExpressionVariablesEvent;
-use Fxp\Component\Security\ExpressionVariableEvents;
 use Fxp\Component\Security\Identity\IdentityUtils;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Fxp\Component\Security\Role\RoleUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -59,7 +57,7 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
     public static function getSubscribedEvents(): array
     {
         return [
-            ExpressionVariableEvents::GET => ['inject', 0],
+            GetExpressionVariablesEvent::class => ['inject', 0],
         ];
     }
 
@@ -138,6 +136,6 @@ class ExpressionVariableStorage implements ExpressionVariableStorageInterface, E
             return IdentityUtils::filterRolesIdentities($sids);
         }
 
-        return RoleUtil::formatNames($token->getRoles());
+        return $token->getRoleNames();
     }
 }

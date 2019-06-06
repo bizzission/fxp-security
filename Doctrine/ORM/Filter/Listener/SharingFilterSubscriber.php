@@ -15,14 +15,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Fxp\Component\DoctrineExtensions\Filter\Listener\AbstractFilterSubscriber;
 use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
+use Fxp\Component\Security\Event\SetCurrentOrganizationEvent;
+use Fxp\Component\Security\Event\SharingDisabledEvent;
+use Fxp\Component\Security\Event\SharingEnabledEvent;
 use Fxp\Component\Security\Identity\IdentityUtils;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Model\SharingInterface;
 use Fxp\Component\Security\Model\UserInterface;
-use Fxp\Component\Security\OrganizationalContextEvents;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
-use Fxp\Component\Security\SharingEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -91,13 +92,13 @@ class SharingFilterSubscriber extends AbstractFilterSubscriber
     public static function getSubscribedEvents(): array
     {
         return array_merge(parent::getSubscribedEvents(), [
-            OrganizationalContextEvents::SET_CURRENT_ORGANIZATION => [
+            SetCurrentOrganizationEvent::class => [
                 ['onEvent', 0],
             ],
-            SharingEvents::ENABLED => [
+            SharingEnabledEvent::class => [
                 ['onSharingManagerChange', 0],
             ],
-            SharingEvents::DISABLED => [
+            SharingDisabledEvent::class => [
                 ['onSharingManagerChange', 0],
             ],
         ]);

@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class MixedValueTest extends TestCase
 {
-    public function getValues()
+    public function getValues(): array
     {
         return [
             ['string', null],

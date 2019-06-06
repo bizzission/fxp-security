@@ -12,7 +12,7 @@
 namespace Fxp\Component\Security\Firewall;
 
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -56,9 +56,9 @@ class AnonymousRoleListener extends AbstractRoleListener
     /**
      * Handles anonymous authentication.
      *
-     * @param GetResponseEvent $event A GetResponseEvent instance
+     * @param RequestEvent $event A RequestEvent instance
      */
-    public function handle(GetResponseEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         if ($this->isEnabled() && $this->hasRole() && $this->isAnonymous()) {
             $this->sidManager->addSpecialRole($this->config['role']);

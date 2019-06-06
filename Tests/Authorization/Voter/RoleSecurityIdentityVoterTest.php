@@ -14,6 +14,7 @@ namespace Fxp\Component\Security\Tests\Authorization\Voter;
 use Fxp\Component\Security\Authorization\Voter\RoleSecurityIdentityVoter;
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 final class RoleSecurityIdentityVoterTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -42,7 +43,7 @@ final class RoleSecurityIdentityVoterTest extends TestCase
         $this->voter = new RoleSecurityIdentityVoter($this->sidManager, 'TEST_');
     }
 
-    public function getAccessResults()
+    public function getAccessResults(): array
     {
         return [
             [['TEST_ADMIN'], VoterInterface::ACCESS_GRANTED],
@@ -59,7 +60,7 @@ final class RoleSecurityIdentityVoterTest extends TestCase
      */
     public function testExtractRolesWithAccessGranted(array $attributes, $access): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $sids = [

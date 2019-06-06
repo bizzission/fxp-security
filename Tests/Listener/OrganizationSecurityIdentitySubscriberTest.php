@@ -15,6 +15,7 @@ use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
 use Fxp\Component\Security\Listener\OrganizationSecurityIdentitySubscriber;
 use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
@@ -27,12 +28,12 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 final class OrganizationSecurityIdentitySubscriberTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface
+     * @var MockObject|RoleHierarchyInterface
      */
     protected $roleHierarchy;
 
     /**
-     * @var OrganizationalContextInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|OrganizationalContextInterface
      */
     protected $orgContext;
 
@@ -78,7 +79,7 @@ final class OrganizationSecurityIdentitySubscriberTest extends TestCase
 
     public function testAddOrganizationSecurityIdentities(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
         $event = new AddSecurityIdentityEvent($token, $sids);
@@ -90,7 +91,7 @@ final class OrganizationSecurityIdentitySubscriberTest extends TestCase
 
     public function testAddOrganizationSecurityIdentitiesWithInvalidArgument(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
         $event = new AddSecurityIdentityEvent($token, $sids);

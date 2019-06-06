@@ -15,14 +15,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The doctrine orm get filter event.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class GetFilterEvent extends Event
+abstract class AbstractGetFilterEvent extends Event
 {
     /**
      * @var SQLFilter
@@ -131,9 +131,9 @@ class GetFilterEvent extends Event
      * @param mixed       $value The value of the parameter
      * @param null|string $type  The parameter type
      *
-     * @return GetFilterEvent
+     * @return static
      */
-    public function setParameter(string $name, $value, ?string $type = null): GetFilterEvent
+    public function setParameter(string $name, $value, ?string $type = null): self
     {
         $this->filter->setParameter($name, $value, $type);
 
@@ -213,9 +213,9 @@ class GetFilterEvent extends Event
      *
      * @param string $filterConstraint The filter constraint
      *
-     * @return GetFilterEvent
+     * @return static
      */
-    public function setFilterConstraint(string $filterConstraint): GetFilterEvent
+    public function setFilterConstraint(string $filterConstraint): self
     {
         $this->filterConstraint = $filterConstraint;
 

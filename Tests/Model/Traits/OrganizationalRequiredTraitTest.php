@@ -22,6 +22,9 @@ use PHPUnit\Framework\TestCase;
  */
 final class OrganizationalRequiredTraitTest extends TestCase
 {
+    /**
+     * @throws
+     */
     public function testModel(): void
     {
         /** @var OrganizationInterface $org */

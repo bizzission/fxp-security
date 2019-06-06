@@ -11,7 +11,6 @@
 
 namespace Fxp\Component\Security\Tests\Model;
 
-use Doctrine\Common\Collections\Collection;
 use Fxp\Component\Security\PermissionContexts;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockPermission;
@@ -37,6 +36,6 @@ final class PermissionTest extends TestCase
         $this->assertSame(MockObject::class, $perm->getClass());
         $this->assertSame('name', $perm->getField());
         $this->assertSame([PermissionContexts::ROLE], $perm->getContexts());
-        $this->assertInstanceOf(Collection::class, $perm->getRoles());
+        $this->assertCount(0, $perm->getRoles());
     }
 }

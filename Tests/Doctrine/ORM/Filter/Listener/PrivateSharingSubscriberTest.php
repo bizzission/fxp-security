@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
-use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetPrivateFilterEvent;
 use Fxp\Component\Security\Doctrine\ORM\Filter\Listener\PrivateSharingSubscriber;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObjectOwnerable;
@@ -35,32 +35,32 @@ use PHPUnit\Framework\TestCase;
 final class PrivateSharingSubscriberTest extends TestCase
 {
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $entityManager;
 
     /**
-     * @var Connection|\PHPUnit_Framework_MockObject_MockObject
+     * @var Connection|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $connection;
 
     /**
-     * @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject
+     * @var ClassMetadata|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $targetEntity;
 
     /**
-     * @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject
+     * @var ClassMetadata|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $sharingMeta;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SQLFilter
+     * @var \PHPUnit\Framework\MockObject\MockObject|SQLFilter
      */
     protected $filter;
 
     /**
-     * @var GetFilterEvent
+     * @var GetPrivateFilterEvent
      */
     protected $event;
 
@@ -69,6 +69,9 @@ final class PrivateSharingSubscriberTest extends TestCase
      */
     protected $listener;
 
+    /**
+     * @throws
+     */
     protected function setUp(): void
     {
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
@@ -76,7 +79,7 @@ final class PrivateSharingSubscriberTest extends TestCase
         $this->targetEntity = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $this->sharingMeta = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $this->filter = $this->getMockForAbstractClass(SQLFilter::class, [$this->entityManager]);
-        $this->event = new GetFilterEvent(
+        $this->event = new GetPrivateFilterEvent(
             $this->filter,
             $this->entityManager,
             $this->targetEntity,
@@ -108,7 +111,7 @@ final class PrivateSharingSubscriberTest extends TestCase
 
         $this->connection->expects($this->any())
             ->method('quote')
-            ->willReturnCallback(function ($v) {
+            ->willReturnCallback(static function ($v) {
                 if (\is_array($v)) {
                     return implode(', ', $v);
                 }
@@ -139,7 +142,7 @@ final class PrivateSharingSubscriberTest extends TestCase
 
         $this->sharingMeta->expects($this->atLeastOnce())
             ->method('getColumnName')
-            ->willReturnCallback(function ($value) {
+            ->willReturnCallback(static function ($value) {
                 $map = [
                     'subjectClass' => 'subject_class',
                     'subjectId' => 'subject_id',
@@ -174,7 +177,7 @@ SELECTCLAUSE;
         $this->assertSame($validFilter, $this->event->getFilterConstraint());
     }
 
-    public function getCurrentUserValues()
+    public function getCurrentUserValues(): array
     {
         return [
             [MockObjectOwnerable::class, false],
@@ -208,7 +211,7 @@ SELECTCLAUSE;
 
         $this->targetEntity->expects($this->atLeastOnce())
             ->method('getAssociationMapping')
-            ->willReturnCallback(function ($value) {
+            ->willReturnCallback(static function ($value) {
                 $map = [
                     'owner' => [
                         'joinColumnFieldNames' => [
@@ -228,7 +231,7 @@ SELECTCLAUSE;
 
         $this->sharingMeta->expects($this->atLeastOnce())
             ->method('getColumnName')
-            ->willReturnCallback(function ($value) {
+            ->willReturnCallback(static function ($value) {
                 $map = [
                     'subjectClass' => 'subject_class',
                     'subjectId' => 'subject_id',

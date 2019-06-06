@@ -45,7 +45,7 @@ trait PermissionsTrait
     /**
      * {@inheritdoc}
      */
-    public function getPermissions()
+    public function getPermissions(): Collection
     {
         return $this->permissions ?: $this->permissions = new ArrayCollection();
     }

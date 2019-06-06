@@ -13,7 +13,7 @@ namespace Fxp\Component\Security\Event;
 
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The check permission event.

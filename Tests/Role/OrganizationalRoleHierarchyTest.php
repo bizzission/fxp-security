@@ -21,8 +21,8 @@ use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Model\RoleHierarchicalInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use Fxp\Component\Security\Role\OrganizationalRoleHierarchy;
-use Fxp\Component\Security\Role\RoleUtil;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -36,7 +36,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class OrganizationalRoleHierarchyTest extends TestCase
 {
     /**
-     * @var ManagerRegistryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ManagerRegistryInterface|MockObject
      */
     protected $registry;
 
@@ -46,32 +46,32 @@ final class OrganizationalRoleHierarchyTest extends TestCase
     protected $roleClassname;
 
     /**
-     * @var CacheItemPoolInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var CacheItemPoolInterface|MockObject
      */
     protected $cache;
 
     /**
-     * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EventDispatcherInterface|MockObject
      */
     protected $eventDispatcher;
 
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|MockObject
      */
     protected $em;
 
     /**
-     * @var ObjectRepository|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|ObjectRepository
      */
     protected $repo;
 
     /**
-     * @var FilterCollection|\PHPUnit_Framework_MockObject_MockObject
+     * @var FilterCollection|MockObject
      */
     protected $filters;
 
     /**
-     * @var OrganizationalContextInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|OrganizationalContextInterface
      */
     protected $context;
 
@@ -124,7 +124,7 @@ final class OrganizationalRoleHierarchyTest extends TestCase
         ;
     }
 
-    public function getOrganizationContextType()
+    public function getOrganizationContextType(): array
     {
         return [
             [null],
@@ -137,6 +137,8 @@ final class OrganizationalRoleHierarchyTest extends TestCase
      * @dataProvider getOrganizationContextType
      *
      * @param null|string $orgContextType The organization context type
+     *
+     * @throws
      */
     public function testGetReachableRolesWithCustomRoles($orgContextType): void
     {
@@ -145,10 +147,10 @@ final class OrganizationalRoleHierarchyTest extends TestCase
         $roles = [
             new MockRole('ROLE_ADMIN'),
         ];
-        $validRoles = RoleUtil::formatRoles([
+        $validRoles = [
             'ROLE_ADMIN',
             'ROLE_USER',
-        ]);
+        ];
 
         $cacheItem = $this->getMockBuilder(CacheItemInterface::class)->getMock();
 
@@ -184,7 +186,7 @@ final class OrganizationalRoleHierarchyTest extends TestCase
         $dbRole = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $dbRoleChildren = $this->getMockBuilder(Collection::class)->getMock();
 
-        $dbRole->expects($this->any())
+        $dbRole->expects($this->atLeastOnce())
             ->method('getName')
             ->willReturn('ROLE_ADMIN')
         ;
@@ -218,7 +220,7 @@ final class OrganizationalRoleHierarchyTest extends TestCase
             ->method('save')
         ;
 
-        $fullRoles = $this->roleHierarchy->getReachableRoles($roles);
+        $fullRoles = $this->roleHierarchy->getReachableRoleNames($roles);
 
         $this->assertCount(2, $fullRoles);
         $this->assertEquals($validRoles, $fullRoles);

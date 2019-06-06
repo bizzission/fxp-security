@@ -17,6 +17,7 @@ use Fxp\Component\Security\Model\GroupInterface;
 use Fxp\Component\Security\Model\Traits\GroupableInterface;
 use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockGroup;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -42,7 +43,7 @@ final class GroupSecurityIdentityTest extends TestCase
         $this->assertSame('identifier', $identity->getIdentifier());
     }
 
-    public function getIdentities()
+    public function getIdentities(): array
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
         $id3->expects($this->any())->method('getType')->willReturn(MockGroup::class);
@@ -70,7 +71,7 @@ final class GroupSecurityIdentityTest extends TestCase
 
     public function testFromAccount(): void
     {
-        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
@@ -86,21 +87,21 @@ final class GroupSecurityIdentityTest extends TestCase
 
     public function testFormToken(): void
     {
-        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
             ->willReturn('GROUP_TEST')
         ;
 
-        /** @var GroupableInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        /** @var GroupableInterface|MockObject $user */
         $user = $this->getMockBuilder(GroupableInterface::class)->getMock();
         $user->expects($this->once())
             ->method('getGroups')
             ->willReturn([$group])
         ;
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
@@ -120,10 +121,10 @@ final class GroupSecurityIdentityTest extends TestCase
         $this->expectException(\Fxp\Component\Security\Exception\InvalidArgumentException::class);
         $this->expectExceptionMessage('The user class must implement "Fxp\\Component\\Security\\Model\\Traits\\GroupableInterface"');
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
+        /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')

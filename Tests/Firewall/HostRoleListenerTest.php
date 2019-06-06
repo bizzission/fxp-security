@@ -13,9 +13,10 @@ namespace Fxp\Component\Security\Tests\Firewall;
 
 use Fxp\Component\Security\Firewall\HostRoleListener;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /**
@@ -26,7 +27,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 final class HostRoleListenerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -36,12 +37,12 @@ final class HostRoleListenerTest extends TestCase
     protected $config;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Request
+     * @var MockObject|Request
      */
     protected $request;
 
     /**
-     * @var GetResponseEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|RequestEvent
      */
     protected $event;
 
@@ -60,7 +61,7 @@ final class HostRoleListenerTest extends TestCase
             '*.bar' => 'ROLE_HOST_BAR',
         ];
         $this->request = $this->getMockBuilder(Request::class)->getMock();
-        $this->event = $this->getMockBuilder(GetResponseEvent::class)->disableOriginalConstructor()->getMock();
+        $this->event = $this->getMockBuilder(RequestEvent::class)->disableOriginalConstructor()->getMock();
         $this->event->expects($this->any())
             ->method('getRequest')
             ->willReturn($this->request)
@@ -76,17 +77,17 @@ final class HostRoleListenerTest extends TestCase
         $this->assertFalse($this->listener->isEnabled());
     }
 
-    public function testHandleWithDisabledListener(): void
+    public function testInvokeWithDisabledListener(): void
     {
         $this->sidManager->expects($this->never())
             ->method('addSpecialRole')
         ;
 
         $this->listener->setEnabled(false);
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
     }
 
-    public function testHandleWithoutHostRole(): void
+    public function testInvokeWithoutHostRole(): void
     {
         $this->request->expects($this->once())
             ->method('getHttpHost')
@@ -97,10 +98,10 @@ final class HostRoleListenerTest extends TestCase
             ->method('addSpecialRole')
         ;
 
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
     }
 
-    public function testHandleWithoutToken(): void
+    public function testWithoutToken(): void
     {
         $this->request->expects($this->once())
             ->method('getHttpHost')
@@ -112,10 +113,10 @@ final class HostRoleListenerTest extends TestCase
             ->with('ROLE_HOST')
         ;
 
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
     }
 
-    public function testHandleWithAlreadyRoleIncluded(): void
+    public function testWithAlreadyRoleIncluded(): void
     {
         $token = new AnonymousToken('secret', 'user', [
             'ROLE_HOST',
@@ -131,12 +132,12 @@ final class HostRoleListenerTest extends TestCase
             ->with('ROLE_HOST')
         ;
 
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
 
         $this->assertCount(1, $token->getRoles());
     }
 
-    public function getHosts()
+    public function getHosts(): array
     {
         return [
             ['foo.bar.tld', 'ROLE_HOST'],
@@ -157,7 +158,7 @@ final class HostRoleListenerTest extends TestCase
      * @param string $host      The host name
      * @param string $validRole The valid role
      */
-    public function testHandle($host, $validRole): void
+    public function testInvoke($host, $validRole): void
     {
         $token = new AnonymousToken('secret', 'user', [
             'ROLE_FOO',
@@ -173,7 +174,7 @@ final class HostRoleListenerTest extends TestCase
             ->with($validRole)
         ;
 
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
 
         $this->assertCount(1, $token->getRoles());
     }

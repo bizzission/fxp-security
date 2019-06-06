@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class DoctrineOrmCollectionValueTest extends TestCase
 {
-    public function getValues()
+    public function getValues(): array
     {
         return [
             [$this->getMockBuilder(Collection::class)->getMock(), true],

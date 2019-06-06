@@ -110,7 +110,7 @@ trait OrganizationTrait
     /**
      * {@inheritdoc}
      */
-    public function getOrganizationUsers()
+    public function getOrganizationUsers(): Collection
     {
         return $this->organizationUsers ?: $this->organizationUsers = new ArrayCollection();
     }

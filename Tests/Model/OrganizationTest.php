@@ -16,6 +16,7 @@ use Fxp\Component\Security\Model\OrganizationUserInterface;
 use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -93,9 +94,9 @@ final class OrganizationTest extends TestCase
 
     public function testModelGroups(): void
     {
-        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
-        $group->expects($this->any())
+        $group->expects($this->atLeastOnce())
             ->method('getName')
             ->willReturn('GROUP_DEFAULT')
         ;
@@ -122,16 +123,16 @@ final class OrganizationTest extends TestCase
 
     public function testModelUsers(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
+        /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->any())
+        $user->expects($this->atLeastOnce())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
 
-        /** @var OrganizationUserInterface|\PHPUnit_Framework_MockObject_MockObject $orgUser */
+        /** @var MockObject|OrganizationUserInterface $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
-        $orgUser->expects($this->any())
+        $orgUser->expects($this->atLeastOnce())
             ->method('getUser')
             ->willReturn($user)
         ;

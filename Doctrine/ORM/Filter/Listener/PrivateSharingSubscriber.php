@@ -13,11 +13,9 @@ namespace Fxp\Component\Security\Doctrine\ORM\Filter\Listener;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Fxp\Component\Security\Doctrine\DoctrineUtils;
-use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetPrivateFilterEvent;
 use Fxp\Component\Security\Model\Traits\OwnerableInterface;
 use Fxp\Component\Security\Model\Traits\OwnerableOptionalInterface;
-use Fxp\Component\Security\SharingFilterEvents;
-use Fxp\Component\Security\SharingVisibilities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -33,22 +31,17 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents(): array
     {
-        $privateFilter = SharingFilterEvents::getName(
-            SharingFilterEvents::DOCTRINE_ORM_FILTER,
-            SharingVisibilities::TYPE_PRIVATE
-        );
-
         return [
-            $privateFilter => ['getFilter', 0],
+            GetPrivateFilterEvent::class => ['getFilter', 0],
         ];
     }
 
     /**
      * Get the sharing filter.
      *
-     * @param GetFilterEvent $event The event
+     * @param GetPrivateFilterEvent $event The event
      */
-    public function getFilter(GetFilterEvent $event): void
+    public function getFilter(GetPrivateFilterEvent $event): void
     {
         $filter = $this->buildSharingFilter($event);
         $filter = $this->buildOwnerFilter($event, $filter);
@@ -59,11 +52,11 @@ class PrivateSharingSubscriber implements EventSubscriberInterface
     /**
      * Build the query filter with sharing entries.
      *
-     * @param GetFilterEvent $event The event
+     * @param GetPrivateFilterEvent $event The event
      *
      * @return string
      */
-    private function buildSharingFilter(GetFilterEvent $event): string
+    private function buildSharingFilter(GetPrivateFilterEvent $event): string
     {
         $targetEntity = $event->getTargetEntity();
         $targetTableAlias = $event->getTargetTableAlias();
@@ -91,14 +84,14 @@ SELECTCLAUSE;
     /**
      * Add the where condition of security identities.
      *
-     * @param GetFilterEvent $event The event
-     * @param ClassMetadata  $meta  The class metadata of sharing entity
+     * @param GetPrivateFilterEvent $event The event
+     * @param ClassMetadata         $meta  The class metadata of sharing entity
      *
      * @throws
      *
      * @return string
      */
-    private function addWhereSecurityIdentitiesForSharing(GetFilterEvent $event, ClassMetadata $meta): string
+    private function addWhereSecurityIdentitiesForSharing(GetPrivateFilterEvent $event, ClassMetadata $meta): string
     {
         $where = '';
         $mapSids = (array) $event->getRealParameter('map_security_identities');
@@ -122,12 +115,12 @@ SELECTCLAUSE;
     /**
      * Build the query filter with owner.
      *
-     * @param GetFilterEvent $event  The event
-     * @param string         $filter The previous filter
+     * @param GetPrivateFilterEvent $event  The event
+     * @param string                $filter The previous filter
      *
      * @return string
      */
-    private function buildOwnerFilter(GetFilterEvent $event, string $filter): string
+    private function buildOwnerFilter(GetPrivateFilterEvent $event, string $filter): string
     {
         $class = $event->getTargetEntity()->getName();
         $interfaces = class_implements($class);
@@ -144,14 +137,14 @@ SELECTCLAUSE;
     /**
      * Build the query filter with required owner.
      *
-     * @param GetFilterEvent $event  The event
-     * @param string         $filter The previous filter
+     * @param GetPrivateFilterEvent $event  The event
+     * @param string                $filter The previous filter
      *
      * @throws
      *
      * @return string
      */
-    private function buildRequiredOwnerFilter(GetFilterEvent $event, string $filter): string
+    private function buildRequiredOwnerFilter(GetPrivateFilterEvent $event, string $filter): string
     {
         $connection = $event->getConnection();
         $platform = $connection->getDatabasePlatform();
@@ -175,14 +168,14 @@ SELECTCLAUSE;
     /**
      * Build the query filter with optional owner.
      *
-     * @param GetFilterEvent $event  The event
-     * @param string         $filter The previous filter
+     * @param GetPrivateFilterEvent $event  The event
+     * @param string                $filter The previous filter
      *
      * @throws
      *
      * @return string
      */
-    private function buildOptionalOwnerFilter(GetFilterEvent $event, string $filter): string
+    private function buildOptionalOwnerFilter(GetPrivateFilterEvent $event, string $filter): string
     {
         $targetEntity = $event->getTargetEntity();
         $targetTableAlias = $event->getTargetTableAlias();

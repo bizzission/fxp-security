@@ -14,7 +14,7 @@ namespace Fxp\Component\Security\Tests\Listener;
 use Fxp\Component\Security\Listener\PermissionExceptionListener;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -42,7 +42,7 @@ final class PermissionExceptionListenerTest extends TestCase
     public function testKernelException(): void
     {
         $e = new \Exception('Test');
-        $event = new GetResponseForExceptionEvent(
+        $event = new ExceptionEvent(
             $this->kernel,
             $this->request,
             HttpKernelInterface::SUB_REQUEST,
@@ -58,7 +58,7 @@ final class PermissionExceptionListenerTest extends TestCase
     public function testKernelExceptionWithAccessDeniedException(): void
     {
         $e = new AccessDeniedException('Test');
-        $event = new GetResponseForExceptionEvent(
+        $event = new ExceptionEvent(
             $this->kernel,
             $this->request,
             HttpKernelInterface::SUB_REQUEST,

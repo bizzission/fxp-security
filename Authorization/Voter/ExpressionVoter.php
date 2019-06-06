@@ -12,7 +12,6 @@
 namespace Fxp\Component\Security\Authorization\Voter;
 
 use Fxp\Component\Security\Event\GetExpressionVariablesEvent;
-use Fxp\Component\Security\ExpressionVariableEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
@@ -100,7 +99,7 @@ class ExpressionVoter implements VoterInterface
     protected function getVariables(TokenInterface $token, $subject): array
     {
         $event = new GetExpressionVariablesEvent($token);
-        $this->dispatcher->dispatch(ExpressionVariableEvents::GET, $event);
+        $this->dispatcher->dispatch($event);
 
         $variables = array_merge($event->getVariables(), [
             'object' => $subject,

@@ -12,8 +12,6 @@
 namespace Fxp\Component\Security\Role;
 
 use Fxp\Component\Security\Model\RoleInterface;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Utils for role.
@@ -23,45 +21,9 @@ use Symfony\Component\Security\Core\Role\Role;
 abstract class RoleUtil
 {
     /**
-     * Format the roles.
-     *
-     * @param Role[]|string[] $roles The roles
-     * @param bool            $force Force to convert the role name
-     *
-     * @return Role[]|string[]
-     */
-    public static function formatRoles(array $roles, bool $force = false): array
-    {
-        if ($force || version_compare(Kernel::VERSION, '4.3', '<')) {
-            $roles = array_map(static function ($role) {
-                return !$role instanceof Role ? new Role((string) $role) : $role;
-            }, $roles);
-        }
-
-        return $roles;
-    }
-
-    /**
-     * Format the role.
-     *
-     * @param Role|string $role  The role
-     * @param bool        $force Force to convert the role name
-     *
-     * @return Role|string
-     */
-    public static function formatRole($role, bool $force = false)
-    {
-        if ($force || version_compare(Kernel::VERSION, '4.3', '<')) {
-            $role = !$role instanceof Role ? new Role((string) $role) : $role;
-        }
-
-        return $role;
-    }
-
-    /**
      * Format the role names.
      *
-     * @param Role[]|RoleInterface[]|string[] $roles The roles
+     * @param RoleInterface[]|string[] $roles The roles
      *
      * @return string[]
      */
@@ -75,16 +37,12 @@ abstract class RoleUtil
     /**
      * Format the role name.
      *
-     * @param Role|RoleInterface|string $role The role
+     * @param RoleInterface|string $role The role
      *
      * @return string
      */
     public static function formatName($role): string
     {
-        if ($role instanceof RoleInterface) {
-            return $role->getName();
-        }
-
-        return $role instanceof Role ? $role->getRole() : (string) $role;
+        return $role instanceof RoleInterface ? $role->getName() : (string) $role;
     }
 }

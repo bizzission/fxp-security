@@ -16,11 +16,10 @@ use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\FilterCollection;
-use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetPrivateFilterEvent;
 use Fxp\Component\Security\Doctrine\ORM\Filter\SharingFilter;
 use Fxp\Component\Security\Identity\SubjectIdentity;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
-use Fxp\Component\Security\SharingFilterEvents;
 use Fxp\Component\Security\SharingVisibilities;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
@@ -36,7 +35,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class SharingFilterTest extends TestCase
 {
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $em;
 
@@ -46,7 +45,7 @@ final class SharingFilterTest extends TestCase
     protected $eventManager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
@@ -61,7 +60,7 @@ final class SharingFilterTest extends TestCase
     protected $sharingClass;
 
     /**
-     * @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject
+     * @var ClassMetadata|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $targetEntity;
 
@@ -70,6 +69,9 @@ final class SharingFilterTest extends TestCase
      */
     protected $filter;
 
+    /**
+     * @throws
+     */
     protected function setUp(): void
     {
         $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
@@ -77,17 +79,9 @@ final class SharingFilterTest extends TestCase
         $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
         $this->eventDispatcher = new EventDispatcher();
         $this->sharingClass = MockSharing::class;
-        $this->targetEntity = $this->getMockForAbstractClass(
-            ClassMetadata::class,
-            [],
-            '',
-            false,
-            true,
-            true,
-            [
-                'getName',
-            ]
-        );
+        $this->targetEntity = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->setMethods([
+            'getName',
+        ])->getMock();
         $this->filter = new SharingFilter($this->em);
 
         $connection = $this->getMockBuilder(Connection::class)->getMock();
@@ -109,7 +103,7 @@ final class SharingFilterTest extends TestCase
 
         $connection->expects($this->any())
             ->method('quote')
-            ->willReturnCallback(function ($v) {
+            ->willReturnCallback(static function ($v) {
                 return '\''.$v.'\'';
             })
         ;
@@ -141,8 +135,8 @@ final class SharingFilterTest extends TestCase
         $this->filter->setParameter('sharing_manager_enabled', true, 'boolean');
 
         $this->eventDispatcher->addListener(
-            SharingFilterEvents::getName(SharingFilterEvents::DOCTRINE_ORM_FILTER, SharingVisibilities::TYPE_PRIVATE),
-            function (GetFilterEvent $event) use (&$eventAction): void {
+            GetPrivateFilterEvent::class,
+            static function (GetPrivateFilterEvent $event): void {
                 $event->setFilterConstraint('FILTER_TEST');
             }
         );

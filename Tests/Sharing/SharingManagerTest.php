@@ -11,13 +11,14 @@
 
 namespace Fxp\Component\Security\Tests\Sharing;
 
+use Fxp\Component\Security\Event\SharingDisabledEvent;
+use Fxp\Component\Security\Event\SharingEnabledEvent;
 use Fxp\Component\Security\Identity\SubjectIdentity;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Sharing\SharingIdentityConfig;
 use Fxp\Component\Security\Sharing\SharingManager;
 use Fxp\Component\Security\Sharing\SharingProviderInterface;
 use Fxp\Component\Security\Sharing\SharingSubjectConfig;
-use Fxp\Component\Security\SharingEvents;
 use Fxp\Component\Security\SharingVisibilities;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockGroup;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -36,12 +37,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class SharingManagerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SharingProviderInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SharingProviderInterface
      */
     protected $provider;
 
     /**
-     * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $dispatcher;
 
@@ -67,12 +68,12 @@ final class SharingManagerTest extends TestCase
     {
         $this->dispatcher->expects($this->at(0))
             ->method('dispatch')
-            ->with(SharingEvents::DISABLED)
+            ->with(new SharingDisabledEvent())
         ;
 
         $this->dispatcher->expects($this->at(1))
             ->method('dispatch')
-            ->with(SharingEvents::ENABLED)
+            ->with(new SharingEnabledEvent())
         ;
 
         $this->assertTrue($this->sm->isEnabled());
@@ -213,7 +214,7 @@ final class SharingManagerTest extends TestCase
 
     public function testHasSharingVisibilityWithoutConfig(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SubjectIdentityInterface $subject */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|SubjectIdentityInterface $subject */
         $subject = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
         $subject->expects($this->once())
             ->method('getType')
@@ -223,7 +224,7 @@ final class SharingManagerTest extends TestCase
         $this->assertFalse($this->sm->hasSharingVisibility($subject));
     }
 
-    public function getSharingVisibilities()
+    public function getSharingVisibilities(): array
     {
         return [
             [SharingVisibilities::TYPE_NONE, false],
@@ -240,7 +241,7 @@ final class SharingManagerTest extends TestCase
      */
     public function testHasSharingVisibility($visibility, $result): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SubjectIdentityInterface $subject */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|SubjectIdentityInterface $subject */
         $subject = $this->getMockBuilder(SubjectIdentityInterface::class)->getMock();
         $subject->expects($this->once())
             ->method('getType')

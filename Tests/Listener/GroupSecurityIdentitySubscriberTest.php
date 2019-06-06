@@ -14,6 +14,7 @@ namespace Fxp\Component\Security\Tests\Listener;
 use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
 use Fxp\Component\Security\Listener\GroupSecurityIdentitySubscriber;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserGroupable;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -29,7 +30,7 @@ final class GroupSecurityIdentitySubscriberTest extends TestCase
         $listener = new GroupSecurityIdentitySubscriber();
         $this->assertCount(1, GroupSecurityIdentitySubscriber::getSubscribedEvents());
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
 
@@ -43,7 +44,7 @@ final class GroupSecurityIdentitySubscriberTest extends TestCase
         $listener = new GroupSecurityIdentitySubscriber();
         $this->assertCount(1, GroupSecurityIdentitySubscriber::getSubscribedEvents());
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $sids = [];
 

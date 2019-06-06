@@ -17,8 +17,9 @@ use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
-use Fxp\Component\Security\Role\RoleUtil;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Token\MockToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -32,12 +33,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 final class ExpressionVariableStorageTest extends TestCase
 {
     /**
-     * @var AuthenticationTrustResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AuthenticationTrustResolverInterface|MockObject
      */
     protected $trustResolver;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -52,7 +53,7 @@ final class ExpressionVariableStorageTest extends TestCase
     protected $orgRole;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface
+     * @var MockObject|TokenInterface
      */
     protected $token;
 
@@ -60,7 +61,7 @@ final class ExpressionVariableStorageTest extends TestCase
     {
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
+        $this->token = $this->getMockBuilder(MockToken::class)->getMock();
     }
 
     public function testSetVariablesWithSecurityIdentityManager(): void
@@ -72,7 +73,7 @@ final class ExpressionVariableStorageTest extends TestCase
         ];
 
         $this->token->expects($this->never())
-            ->method('getRoles')
+            ->method('getRoleNames')
         ;
 
         $this->sidManager->expects($this->once())
@@ -106,9 +107,9 @@ final class ExpressionVariableStorageTest extends TestCase
     public function testSetVariablesWithoutSecurityIdentityManager(): void
     {
         $this->token->expects($this->once())
-            ->method('getRoles')
+            ->method('getRoleNames')
             ->willReturn([
-                RoleUtil::formatRole('ROLE_USER'),
+                'ROLE_USER',
             ])
         ;
 

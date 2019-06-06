@@ -68,7 +68,7 @@ final class SubjectIdentityTest extends TestCase
         new SubjectIdentity(MockObject::class, '42', 42);
     }
 
-    public function getIdentities()
+    public function getIdentities(): array
     {
         return [
             [new SubjectIdentity(MockObject::class, '42'), true],

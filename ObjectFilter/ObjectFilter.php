@@ -17,7 +17,6 @@ use Fxp\Component\Security\Event\PostCommitObjectFilterEvent;
 use Fxp\Component\Security\Event\PreCommitObjectFilterEvent;
 use Fxp\Component\Security\Event\RestoreViewGrantedEvent;
 use Fxp\Component\Security\Exception\UnexpectedTypeException;
-use Fxp\Component\Security\ObjectFilterEvents;
 use Fxp\Component\Security\Permission\FieldVote;
 use Fxp\Component\Security\Permission\PermissionManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -137,7 +136,7 @@ class ObjectFilter implements ObjectFilterInterface
     public function commit(): void
     {
         $event = new PreCommitObjectFilterEvent($this->queue);
-        $this->dispatcher->dispatch(ObjectFilterEvents::PRE_COMMIT, $event);
+        $this->dispatcher->dispatch($event);
 
         $this->pm->preloadPermissions(array_values($this->queue));
 
@@ -150,7 +149,7 @@ class ObjectFilter implements ObjectFilterInterface
         }
 
         $event = new PostCommitObjectFilterEvent($this->queue);
-        $this->dispatcher->dispatch(ObjectFilterEvents::POST_COMMIT, $event);
+        $this->dispatcher->dispatch($event);
 
         $this->queue = [];
         $this->isTransactional = false;
@@ -278,7 +277,7 @@ class ObjectFilter implements ObjectFilterInterface
     protected function isRestoreViewGranted(FieldVote $fieldVote, array $values): bool
     {
         $event = new RestoreViewGrantedEvent($fieldVote, $values['old'], $values['new']);
-        $this->dispatcher->dispatch(ObjectFilterEvents::RESTORE_VIEW_GRANTED, $event);
+        $this->dispatcher->dispatch($event);
 
         if ($event->isSkipAuthorizationChecker()) {
             return !$event->isGranted();
@@ -298,16 +297,14 @@ class ObjectFilter implements ObjectFilterInterface
     protected function isViewGranted($object): bool
     {
         if ($object instanceof FieldVote) {
-            $eventName = ObjectFilterEvents::OBJECT_FIELD_VIEW_GRANTED;
             $event = new ObjectFieldViewGrantedEvent($object);
             $permission = 'perm_read';
         } else {
-            $eventName = ObjectFilterEvents::OBJECT_VIEW_GRANTED;
             $event = new ObjectViewGrantedEvent($object);
             $permission = 'perm_view';
         }
 
-        $this->dispatcher->dispatch($eventName, $event);
+        $this->dispatcher->dispatch($event);
 
         if ($event->isSkipAuthorizationChecker()) {
             return $event->isGranted();

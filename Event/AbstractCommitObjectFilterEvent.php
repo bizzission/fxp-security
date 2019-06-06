@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The abstract commit object filter event.

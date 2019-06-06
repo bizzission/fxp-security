@@ -12,14 +12,13 @@
 namespace Fxp\Component\Security\Firewall;
 
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
  * Abstract security listener for role.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class AbstractRoleListener implements ListenerInterface
+abstract class AbstractRoleListener
 {
     /**
      * @var SecurityIdentityManagerInterface

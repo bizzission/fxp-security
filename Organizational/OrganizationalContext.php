@@ -19,7 +19,6 @@ use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Model\OrganizationUserInterface;
 use Fxp\Component\Security\Model\Traits\OrganizationalInterface;
 use Fxp\Component\Security\Model\UserInterface;
-use Fxp\Component\Security\OrganizationalContextEvents;
 use Fxp\Component\Security\OrganizationalTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -80,7 +79,6 @@ class OrganizationalContext implements OrganizationalContextInterface
             $old = $this->organization;
             $this->organization = $organization;
             $this->dispatch(
-                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION,
                 SetCurrentOrganizationEvent::class,
                 $organization,
                 $old
@@ -125,7 +123,6 @@ class OrganizationalContext implements OrganizationalContextInterface
             $this->organizationUser = $organizationUser;
             $org = $organizationUser->getOrganization();
             $this->dispatch(
-                OrganizationalContextEvents::SET_CURRENT_ORGANIZATION_USER,
                 SetCurrentOrganizationUserEvent::class,
                 $organizationUser,
                 $old
@@ -160,7 +157,6 @@ class OrganizationalContext implements OrganizationalContextInterface
         $old = $this->optionalFilterType;
         $this->optionalFilterType = $type;
         $this->dispatch(
-            OrganizationalContextEvents::SET_OPTIONAL_FILTER_TYPE,
             SetOrganizationalOptionalFilterTypeEvent::class,
             $type,
             $old
@@ -207,15 +203,14 @@ class OrganizationalContext implements OrganizationalContextInterface
     /**
      * Dispatch the event.
      *
-     * @param string                   $eventName  The event name
      * @param string                   $eventClass The class name of event
      * @param null|false|object|string $subject    The event subject
      * @param null|false|object|string $oldSubject The old event subject
      */
-    protected function dispatch(string $eventName, string $eventClass, $subject, $oldSubject): void
+    protected function dispatch(string $eventClass, $subject, $oldSubject): void
     {
         if (null !== $this->dispatcher && $oldSubject !== $subject) {
-            $this->dispatcher->dispatch($eventName, new $eventClass($subject));
+            $this->dispatcher->dispatch(new $eventClass($subject));
         }
     }
 

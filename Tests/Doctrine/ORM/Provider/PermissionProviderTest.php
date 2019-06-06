@@ -39,25 +39,28 @@ use PHPUnit\Framework\TestCase;
 final class PermissionProviderTest extends TestCase
 {
     /**
-     * @var EntityRepository|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityRepository|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $permissionRepo;
 
     /**
-     * @var ManagerRegistry|\PHPUnit_Framework_MockObject_MockObject
+     * @var ManagerRegistry|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $registry;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|QueryBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|QueryBuilder
      */
     protected $qb;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Query
+     * @var \PHPUnit\Framework\MockObject\MockObject|Query
      */
     protected $query;
 
+    /**
+     * @throws
+     */
     protected function setUp(): void
     {
         $this->permissionRepo = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
@@ -156,7 +159,7 @@ final class PermissionProviderTest extends TestCase
     {
         $om = $this->getMockBuilder(ObjectManager::class)->getMock();
 
-        /** @var PermissionConfigInterface|\PHPUnit_Framework_MockObject_MockObject $permConfig */
+        /** @var PermissionConfigInterface|\PHPUnit\Framework\MockObject\MockObject $permConfig */
         $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
 
         $permConfig->expects($this->once())
@@ -197,7 +200,7 @@ final class PermissionProviderTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The doctrine object manager is not found for the class "Fxp\\Component\\Security\\Tests\\Fixtures\\Model\\MockObject"');
 
-        /** @var PermissionConfigInterface|\PHPUnit_Framework_MockObject_MockObject $permConfig */
+        /** @var PermissionConfigInterface|\PHPUnit\Framework\MockObject\MockObject $permConfig */
         $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
 
         $permConfig->expects($this->atLeast(2))
@@ -222,7 +225,7 @@ final class PermissionProviderTest extends TestCase
 
         $om = $this->getMockBuilder(ObjectManager::class)->getMock();
 
-        /** @var PermissionConfigInterface|\PHPUnit_Framework_MockObject_MockObject $permConfig */
+        /** @var PermissionConfigInterface|\PHPUnit\Framework\MockObject\MockObject $permConfig */
         $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
 
         $permConfig->expects($this->atLeast(2))
@@ -531,7 +534,7 @@ final class PermissionProviderTest extends TestCase
         $this->assertSame($expected, $res);
     }
 
-    protected function createProvider($mockRegistry = true)
+    protected function createProvider(): PermissionProvider
     {
         $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
 

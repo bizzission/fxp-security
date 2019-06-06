@@ -23,9 +23,10 @@ use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserRoleable;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -37,32 +38,32 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 final class SharingFilterSubscriberTest extends TestCase
 {
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|MockObject
      */
     protected $entityManager;
 
     /**
-     * @var FilterCollection|\PHPUnit_Framework_MockObject_MockObject
+     * @var FilterCollection|MockObject
      */
     protected $filterCollection;
 
     /**
-     * @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EventDispatcherInterface|MockObject
      */
     protected $dispatcher;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     * @var MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
+     * @var MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
@@ -101,7 +102,7 @@ final class SharingFilterSubscriberTest extends TestCase
         $connection = $this->getMockBuilder(Connection::class)->getMock();
         $connection->expects($this->any())
             ->method('quote')
-            ->willReturnCallback(function ($v) {
+            ->willReturnCallback(static function ($v) {
                 return $v;
             })
         ;
@@ -170,7 +171,9 @@ final class SharingFilterSubscriberTest extends TestCase
         $this->assertFalse($this->filter->hasParameter('user_id'));
         $this->assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
 
-        $this->listener->onEvent(new Event());
+        /** @var KernelEvent $event */
+        $event = $this->getMockBuilder(KernelEvent::class)->disableOriginalConstructor()->getMock();
+        $this->listener->onEvent($event);
 
         $this->assertTrue($this->filter->hasParameter('has_security_identities'));
         $this->assertTrue($this->filter->hasParameter('map_security_identities'));
@@ -208,13 +211,13 @@ final class SharingFilterSubscriberTest extends TestCase
             ])
         ;
 
-        $this->sharingManager->expects($this->any())
+        $this->sharingManager->expects($this->atLeastOnce())
             ->method('getIdentityConfig')
             ->willReturnCallback(function ($v) {
                 $config = $this->getMockBuilder(SharingIdentityConfigInterface::class)->getMock();
-                $config->expects($this->any())
+                $config->expects($this->atLeastOnce())
                     ->method('getType')
-                    ->willReturnCallback(function () use ($v) {
+                    ->willReturnCallback(static function () use ($v) {
                         return 'role' === $v
                             ? MockRole::class
                             : 'foo';
@@ -227,7 +230,7 @@ final class SharingFilterSubscriberTest extends TestCase
 
         $user = new MockUserRoleable();
 
-        $token->expects($this->any())
+        $token->expects($this->atLeastOnce())
             ->method('getUser')
             ->willReturn($user)
         ;
@@ -237,7 +240,9 @@ final class SharingFilterSubscriberTest extends TestCase
         $this->assertFalse($this->filter->hasParameter('user_id'));
         $this->assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
 
-        $this->listener->onEvent(new Event());
+        /** @var KernelEvent $event */
+        $event = $this->getMockBuilder(KernelEvent::class)->disableOriginalConstructor()->getMock();
+        $this->listener->onEvent($event);
 
         $this->assertTrue($this->filter->hasParameter('has_security_identities'));
         $this->assertTrue($this->filter->hasParameter('map_security_identities'));

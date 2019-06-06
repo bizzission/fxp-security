@@ -20,7 +20,6 @@ use Fxp\Component\Security\Model\Traits\RoleableInterface;
 use Fxp\Component\Security\Model\Traits\UserOrganizationUsersInterface;
 use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
-use Fxp\Component\Security\Role\RoleUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
@@ -167,7 +166,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
             $roles = self::buildOrganizationRoles([], $organization);
 
             if ($roleHierarchy instanceof RoleHierarchyInterface) {
-                $roles = RoleUtil::formatNames($roleHierarchy->getReachableRoles($roles));
+                $roles = $roleHierarchy->getReachableRoleNames($roles);
             }
         }
 
@@ -195,7 +194,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
             }
 
             if ($roleHierarchy instanceof RoleHierarchyInterface) {
-                $roles = RoleUtil::formatNames($roleHierarchy->getReachableRoles($roles));
+                $roles = $roleHierarchy->getReachableRoleNames($roles);
             }
         }
 
@@ -214,7 +213,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
     private static function buildOrganizationUserRoles(array $roles, RoleableInterface $user, string $orgName): array
     {
         foreach ($user->getRoles() as $role) {
-            $roles[] = RoleUtil::formatName($role).'__'.$orgName;
+            $roles[] = $role.'__'.$orgName;
         }
 
         return $roles;
@@ -240,7 +239,7 @@ final class OrganizationSecurityIdentity extends AbstractSecurityIdentity
             }
 
             foreach ($org->getRoles() as $orgRole) {
-                $roleName = RoleUtil::formatName($orgRole);
+                $roleName = $orgRole;
 
                 if (!\in_array($roleName, $existingRoles, true)) {
                     $roles[] = $roleName.'__'.$orgName;

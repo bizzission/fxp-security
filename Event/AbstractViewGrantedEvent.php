@@ -13,7 +13,7 @@ namespace Fxp\Component\Security\Event;
 
 use Fxp\Component\Security\Exception\UnexpectedTypeException;
 use Fxp\Component\Security\Permission\FieldVote;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The abstract view granted event.

@@ -12,8 +12,8 @@
 namespace Fxp\Component\Security\Tests\Role;
 
 use Fxp\Component\Security\Role\RoleUtil;
+use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -22,25 +22,25 @@ use Symfony\Component\Security\Core\Role\Role;
  */
 final class RoleUtilTest extends TestCase
 {
-    public function testFormatRoles(): void
+    public function testFormatNames(): void
     {
         $value = [
+            new MockRole('ROLE_USER', 23),
+            new MockRole('ROLE_TEST', 32),
+        ];
+        $expected = [
             'ROLE_USER',
             'ROLE_TEST',
         ];
-        $expected = [
-            new Role('ROLE_USER'),
-            new Role('ROLE_TEST'),
-        ];
 
-        $this->assertEquals($expected, RoleUtil::formatRoles($value, true));
+        $this->assertEquals($expected, RoleUtil::formatNames($value));
     }
 
-    public function testFormatRole(): void
+    public function testFormatName(): void
     {
-        $value = 'ROLE_TEST';
-        $expected = new Role('ROLE_TEST');
+        $value = new MockRole('ROLE_TEST');
+        $expected = 'ROLE_TEST';
 
-        $this->assertEquals($expected, RoleUtil::formatRole($value, true));
+        $this->assertEquals($expected, RoleUtil::formatName($value));
     }
 }

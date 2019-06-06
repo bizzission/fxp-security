@@ -44,7 +44,7 @@ trait GroupableTrait
     /**
      * {@inheritdoc}
      */
-    public function getGroups()
+    public function getGroups(): Collection
     {
         return $this->groups ?: $this->groups = new ArrayCollection();
     }

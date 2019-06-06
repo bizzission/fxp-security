@@ -12,11 +12,12 @@
 namespace Fxp\Component\Security\Sharing;
 
 use Fxp\Component\DoctrineExtra\Util\ClassUtils;
+use Fxp\Component\Security\Event\SharingDisabledEvent;
+use Fxp\Component\Security\Event\SharingEnabledEvent;
 use Fxp\Component\Security\Exception\AlreadyConfigurationAliasExistingException;
 use Fxp\Component\Security\Exception\SharingIdentityConfigNotFoundException;
 use Fxp\Component\Security\Exception\SharingSubjectConfigNotFoundException;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
-use Fxp\Component\Security\SharingEvents;
 use Fxp\Component\Security\SharingVisibilities;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -122,8 +123,8 @@ abstract class AbstractSharingManager implements SharingManagerInterface
         $this->enabled = $enabled;
 
         if (null !== $this->dispatcher) {
-            $name = $this->enabled ? SharingEvents::ENABLED : SharingEvents::DISABLED;
-            $this->dispatcher->dispatch($name);
+            $event = $this->enabled ? new SharingEnabledEvent() : new SharingDisabledEvent();
+            $this->dispatcher->dispatch($event);
         }
 
         return $this;

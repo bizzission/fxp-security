@@ -22,8 +22,10 @@ use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganizationUserRoleableGroupable;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsersGroupable;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -48,7 +50,7 @@ final class OrganizationSecurityIdentityTest extends TestCase
         $this->assertSame('identifier', $identity->getIdentifier());
     }
 
-    public function getIdentities()
+    public function getIdentities(): array
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
         $id3->expects($this->any())->method('getType')->willReturn(MockOrganization::class);
@@ -76,7 +78,7 @@ final class OrganizationSecurityIdentityTest extends TestCase
 
     public function testFromAccount(): void
     {
-        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var MockObject|OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $org->expects($this->once())
             ->method('getName')
@@ -98,7 +100,7 @@ final class OrganizationSecurityIdentityTest extends TestCase
 
         $org->addRole('ROLE_ORG_TEST');
 
-        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
@@ -110,18 +112,18 @@ final class OrganizationSecurityIdentityTest extends TestCase
 
         $user->addUserOrganization($orgUser);
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface $roleHierarchy */
-        $roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
+        /** @var MockObject|RoleHierarchyInterface $roleHierarchy */
+        $roleHierarchy = $this->getMockBuilder(RoleHierarchy::class)->disableOriginalConstructor()->getMock();
         $roleHierarchy->expects($this->once())
-            ->method('getReachableRoles')
-            ->willReturnCallback(function ($value) {
+            ->method('getReachableRoleNames')
+            ->willReturnCallback(static function ($value) {
                 return $value;
             })
         ;
@@ -149,7 +151,7 @@ final class OrganizationSecurityIdentityTest extends TestCase
 
         $org->addRole('ROLE_ORG_TEST');
 
-        /** @var GroupInterface|\PHPUnit_Framework_MockObject_MockObject $group */
+        /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
         $group->expects($this->once())
             ->method('getName')
@@ -161,14 +163,14 @@ final class OrganizationSecurityIdentityTest extends TestCase
 
         $user->addUserOrganization($orgUser);
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        /** @var OrganizationalContextInterface|\PHPUnit_Framework_MockObject_MockObject $context */
+        /** @var MockObject|OrganizationalContextInterface $context */
         $context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $context->expects($this->once())
             ->method('getCurrentOrganization')
@@ -179,11 +181,11 @@ final class OrganizationSecurityIdentityTest extends TestCase
             ->willReturn($orgUser)
         ;
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface $roleHierarchy */
-        $roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
+        /** @var MockObject|RoleHierarchyInterface $roleHierarchy */
+        $roleHierarchy = $this->getMockBuilder(RoleHierarchy::class)->disableOriginalConstructor()->getMock();
         $roleHierarchy->expects($this->once())
-            ->method('getReachableRoles')
-            ->willReturnCallback(function ($value) {
+            ->method('getReachableRoleNames')
+            ->willReturnCallback(static function ($value) {
                 return $value;
             })
         ;
@@ -211,14 +213,14 @@ final class OrganizationSecurityIdentityTest extends TestCase
 
         $org->addRole('ROLE_ORG_TEST');
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        /** @var OrganizationalContextInterface|\PHPUnit_Framework_MockObject_MockObject $context */
+        /** @var MockObject|OrganizationalContextInterface $context */
         $context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $context->expects($this->once())
             ->method('getCurrentOrganization')
@@ -229,11 +231,11 @@ final class OrganizationSecurityIdentityTest extends TestCase
             ->willReturn(null)
         ;
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface $roleHierarchy */
-        $roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
+        /** @var MockObject|RoleHierarchyInterface $roleHierarchy */
+        $roleHierarchy = $this->getMockBuilder(RoleHierarchy::class)->disableOriginalConstructor()->getMock();
         $roleHierarchy->expects($this->once())
-            ->method('getReachableRoles')
-            ->willReturnCallback(function ($value) {
+            ->method('getReachableRoleNames')
+            ->willReturnCallback(static function ($value) {
                 return $value;
             })
         ;
@@ -249,10 +251,10 @@ final class OrganizationSecurityIdentityTest extends TestCase
 
     public function testFormTokenWithInvalidInterface(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|UserInterface $user */
+        /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $token->expects($this->once())
             ->method('getUser')

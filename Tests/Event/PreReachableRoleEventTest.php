@@ -29,13 +29,13 @@ final class PreReachableRoleEventTest extends TestCase
         ];
 
         $event = new PreReachableRoleEvent($roles);
-        $this->assertSame($roles, $event->getReachableRoles());
+        $this->assertSame($roles, $event->getReachableRoleNames());
         $this->assertTrue($event->isPermissionEnabled());
 
         $roles[] = 'ROLE_BAZ';
-        $event->setReachableRoles($roles);
+        $event->setReachableRoleNames($roles);
         $event->setPermissionEnabled(false);
-        $this->assertSame($roles, $event->getReachableRoles());
+        $this->assertSame($roles, $event->getReachableRoleNames());
         $this->assertFalse($event->isPermissionEnabled());
     }
 }

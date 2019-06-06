@@ -27,6 +27,7 @@ use Fxp\Component\Security\Model\RoleHierarchicalInterface;
 use Fxp\Component\Security\Model\Traits\GroupableInterface;
 use Fxp\Component\Security\Model\UserInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -37,27 +38,27 @@ use PHPUnit\Framework\TestCase;
 final class RoleHierarchyListenerTest extends TestCase
 {
     /**
-     * @var CacheSecurityIdentityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var CacheSecurityIdentityManagerInterface|MockObject
      */
     protected $sidManager;
 
     /**
-     * @var AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AdapterInterface|MockObject
      */
     protected $cache;
 
     /**
-     * @var OrganizationalContextInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|OrganizationalContextInterface
      */
     protected $context;
 
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|MockObject
      */
     protected $em;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWork
+     * @var MockObject|UnitOfWork
      */
     protected $uow;
 
@@ -85,7 +86,7 @@ final class RoleHierarchyListenerTest extends TestCase
 
     public function testOnFLushWithUserObject(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(UserInterface::class)->getMock();
         $changeSet = [
@@ -122,7 +123,7 @@ final class RoleHierarchyListenerTest extends TestCase
 
     public function testOnFLushWithUserObjectAndNotRequiredField(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(UserInterface::class)->getMock();
         $changeSet = [];
@@ -157,7 +158,7 @@ final class RoleHierarchyListenerTest extends TestCase
 
     public function testOnFLushWithRoleHierarchicalObject(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $changeSet = [
@@ -194,7 +195,7 @@ final class RoleHierarchyListenerTest extends TestCase
 
     public function testOnFLushWithGroupObject(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(GroupInterface::class)->getMock();
         $changeSet = [
@@ -231,7 +232,7 @@ final class RoleHierarchyListenerTest extends TestCase
 
     public function testOnFLushWithOrganizationUserObject(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $object = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
@@ -277,7 +278,7 @@ final class RoleHierarchyListenerTest extends TestCase
         $this->listener->onFlush($args);
     }
 
-    public function getCollectionInterfaces()
+    public function getCollectionInterfaces(): array
     {
         return [
             [RoleHierarchicalInterface::class, 'children'],
@@ -293,12 +294,12 @@ final class RoleHierarchyListenerTest extends TestCase
      */
     public function testOnFLushWithPersistentCollection($interface, $fieldName): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder($interface)->getMock();
-        /** @var Collection|\PHPUnit_Framework_MockObject_MockObject $collection */
+        /** @var Collection|MockObject $collection */
         $collection = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
-        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $meta */
+        /** @var ClassMetadata|MockObject $meta */
         $meta = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $persistCollection = new PersistentCollection($this->em, $meta, $collection);
 
@@ -330,12 +331,12 @@ final class RoleHierarchyListenerTest extends TestCase
 
     public function testOnFLushWithOptionalPersistentCollection(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
-        /** @var Collection|\PHPUnit_Framework_MockObject_MockObject $collection */
+        /** @var Collection|MockObject $collection */
         $collection = $this->getMockBuilder(Collection::class)->disableOriginalConstructor()->getMock();
-        /** @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject $meta */
+        /** @var ClassMetadata|MockObject $meta */
         $meta = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $persistCollection = new PersistentCollection($this->em, $meta, $collection);
 
@@ -370,7 +371,7 @@ final class RoleHierarchyListenerTest extends TestCase
 
     public function testOnFLushWithoutOrganizationalContext(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $object = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $changeSet = [

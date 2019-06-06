@@ -17,8 +17,9 @@ use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
-use Fxp\Component\Security\Role\RoleUtil;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockRole;
+use Fxp\Component\Security\Tests\Fixtures\Token\MockToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -43,17 +44,17 @@ final class ExpressionVoterTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var ExpressionLanguage|\PHPUnit_Framework_MockObject_MockObject
+     * @var ExpressionLanguage|MockObject
      */
     protected $expressionLanguage;
 
     /**
-     * @var AuthenticationTrustResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AuthenticationTrustResolverInterface|MockObject
      */
     protected $trustResolver;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -68,7 +69,7 @@ final class ExpressionVoterTest extends TestCase
     protected $orgRole;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface
+     * @var MockObject|TokenInterface
      */
     protected $token;
 
@@ -90,7 +91,7 @@ final class ExpressionVoterTest extends TestCase
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->context = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $this->orgRole = $this->getMockBuilder(RoleInterface::class)->getMock();
-        $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
+        $this->token = $this->getMockBuilder(MockToken::class)->getMock();
 
         $this->variableStorage = new ExpressionVariableStorage(
             [
@@ -129,7 +130,7 @@ final class ExpressionVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $res);
     }
 
-    public function getExpressionResults()
+    public function getExpressionResults(): array
     {
         return [
             [VoterInterface::ACCESS_GRANTED, true],
@@ -186,8 +187,8 @@ final class ExpressionVoterTest extends TestCase
     public function testWithoutSecurityIdentityManagerButWithRequestSubject(): void
     {
         $this->token->expects($this->once())
-            ->method('getRoles')
-            ->willReturn([RoleUtil::formatRole('ROLE_USER')])
+            ->method('getRoleNames')
+            ->willReturn(['ROLE_USER'])
         ;
 
         $this->expressionLanguage->expects($this->once())

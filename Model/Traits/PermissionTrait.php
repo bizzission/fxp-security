@@ -133,7 +133,7 @@ trait PermissionTrait
     /**
      * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles ?: $this->roles = new ArrayCollection();
     }

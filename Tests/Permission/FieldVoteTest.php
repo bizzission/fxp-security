@@ -30,7 +30,7 @@ final class FieldVoteTest extends TestCase
 
         $fv = new FieldVote($object, $field);
 
-        $this->assertInstanceOf(SubjectIdentityInterface::class, $fv->getSubject());
+        $this->assertNotNull($fv->getSubject());
         $this->assertSame($object, $fv->getSubject()->getObject());
         $this->assertSame(\get_class($object), $fv->getSubject()->getType());
         $this->assertSame($field, $fv->getField());

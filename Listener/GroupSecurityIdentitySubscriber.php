@@ -14,7 +14,6 @@ namespace Fxp\Component\Security\Listener;
 use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
 use Fxp\Component\Security\Identity\GroupSecurityIdentity;
 use Fxp\Component\Security\Identity\IdentityUtils;
-use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -30,7 +29,7 @@ class GroupSecurityIdentitySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityIdentityEvents::RETRIEVAL_ADD => ['addGroupSecurityIdentities', 0],
+            AddSecurityIdentityEvent::class => ['addGroupSecurityIdentities', 0],
         ];
     }
 

@@ -13,10 +13,12 @@ namespace Fxp\Component\Security\Tests\Identity;
 
 use Fxp\Component\Security\Identity\CacheSecurityIdentityManager;
 use Fxp\Component\Security\Tests\Fixtures\Listener\MockCacheSecurityIdentitySubscriber;
+use Fxp\Component\Security\Tests\Fixtures\Token\MockToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -32,12 +34,12 @@ final class CacheSecurityIdentityManagerTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RoleHierarchyInterface
+     * @var MockObject|RoleHierarchyInterface
      */
     protected $roleHierarchy;
 
     /**
-     * @var AuthenticationTrustResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AuthenticationTrustResolverInterface|MockObject
      */
     protected $authenticationTrustResolver;
 
@@ -49,7 +51,7 @@ final class CacheSecurityIdentityManagerTest extends TestCase
     protected function setUp(): void
     {
         $this->dispatcher = new EventDispatcher();
-        $this->roleHierarchy = $this->getMockBuilder(RoleHierarchyInterface::class)->getMock();
+        $this->roleHierarchy = $this->getMockBuilder(RoleHierarchy::class)->disableOriginalConstructor()->getMock();
         $this->authenticationTrustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
 
         $this->sidManager = new CacheSecurityIdentityManager(
@@ -61,20 +63,10 @@ final class CacheSecurityIdentityManagerTest extends TestCase
 
     public function testGetSecurityIdentities(): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
-        $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $token->expects($this->exactly(2))
-            ->method('getUser')
-            ->willReturn(null)
-        ;
-
-        $token->expects($this->exactly(2))
-            ->method('getRoles')
-            ->willReturn([])
-        ;
+        $token = new MockToken();
 
         $this->roleHierarchy->expects($this->exactly(2))
-            ->method('getReachableRoles')
+            ->method('getReachableRoleNames')
             ->with([])
             ->willReturn([])
         ;
@@ -116,7 +108,7 @@ final class CacheSecurityIdentityManagerTest extends TestCase
             ->method('getReachableRoles')
         ;
 
-        $sids = $this->sidManager->getSecurityIdentities(null);
+        $sids = $this->sidManager->getSecurityIdentities();
 
         $this->assertCount(0, $sids);
     }

@@ -13,10 +13,11 @@ namespace Fxp\Component\Security\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Fxp\Component\DoctrineExtensions\Filter\AbstractFilter;
-use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Doctrine\DoctrineSharingVisibilities;
+use Fxp\Component\Security\Doctrine\ORM\Event\AbstractGetFilterEvent;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetNoneFilterEvent;
 use Fxp\Component\Security\Identity\SubjectUtils;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
-use Fxp\Component\Security\SharingFilterEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -88,12 +89,11 @@ class SharingFilter extends AbstractFilter
      */
     public function doAddFilterConstraint(ClassMetadata $targetEntity, string $targetTableAlias): string
     {
-        $name = SharingFilterEvents::getName(
-            SharingFilterEvents::DOCTRINE_ORM_FILTER,
-            $this->sm->getSharingVisibility(SubjectUtils::getSubjectIdentity($targetEntity->getName()))
-        );
-        $event = new GetFilterEvent($this, $this->getEntityManager(), $targetEntity, $targetTableAlias, $this->sharingClass);
-        $this->dispatcher->dispatch($name, $event);
+        $visibility = $this->sm->getSharingVisibility(SubjectUtils::getSubjectIdentity($targetEntity->getName()));
+        $eventClass = DoctrineSharingVisibilities::$classMap[$visibility] ?? GetNoneFilterEvent::class;
+        /** @var AbstractGetFilterEvent $event */
+        $event = new $eventClass($this, $this->getEntityManager(), $targetEntity, $targetTableAlias, $this->sharingClass);
+        $this->dispatcher->dispatch($event);
 
         return $event->getFilterConstraint();
     }

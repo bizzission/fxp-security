@@ -33,12 +33,12 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 final class SharingValidatorTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
     /**
-     * @var ExecutionContextInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ExecutionContextInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $context;
 

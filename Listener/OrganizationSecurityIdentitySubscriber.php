@@ -16,7 +16,6 @@ use Fxp\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
 use Fxp\Component\Security\Identity\IdentityUtils;
 use Fxp\Component\Security\Identity\OrganizationSecurityIdentity;
 use Fxp\Component\Security\Organizational\OrganizationalContextInterface;
-use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
@@ -57,7 +56,7 @@ class OrganizationSecurityIdentitySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityIdentityEvents::RETRIEVAL_ADD => ['addOrganizationSecurityIdentities', 0],
+            AddSecurityIdentityEvent::class => ['addOrganizationSecurityIdentities', 0],
         ];
     }
 

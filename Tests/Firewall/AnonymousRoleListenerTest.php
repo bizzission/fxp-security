@@ -13,9 +13,10 @@ namespace Fxp\Component\Security\Tests\Firewall;
 
 use Fxp\Component\Security\Firewall\AnonymousRoleListener;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -28,7 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 final class AnonymousRoleListenerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -38,22 +39,22 @@ final class AnonymousRoleListenerTest extends TestCase
     protected $config;
 
     /**
-     * @var AuthenticationTrustResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AuthenticationTrustResolverInterface|MockObject
      */
     protected $trustResolver;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     * @var MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Request
+     * @var MockObject|Request
      */
     protected $request;
 
     /**
-     * @var GetResponseEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|RequestEvent
      */
     protected $event;
 
@@ -71,7 +72,7 @@ final class AnonymousRoleListenerTest extends TestCase
         $this->trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->request = $this->getMockBuilder(Request::class)->getMock();
-        $this->event = $this->getMockBuilder(GetResponseEvent::class)->disableOriginalConstructor()->getMock();
+        $this->event = $this->getMockBuilder(RequestEvent::class)->disableOriginalConstructor()->getMock();
         $this->event->expects($this->any())
             ->method('getRequest')
             ->willReturn($this->request)
@@ -92,7 +93,7 @@ final class AnonymousRoleListenerTest extends TestCase
         $this->assertFalse($this->listener->isEnabled());
     }
 
-    public function testHandleWithDisabledListener(): void
+    public function testInvokeWithDisabledListener(): void
     {
         $this->sidManager->expects($this->never())
             ->method('addSpecialRole')
@@ -107,10 +108,10 @@ final class AnonymousRoleListenerTest extends TestCase
         ;
 
         $this->listener->setEnabled(false);
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
     }
 
-    public function testHandleWithoutAnonymousRole(): void
+    public function testInvokeWithoutAnonymousRole(): void
     {
         $this->listener = new AnonymousRoleListener(
             $this->sidManager,
@@ -133,10 +134,10 @@ final class AnonymousRoleListenerTest extends TestCase
             ->method('isAnonymous')
         ;
 
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
     }
 
-    public function testHandleWithoutToken(): void
+    public function testInvokeWithoutToken(): void
     {
         $this->tokenStorage->expects($this->once())
             ->method('getToken')
@@ -152,10 +153,10 @@ final class AnonymousRoleListenerTest extends TestCase
             ->with('ROLE_CUSTOM_ANONYMOUS')
         ;
 
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
     }
 
-    public function testHandleWithToken(): void
+    public function testInvokeWithToken(): void
     {
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
@@ -175,6 +176,6 @@ final class AnonymousRoleListenerTest extends TestCase
             ->with('ROLE_CUSTOM_ANONYMOUS')
         ;
 
-        $this->listener->handle($this->event);
+        ($this->listener)($this->event);
     }
 }

@@ -11,8 +11,8 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Listener;
 
+use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
 use Fxp\Component\Security\Identity\CacheSecurityIdentityListenerInterface;
-use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -26,7 +26,7 @@ class MockCacheSecurityIdentitySubscriber implements EventSubscriberInterface, C
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityIdentityEvents::RETRIEVAL_ADD => ['onAddIdentity', 0],
+            AddSecurityIdentityEvent::class => ['onAddIdentity', 0],
         ];
     }
 

@@ -38,7 +38,7 @@ trait OrganizationRolesTrait
     /**
      * {@inheritdoc}
      */
-    public function getOrganizationRoles()
+    public function getOrganizationRoles(): Collection
     {
         return $this->organizationRoles ?: $this->organizationRoles = new ArrayCollection();
     }

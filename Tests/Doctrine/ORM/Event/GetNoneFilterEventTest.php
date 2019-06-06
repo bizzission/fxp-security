@@ -16,8 +16,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Query\FilterCollection;
-use Fxp\Component\Security\Doctrine\ORM\Event\GetFilterEvent;
+use Fxp\Component\Security\Doctrine\ORM\Event\GetNoneFilterEvent;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockSharing;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,33 +26,36 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-final class GetFilterEventTest extends TestCase
+final class GetNoneFilterEventTest extends TestCase
 {
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|MockObject
      */
     protected $entityManager;
 
     /**
-     * @var Connection|\PHPUnit_Framework_MockObject_MockObject
+     * @var Connection|MockObject
      */
     protected $connection;
 
     /**
-     * @var ClassMetadata|\PHPUnit_Framework_MockObject_MockObject
+     * @var ClassMetadata|MockObject
      */
     protected $targetEntity;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SQLFilter
+     * @var MockObject|SQLFilter
      */
     protected $filter;
 
     /**
-     * @var GetFilterEvent
+     * @var GetNoneFilterEvent
      */
     protected $event;
 
+    /**
+     * @throws
+     */
     protected function setUp(): void
     {
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
@@ -76,12 +80,12 @@ final class GetFilterEventTest extends TestCase
 
         $this->connection->expects($this->any())
             ->method('quote')
-            ->willReturnCallback(function ($v) {
+            ->willReturnCallback(static function ($v) {
                 return '\''.$v.'\'';
             })
         ;
 
-        $this->event = new GetFilterEvent(
+        $this->event = new GetNoneFilterEvent(
             $this->filter,
             $this->entityManager,
             $this->targetEntity,
@@ -100,6 +104,9 @@ final class GetFilterEventTest extends TestCase
         $this->assertSame('t0', $this->event->getTargetTableAlias());
     }
 
+    /**
+     * @throws
+     */
     public function testSetParameter(): void
     {
         $this->assertFalse($this->event->hasParameter('foo'));

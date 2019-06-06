@@ -17,6 +17,7 @@ use Doctrine\ORM\UnitOfWork;
 use Fxp\Component\Security\Doctrine\ORM\Listener\PermissionCheckerListener;
 use Fxp\Component\Security\Permission\PermissionManagerInterface;
 use Fxp\Component\Security\Token\ConsoleToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -30,27 +31,27 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 final class PermissionCheckerListenerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     * @var MockObject|TokenStorageInterface
      */
     protected $tokenStorage;
 
     /**
-     * @var AuthorizationCheckerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var AuthorizationCheckerInterface|MockObject
      */
     protected $authChecker;
 
     /**
-     * @var PermissionManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|PermissionManagerInterface
      */
     protected $permissionManager;
 
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|MockObject
      */
     protected $em;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWork
+     * @var MockObject|UnitOfWork
      */
     protected $uow;
 
@@ -80,7 +81,7 @@ final class PermissionCheckerListenerTest extends TestCase
         $this->assertCount(2, $this->listener->getSubscribedEvents());
     }
 
-    public function getInvalidInitMethods()
+    public function getInvalidInitMethods(): array
     {
         return [
             ['setTokenStorage', []],
@@ -183,7 +184,7 @@ final class PermissionCheckerListenerTest extends TestCase
         $this->expectException(\Fxp\Component\Security\Exception\AccessDeniedException::class);
         $this->expectExceptionMessage('Insufficient privilege to create the entity');
 
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
@@ -237,7 +238,7 @@ final class PermissionCheckerListenerTest extends TestCase
         $this->expectException(\Fxp\Component\Security\Exception\AccessDeniedException::class);
         $this->expectExceptionMessage('Insufficient privilege to update the entity');
 
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
@@ -291,7 +292,7 @@ final class PermissionCheckerListenerTest extends TestCase
         $this->expectException(\Fxp\Component\Security\Exception\AccessDeniedException::class);
         $this->expectExceptionMessage('Insufficient privilege to delete the entity');
 
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
@@ -342,7 +343,7 @@ final class PermissionCheckerListenerTest extends TestCase
 
     public function testOnFLush(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var MockObject|OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 

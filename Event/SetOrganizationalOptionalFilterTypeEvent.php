@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The event of set optional filter type by the organizational context.

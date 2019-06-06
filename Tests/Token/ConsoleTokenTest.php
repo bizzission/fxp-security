@@ -31,7 +31,8 @@ final class ConsoleTokenTest extends TestCase
         $this->assertSame('key', $token->getKey());
 
         $tokenSerialized = $token->serialize();
-        $this->assertInternalType('string', $tokenSerialized);
+        $value = \is_string($tokenSerialized);
+        $this->assertTrue($value);
 
         $token2 = new ConsoleToken('', '');
         $token2->unserialize($tokenSerialized);

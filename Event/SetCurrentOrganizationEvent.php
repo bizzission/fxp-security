@@ -12,7 +12,7 @@
 namespace Fxp\Component\Security\Event;
 
 use Fxp\Component\Security\Model\OrganizationInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The event of set current organization by the organizational context.

@@ -24,7 +24,6 @@ use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Identity\SubjectUtils;
 use Fxp\Component\Security\Model\PermissionChecking;
 use Fxp\Component\Security\Model\RoleInterface;
-use Fxp\Component\Security\PermissionEvents;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -281,7 +280,7 @@ class PermissionManager extends AbstractPermissionManager
     private function doIsGrantedPermission($id, array $sids, string $operation, ?SubjectIdentityInterface $subject = null, ?string $field = null): bool
     {
         $event = new CheckPermissionEvent($sids, $this->cache[$id], $operation, $subject, $field);
-        $this->dispatcher->dispatch(PermissionEvents::CHECK_PERMISSION, $event);
+        $this->dispatcher->dispatch($event);
 
         if (\is_bool($event->isGranted())) {
             return $event->isGranted();
@@ -321,7 +320,7 @@ class PermissionManager extends AbstractPermissionManager
         if (!\array_key_exists($id, $this->cache)) {
             $this->cache[$id] = [];
             $preEvent = new PreLoadPermissionsEvent($sids, $roles);
-            $this->dispatcher->dispatch(PermissionEvents::PRE_LOAD, $preEvent);
+            $this->dispatcher->dispatch($preEvent);
             $perms = $this->provider->getPermissions($roles);
 
             $this->buildSystemPermissions($id);
@@ -333,7 +332,7 @@ class PermissionManager extends AbstractPermissionManager
             }
 
             $postEvent = new PostLoadPermissionsEvent($sids, $roles, $this->cache[$id]);
-            $this->dispatcher->dispatch(PermissionEvents::POST_LOAD, $postEvent);
+            $this->dispatcher->dispatch($postEvent);
             $this->cache[$id] = $postEvent->getPermissionMap();
         }
 

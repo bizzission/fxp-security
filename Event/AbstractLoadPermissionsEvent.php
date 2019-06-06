@@ -12,7 +12,7 @@
 namespace Fxp\Component\Security\Event;
 
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The abstract load permissions event.

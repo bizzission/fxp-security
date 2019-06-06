@@ -14,7 +14,6 @@ namespace Fxp\Component\Security\Authorization\Voter;
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Organizational\OrganizationalUtil;
-use Fxp\Component\Security\Role\RoleUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 
@@ -70,6 +69,6 @@ class RoleSecurityIdentityVoter extends RoleVoter
             }
         }
 
-        return $this->cacheExec[$id] = RoleUtil::formatRoles($roles);
+        return $this->cacheExec[$id] = $roles;
     }
 }

@@ -13,9 +13,11 @@ namespace Fxp\Component\Security\Listener;
 
 use Fxp\Component\Security\Event\AbstractEditableSecurityEvent;
 use Fxp\Component\Security\Event\AbstractSecurityEvent;
+use Fxp\Component\Security\Event\PostReachableRoleEvent;
+use Fxp\Component\Security\Event\PostSecurityIdentityEvent;
+use Fxp\Component\Security\Event\PreReachableRoleEvent;
+use Fxp\Component\Security\Event\PreSecurityIdentityEvent;
 use Fxp\Component\Security\Permission\PermissionManagerInterface;
-use Fxp\Component\Security\ReachableRoleEvents;
-use Fxp\Component\Security\SecurityIdentityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -46,10 +48,10 @@ class DisablePermissionSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityIdentityEvents::RETRIEVAL_PRE => ['disablePermissionManager', -255],
-            ReachableRoleEvents::PRE => ['disablePermissionManager', -255],
-            SecurityIdentityEvents::RETRIEVAL_POST => ['enablePermissionManager', 255],
-            ReachableRoleEvents::POST => ['enablePermissionManager', 255],
+            PreSecurityIdentityEvent::class => ['disablePermissionManager', -255],
+            PreReachableRoleEvent::class => ['disablePermissionManager', -255],
+            PostSecurityIdentityEvent::class => ['enablePermissionManager', 255],
+            PostReachableRoleEvent::class => ['enablePermissionManager', 255],
         ];
     }
 

@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Identity;
 
-use Fxp\Component\Security\SecurityIdentityEvents;
+use Fxp\Component\Security\Event\AddSecurityIdentityEvent;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -85,7 +85,7 @@ class CacheSecurityIdentityManager extends SecurityIdentityManager implements Ca
     {
         if (null === $this->cacheIdentityListeners) {
             $this->cacheIdentityListeners = [];
-            $listeners = $this->dispatcher->getListeners(SecurityIdentityEvents::RETRIEVAL_ADD);
+            $listeners = $this->dispatcher->getListeners(AddSecurityIdentityEvent::class);
 
             foreach ($listeners as $listener) {
                 $listener = \is_array($listener) && \count($listener) > 1 ? $listener[0] : $listener;

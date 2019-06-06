@@ -15,6 +15,7 @@ use Fxp\Component\Security\Authorization\Voter\OrganizationVoter;
 use Fxp\Component\Security\Identity\OrganizationSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockOrganization;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 final class OrganizationVoterTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SecurityIdentityManagerInterface
+     * @var MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
@@ -42,7 +43,7 @@ final class OrganizationVoterTest extends TestCase
         $this->voter = new OrganizationVoter($this->sidManager, null);
     }
 
-    public function getAccessResults()
+    public function getAccessResults(): array
     {
         return [
             [['ORG_FOO'], VoterInterface::ACCESS_GRANTED],
@@ -59,7 +60,7 @@ final class OrganizationVoterTest extends TestCase
      */
     public function testExtractRolesWithAccessGranted(array $attributes, $access): void
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|TokenInterface $token */
+        /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
         $sids = [

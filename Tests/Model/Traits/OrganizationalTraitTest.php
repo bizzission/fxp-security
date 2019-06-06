@@ -13,6 +13,7 @@ namespace Fxp\Component\Security\Tests\Model\Traits;
 
 use Fxp\Component\Security\Model\OrganizationInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockUserOrganizationUsers;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,7 +25,7 @@ final class OrganizationalTraitTest extends TestCase
 {
     public function testModel(): void
     {
-        /** @var OrganizationInterface|\PHPUnit_Framework_MockObject_MockObject $org */
+        /** @var MockObject|OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $org->expects($this->once())
             ->method('getId')

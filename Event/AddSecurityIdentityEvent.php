@@ -13,8 +13,8 @@ namespace Fxp\Component\Security\Event;
 
 use Fxp\Component\Security\Event\Traits\SecurityIdentityEventTrait;
 use Fxp\Component\Security\Identity\SecurityIdentityInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The add security identity event.

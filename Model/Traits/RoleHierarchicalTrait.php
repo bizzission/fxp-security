@@ -82,7 +82,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function getParents()
+    public function getParents(): Collection
     {
         return $this->parents ?: $this->parents = new ArrayCollection();
     }
@@ -135,7 +135,7 @@ trait RoleHierarchicalTrait
     /**
      * {@inheritdoc}
      */
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children ?: $this->children = new ArrayCollection();
     }

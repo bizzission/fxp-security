@@ -34,27 +34,27 @@ use PHPUnit\Framework\TestCase;
 final class SharingDeleteListenerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|SharingManagerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SharingManagerInterface
      */
     protected $sharingManager;
 
     /**
-     * @var EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $em;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|UnitOfWork
+     * @var \PHPUnit\Framework\MockObject\MockObject|UnitOfWork
      */
     protected $uow;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|QueryBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|QueryBuilder
      */
     protected $qb;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Query
+     * @var \PHPUnit\Framework\MockObject\MockObject|Query
      */
     protected $query;
 
@@ -63,6 +63,9 @@ final class SharingDeleteListenerTest extends TestCase
      */
     protected $listener;
 
+    /**
+     * @throws
+     */
     protected function setUp(): void
     {
         $this->sharingManager = $this->getMockBuilder(SharingManagerInterface::class)->getMock();
@@ -93,7 +96,7 @@ final class SharingDeleteListenerTest extends TestCase
         $this->assertCount(2, $this->listener->getSubscribedEvents());
     }
 
-    public function getInvalidInitMethods()
+    public function getInvalidInitMethods(): array
     {
         return [
             ['setSharingManager', []],
@@ -129,9 +132,9 @@ final class SharingDeleteListenerTest extends TestCase
 
     public function testOnFlush(): void
     {
-        /** @var OnFlushEventArgs|\PHPUnit_Framework_MockObject_MockObject $args */
+        /** @var OnFlushEventArgs|\PHPUnit\Framework\MockObject\MockObject $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
-        /** @var \PHPUnit_Framework_MockObject_MockObject|PostFlushEventArgs $postArgs */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|PostFlushEventArgs $postArgs */
         $postArgs = $this->getMockBuilder(PostFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
         $args->expects($this->atLeast(1))
@@ -158,14 +161,14 @@ final class SharingDeleteListenerTest extends TestCase
 
         $this->sharingManager->expects($this->atLeastOnce())
             ->method('hasSubjectConfig')
-            ->willReturnCallback(function ($type) {
+            ->willReturnCallback(static function ($type) {
                 return MockObject::class === $type;
             })
         ;
 
         $this->sharingManager->expects($this->atLeastOnce())
             ->method('hasIdentityConfig')
-            ->willReturnCallback(function ($type) {
+            ->willReturnCallback(static function ($type) {
                 return MockRole::class === $type || MockGroup::class === $type;
             })
         ;
