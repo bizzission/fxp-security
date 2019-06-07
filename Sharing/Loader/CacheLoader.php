@@ -28,12 +28,12 @@ class CacheLoader extends AbstractCacheLoader implements LoaderInterface
     protected $loader;
 
     /**
-     * @var SharingSubjectConfigInterface[]
+     * @var null|SharingSubjectConfigInterface[]
      */
     protected $subjectConfigs;
 
     /**
-     * @var SharingIdentityConfigInterface[]
+     * @var null|SharingIdentityConfigInterface[]
      */
     protected $identityConfigs;
 
