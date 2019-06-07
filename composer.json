@@ -27,6 +27,7 @@
     },
     "require-dev": {
         "symfony/dependency-injection": "^4.3.0",
+        "symfony/config": "^4.3.0",
         "fxp/doctrine-extensions": "^2.0.0",
         "fxp/cache": "^2.0.0",
         "doctrine/orm": "^2.6.0"

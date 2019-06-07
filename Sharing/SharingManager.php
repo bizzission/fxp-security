@@ -61,6 +61,7 @@ class SharingManager extends AbstractSharingManager
      */
     public function preloadPermissions(array $objects): self
     {
+        $this->init();
         $subjects = $this->buildSubjects($objects);
         $entries = $this->buildSharingEntries($subjects);
 
@@ -88,6 +89,7 @@ class SharingManager extends AbstractSharingManager
      */
     public function preloadRolePermissions(array $subjects): void
     {
+        $this->init();
         $roles = [];
         $idSubjects = [];
 

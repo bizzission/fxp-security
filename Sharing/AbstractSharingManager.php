@@ -18,6 +18,7 @@ use Fxp\Component\Security\Exception\AlreadyConfigurationAliasExistingException;
 use Fxp\Component\Security\Exception\SharingIdentityConfigNotFoundException;
 use Fxp\Component\Security\Exception\SharingSubjectConfigNotFoundException;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Sharing\Loader\LoaderInterface;
 use Fxp\Component\Security\SharingVisibilities;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -32,6 +33,11 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      * @var SharingProviderInterface
      */
     protected $provider;
+
+    /**
+     * @var null|LoaderInterface
+     */
+    protected $loader;
 
     /**
      * @var null|EventDispatcherInterface
@@ -74,27 +80,22 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     protected $cacheSubjectVisibilities = [];
 
     /**
+     * @var bool
+     */
+    protected $initialized = false;
+
+    /**
      * Constructor.
      *
-     * @param SharingProviderInterface         $provider        The sharing provider
-     * @param SharingSubjectConfigInterface[]  $subjectConfigs  The subject configs
-     * @param SharingIdentityConfigInterface[] $identityConfigs The identity configs
+     * @param SharingProviderInterface $provider The sharing provider
+     * @param null|LoaderInterface     $loader   The sharing configuration loader
      */
-    public function __construct(
-        SharingProviderInterface $provider,
-        array $subjectConfigs = [],
-        array $identityConfigs = []
-    ) {
+    public function __construct(SharingProviderInterface $provider, ?LoaderInterface $loader = null)
+    {
         $this->provider = $provider;
+        $this->loader = $loader;
+
         $this->provider->setSharingManager($this);
-
-        foreach ($subjectConfigs as $config) {
-            $this->addSubjectConfig($config);
-        }
-
-        foreach ($identityConfigs as $config) {
-            $this->addIdentityConfig($config);
-        }
     }
 
     /**
@@ -146,6 +147,8 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function hasSubjectConfig(string $class): bool
     {
+        $this->init();
+
         return isset($this->subjectConfigs[ClassUtils::getRealClass($class)]);
     }
 
@@ -154,6 +157,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function getSubjectConfig(string $class): SharingSubjectConfigInterface
     {
+        $this->init();
         $class = ClassUtils::getRealClass($class);
 
         if (!$this->hasSubjectConfig($class)) {
@@ -168,6 +172,8 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function getSubjectConfigs(): array
     {
+        $this->init();
+
         return array_values($this->subjectConfigs);
     }
 
@@ -176,6 +182,8 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function hasSharingVisibility(SubjectIdentityInterface $subject): bool
     {
+        $this->init();
+
         return SharingVisibilities::TYPE_NONE !== $this->getSharingVisibility($subject);
     }
 
@@ -184,6 +192,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function getSharingVisibility(SubjectIdentityInterface $subject): string
     {
+        $this->init();
         $type = $subject->getType();
 
         if (!\array_key_exists($type, $this->cacheSubjectVisibilities)) {
@@ -228,8 +237,10 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function hasIdentityConfig(string $class): bool
     {
+        $this->init();
+
         return isset($this->identityConfigs[ClassUtils::getRealClass($class)])
-        || isset($this->identityAliases[$class]);
+            || isset($this->identityAliases[$class]);
     }
 
     /**
@@ -237,6 +248,7 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function getIdentityConfig(string $class): SharingIdentityConfigInterface
     {
+        $this->init();
         $class = $this->identityAliases[$class] ?? ClassUtils::getRealClass($class);
 
         if (!$this->hasIdentityConfig($class)) {
@@ -251,6 +263,8 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function getIdentityConfigs(): array
     {
+        $this->init();
+
         return array_values($this->identityConfigs);
     }
 
@@ -259,6 +273,8 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function hasIdentityRoleable(): bool
     {
+        $this->init();
+
         return $this->identityRoleable;
     }
 
@@ -267,6 +283,28 @@ abstract class AbstractSharingManager implements SharingManagerInterface
      */
     public function hasIdentityPermissible(): bool
     {
+        $this->init();
+
         return $this->identityPermissible;
+    }
+
+    /**
+     * Initialize the configurations.
+     */
+    protected function init(): void
+    {
+        if (!$this->initialized) {
+            $this->initialized = true;
+
+            if (null !== $this->loader) {
+                foreach ($this->loader->loadSubjectConfigurations() as $config) {
+                    $this->addSubjectConfig($config);
+                }
+
+                foreach ($this->loader->loadIdentityConfigurations() as $config) {
+                    $this->addIdentityConfig($config);
+                }
+            }
+        }
     }
 }

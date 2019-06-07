@@ -15,6 +15,7 @@ use Fxp\Component\Security\Event\SharingDisabledEvent;
 use Fxp\Component\Security\Event\SharingEnabledEvent;
 use Fxp\Component\Security\Identity\SubjectIdentity;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
+use Fxp\Component\Security\Sharing\Loader\ConfigurationLoader;
 use Fxp\Component\Security\Sharing\SharingIdentityConfig;
 use Fxp\Component\Security\Sharing\SharingManager;
 use Fxp\Component\Security\Sharing\SharingProviderInterface;
@@ -87,18 +88,18 @@ final class SharingManagerTest extends TestCase
 
     public function testHasSubjectConfig(): void
     {
-        $pm = new SharingManager($this->provider, [
+        $pm = new SharingManager($this->provider, new ConfigurationLoader([
             new SharingSubjectConfig(MockObject::class),
-        ]);
+        ]));
 
         $this->assertTrue($pm->hasSubjectConfig(MockObject::class));
     }
 
     public function testHasIdentityConfig(): void
     {
-        $pm = new SharingManager($this->provider, [], [
+        $pm = new SharingManager($this->provider, new ConfigurationLoader([], [
             new SharingIdentityConfig(MockRole::class),
-        ]);
+        ]));
 
         $this->assertTrue($pm->hasIdentityConfig(MockRole::class));
     }
