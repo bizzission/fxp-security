@@ -19,6 +19,7 @@ use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Model\PermissionChecking;
 use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Model\Traits\OrganizationalInterface;
+use Fxp\Component\Security\Permission\Loader\LoaderInterface;
 use Fxp\Component\Security\PermissionContexts;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 
@@ -32,7 +33,12 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * @var array|PermissionConfigInterface[]
      */
-    protected $configs;
+    protected $configs = [];
+
+    /**
+     * @var null|LoaderInterface
+     */
+    protected $loader;
 
     /**
      * @var bool
@@ -50,21 +56,22 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     protected $cache = [];
 
     /**
+     * @var bool
+     */
+    protected $initialized = false;
+
+    /**
      * Constructor.
      *
      * @param null|SharingManagerInterface $sharingManager The sharing manager
-     * @param PermissionConfigInterface[]  $configs        The permission configs
+     * @param null|LoaderInterface         $loader         The permission loader
      */
     public function __construct(
         ?SharingManagerInterface $sharingManager = null,
-        array $configs = []
+        ?LoaderInterface $loader = null
     ) {
         $this->sharingManager = $sharingManager;
-        $this->configs = [];
-
-        foreach ($configs as $config) {
-            $this->addConfig($config);
-        }
+        $this->loader = $loader;
     }
 
     /**
@@ -102,6 +109,8 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     public function hasConfig(string $class): bool
     {
+        $this->init();
+
         return isset($this->configs[ClassUtils::getRealClass($class)]);
     }
 
@@ -124,6 +133,8 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     public function getConfigs(): array
     {
+        $this->init();
+
         return $this->configs;
     }
 
@@ -133,6 +144,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     public function isManaged($subject): bool
     {
         try {
+            $this->init();
             /** @var SubjectIdentityInterface $subject */
             list($subject, $field) = PermissionUtils::getSubjectAndField($subject);
 
@@ -158,6 +170,7 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     public function isGranted(array $sids, $permissions, $subject = null): bool
     {
         try {
+            $this->init();
             /** @var null|SubjectIdentityInterface $subject */
             list($subject, $field) = PermissionUtils::getSubjectAndField($subject, true);
             list($permissions, $subject, $field) = $this->getMasterPermissions(
@@ -191,6 +204,8 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     public function getRolePermissions(RoleInterface $role, $subject = null): array
     {
+        $this->init();
+
         return $this->doGetRolePermissions($role, $subject);
     }
 
@@ -199,6 +214,8 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     public function getRoleFieldPermissions(RoleInterface $role, $subject, string $field): array
     {
+        $this->init();
+
         return $this->getRolePermissions($role, new FieldVote($subject, $field));
     }
 
@@ -207,6 +224,8 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
      */
     public function preloadPermissions(array $objects): self
     {
+        $this->init();
+
         if (null !== $this->sharingManager) {
             $this->sharingManager->preloadPermissions($objects);
         }
@@ -256,6 +275,22 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         }
 
         return $contexts;
+    }
+
+    /**
+     * Initialize the configurations.
+     */
+    protected function init(): void
+    {
+        if (!$this->initialized) {
+            $this->initialized = true;
+
+            if (null !== $this->loader) {
+                foreach ($this->loader->loadConfigurations() as $config) {
+                    $this->addConfig($config);
+                }
+            }
+        }
     }
 
     /**

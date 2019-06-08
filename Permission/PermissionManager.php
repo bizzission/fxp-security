@@ -24,6 +24,7 @@ use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Identity\SubjectUtils;
 use Fxp\Component\Security\Model\PermissionChecking;
 use Fxp\Component\Security\Model\RoleInterface;
+use Fxp\Component\Security\Permission\Loader\LoaderInterface;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -62,16 +63,16 @@ class PermissionManager extends AbstractPermissionManager
      * @param PermissionProviderInterface  $provider         The permission provider
      * @param PropertyAccessorInterface    $propertyAccessor The property accessor
      * @param null|SharingManagerInterface $sharingManager   The sharing manager
-     * @param PermissionConfigInterface[]  $configs          The permission configs
+     * @param null|LoaderInterface         $loader           The permission loader
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         PermissionProviderInterface $provider,
         PropertyAccessorInterface $propertyAccessor,
         ?SharingManagerInterface $sharingManager = null,
-        array $configs = []
+        ?LoaderInterface $loader = null
     ) {
-        parent::__construct($sharingManager, $configs);
+        parent::__construct($sharingManager, $loader);
 
         $this->dispatcher = $dispatcher;
         $this->provider = $provider;

@@ -19,6 +19,7 @@ use Fxp\Component\Security\Identity\SubjectIdentity;
 use Fxp\Component\Security\Identity\UserSecurityIdentity;
 use Fxp\Component\Security\Model\PermissionChecking;
 use Fxp\Component\Security\Permission\FieldVote;
+use Fxp\Component\Security\Permission\Loader\ConfigurationLoader;
 use Fxp\Component\Security\Permission\PermissionConfig;
 use Fxp\Component\Security\Permission\PermissionFieldConfig;
 use Fxp\Component\Security\Permission\PermissionManager;
@@ -114,9 +115,9 @@ final class PermissionManagerTest extends TestCase
             $this->provider,
             $this->propertyAccessor,
             null,
-            [
+            new ConfigurationLoader([
                 new PermissionConfig(MockObject::class),
-            ]
+            ])
         );
 
         $this->assertTrue($pm->hasConfig(MockObject::class));
