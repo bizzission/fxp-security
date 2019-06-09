@@ -11,6 +11,7 @@
 
 namespace Fxp\Component\Security\Sharing;
 
+use Fxp\Component\Security\Exception\InvalidArgumentException;
 use Fxp\Component\Security\SharingVisibilities;
 
 /**
@@ -56,5 +57,23 @@ class SharingSubjectConfig implements SharingSubjectConfigInterface
     public function getVisibility(): string
     {
         return $this->visibility;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function merge(SharingSubjectConfigInterface $newConfig): void
+    {
+        if ($this->getType() !== $newConfig->getType()) {
+            throw new InvalidArgumentException(sprintf(
+                'The sharing subject config of "%s" can be merged only with the same type, given: "%s"',
+                $this->getType(),
+                $newConfig->getType()
+            ));
+        }
+
+        if (SharingVisibilities::TYPE_NONE !== $newVisibility = $newConfig->getVisibility()) {
+            $this->visibility = $newVisibility;
+        }
     }
 }

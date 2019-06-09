@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\Loader;
+namespace Fxp\Component\Security\Tests\Cache;
 
-use Fxp\Component\Security\Tests\Fixtures\Loader\MockCacheLoader;
+use Fxp\Component\Security\Tests\Fixtures\Cache\MockCache;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\Config\ConfigCacheFactoryInterface;
  *
  * @internal
  */
-final class AbstractCacheLoaderTest extends TestCase
+final class AbstractCacheTest extends TestCase
 {
     /**
      * @throws
@@ -30,9 +30,9 @@ final class AbstractCacheLoaderTest extends TestCase
     {
         /** @var ConfigCacheFactoryInterface|MockObject $configCacheFactory */
         $configCacheFactory = $this->getMockBuilder(ConfigCacheFactoryInterface::class)->getMock();
-        $cacheLoader = new MockCacheLoader([
+        $cacheLoader = new MockCache([
             'project_dir' => \dirname(__DIR__),
-            'resource_prefixes' => ['Loader'],
+            'resource_prefixes' => ['Cache'],
         ]);
 
         $this->assertNull($cacheLoader->getProtectedConfigCacheFactory());

@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\CacheWarmer;
+namespace Fxp\Component\Security\Tests\Sharing;
 
-use Fxp\Component\Security\CacheWarmer\SharingLoaderCacheWarmer;
+use Fxp\Component\Security\Sharing\SharingFactoryCacheWarmer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
  *
  * @internal
  */
-final class SharingLoaderCacheWarmerTest extends TestCase
+final class SharingFactoryCacheWarmerTest extends TestCase
 {
     public function testWarmUp(): void
     {
@@ -36,11 +36,11 @@ final class SharingLoaderCacheWarmerTest extends TestCase
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $container->expects($this->once())
             ->method('get')
-            ->with('fxp_security.sharing_loader.cache')
+            ->with('fxp_security.sharing_factory')
             ->willReturn($cacheLoader)
         ;
 
-        $warmer = new SharingLoaderCacheWarmer($container);
+        $warmer = new SharingFactoryCacheWarmer($container);
         $this->assertTrue($warmer->isOptional());
 
         $warmer->warmUp('cache_dir');

@@ -19,7 +19,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class AbstractLoaderCacheWarmer implements CacheWarmerInterface, ServiceSubscriberInterface
+abstract class AbstractCacheWarmer implements CacheWarmerInterface, ServiceSubscriberInterface
 {
     /**
      * @var ContainerInterface
@@ -29,7 +29,7 @@ abstract class AbstractLoaderCacheWarmer implements CacheWarmerInterface, Servic
     /**
      * @var null|object
      */
-    private $cacheLoader;
+    private $cacheService;
 
     /**
      * Constructor.
@@ -46,12 +46,12 @@ abstract class AbstractLoaderCacheWarmer implements CacheWarmerInterface, Servic
      */
     public function warmUp($cacheDir): void
     {
-        if (null === $this->cacheLoader) {
-            $this->cacheLoader = $this->container->get(array_keys(static::getSubscribedServices())[0]);
+        if (null === $this->cacheService) {
+            $this->cacheService = $this->container->get(array_keys(static::getSubscribedServices())[0]);
         }
 
-        if ($this->cacheLoader instanceof WarmableInterface) {
-            $this->cacheLoader->warmUp($cacheDir);
+        if ($this->cacheService instanceof WarmableInterface) {
+            $this->cacheService->warmUp($cacheDir);
         }
     }
 

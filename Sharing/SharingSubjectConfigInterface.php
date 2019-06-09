@@ -31,4 +31,11 @@ interface SharingSubjectConfigInterface
      * @return string
      */
     public function getVisibility(): string;
+
+    /**
+     * Merge the new sharing subject config.
+     *
+     * @param SharingSubjectConfigInterface $newConfig The new sharing subject config
+     */
+    public function merge(SharingSubjectConfigInterface $newConfig): void;
 }

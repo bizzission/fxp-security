@@ -21,6 +21,7 @@ use Fxp\Component\Security\Model\PermissionChecking;
 use Fxp\Component\Security\Permission\FieldVote;
 use Fxp\Component\Security\Permission\Loader\ConfigurationLoader;
 use Fxp\Component\Security\Permission\PermissionConfig;
+use Fxp\Component\Security\Permission\PermissionFactory;
 use Fxp\Component\Security\Permission\PermissionFieldConfig;
 use Fxp\Component\Security\Permission\PermissionManager;
 use Fxp\Component\Security\Permission\PermissionProviderInterface;
@@ -97,6 +98,7 @@ final class PermissionManagerTest extends TestCase
             $this->dispatcher,
             $this->provider,
             $this->propertyAccessor,
+            null,
             $sm
         );
 
@@ -114,10 +116,9 @@ final class PermissionManagerTest extends TestCase
             $this->dispatcher,
             $this->provider,
             $this->propertyAccessor,
-            null,
-            new ConfigurationLoader([
+            new PermissionFactory(new ConfigurationLoader([
                 new PermissionConfig(MockObject::class),
-            ])
+            ]))
         );
 
         $this->assertTrue($pm->hasConfig(MockObject::class));
@@ -378,6 +379,7 @@ final class PermissionManagerTest extends TestCase
             $this->dispatcher,
             $this->provider,
             $this->propertyAccessor,
+            null,
             $sharingManager
         );
         $this->pm->addConfig(new PermissionConfig(MockObject::class));
@@ -739,6 +741,7 @@ final class PermissionManagerTest extends TestCase
             $this->dispatcher,
             $this->provider,
             $this->propertyAccessor,
+            null,
             $sharingManager
         );
 
@@ -773,6 +776,7 @@ final class PermissionManagerTest extends TestCase
             $this->dispatcher,
             $this->provider,
             $this->propertyAccessor,
+            null,
             $sharingManager
         );
 

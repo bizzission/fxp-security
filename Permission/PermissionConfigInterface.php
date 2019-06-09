@@ -108,4 +108,39 @@ interface PermissionConfigInterface
      * @return string[]
      */
     public function getMappingPermissions(): array;
+
+    /**
+     * Check if the fields must be built even if no field config is added.
+     *
+     * @return bool
+     */
+    public function buildFields(): bool;
+
+    /**
+     * Get the value of build fields.
+     *
+     * @return null|bool
+     */
+    public function getBuildFields(): ?bool;
+
+    /**
+     * Check if the default fields must be built.
+     *
+     * @return bool
+     */
+    public function buildDefaultFields(): bool;
+
+    /**
+     * Get the value of build default fields.
+     *
+     * @return null|bool
+     */
+    public function getBuildDefaultFields(): ?bool;
+
+    /**
+     * Merge the new permission config.
+     *
+     * @param PermissionConfigInterface $newConfig The new permission config
+     */
+    public function merge(PermissionConfigInterface $newConfig): void;
 }

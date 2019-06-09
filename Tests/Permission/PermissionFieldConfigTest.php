@@ -11,6 +11,7 @@
 
 namespace Fxp\Component\Security\Tests\Permission;
 
+use Fxp\Component\Security\Exception\InvalidArgumentException;
 use Fxp\Component\Security\Permission\PermissionFieldConfig;
 use PHPUnit\Framework\TestCase;
 
@@ -46,5 +47,32 @@ final class PermissionFieldConfigTest extends TestCase
         $this->assertSame($alias, $config->getMappingPermissions());
         $this->assertTrue($config->hasOperation('test'));
         $this->assertFalse($config->isEditable());
+    }
+
+    public function testMerge(): void
+    {
+        $config = new PermissionFieldConfig('foo', ['read'], ['update' => 'edit'], false);
+
+        $this->assertSame('foo', $config->getField());
+        $this->assertSame(['read'], $config->getOperations());
+        $this->assertSame(['update' => 'edit'], $config->getMappingPermissions());
+        $this->assertFalse($config->isEditable());
+
+        $config->merge(new PermissionFieldConfig('foo', ['update'], ['view' => 'read'], true));
+
+        $this->assertSame('foo', $config->getField());
+        $this->assertSame(['read', 'update'], $config->getOperations());
+        $this->assertSame(['update' => 'edit', 'view' => 'read'], $config->getMappingPermissions());
+        $this->assertTrue($config->isEditable());
+    }
+
+    public function testMergeWithInvalidType(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The permission field config of "foo" can be merged only with the same field, given: "bar"');
+
+        $config = new PermissionFieldConfig('foo');
+
+        $config->merge(new PermissionFieldConfig('bar'));
     }
 }

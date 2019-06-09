@@ -11,6 +11,7 @@
 
 namespace Fxp\Component\Security\Tests\Sharing;
 
+use Fxp\Component\Security\Exception\InvalidArgumentException;
 use Fxp\Component\Security\Sharing\SharingIdentityConfig;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -40,5 +41,30 @@ final class SharingIdentityConfigTest extends TestCase
         $this->assertSame('mock_object', $config->getAlias());
         $this->assertTrue($config->isRoleable());
         $this->assertTrue($config->isPermissible());
+    }
+
+    public function testMerge(): void
+    {
+        $config = new SharingIdentityConfig(MockObject::class, 'mock_object', false, false);
+
+        $this->assertSame('mock_object', $config->getAlias());
+        $this->assertFalse($config->isRoleable());
+        $this->assertFalse($config->isPermissible());
+
+        $config->merge(new SharingIdentityConfig(MockObject::class, 'new_mock_object', true, true));
+
+        $this->assertSame('new_mock_object', $config->getAlias());
+        $this->assertTrue($config->isRoleable());
+        $this->assertTrue($config->isPermissible());
+    }
+
+    public function testMergeWithInvalidType(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The sharing identity config of "Fxp\Component\Security\Tests\Fixtures\Model\MockObject" can be merged only with the same type, given: "stdClass"');
+
+        $config = new SharingIdentityConfig(MockObject::class);
+
+        $config->merge(new SharingIdentityConfig(\stdClass::class));
     }
 }

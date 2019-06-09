@@ -11,6 +11,8 @@
 
 namespace Fxp\Component\Security\Sharing;
 
+use Fxp\Component\Security\Exception\InvalidArgumentException;
+
 /**
  * Sharing identity config.
  *
@@ -84,6 +86,32 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     public function isPermissible(): bool
     {
         return $this->permissible;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function merge(SharingIdentityConfigInterface $newConfig): void
+    {
+        if ($this->getType() !== $newConfig->getType()) {
+            throw new InvalidArgumentException(sprintf(
+                'The sharing identity config of "%s" can be merged only with the same type, given: "%s"',
+                $this->getType(),
+                $newConfig->getType()
+            ));
+        }
+
+        if (null !== $newAlias = $newConfig->getAlias()) {
+            $this->alias = $newAlias;
+        }
+
+        if ($newConfig->isRoleable()) {
+            $this->roleable = true;
+        }
+
+        if ($newConfig->isPermissible()) {
+            $this->permissible = true;
+        }
     }
 
     /**

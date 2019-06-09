@@ -18,7 +18,6 @@ use Fxp\Component\Security\Exception\AlreadyConfigurationAliasExistingException;
 use Fxp\Component\Security\Exception\SharingIdentityConfigNotFoundException;
 use Fxp\Component\Security\Exception\SharingSubjectConfigNotFoundException;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
-use Fxp\Component\Security\Sharing\Loader\LoaderInterface;
 use Fxp\Component\Security\SharingVisibilities;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -35,9 +34,9 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     protected $provider;
 
     /**
-     * @var null|LoaderInterface
+     * @var null|SharingFactoryInterface
      */
-    protected $loader;
+    protected $factory;
 
     /**
      * @var null|EventDispatcherInterface
@@ -87,13 +86,13 @@ abstract class AbstractSharingManager implements SharingManagerInterface
     /**
      * Constructor.
      *
-     * @param SharingProviderInterface $provider The sharing provider
-     * @param null|LoaderInterface     $loader   The sharing configuration loader
+     * @param SharingProviderInterface     $provider The sharing provider
+     * @param null|SharingFactoryInterface $factory  The sharing factory
      */
-    public function __construct(SharingProviderInterface $provider, ?LoaderInterface $loader = null)
+    public function __construct(SharingProviderInterface $provider, ?SharingFactoryInterface $factory = null)
     {
         $this->provider = $provider;
-        $this->loader = $loader;
+        $this->factory = $factory;
 
         $this->provider->setSharingManager($this);
     }
@@ -296,12 +295,12 @@ abstract class AbstractSharingManager implements SharingManagerInterface
         if (!$this->initialized) {
             $this->initialized = true;
 
-            if (null !== $this->loader) {
-                foreach ($this->loader->loadSubjectConfigurations() as $config) {
+            if (null !== $this->factory) {
+                foreach ($this->factory->createSubjectConfigurations() as $config) {
                     $this->addSubjectConfig($config);
                 }
 
-                foreach ($this->loader->loadIdentityConfigurations() as $config) {
+                foreach ($this->factory->createIdentityConfigurations() as $config) {
                     $this->addIdentityConfig($config);
                 }
             }

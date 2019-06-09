@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\CacheWarmer;
+namespace Fxp\Component\Security\Permission;
 
-use Fxp\Component\Security\Sharing\Loader\CacheLoader;
+use Fxp\Component\Security\CacheWarmer\AbstractCacheWarmer;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class SharingLoaderCacheWarmer extends AbstractLoaderCacheWarmer
+class PermissionFactoryCacheWarmer extends AbstractCacheWarmer
 {
     /**
      * {@inheritdoc}
@@ -24,7 +24,7 @@ class SharingLoaderCacheWarmer extends AbstractLoaderCacheWarmer
     public static function getSubscribedServices(): array
     {
         return [
-            'fxp_security.sharing_loader.cache' => CacheLoader::class,
+            'fxp_security.permission_factory' => PermissionFactoryInterface::class,
         ];
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Fxp\Component\Security\Permission;
 
+use Fxp\Component\Security\Exception\InvalidArgumentException;
+
 /**
  * Permission field config.
  *
@@ -93,6 +95,14 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function getEditable(): ?bool
+    {
+        return $this->editable;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMappingPermission(string $aliasPermission): string
     {
         return $this->mappingPermissions[$aliasPermission] ?? $aliasPermission;
@@ -104,5 +114,26 @@ class PermissionFieldConfig implements PermissionFieldConfigInterface
     public function getMappingPermissions(): array
     {
         return $this->mappingPermissions;
+    }
+
+    public function merge(PermissionFieldConfigInterface $newConfig): void
+    {
+        if ($this->getField() !== $newConfig->getField()) {
+            throw new InvalidArgumentException(sprintf(
+                'The permission field config of "%s" can be merged only with the same field, given: "%s"',
+                $this->getField(),
+                $newConfig->getField()
+            ));
+        }
+
+        $this->operations = array_unique(array_merge($this->operations, $newConfig->getOperations()));
+        $this->mappingPermissions = array_merge(
+            $this->mappingPermissions,
+            $newConfig->getMappingPermissions()
+        );
+
+        if (null !== $newConfig->getEditable()) {
+            $this->editable = $newConfig->getEditable();
+        }
     }
 }

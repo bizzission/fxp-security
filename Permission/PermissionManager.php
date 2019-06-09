@@ -24,7 +24,6 @@ use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Identity\SubjectUtils;
 use Fxp\Component\Security\Model\PermissionChecking;
 use Fxp\Component\Security\Model\RoleInterface;
-use Fxp\Component\Security\Permission\Loader\LoaderInterface;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -59,20 +58,20 @@ class PermissionManager extends AbstractPermissionManager
     /**
      * Constructor.
      *
-     * @param EventDispatcherInterface     $dispatcher       The event dispatcher
-     * @param PermissionProviderInterface  $provider         The permission provider
-     * @param PropertyAccessorInterface    $propertyAccessor The property accessor
-     * @param null|SharingManagerInterface $sharingManager   The sharing manager
-     * @param null|LoaderInterface         $loader           The permission loader
+     * @param EventDispatcherInterface        $dispatcher       The event dispatcher
+     * @param PermissionProviderInterface     $provider         The permission provider
+     * @param PropertyAccessorInterface       $propertyAccessor The property accessor
+     * @param null|PermissionFactoryInterface $factory          The permission factory
+     * @param null|SharingManagerInterface    $sharingManager   The sharing manager
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         PermissionProviderInterface $provider,
         PropertyAccessorInterface $propertyAccessor,
-        ?SharingManagerInterface $sharingManager = null,
-        ?LoaderInterface $loader = null
+        ?PermissionFactoryInterface $factory = null,
+        ?SharingManagerInterface $sharingManager = null
     ) {
-        parent::__construct($sharingManager, $loader);
+        parent::__construct($factory, $sharingManager);
 
         $this->dispatcher = $dispatcher;
         $this->provider = $provider;

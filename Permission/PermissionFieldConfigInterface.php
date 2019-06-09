@@ -49,6 +49,13 @@ interface PermissionFieldConfigInterface
     public function isEditable(): bool;
 
     /**
+     * Get the value of editable.
+     *
+     * @return null|bool
+     */
+    public function getEditable(): ?bool;
+
+    /**
      * Get the real permission associated with the alias permission.
      *
      * Example: [
@@ -68,4 +75,11 @@ interface PermissionFieldConfigInterface
      * @return string[]
      */
     public function getMappingPermissions(): array;
+
+    /**
+     * Merge the new permission field config.
+     *
+     * @param PermissionFieldConfigInterface $newConfig The new permission field config
+     */
+    public function merge(PermissionFieldConfigInterface $newConfig): void;
 }

@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\Sharing\Loader;
+namespace Fxp\Component\Security\Tests\Sharing;
 
-use Fxp\Component\Security\Sharing\Loader\CacheLoader;
-use Fxp\Component\Security\Sharing\Loader\LoaderInterface;
+use Fxp\Component\Security\Sharing\CacheSharingFactory;
+use Fxp\Component\Security\Sharing\SharingFactoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
@@ -24,12 +24,12 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @internal
  */
-final class CacheLoaderTest extends TestCase
+final class CacheSharingFactoryTest extends TestCase
 {
     /**
-     * @var LoaderInterface|MockObject
+     * @var MockObject|SharingFactoryInterface
      */
-    private $loader;
+    private $factory;
 
     /**
      * @var ConfigCacheFactoryInterface|MockObject
@@ -43,7 +43,7 @@ final class CacheLoaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $this->factory = $this->getMockBuilder(SharingFactoryInterface::class)->getMock();
         $this->configCacheFactory = $this->getMockBuilder(ConfigCacheFactoryInterface::class)->getMock();
         $this->cacheDir = sys_get_temp_dir().uniqid('/fxp_security_', true);
     }
@@ -53,66 +53,58 @@ final class CacheLoaderTest extends TestCase
         $fs = new Filesystem();
         $fs->remove($this->cacheDir);
 
-        $this->loader = null;
+        $this->factory = null;
         $this->configCacheFactory = null;
         $this->cacheDir = null;
     }
 
-    public function testLoadConfigsWithoutCacheDir(): void
+    public function testCreateConfigsWithoutCacheDir(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CacheSharingFactory($this->factory, [
             'cache_dir' => null,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadSubjectConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createSubjectConfigurations')
         ;
 
-        $this->loader->expects($this->once())
-            ->method('loadIdentityConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createIdentityConfigurations')
         ;
 
         $this->configCacheFactory->expects($this->never())
             ->method('cache')
         ;
 
-        $cacheLoader->loadSubjectConfigurations();
-        $cacheLoader->loadIdentityConfigurations();
-
-        // Test the execution cache
-        $cacheLoader->loadSubjectConfigurations();
-        $cacheLoader->loadIdentityConfigurations();
+        $cacheFactory->createSubjectConfigurations();
+        $cacheFactory->createIdentityConfigurations();
     }
 
-    public function testLoadConfigsWithDebug(): void
+    public function testCreateConfigsWithDebug(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CacheSharingFactory($this->factory, [
             'debug' => true,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadSubjectConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createSubjectConfigurations')
         ;
 
-        $this->loader->expects($this->once())
-            ->method('loadIdentityConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createIdentityConfigurations')
         ;
 
         $this->configCacheFactory->expects($this->never())
             ->method('cache')
         ;
 
-        $cacheLoader->loadSubjectConfigurations();
-        $cacheLoader->loadIdentityConfigurations();
-
-        // Test the execution cache
-        $cacheLoader->loadSubjectConfigurations();
-        $cacheLoader->loadIdentityConfigurations();
+        $cacheFactory->createSubjectConfigurations();
+        $cacheFactory->createIdentityConfigurations();
     }
 
-    public function testLoadConfigsWithCacheDir(): void
+    public function testCreateConfigsWithCacheDir(): void
     {
         $fs = new Filesystem();
 
@@ -122,17 +114,17 @@ final class CacheLoaderTest extends TestCase
         $cacheFileIdentities = $this->cacheDir.'/cache_file_identities.php';
         $fs->dumpFile($cacheFileIdentities, '<?php'.PHP_EOL.'    return [];'.PHP_EOL);
 
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CacheSharingFactory($this->factory, [
             'cache_dir' => $this->cacheDir,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadSubjectConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createSubjectConfigurations')
         ;
 
-        $this->loader->expects($this->once())
-            ->method('loadIdentityConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createIdentityConfigurations')
         ;
 
         $cache = $this->getMockBuilder(ConfigCacheInterface::class)->getMock();
@@ -160,48 +152,44 @@ final class CacheLoaderTest extends TestCase
             })
         ;
 
-        $cacheLoader->loadSubjectConfigurations();
-        $cacheLoader->loadIdentityConfigurations();
-
-        // Test the execution cache
-        $cacheLoader->loadSubjectConfigurations();
-        $cacheLoader->loadIdentityConfigurations();
+        $cacheFactory->createSubjectConfigurations();
+        $cacheFactory->createIdentityConfigurations();
     }
 
     public function testWarmUpWithoutCacheDir(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CacheSharingFactory($this->factory, [
             'cache_dir' => null,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->never())
-            ->method('loadSubjectConfigurations')
+        $this->factory->expects($this->never())
+            ->method('createSubjectConfigurations')
         ;
 
-        $this->loader->expects($this->never())
-            ->method('loadIdentityConfigurations')
+        $this->factory->expects($this->never())
+            ->method('createIdentityConfigurations')
         ;
 
-        $cacheLoader->warmUp('cache_dir');
+        $cacheFactory->warmUp('cache_dir');
     }
 
     public function testWarmUpWithCacheDir(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CacheSharingFactory($this->factory, [
             'cache_dir' => $this->cacheDir,
             'debug' => true,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadSubjectConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createSubjectConfigurations')
         ;
 
-        $this->loader->expects($this->once())
-            ->method('loadIdentityConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createIdentityConfigurations')
         ;
 
-        $cacheLoader->warmUp('cache_dir');
+        $cacheFactory->warmUp('cache_dir');
     }
 }

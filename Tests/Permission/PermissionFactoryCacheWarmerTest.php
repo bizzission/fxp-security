@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\CacheWarmer;
+namespace Fxp\Component\Security\Tests\Permission;
 
-use Fxp\Component\Security\CacheWarmer\PermissionLoaderCacheWarmer;
+use Fxp\Component\Security\Permission\PermissionFactoryCacheWarmer;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
  *
  * @internal
  */
-final class PermissionLoaderCacheWarmerTest extends TestCase
+final class PermissionFactoryCacheWarmerTest extends TestCase
 {
     public function testWarmUp(): void
     {
@@ -36,11 +36,11 @@ final class PermissionLoaderCacheWarmerTest extends TestCase
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $container->expects($this->once())
             ->method('get')
-            ->with('fxp_security.permission_loader.cache')
+            ->with('fxp_security.permission_factory')
             ->willReturn($cacheLoader)
         ;
 
-        $warmer = new PermissionLoaderCacheWarmer($container);
+        $warmer = new PermissionFactoryCacheWarmer($container);
         $this->assertTrue($warmer->isOptional());
 
         $warmer->warmUp('cache_dir');

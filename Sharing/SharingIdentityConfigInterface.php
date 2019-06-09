@@ -45,4 +45,11 @@ interface SharingIdentityConfigInterface
      * @return bool
      */
     public function isPermissible(): bool;
+
+    /**
+     * Merge the new sharing identity config.
+     *
+     * @param SharingIdentityConfigInterface $newConfig The new sharing identity config
+     */
+    public function merge(SharingIdentityConfigInterface $newConfig): void;
 }

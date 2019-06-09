@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\Fixtures\Loader;
+namespace Fxp\Component\Security\Tests\Fixtures\Cache;
 
-use Fxp\Component\Security\Loader\AbstractCacheLoader;
+use Fxp\Component\Security\Cache\AbstractCache;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class MockCacheLoader extends AbstractCacheLoader
+class MockCache extends AbstractCache
 {
     public function warmUp($cacheDir): void
     {

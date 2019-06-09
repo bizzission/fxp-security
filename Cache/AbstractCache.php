@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Loader;
+namespace Fxp\Component\Security\Cache;
 
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
@@ -19,11 +19,11 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 
 /**
- * Sharing chain loader.
+ * Base of cache.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class AbstractCacheLoader implements WarmableInterface
+abstract class AbstractCache implements WarmableInterface
 {
     /**
      * @var array
@@ -58,7 +58,7 @@ abstract class AbstractCacheLoader implements WarmableInterface
         $this->options['resource_prefixes'] = array_unique($this->options['resource_prefixes']);
 
         if (null !== ($projectDir = $this->options['project_dir'])
-                && null !== ($prefixes = $this->options['resource_prefixes'])) {
+            && null !== ($prefixes = $this->options['resource_prefixes'])) {
             foreach ($prefixes as $prefix) {
                 $path = $projectDir.'/'.$prefix;
 

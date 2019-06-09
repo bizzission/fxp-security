@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\Permission\Loader;
+namespace Fxp\Component\Security\Tests\Permission;
 
-use Fxp\Component\Security\Permission\Loader\CacheLoader;
-use Fxp\Component\Security\Permission\Loader\LoaderInterface;
+use Fxp\Component\Security\Permission\CachePermissionFactory;
+use Fxp\Component\Security\Permission\PermissionFactoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
@@ -24,12 +24,12 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @internal
  */
-final class CacheLoaderTest extends TestCase
+final class CachePermissionFactoryTest extends TestCase
 {
     /**
-     * @var LoaderInterface|MockObject
+     * @var MockObject|PermissionFactoryInterface
      */
-    private $loader;
+    private $factory;
 
     /**
      * @var ConfigCacheFactoryInterface|MockObject
@@ -43,7 +43,7 @@ final class CacheLoaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $this->factory = $this->getMockBuilder(PermissionFactoryInterface::class)->getMock();
         $this->configCacheFactory = $this->getMockBuilder(ConfigCacheFactoryInterface::class)->getMock();
         $this->cacheDir = sys_get_temp_dir().uniqid('/fxp_security_', true);
     }
@@ -53,67 +53,61 @@ final class CacheLoaderTest extends TestCase
         $fs = new Filesystem();
         $fs->remove($this->cacheDir);
 
-        $this->loader = null;
+        $this->factory = null;
         $this->configCacheFactory = null;
         $this->cacheDir = null;
     }
 
-    public function testLoadConfigsWithoutCacheDir(): void
+    public function testCreateConfigsWithoutCacheDir(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CachePermissionFactory($this->factory, [
             'cache_dir' => null,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createConfigurations')
         ;
 
         $this->configCacheFactory->expects($this->never())
             ->method('cache')
         ;
 
-        $cacheLoader->loadConfigurations();
-
-        // Test the execution cache
-        $cacheLoader->loadConfigurations();
+        $cacheFactory->createConfigurations();
     }
 
-    public function testLoadConfigsWithDebug(): void
+    public function testCreateConfigsWithDebug(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CachePermissionFactory($this->factory, [
             'debug' => true,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createConfigurations')
         ;
 
         $this->configCacheFactory->expects($this->never())
             ->method('cache')
         ;
 
-        $cacheLoader->loadConfigurations();
-
-        // Test the execution cache
-        $cacheLoader->loadConfigurations();
+        $cacheFactory->createConfigurations();
     }
 
-    public function testLoadConfigsWithCacheDir(): void
+    public function testCreateConfigsWithCacheDir(): void
     {
         $fs = new Filesystem();
 
         $cacheFileConfigs = $this->cacheDir.'/cache_file_configs.php';
         $fs->dumpFile($cacheFileConfigs, '<?php'.PHP_EOL.'    return [];'.PHP_EOL);
 
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CachePermissionFactory($this->factory, [
             'cache_dir' => $this->cacheDir,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createConfigurations')
         ;
 
         $cache = $this->getMockBuilder(ConfigCacheInterface::class)->getMock();
@@ -134,38 +128,35 @@ final class CacheLoaderTest extends TestCase
             })
         ;
 
-        $cacheLoader->loadConfigurations();
-
-        // Test the execution cache
-        $cacheLoader->loadConfigurations();
+        $cacheFactory->createConfigurations();
     }
 
     public function testWarmUpWithoutCacheDir(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CachePermissionFactory($this->factory, [
             'cache_dir' => null,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->never())
-            ->method('loadConfigurations')
+        $this->factory->expects($this->never())
+            ->method('createConfigurations')
         ;
 
-        $cacheLoader->warmUp('cache_dir');
+        $cacheFactory->warmUp('cache_dir');
     }
 
     public function testWarmUpWithCacheDir(): void
     {
-        $cacheLoader = new CacheLoader($this->loader, [
+        $cacheFactory = new CachePermissionFactory($this->factory, [
             'cache_dir' => $this->cacheDir,
             'debug' => true,
         ]);
-        $cacheLoader->setConfigCacheFactory($this->configCacheFactory);
+        $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->loader->expects($this->once())
-            ->method('loadConfigurations')
+        $this->factory->expects($this->once())
+            ->method('createConfigurations')
         ;
 
-        $cacheLoader->warmUp('cache_dir');
+        $cacheFactory->warmUp('cache_dir');
     }
 }

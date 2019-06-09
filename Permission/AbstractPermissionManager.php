@@ -19,7 +19,6 @@ use Fxp\Component\Security\Identity\SubjectIdentityInterface;
 use Fxp\Component\Security\Model\PermissionChecking;
 use Fxp\Component\Security\Model\RoleInterface;
 use Fxp\Component\Security\Model\Traits\OrganizationalInterface;
-use Fxp\Component\Security\Permission\Loader\LoaderInterface;
 use Fxp\Component\Security\PermissionContexts;
 use Fxp\Component\Security\Sharing\SharingManagerInterface;
 
@@ -31,24 +30,24 @@ use Fxp\Component\Security\Sharing\SharingManagerInterface;
 abstract class AbstractPermissionManager implements PermissionManagerInterface
 {
     /**
-     * @var array|PermissionConfigInterface[]
+     * @var null|PermissionFactoryInterface
      */
-    protected $configs = [];
-
-    /**
-     * @var null|LoaderInterface
-     */
-    protected $loader;
-
-    /**
-     * @var bool
-     */
-    protected $enabled = true;
+    protected $factory;
 
     /**
      * @var null|SharingManagerInterface
      */
     protected $sharingManager;
+
+    /**
+     * @var array|PermissionConfigInterface[]
+     */
+    protected $configs = [];
+
+    /**
+     * @var bool
+     */
+    protected $enabled = true;
 
     /**
      * @var array
@@ -63,15 +62,15 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
     /**
      * Constructor.
      *
-     * @param null|SharingManagerInterface $sharingManager The sharing manager
-     * @param null|LoaderInterface         $loader         The permission loader
+     * @param null|PermissionFactoryInterface $factory        The permission factory
+     * @param null|SharingManagerInterface    $sharingManager The sharing manager
      */
     public function __construct(
-        ?SharingManagerInterface $sharingManager = null,
-        ?LoaderInterface $loader = null
+        ?PermissionFactoryInterface $factory = null,
+        ?SharingManagerInterface $sharingManager = null
     ) {
+        $this->factory = $factory;
         $this->sharingManager = $sharingManager;
-        $this->loader = $loader;
     }
 
     /**
@@ -285,8 +284,8 @@ abstract class AbstractPermissionManager implements PermissionManagerInterface
         if (!$this->initialized) {
             $this->initialized = true;
 
-            if (null !== $this->loader) {
-                foreach ($this->loader->loadConfigurations() as $config) {
+            if (null !== $this->factory) {
+                foreach ($this->factory->createConfigurations() as $config) {
                     $this->addConfig($config);
                 }
             }
