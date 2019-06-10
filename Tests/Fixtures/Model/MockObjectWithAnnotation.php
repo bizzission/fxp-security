@@ -28,6 +28,23 @@ use Fxp\Component\Security\Configuration as FxpSecurity;
  *     }
  * )
  *
+ * @FxpSecurity\SharingSubject(
+ *     visibility="public"
+ * )
+ *
+ * @FxpSecurity\SharingSubject(
+ *     visibility="private"
+ * )
+ *
+ * @FxpSecurity\SharingIdentity(
+ *     alias="object"
+ * )
+ *
+ * @FxpSecurity\SharingIdentity(
+ *     roleable="true",
+ *     permissible="true"
+ * )
+ *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
 class MockObjectWithAnnotation extends MockObject

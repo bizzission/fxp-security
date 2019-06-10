@@ -33,11 +33,25 @@ interface SharingIdentityConfigInterface
     public function getAlias(): string;
 
     /**
+     * Get the value of roleable.
+     *
+     * @return null|bool
+     */
+    public function getRoleable(): ?bool;
+
+    /**
      * Check if the identity can be use the roles.
      *
      * @return bool
      */
     public function isRoleable(): bool;
+
+    /**
+     * Get the value of permissible.
+     *
+     * @return null|bool
+     */
+    public function getPermissible(): ?bool;
 
     /**
      * Check if the identity can be use the permissions.

@@ -11,8 +11,7 @@
 
 namespace Fxp\Component\Security\Permission\Loader;
 
-use Doctrine\Common\Annotations\Reader;
-use Fxp\Component\Security\Annotation\ClassFinder;
+use Fxp\Component\Security\Annotation\AbstractAnnotationLoader;
 use Fxp\Component\Security\Configuration\Permission;
 use Fxp\Component\Security\Configuration\PermissionField;
 use Fxp\Component\Security\Permission\PermissionConfig;
@@ -21,34 +20,12 @@ use Fxp\Component\Security\Permission\PermissionFieldConfig;
 use Fxp\Component\Security\Permission\PermissionFieldConfigInterface;
 
 /**
- * The permission annotation loader.
+ * Permission annotation loader.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class AnnotationLoader implements LoaderInterface
+class AnnotationLoader extends AbstractAnnotationLoader implements LoaderInterface
 {
-    /**
-     * @var Reader
-     */
-    private $reader;
-
-    /**
-     * @var ClassFinder
-     */
-    private $classFinder;
-
-    /**
-     * Constructor.
-     *
-     * @param Reader      $reader      The annotation reader
-     * @param ClassFinder $classFinder The class finder
-     */
-    public function __construct(Reader $reader, ClassFinder $classFinder)
-    {
-        $this->reader = $reader;
-        $this->classFinder = $classFinder;
-    }
-
     /**
      * {@inheritdoc}
      */

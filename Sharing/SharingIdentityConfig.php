@@ -31,12 +31,12 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     protected $alias;
 
     /**
-     * @var bool
+     * @var null|bool
      */
     protected $roleable;
 
     /**
-     * @var bool
+     * @var null|bool
      */
     protected $permissible;
 
@@ -45,10 +45,10 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
      *
      * @param string      $type        The type, typically, this is the PHP class name
      * @param null|string $alias       The alias of identity type
-     * @param bool        $roleable    Check if the identity can be use the roles
-     * @param bool        $permissible Check if the identity can be use the permissions
+     * @param null|bool   $roleable    Check if the identity can be use the roles
+     * @param null|bool   $permissible Check if the identity can be use the permissions
      */
-    public function __construct(string $type, ?string $alias = null, bool $roleable = false, bool $permissible = false)
+    public function __construct(string $type, ?string $alias = null, ?bool $roleable = null, ?bool $permissible = null)
     {
         $this->type = $type;
         $this->alias = $this->buildAlias($type, $alias);
@@ -75,7 +75,7 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function isRoleable(): bool
+    public function getRoleable(): ?bool
     {
         return $this->roleable;
     }
@@ -83,9 +83,25 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function isPermissible(): bool
+    public function isRoleable(): bool
+    {
+        return $this->roleable ?? false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPermissible(): ?bool
     {
         return $this->permissible;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isPermissible(): bool
+    {
+        return $this->permissible ?? false;
     }
 
     /**
@@ -101,16 +117,16 @@ class SharingIdentityConfig implements SharingIdentityConfigInterface
             ));
         }
 
-        if (null !== $newAlias = $newConfig->getAlias()) {
+        if ($this->buildAlias($this->type, null) !== ($newAlias = $newConfig->getAlias())) {
             $this->alias = $newAlias;
         }
 
-        if ($newConfig->isRoleable()) {
-            $this->roleable = true;
+        if (null !== $newRoleable = $newConfig->getRoleable()) {
+            $this->roleable = $newRoleable;
         }
 
-        if ($newConfig->isPermissible()) {
-            $this->permissible = true;
+        if (null !== $newPermissible = $newConfig->getPermissible()) {
+            $this->permissible = $newPermissible;
         }
     }
 

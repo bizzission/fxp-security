@@ -46,7 +46,8 @@ Features include:
 - Authorization expression voter with injectable custom variables (to build custom expression functions with dependencies)
 - `is_basic_auth` expression language function
 - `is_granted` expression language function
-- `@Permission` and `@PermissionField` annotations to configure the permissions directly in the entity classes
+- `@Permission` and `@PermissionField` annotations to configure the global permissions directly in the classes
+- `@SharingSubject` and `@SharingIdentity` annotations to configure the global sharing directly in the classes
 
 Documentation
 -------------
