@@ -106,8 +106,9 @@ final class PermissionVoterTest extends TestCase
      * @param mixed     $subject           The subject
      * @param int       $result            The expected result
      * @param null|bool $permManagerResult The result of permission manager
+     * @param bool      $isManaged         Check if the subject is managed
      */
-    public function testVote(array $attributes, $subject, $result, $permManagerResult = null): void
+    public function testVote(array $attributes, $subject, $result, $permManagerResult = null, $isManaged = true): void
     {
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
@@ -121,12 +122,30 @@ final class PermissionVoterTest extends TestCase
             ;
 
             if (\is_array($subject) && isset($subject[0], $subject[1])) {
+                $expectedSubject = new FieldVote($subject[0], $subject[1]);
+
+                if (null !== $subject) {
+                    $this->permManager->expects($this->once())
+                        ->method('isManaged')
+                        ->with($expectedSubject)
+                        ->willReturn($isManaged)
+                    ;
+                }
+
                 $this->permManager->expects($this->once())
                     ->method('isGranted')
-                    ->with($sids, substr($attributes[0], 5), new FieldVote($subject[0], $subject[1]))
+                    ->with($sids, substr($attributes[0], 5), $expectedSubject)
                     ->willReturn($permManagerResult)
                 ;
             } else {
+                if (null !== $subject) {
+                    $this->permManager->expects($this->once())
+                        ->method('isManaged')
+                        ->with($subject)
+                        ->willReturn($isManaged)
+                    ;
+                }
+
                 $this->permManager->expects($this->once())
                     ->method('isGranted')
                     ->with($sids, substr($attributes[0], 5), $subject)

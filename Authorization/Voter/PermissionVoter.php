@@ -53,7 +53,9 @@ class PermissionVoter extends Voter
      */
     protected function supports($attribute, $subject): bool
     {
-        return $this->isAttributeSupported($attribute) && $this->isSubjectSupported($subject);
+        return $this->isAttributeSupported($attribute)
+            && $this->isSubjectSupported($subject)
+            && $this->isSubjectManaged($subject);
     }
 
     /**
@@ -83,9 +85,20 @@ class PermissionVoter extends Voter
 
         return \is_array($subject)
             && isset($subject[0], $subject[1])
-
             && (\is_string($subject[0]) || \is_object($subject[0]))
             && \is_string($subject[1]);
+    }
+
+    /**
+     * Check if the subject is managed.
+     *
+     * @param null|FieldVote|mixed $subject The subject
+     *
+     * @return bool
+     */
+    protected function isSubjectManaged($subject): bool
+    {
+        return null === $subject ? true : $this->permissionManager->isManaged($this->convertSubject($subject));
     }
 
     /**
@@ -95,12 +108,23 @@ class PermissionVoter extends Voter
     {
         $sids = $this->sim->getSecurityIdentities($token);
         $attribute = substr($attribute, 5);
+        $subject = $this->convertSubject($subject);
 
+        return !$this->permissionManager->isEnabled()
+            || $this->permissionManager->isGranted($sids, $attribute, $subject);
+    }
+
+    /**
+     * @param null|FieldVote|mixed $subject The subject
+     *
+     * @return FieldVote|object|string
+     */
+    protected function convertSubject($subject)
+    {
         if (\is_array($subject) && isset($subject[0], $subject[1])) {
             $subject = new FieldVote($subject[0], $subject[1]);
         }
 
-        return !$this->permissionManager->isEnabled()
-            || $this->permissionManager->isGranted($sids, $attribute, $subject);
+        return $subject;
     }
 }
