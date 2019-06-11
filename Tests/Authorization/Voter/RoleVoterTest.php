@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Tests\Authorization\Voter;
 
-use Fxp\Component\Security\Authorization\Voter\RoleSecurityIdentityVoter;
+use Fxp\Component\Security\Authorization\Voter\RoleVoter;
 use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject;
@@ -25,22 +25,22 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  *
  * @internal
  */
-final class RoleSecurityIdentityVoterTest extends TestCase
+final class RoleVoterTest extends TestCase
 {
     /**
-     * @var MockObject|SecurityIdentityManagerInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|SecurityIdentityManagerInterface
      */
     protected $sidManager;
 
     /**
-     * @var RoleSecurityIdentityVoter
+     * @var RoleVoter
      */
     protected $voter;
 
     protected function setUp(): void
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->voter = new RoleSecurityIdentityVoter($this->sidManager, 'TEST_');
+        $this->voter = new RoleVoter($this->sidManager, 'TEST_');
     }
 
     public function getAccessResults(): array

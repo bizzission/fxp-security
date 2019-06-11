@@ -15,15 +15,15 @@ use Fxp\Component\Security\Identity\RoleSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Organizational\OrganizationalUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter as BaseRoleVoter;
 
 /**
- * RoleSecurityIdentityVoter uses a SecurityIdentityManager to
+ * Role Voter uses a SecurityIdentityManager to
  * determine the roles granted to the user before voting.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class RoleSecurityIdentityVoter extends RoleVoter
+class RoleVoter extends BaseRoleVoter
 {
     /**
      * @var SecurityIdentityManagerInterface
