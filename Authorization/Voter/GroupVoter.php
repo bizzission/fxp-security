@@ -14,11 +14,11 @@ namespace Fxp\Component\Security\Authorization\Voter;
 use Fxp\Component\Security\Model\GroupInterface;
 
 /**
- * GroupableVoter to determine the groups granted on current user defined in token.
+ * Voter to determine the groups granted on current user defined in token.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class GroupableVoter extends AbstractIdentityVoter
+class GroupVoter extends AbstractIdentityVoter
 {
     /**
      * {@inheritdoc}

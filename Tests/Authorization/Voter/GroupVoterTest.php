@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Tests\Authorization\Voter;
 
-use Fxp\Component\Security\Authorization\Voter\GroupableVoter;
+use Fxp\Component\Security\Authorization\Voter\GroupVoter;
 use Fxp\Component\Security\Identity\GroupSecurityIdentity;
 use Fxp\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockGroup;
@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  *
  * @internal
  */
-final class GroupableVoterTest extends TestCase
+final class GroupVoterTest extends TestCase
 {
     /**
      * @var MockObject|SecurityIdentityManagerInterface
@@ -33,14 +33,14 @@ final class GroupableVoterTest extends TestCase
     protected $sidManager;
 
     /**
-     * @var GroupableVoter
+     * @var GroupVoter
      */
     protected $voter;
 
     protected function setUp(): void
     {
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
-        $this->voter = new GroupableVoter($this->sidManager, null);
+        $this->voter = new GroupVoter($this->sidManager, null);
     }
 
     public function getAccessResults(): array
