@@ -35,17 +35,25 @@ class PermissionVoter extends Voter
     private $sim;
 
     /**
+     * @var bool
+     */
+    private $allowNotManagedSubject;
+
+    /**
      * Constructor.
      *
-     * @param PermissionManagerInterface       $permissionManager The permission manager
-     * @param SecurityIdentityManagerInterface $sim               The security identity manager
+     * @param PermissionManagerInterface       $permissionManager      The permission manager
+     * @param SecurityIdentityManagerInterface $sim                    The security identity manager
+     * @param bool                             $allowNotManagedSubject Check if the voter allow the not managed subject
      */
     public function __construct(
         PermissionManagerInterface $permissionManager,
-        SecurityIdentityManagerInterface $sim
+        SecurityIdentityManagerInterface $sim,
+        bool $allowNotManagedSubject = true
     ) {
         $this->permissionManager = $permissionManager;
         $this->sim = $sim;
+        $this->allowNotManagedSubject = $allowNotManagedSubject;
     }
 
     /**
@@ -98,7 +106,9 @@ class PermissionVoter extends Voter
      */
     protected function isSubjectManaged($subject): bool
     {
-        return null === $subject ? true : $this->permissionManager->isManaged($this->convertSubject($subject));
+        return null === $subject || $this->allowNotManagedSubject
+            ? true
+            : $this->permissionManager->isManaged($this->convertSubject($subject));
     }
 
     /**

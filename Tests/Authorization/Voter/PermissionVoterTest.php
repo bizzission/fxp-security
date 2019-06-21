@@ -75,41 +75,85 @@ final class PermissionVoterTest extends TestCase
         $arrayInvalid = [$object];
 
         return [
-            [[42], $class, VoterInterface::ACCESS_ABSTAIN],
-            [[42], $object, VoterInterface::ACCESS_ABSTAIN],
-            [[42], $fieldVote, VoterInterface::ACCESS_ABSTAIN],
-            [[42], $arrayValid, VoterInterface::ACCESS_ABSTAIN],
-            [[42], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN],
-            [['view'], $class, VoterInterface::ACCESS_ABSTAIN],
-            [['view'], $object, VoterInterface::ACCESS_ABSTAIN],
-            [['view'], $fieldVote, VoterInterface::ACCESS_ABSTAIN],
-            [['view'], $arrayValid, VoterInterface::ACCESS_ABSTAIN],
-            [['view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN],
-            [['perm_view'], $class, VoterInterface::ACCESS_GRANTED, true],
-            [['perm_view'], $object, VoterInterface::ACCESS_GRANTED, true],
-            [['perm_view'], $object, VoterInterface::ACCESS_DENIED, false],
-            [['perm_view'], $fieldVote, VoterInterface::ACCESS_GRANTED, true],
-            [['perm_view'], $fieldVote, VoterInterface::ACCESS_DENIED, false],
-            [['perm_view'], $arrayValid, VoterInterface::ACCESS_GRANTED, true],
-            [['perm_view'], $arrayValid, VoterInterface::ACCESS_DENIED, false],
-            [['perm_view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN],
-            [['foo'], null, VoterInterface::ACCESS_ABSTAIN],
-            [['perm_foo'], null, VoterInterface::ACCESS_GRANTED, true],
-            [['perm_foo'], null, VoterInterface::ACCESS_DENIED, false],
+            [[42], $class, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [[42], $class, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [[42], $object, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [[42], $object, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [[42], $fieldVote, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [[42], $fieldVote, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [[42], $arrayValid, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [[42], $arrayValid, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [[42], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [[42], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['view'], $class, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [['view'], $class, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['view'], $object, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [['view'], $object, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['view'], $fieldVote, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [['view'], $fieldVote, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['view'], $arrayValid, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [['view'], $arrayValid, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [['view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['perm_view'], $class, VoterInterface::ACCESS_GRANTED, true, true, false],
+            [['perm_view'], $class, VoterInterface::ACCESS_GRANTED, true, false, true],
+
+            [['perm_view'], $object, VoterInterface::ACCESS_GRANTED, true, true, false],
+            [['perm_view'], $object, VoterInterface::ACCESS_GRANTED, true, false, true],
+
+            [['perm_view'], $object, VoterInterface::ACCESS_DENIED, false, true, false],
+            [['perm_view'], $object, VoterInterface::ACCESS_DENIED, false, false, true],
+
+            [['perm_view'], $fieldVote, VoterInterface::ACCESS_GRANTED, true, true, false],
+            [['perm_view'], $fieldVote, VoterInterface::ACCESS_GRANTED, true, false, true],
+
+            [['perm_view'], $fieldVote, VoterInterface::ACCESS_DENIED, false, true, false],
+            [['perm_view'], $fieldVote, VoterInterface::ACCESS_DENIED, false, false, true],
+
+            [['perm_view'], $arrayValid, VoterInterface::ACCESS_GRANTED, true, true, false],
+            [['perm_view'], $arrayValid, VoterInterface::ACCESS_GRANTED, true, false, true],
+
+            [['perm_view'], $arrayValid, VoterInterface::ACCESS_DENIED, false, true, false],
+            [['perm_view'], $arrayValid, VoterInterface::ACCESS_DENIED, false, false, true],
+
+            [['perm_view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [['perm_view'], $arrayInvalid, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['foo'], null, VoterInterface::ACCESS_ABSTAIN, null, true, false],
+            [['foo'], null, VoterInterface::ACCESS_ABSTAIN, null, true, true],
+
+            [['perm_foo'], null, VoterInterface::ACCESS_GRANTED, true, true, false],
+            [['perm_foo'], null, VoterInterface::ACCESS_GRANTED, true, true, true],
+
+            [['perm_foo'], null, VoterInterface::ACCESS_DENIED, false, true, false],
+            [['perm_foo'], null, VoterInterface::ACCESS_DENIED, false, true, true],
         ];
     }
 
     /**
      * @dataProvider getVoteAttributes
      *
-     * @param array     $attributes        The attributes
-     * @param mixed     $subject           The subject
-     * @param int       $result            The expected result
-     * @param null|bool $permManagerResult The result of permission manager
-     * @param bool      $isManaged         Check if the subject is managed
+     * @param array     $attributes             The attributes
+     * @param mixed     $subject                The subject
+     * @param int       $result                 The expected result
+     * @param null|bool $permManagerResult      The result of permission manager
+     * @param bool      $isManaged              Check if the subject is managed
+     * @param bool      $allowNotManagedSubject Allow the not managed subject
      */
-    public function testVote(array $attributes, $subject, $result, $permManagerResult = null, $isManaged = true): void
+    public function testVote(array $attributes, $subject, int $result, ?bool $permManagerResult, bool $isManaged, bool $allowNotManagedSubject): void
     {
+        $this->voter = new PermissionVoter($this->permManager, $this->sidManager, $allowNotManagedSubject);
+
         $sids = [
             new RoleSecurityIdentity(MockRole::class, 'ROLE_USER'),
         ];
@@ -124,7 +168,9 @@ final class PermissionVoterTest extends TestCase
             if (\is_array($subject) && isset($subject[0], $subject[1])) {
                 $expectedSubject = new FieldVote($subject[0], $subject[1]);
 
-                if (null !== $subject) {
+                if ($allowNotManagedSubject) {
+                    $this->permManager->expects(static::never())->method('isManaged');
+                } elseif (null !== $subject) {
                     $this->permManager->expects(static::once())
                         ->method('isManaged')
                         ->with($expectedSubject)
@@ -138,7 +184,9 @@ final class PermissionVoterTest extends TestCase
                     ->willReturn($permManagerResult)
                 ;
             } else {
-                if (null !== $subject) {
+                if ($allowNotManagedSubject) {
+                    $this->permManager->expects(static::never())->method('isManaged');
+                } elseif (null !== $subject) {
                     $this->permManager->expects(static::once())
                         ->method('isManaged')
                         ->with($subject)
