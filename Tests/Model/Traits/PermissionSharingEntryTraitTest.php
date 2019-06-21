@@ -24,6 +24,6 @@ final class PermissionSharingEntryTraitTest extends TestCase
     public function testModel(): void
     {
         $permission = new MockPermissionSharing();
-        $this->assertCount(0, $permission->getSharingEntries());
+        static::assertCount(0, $permission->getSharingEntries());
     }
 }

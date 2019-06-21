@@ -29,7 +29,7 @@ final class IsOrganizationProviderTest extends TestCase
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $orgContext = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
 
-        $orgContext->expects($this->once())
+        $orgContext->expects(static::once())
             ->method('isOrganization')
             ->with()
             ->willReturn(true)
@@ -41,9 +41,9 @@ final class IsOrganizationProviderTest extends TestCase
             'organizational_context' => $orgContext,
         ];
 
-        $this->assertTrue($expressionLanguage->evaluate('is_organization()', $variables));
+        static::assertTrue($expressionLanguage->evaluate('is_organization()', $variables));
 
         $compiled = '$organizational_context && $organizational_context->isOrganization()';
-        $this->assertEquals($compiled, $expressionLanguage->compile('is_organization()', ['object']));
+        static::assertEquals($compiled, $expressionLanguage->compile('is_organization()', ['object']));
     }
 }

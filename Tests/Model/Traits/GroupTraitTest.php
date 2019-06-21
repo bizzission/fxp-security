@@ -25,9 +25,9 @@ final class GroupTraitTest extends TestCase
     {
         $group = new MockGroup('GROUP_TEST');
 
-        $this->assertSame('GROUP_TEST', $group->getName());
+        static::assertSame('GROUP_TEST', $group->getName());
 
         $group->setName('GROUP_FOO');
-        $this->assertSame('GROUP_FOO', $group->getName());
+        static::assertSame('GROUP_FOO', $group->getName());
     }
 }

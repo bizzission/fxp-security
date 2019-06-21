@@ -30,6 +30,6 @@ final class PreCommitObjectFilterEventTest extends TestCase
         ];
 
         $event = new PreCommitObjectFilterEvent($objects);
-        $this->assertSame($objects, $event->getObjects());
+        static::assertSame($objects, $event->getObjects());
     }
 }

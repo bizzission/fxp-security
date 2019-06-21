@@ -60,7 +60,7 @@ final class OrganizationalContextTest extends TestCase
         $this->dispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
         $this->context = new OrganizationalContext($this->tokenStorage, $this->dispatcher);
 
-        $this->tokenStorage->expects($this->any())
+        $this->tokenStorage->expects(static::any())
             ->method('getToken')
             ->willReturn($this->token)
         ;
@@ -68,14 +68,14 @@ final class OrganizationalContextTest extends TestCase
 
     public function testSetDisabledCurrentOrganization(): void
     {
-        $this->dispatcher->expects($this->once())
+        $this->dispatcher->expects(static::once())
             ->method('dispatch')
             ->with(new SetCurrentOrganizationEvent(false))
         ;
 
         $this->context->setCurrentOrganization(false);
 
-        $this->assertNull($this->context->getCurrentOrganization());
+        static::assertNull($this->context->getCurrentOrganization());
     }
 
     public function testSetCurrentOrganization(): void
@@ -83,13 +83,13 @@ final class OrganizationalContextTest extends TestCase
         /** @var OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
-        $this->dispatcher->expects($this->once())
+        $this->dispatcher->expects(static::once())
             ->method('dispatch')
             ->with(new SetCurrentOrganizationEvent($org))
         ;
 
         $this->context->setCurrentOrganization($org);
-        $this->assertSame($org, $this->context->getCurrentOrganization());
+        static::assertSame($org, $this->context->getCurrentOrganization());
     }
 
     public function testGetCurrentOrganizationWithoutSetterAndWithTokenUser(): void
@@ -98,72 +98,72 @@ final class OrganizationalContextTest extends TestCase
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
         $user = $this->getMockBuilder(MockUserOrganizationUsers::class)->getMock();
 
-        $this->dispatcher->expects($this->never())
+        $this->dispatcher->expects(static::never())
             ->method('dispatch')
         ;
 
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $user->expects($this->once())
+        $user->expects(static::once())
             ->method('getOrganization')
             ->willReturn($org)
         ;
 
-        $this->assertSame($org, $this->context->getCurrentOrganization());
+        static::assertSame($org, $this->context->getCurrentOrganization());
     }
 
     public function testGetCurrentOrganizationWithoutSetterAndWithTokenUserAndEmptyOrganization(): void
     {
         $user = $this->getMockBuilder(MockUserOrganizationUsers::class)->getMock();
 
-        $this->dispatcher->expects($this->never())
+        $this->dispatcher->expects(static::never())
             ->method('dispatch')
         ;
 
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $user->expects($this->once())
+        $user->expects(static::once())
             ->method('getOrganization')
             ->willReturn(null)
         ;
 
-        $this->assertNull($this->context->getCurrentOrganization());
+        static::assertNull($this->context->getCurrentOrganization());
     }
 
     public function testGetCurrentOrganizationWithoutSetterAndWithTokenUserWithoutOrganizationField(): void
     {
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
-        $this->dispatcher->expects($this->never())
+        $this->dispatcher->expects(static::never())
             ->method('dispatch')
         ;
 
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $this->assertNull($this->context->getCurrentOrganization());
+        static::assertNull($this->context->getCurrentOrganization());
     }
 
     public function testGetCurrentOrganizationWithoutSetterAndWithoutTokenUser(): void
     {
-        $this->dispatcher->expects($this->never())
+        $this->dispatcher->expects(static::never())
             ->method('dispatch')
         ;
 
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getUser')
             ->willReturn(null)
         ;
 
-        $this->assertNull($this->context->getCurrentOrganization());
+        static::assertNull($this->context->getCurrentOrganization());
     }
 
     public function testSetCurrentOrganizationUser(): void
@@ -175,32 +175,32 @@ final class OrganizationalContextTest extends TestCase
         /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
-        $this->dispatcher->expects($this->at(0))
+        $this->dispatcher->expects(static::at(0))
             ->method('dispatch')
             ->with(new SetCurrentOrganizationEvent($org))
         ;
 
-        $this->dispatcher->expects($this->at(1))
+        $this->dispatcher->expects(static::at(1))
             ->method('dispatch')
             ->with(new SetCurrentOrganizationUserEvent($orgUser))
         ;
 
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $orgUser->expects($this->atLeast(2))
+        $orgUser->expects(static::atLeast(2))
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $orgUser->expects($this->once())
+        $orgUser->expects(static::once())
             ->method('getOrganization')
             ->willReturn($org)
         ;
 
-        $user->expects($this->atLeast(2))
+        $user->expects(static::atLeast(2))
             ->method('getUsername')
             ->willReturn('user.test')
         ;
@@ -208,8 +208,8 @@ final class OrganizationalContextTest extends TestCase
         $this->context->setCurrentOrganization($org);
         $this->context->setCurrentOrganizationUser($orgUser);
 
-        $this->assertSame($orgUser, $this->context->getCurrentOrganizationUser());
-        $this->assertSame($org, $this->context->getCurrentOrganization());
+        static::assertSame($orgUser, $this->context->getCurrentOrganizationUser());
+        static::assertSame($org, $this->context->getCurrentOrganization());
     }
 
     public function testIsOrganization(): void
@@ -221,37 +221,37 @@ final class OrganizationalContextTest extends TestCase
         /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
 
-        $this->dispatcher->expects($this->at(0))
+        $this->dispatcher->expects(static::at(0))
             ->method('dispatch')
             ->with(new SetCurrentOrganizationEvent($org))
         ;
 
-        $this->dispatcher->expects($this->at(1))
+        $this->dispatcher->expects(static::at(1))
             ->method('dispatch')
             ->with(new SetCurrentOrganizationUserEvent($orgUser))
         ;
 
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $orgUser->expects($this->atLeast(2))
+        $orgUser->expects(static::atLeast(2))
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $orgUser->expects($this->once())
+        $orgUser->expects(static::once())
             ->method('getOrganization')
             ->willReturn($org)
         ;
 
-        $user->expects($this->atLeast(2))
+        $user->expects(static::atLeast(2))
             ->method('getUsername')
             ->willReturn('user.test')
         ;
 
-        $org->expects($this->once())
+        $org->expects(static::once())
             ->method('isUserOrganization')
             ->willReturn(false)
         ;
@@ -259,37 +259,37 @@ final class OrganizationalContextTest extends TestCase
         $this->context->setCurrentOrganization($org);
         $this->context->setCurrentOrganizationUser($orgUser);
 
-        $this->assertTrue($this->context->isOrganization());
+        static::assertTrue($this->context->isOrganization());
     }
 
     public function testSetOptionalFilterType(): void
     {
-        $this->assertSame(OrganizationalTypes::OPTIONAL_FILTER_WITH_ORG, $this->context->getOptionalFilterType());
-        $this->assertFalse($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
+        static::assertSame(OrganizationalTypes::OPTIONAL_FILTER_WITH_ORG, $this->context->getOptionalFilterType());
+        static::assertFalse($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
 
-        $this->dispatcher->expects($this->at(0))
+        $this->dispatcher->expects(static::at(0))
             ->method('dispatch')
             ->with(new SetOrganizationalOptionalFilterTypeEvent(OrganizationalTypes::OPTIONAL_FILTER_ALL))
         ;
 
         $this->context->setOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL);
 
-        $this->assertSame(OrganizationalTypes::OPTIONAL_FILTER_ALL, $this->context->getOptionalFilterType());
-        $this->assertTrue($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
+        static::assertSame(OrganizationalTypes::OPTIONAL_FILTER_ALL, $this->context->getOptionalFilterType());
+        static::assertTrue($this->context->isOptionalFilterType(OrganizationalTypes::OPTIONAL_FILTER_ALL));
     }
 
     public function testValidEmptyTokenForUser(): void
     {
         /** @var MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
-        $tokenStorage->expects($this->atLeastOnce())
+        $tokenStorage->expects(static::atLeastOnce())
             ->method('getToken')
             ->willReturn(null)
         ;
 
         $context = new OrganizationalContext($tokenStorage);
         $context->setCurrentOrganization(null);
-        $this->assertNull($context->getCurrentOrganization());
+        static::assertNull($context->getCurrentOrganization());
     }
 
     public function testInvalidTokenForUser(): void
@@ -302,7 +302,7 @@ final class OrganizationalContextTest extends TestCase
 
         /** @var MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
-        $tokenStorage->expects($this->once())
+        $tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn(null)
         ;
@@ -315,18 +315,18 @@ final class OrganizationalContextTest extends TestCase
     {
         /** @var MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
-        $tokenStorage->expects($this->atLeastOnce())
+        $tokenStorage->expects(static::atLeastOnce())
             ->method('getToken')
             ->willReturn(null)
         ;
 
-        $this->dispatcher->expects($this->never())
+        $this->dispatcher->expects(static::never())
             ->method('dispatch')
         ;
 
         $context = new OrganizationalContext($tokenStorage);
         $context->setCurrentOrganizationUser(null);
-        $this->assertNull($context->getCurrentOrganizationUser());
+        static::assertNull($context->getCurrentOrganizationUser());
     }
 
     public function testInvalidTokenForOrganizationUser(): void
@@ -339,12 +339,12 @@ final class OrganizationalContextTest extends TestCase
 
         /** @var MockObject|TokenStorageInterface $tokenStorage */
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
-        $tokenStorage->expects($this->once())
+        $tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn(null)
         ;
 
-        $this->dispatcher->expects($this->never())
+        $this->dispatcher->expects(static::never())
             ->method('dispatch')
         ;
 

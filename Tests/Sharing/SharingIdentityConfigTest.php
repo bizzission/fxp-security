@@ -27,35 +27,35 @@ final class SharingIdentityConfigTest extends TestCase
     {
         $config = new SharingIdentityConfig(MockObject::class);
 
-        $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame('mockobject', $config->getAlias());
-        $this->assertFalse($config->isRoleable());
-        $this->assertFalse($config->isPermissible());
+        static::assertSame(MockObject::class, $config->getType());
+        static::assertSame('mockobject', $config->getAlias());
+        static::assertFalse($config->isRoleable());
+        static::assertFalse($config->isPermissible());
     }
 
     public function testSharingIdentityConfig(): void
     {
         $config = new SharingIdentityConfig(MockObject::class, 'mock_object', true, true);
 
-        $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame('mock_object', $config->getAlias());
-        $this->assertTrue($config->isRoleable());
-        $this->assertTrue($config->isPermissible());
+        static::assertSame(MockObject::class, $config->getType());
+        static::assertSame('mock_object', $config->getAlias());
+        static::assertTrue($config->isRoleable());
+        static::assertTrue($config->isPermissible());
     }
 
     public function testMerge(): void
     {
         $config = new SharingIdentityConfig(MockObject::class, 'mock_object', false, false);
 
-        $this->assertSame('mock_object', $config->getAlias());
-        $this->assertFalse($config->isRoleable());
-        $this->assertFalse($config->isPermissible());
+        static::assertSame('mock_object', $config->getAlias());
+        static::assertFalse($config->isRoleable());
+        static::assertFalse($config->isPermissible());
 
         $config->merge(new SharingIdentityConfig(MockObject::class, 'new_mock_object', true, true));
 
-        $this->assertSame('new_mock_object', $config->getAlias());
-        $this->assertTrue($config->isRoleable());
-        $this->assertTrue($config->isPermissible());
+        static::assertSame('new_mock_object', $config->getAlias());
+        static::assertTrue($config->isRoleable());
+        static::assertTrue($config->isPermissible());
     }
 
     public function testMergeWithInvalidType(): void

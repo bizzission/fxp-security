@@ -35,11 +35,11 @@ final class AbstractCacheTest extends TestCase
             'resource_prefixes' => ['Cache'],
         ]);
 
-        $this->assertNull($cacheLoader->getProtectedConfigCacheFactory());
+        static::assertNull($cacheLoader->getProtectedConfigCacheFactory());
         $cacheLoader->warmUp('cache_dir');
-        $this->assertNotNull($cacheLoader->getProtectedConfigCacheFactory());
+        static::assertNotNull($cacheLoader->getProtectedConfigCacheFactory());
 
         $cacheLoader->setConfigCacheFactory($configCacheFactory);
-        $this->assertSame($configCacheFactory, $cacheLoader->getProtectedConfigCacheFactory());
+        static::assertSame($configCacheFactory, $cacheLoader->getProtectedConfigCacheFactory());
     }
 }

@@ -28,6 +28,6 @@ final class SetOrganizationalOptionalFilterTypeEventTest extends TestCase
 
         $event = new SetOrganizationalOptionalFilterTypeEvent($type);
 
-        $this->assertSame($type, $event->getOptionalFilterType());
+        static::assertSame($type, $event->getOptionalFilterType());
     }
 }

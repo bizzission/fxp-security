@@ -62,7 +62,7 @@ final class HostRoleListenerTest extends TestCase
         ];
         $this->request = $this->getMockBuilder(Request::class)->getMock();
         $this->event = $this->getMockBuilder(RequestEvent::class)->disableOriginalConstructor()->getMock();
-        $this->event->expects($this->any())
+        $this->event->expects(static::any())
             ->method('getRequest')
             ->willReturn($this->request)
         ;
@@ -72,14 +72,14 @@ final class HostRoleListenerTest extends TestCase
 
     public function testBasic(): void
     {
-        $this->assertTrue($this->listener->isEnabled());
+        static::assertTrue($this->listener->isEnabled());
         $this->listener->setEnabled(false);
-        $this->assertFalse($this->listener->isEnabled());
+        static::assertFalse($this->listener->isEnabled());
     }
 
     public function testInvokeWithDisabledListener(): void
     {
-        $this->sidManager->expects($this->never())
+        $this->sidManager->expects(static::never())
             ->method('addSpecialRole')
         ;
 
@@ -89,12 +89,12 @@ final class HostRoleListenerTest extends TestCase
 
     public function testInvokeWithoutHostRole(): void
     {
-        $this->request->expects($this->once())
+        $this->request->expects(static::once())
             ->method('getHttpHost')
             ->willReturn('no.host-role.tld')
         ;
 
-        $this->sidManager->expects($this->never())
+        $this->sidManager->expects(static::never())
             ->method('addSpecialRole')
         ;
 
@@ -103,12 +103,12 @@ final class HostRoleListenerTest extends TestCase
 
     public function testWithoutToken(): void
     {
-        $this->request->expects($this->once())
+        $this->request->expects(static::once())
             ->method('getHttpHost')
             ->willReturn('foo.bar.tld')
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('addSpecialRole')
             ->with('ROLE_HOST')
         ;
@@ -122,19 +122,19 @@ final class HostRoleListenerTest extends TestCase
             'ROLE_HOST',
         ]);
 
-        $this->request->expects($this->once())
+        $this->request->expects(static::once())
             ->method('getHttpHost')
             ->willReturn('foo.bar.tld')
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('addSpecialRole')
             ->with('ROLE_HOST')
         ;
 
         ($this->listener)($this->event);
 
-        $this->assertCount(1, $token->getRoles());
+        static::assertCount(1, $token->getRoles());
     }
 
     public function getHosts(): array
@@ -164,18 +164,18 @@ final class HostRoleListenerTest extends TestCase
             'ROLE_FOO',
         ]);
 
-        $this->request->expects($this->once())
+        $this->request->expects(static::once())
             ->method('getHttpHost')
             ->willReturn($host)
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('addSpecialRole')
             ->with($validRole)
         ;
 
         ($this->listener)($this->event);
 
-        $this->assertCount(1, $token->getRoles());
+        static::assertCount(1, $token->getRoles());
     }
 }

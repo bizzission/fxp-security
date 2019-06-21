@@ -76,12 +76,12 @@ final class RoleHierarchyListenerTest extends TestCase
         $this->uow = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
         $this->listener = new RoleHierarchyListener($this->sidManager, $this->cache, $this->context);
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getUnitOfWork')
             ->willReturn($this->uow)
         ;
 
-        $this->assertCount(1, $this->listener->getSubscribedEvents());
+        static::assertCount(1, $this->listener->getSubscribedEvents());
     }
 
     public function testOnFLushWithUserObject(): void
@@ -96,25 +96,25 @@ final class RoleHierarchyListenerTest extends TestCase
             ],
         ];
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$object]);
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getEntityChangeSet')
             ->with($object)
             ->willReturn($changeSet)
         ;
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('clearByPrefixes')
             ->with(['user__'])
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('invalidateCache')
         ;
 
@@ -128,28 +128,28 @@ final class RoleHierarchyListenerTest extends TestCase
         $object = $this->getMockBuilder(UserInterface::class)->getMock();
         $changeSet = [];
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$object]);
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getEntityChangeSet')
             ->with($object)
             ->willReturn($changeSet)
         ;
 
-        $this->cache->expects($this->never())
+        $this->cache->expects(static::never())
             ->method('clear')
         ;
 
-        $this->cache->expects($this->never())
+        $this->cache->expects(static::never())
             ->method('clearByPrefixes')
         ;
 
-        $this->sidManager->expects($this->never())
+        $this->sidManager->expects(static::never())
             ->method('invalidateCache')
         ;
 
@@ -168,25 +168,25 @@ final class RoleHierarchyListenerTest extends TestCase
             ],
         ];
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$object]);
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getEntityChangeSet')
             ->with($object)
             ->willReturn($changeSet)
         ;
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('clearByPrefixes')
             ->with(['user__'])
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('invalidateCache')
         ;
 
@@ -205,25 +205,25 @@ final class RoleHierarchyListenerTest extends TestCase
             ],
         ];
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$object]);
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getEntityChangeSet')
             ->with($object)
             ->willReturn($changeSet)
         ;
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('clearByPrefixes')
             ->with(['user__'])
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('invalidateCache')
         ;
 
@@ -243,35 +243,35 @@ final class RoleHierarchyListenerTest extends TestCase
             ],
         ];
 
-        $object->expects($this->once())
+        $object->expects(static::once())
             ->method('getOrganization')
             ->willReturn($org)
         ;
 
-        $org->expects($this->once())
+        $org->expects(static::once())
             ->method('getId')
             ->willReturn(42)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$object]);
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getEntityChangeSet')
             ->with($object)
             ->willReturn($changeSet)
         ;
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('clearByPrefixes')
             ->with(['42__'])
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('invalidateCache')
         ;
 
@@ -310,19 +310,19 @@ final class RoleHierarchyListenerTest extends TestCase
             'fieldName' => $fieldName,
         ]);
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$persistCollection]);
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('clearByPrefixes')
             ->with(['user__'])
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('invalidateCache')
         ;
 
@@ -347,22 +347,22 @@ final class RoleHierarchyListenerTest extends TestCase
             'sourceEntity' => \get_class($object),
         ]);
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$persistCollection]);
 
-        $this->cache->expects($this->never())
+        $this->cache->expects(static::never())
             ->method('clear')
         ;
 
-        $this->cache->expects($this->never())
+        $this->cache->expects(static::never())
             ->method('clearByPrefixes')
         ;
 
-        $this->sidManager->expects($this->never())
+        $this->sidManager->expects(static::never())
             ->method('invalidateCache')
         ;
 
@@ -381,25 +381,25 @@ final class RoleHierarchyListenerTest extends TestCase
             ],
         ];
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
         $this->allScheduledCollections([$object]);
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getEntityChangeSet')
             ->with($object)
             ->willReturn($changeSet)
         ;
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('clear')
             ->with()
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('invalidateCache')
         ;
 
@@ -412,27 +412,27 @@ final class RoleHierarchyListenerTest extends TestCase
      */
     protected function allScheduledCollections(array $objects = []): void
     {
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn($objects)
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledCollectionUpdates')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledCollectionDeletions')
             ->willReturn([])
         ;

@@ -26,7 +26,7 @@ final class PermissionNotFoundExceptionTest extends TestCase
         $expected = 'The permission "read" for "stdClass" is not found ant it required by the permission configuration';
         $e = new PermissionNotFoundException('read', \stdClass::class);
 
-        $this->assertSame($expected, $e->getMessage());
+        static::assertSame($expected, $e->getMessage());
     }
 
     public function testExceptionWithField(): void
@@ -34,6 +34,6 @@ final class PermissionNotFoundExceptionTest extends TestCase
         $expected = 'The permission "read" for "stdClass::foo" is not found ant it required by the permission configuration';
         $e = new PermissionNotFoundException('read', \stdClass::class, 'foo');
 
-        $this->assertSame($expected, $e->getMessage());
+        static::assertSame($expected, $e->getMessage());
     }
 }

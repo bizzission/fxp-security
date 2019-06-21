@@ -55,7 +55,7 @@ final class PermissionVoterTest extends TestCase
         $this->sidManager = $this->getMockBuilder(SecurityIdentityManagerInterface::class)->getMock();
         $this->token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->permManager->expects($this->any())
+        $this->permManager->expects(static::any())
             ->method('isEnabled')
             ->willReturn(true)
         ;
@@ -115,7 +115,7 @@ final class PermissionVoterTest extends TestCase
         ];
 
         if (null !== $permManagerResult) {
-            $this->sidManager->expects($this->once())
+            $this->sidManager->expects(static::once())
                 ->method('getSecurityIdentities')
                 ->with($this->token)
                 ->willReturn($sids)
@@ -125,28 +125,28 @@ final class PermissionVoterTest extends TestCase
                 $expectedSubject = new FieldVote($subject[0], $subject[1]);
 
                 if (null !== $subject) {
-                    $this->permManager->expects($this->once())
+                    $this->permManager->expects(static::once())
                         ->method('isManaged')
                         ->with($expectedSubject)
                         ->willReturn($isManaged)
                     ;
                 }
 
-                $this->permManager->expects($this->once())
+                $this->permManager->expects(static::once())
                     ->method('isGranted')
                     ->with($sids, substr($attributes[0], 5), $expectedSubject)
                     ->willReturn($permManagerResult)
                 ;
             } else {
                 if (null !== $subject) {
-                    $this->permManager->expects($this->once())
+                    $this->permManager->expects(static::once())
                         ->method('isManaged')
                         ->with($subject)
                         ->willReturn($isManaged)
                     ;
                 }
 
-                $this->permManager->expects($this->once())
+                $this->permManager->expects(static::once())
                     ->method('isGranted')
                     ->with($sids, substr($attributes[0], 5), $subject)
                     ->willReturn($permManagerResult)
@@ -154,6 +154,6 @@ final class PermissionVoterTest extends TestCase
             }
         }
 
-        $this->assertSame($result, $this->voter->vote($this->token, $subject, $attributes));
+        static::assertSame($result, $this->voter->vote($this->token, $subject, $attributes));
     }
 }

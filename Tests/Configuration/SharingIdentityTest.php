@@ -29,8 +29,8 @@ final class SharingIdentityTest extends TestCase
             'permissible' => true,
         ]);
 
-        $this->assertSame('foo', $config->getAlias());
-        $this->assertTrue($config->getRoleable());
-        $this->assertTrue($config->getPermissible());
+        static::assertSame('foo', $config->getAlias());
+        static::assertTrue($config->getRoleable());
+        static::assertTrue($config->getPermissible());
     }
 }

@@ -37,9 +37,9 @@ final class PostLoadPermissionsEventTest extends TestCase
 
         $event = new PostLoadPermissionsEvent($sids, $roles, $permissionMap);
 
-        $this->assertSame($sids, $event->getSecurityIdentities());
-        $this->assertSame($roles, $event->getRoles());
-        $this->assertSame($permissionMap, $event->getPermissionMap());
+        static::assertSame($sids, $event->getSecurityIdentities());
+        static::assertSame($roles, $event->getRoles());
+        static::assertSame($permissionMap, $event->getPermissionMap());
 
         $permissionMap2 = [
             '_global' => [
@@ -48,6 +48,6 @@ final class PostLoadPermissionsEventTest extends TestCase
         ];
         $event->setPermissionMap($permissionMap2);
 
-        $this->assertSame($permissionMap2, $event->getPermissionMap());
+        static::assertSame($permissionMap2, $event->getPermissionMap());
     }
 }

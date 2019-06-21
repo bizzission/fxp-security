@@ -30,7 +30,7 @@ final class SubjectIdentityTest extends TestCase
 
         $si = new SubjectIdentity(\get_class($object), (string) $object->getId(), $object);
 
-        $this->assertSame('SubjectIdentity(Fxp\Component\Security\Tests\Fixtures\Model\MockObject, 42)', (string) $si);
+        static::assertSame('SubjectIdentity(Fxp\Component\Security\Tests\Fixtures\Model\MockObject, 42)', (string) $si);
     }
 
     public function testTypeAndIdentifier(): void
@@ -39,9 +39,9 @@ final class SubjectIdentityTest extends TestCase
 
         $si = new SubjectIdentity(\get_class($object), (string) $object->getId(), $object);
 
-        $this->assertSame((string) $object->getId(), $si->getIdentifier());
-        $this->assertSame(MockObject::class, $si->getType());
-        $this->assertSame($object, $si->getObject());
+        static::assertSame((string) $object->getId(), $si->getIdentifier());
+        static::assertSame(MockObject::class, $si->getType());
+        static::assertSame($object, $si->getObject());
     }
 
     public function testEmptyType(): void
@@ -89,16 +89,16 @@ final class SubjectIdentityTest extends TestCase
         $object = new MockObject('foo');
         $si = new SubjectIdentity(\get_class($object), (string) $object->getId(), $object);
 
-        $this->assertSame($result, $si->equals($value));
+        static::assertSame($result, $si->equals($value));
     }
 
     public function testFromClassname(): void
     {
         $si = SubjectIdentity::fromClassname(MockObject::class);
 
-        $this->assertSame(MockObject::class, $si->getType());
-        $this->assertSame('class', $si->getIdentifier());
-        $this->assertNull($si->getObject());
+        static::assertSame(MockObject::class, $si->getType());
+        static::assertSame('class', $si->getIdentifier());
+        static::assertNull($si->getObject());
     }
 
     public function testFromClassnameWithNonExistentClass(): void
@@ -115,9 +115,9 @@ final class SubjectIdentityTest extends TestCase
 
         $si = SubjectIdentity::fromObject($object);
 
-        $this->assertSame(MockObject::class, $si->getType());
-        $this->assertSame((string) $object->getId(), $si->getIdentifier());
-        $this->assertSame($object, $si->getObject());
+        static::assertSame(MockObject::class, $si->getType());
+        static::assertSame((string) $object->getId(), $si->getIdentifier());
+        static::assertSame($object, $si->getObject());
     }
 
     public function testFromObjectWithSubjectInstance(): void
@@ -126,9 +126,9 @@ final class SubjectIdentityTest extends TestCase
 
         $si = SubjectIdentity::fromObject($object);
 
-        $this->assertSame(MockSubjectObject::class, $si->getType());
-        $this->assertSame((string) $object->getSubjectIdentifier(), $si->getIdentifier());
-        $this->assertSame($object, $si->getObject());
+        static::assertSame(MockSubjectObject::class, $si->getType());
+        static::assertSame((string) $object->getSubjectIdentifier(), $si->getIdentifier());
+        static::assertSame($object, $si->getObject());
     }
 
     public function testFromObjectWithSubjectIdentityInstance(): void
@@ -137,7 +137,7 @@ final class SubjectIdentityTest extends TestCase
 
         $si = SubjectIdentity::fromObject($object);
 
-        $this->assertSame($object, $si);
+        static::assertSame($object, $si);
     }
 
     public function testFromObjectWithNonObject(): void

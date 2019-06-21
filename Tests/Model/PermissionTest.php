@@ -31,11 +31,11 @@ final class PermissionTest extends TestCase
         $perm->setField('name');
         $perm->setContexts([PermissionContexts::ROLE]);
 
-        $this->assertNull($perm->getId());
-        $this->assertSame('foo', $perm->getOperation());
-        $this->assertSame(MockObject::class, $perm->getClass());
-        $this->assertSame('name', $perm->getField());
-        $this->assertSame([PermissionContexts::ROLE], $perm->getContexts());
-        $this->assertCount(0, $perm->getRoles());
+        static::assertNull($perm->getId());
+        static::assertSame('foo', $perm->getOperation());
+        static::assertSame(MockObject::class, $perm->getClass());
+        static::assertSame('name', $perm->getField());
+        static::assertSame([PermissionContexts::ROLE], $perm->getContexts());
+        static::assertCount(0, $perm->getRoles());
     }
 }

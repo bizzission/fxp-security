@@ -80,7 +80,7 @@ final class SharingValidatorTest extends TestCase
         $sharing->setSubjectClass(MockObject::class);
         $sharing->setIdentityClass(MockRole::class);
 
-        $this->sharingManager->expects($this->at(0))
+        $this->sharingManager->expects(static::at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(false)
@@ -91,7 +91,7 @@ final class SharingValidatorTest extends TestCase
             '%class%' => MockObject::class,
         ]);
 
-        $this->sharingManager->expects($this->at(1))
+        $this->sharingManager->expects(static::at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
             ->willReturn(false)
@@ -114,13 +114,13 @@ final class SharingValidatorTest extends TestCase
         $sharing->setIdentityClass(MockRole::class);
         $sharing->setRoles(['ROLE_TEST']);
 
-        $this->sharingManager->expects($this->at(0))
+        $this->sharingManager->expects(static::at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(true)
         ;
 
-        $this->sharingManager->expects($this->at(1))
+        $this->sharingManager->expects(static::at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
             ->willReturn(true)
@@ -128,7 +128,7 @@ final class SharingValidatorTest extends TestCase
 
         $config = new SharingIdentityConfig(MockRole::class);
 
-        $this->sharingManager->expects($this->at(2))
+        $this->sharingManager->expects(static::at(2))
             ->method('getIdentityConfig')
             ->with(MockRole::class)
             ->willReturn($config)
@@ -151,13 +151,13 @@ final class SharingValidatorTest extends TestCase
         $sharing->setIdentityClass(MockRole::class);
         $sharing->getPermissions()->add(new MockPermission());
 
-        $this->sharingManager->expects($this->at(0))
+        $this->sharingManager->expects(static::at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(true)
         ;
 
-        $this->sharingManager->expects($this->at(1))
+        $this->sharingManager->expects(static::at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
             ->willReturn(true)
@@ -165,7 +165,7 @@ final class SharingValidatorTest extends TestCase
 
         $config = new SharingIdentityConfig(MockRole::class);
 
-        $this->sharingManager->expects($this->at(2))
+        $this->sharingManager->expects(static::at(2))
             ->method('getIdentityConfig')
             ->with(MockRole::class)
             ->willReturn($config)
@@ -189,13 +189,13 @@ final class SharingValidatorTest extends TestCase
         $sharing->setRoles(['ROLE_TEST']);
         $sharing->getPermissions()->add(new MockPermission());
 
-        $this->sharingManager->expects($this->at(0))
+        $this->sharingManager->expects(static::at(0))
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(true)
         ;
 
-        $this->sharingManager->expects($this->at(1))
+        $this->sharingManager->expects(static::at(1))
             ->method('hasIdentityConfig')
             ->with(MockRole::class)
             ->willReturn(true)
@@ -203,7 +203,7 @@ final class SharingValidatorTest extends TestCase
 
         $config = new SharingIdentityConfig(MockRole::class, 'role', true, true);
 
-        $this->sharingManager->expects($this->at(2))
+        $this->sharingManager->expects(static::at(2))
             ->method('getIdentityConfig')
             ->with(MockRole::class)
             ->willReturn($config)
@@ -226,13 +226,13 @@ final class SharingValidatorTest extends TestCase
         $vb = $this->getMockBuilder(ConstraintViolationBuilderInterface::class)->getMock();
         $i = 0;
 
-        $this->context->expects($this->at($position))
+        $this->context->expects(static::at($position))
             ->method('buildViolation')
             ->with($message)
             ->willReturn($vb)
         ;
 
-        $vb->expects($this->at(0))
+        $vb->expects(static::at(0))
             ->method('atPath')
             ->with($path)
             ->willReturn($vb)
@@ -240,14 +240,14 @@ final class SharingValidatorTest extends TestCase
 
         foreach ($parameters as $key => $value) {
             ++$i;
-            $vb->expects($this->at($i))
+            $vb->expects(static::at($i))
                 ->method('setParameter')
                 ->with($key, $value)
                 ->willReturn($vb)
             ;
         }
 
-        $vb->expects($this->once())
+        $vb->expects(static::once())
             ->method('addViolation')
         ;
     }

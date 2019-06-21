@@ -26,6 +26,6 @@ final class PermissionTest extends TestCase
     {
         $constraint = new Permission();
 
-        $this->assertEquals(Constraint::CLASS_CONSTRAINT, $constraint->getTargets());
+        static::assertEquals(Constraint::CLASS_CONSTRAINT, $constraint->getTargets());
     }
 }

@@ -28,6 +28,6 @@ final class SharingSubjectTest extends TestCase
             'visibility' => SharingVisibilities::TYPE_PUBLIC,
         ]);
 
-        $this->assertSame(SharingVisibilities::TYPE_PUBLIC, $config->getVisibility());
+        static::assertSame(SharingVisibilities::TYPE_PUBLIC, $config->getVisibility());
     }
 }

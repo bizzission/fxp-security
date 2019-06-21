@@ -65,15 +65,15 @@ final class CacheSharingFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createSubjectConfigurations')
         ;
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createIdentityConfigurations')
         ;
 
-        $this->configCacheFactory->expects($this->never())
+        $this->configCacheFactory->expects(static::never())
             ->method('cache')
         ;
 
@@ -88,15 +88,15 @@ final class CacheSharingFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createSubjectConfigurations')
         ;
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createIdentityConfigurations')
         ;
 
-        $this->configCacheFactory->expects($this->never())
+        $this->configCacheFactory->expects(static::never())
             ->method('cache')
         ;
 
@@ -119,31 +119,31 @@ final class CacheSharingFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createSubjectConfigurations')
         ;
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createIdentityConfigurations')
         ;
 
         $cache = $this->getMockBuilder(ConfigCacheInterface::class)->getMock();
-        $cache->expects($this->at(0))
+        $cache->expects(static::at(0))
             ->method('write')
         ;
-        $cache->expects($this->at(1))
+        $cache->expects(static::at(1))
             ->method('getPath')
             ->willReturn($cacheFileSubjects)
         ;
-        $cache->expects($this->at(2))
+        $cache->expects(static::at(2))
             ->method('write')
         ;
-        $cache->expects($this->at(3))
+        $cache->expects(static::at(3))
             ->method('getPath')
             ->willReturn($cacheFileIdentities)
         ;
 
-        $this->configCacheFactory->expects($this->atLeastOnce())
+        $this->configCacheFactory->expects(static::atLeastOnce())
             ->method('cache')
             ->willReturnCallback(static function ($file, $callable) use ($cache) {
                 $callable($cache);
@@ -163,11 +163,11 @@ final class CacheSharingFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->never())
+        $this->factory->expects(static::never())
             ->method('createSubjectConfigurations')
         ;
 
-        $this->factory->expects($this->never())
+        $this->factory->expects(static::never())
             ->method('createIdentityConfigurations')
         ;
 
@@ -182,11 +182,11 @@ final class CacheSharingFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createSubjectConfigurations')
         ;
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createIdentityConfigurations')
         ;
 

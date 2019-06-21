@@ -32,22 +32,22 @@ final class GroupSecurityIdentityTest extends TestCase
     {
         $sid = new GroupSecurityIdentity(MockGroup::class, 'GROUP_TEST');
 
-        $this->assertSame('GroupSecurityIdentity(GROUP_TEST)', (string) $sid);
+        static::assertSame('GroupSecurityIdentity(GROUP_TEST)', (string) $sid);
     }
 
     public function testTypeAndIdentifier(): void
     {
         $identity = new GroupSecurityIdentity(MockGroup::class, 'identifier');
 
-        $this->assertSame(MockGroup::class, $identity->getType());
-        $this->assertSame('identifier', $identity->getIdentifier());
+        static::assertSame(MockGroup::class, $identity->getType());
+        static::assertSame('identifier', $identity->getIdentifier());
     }
 
     public function getIdentities(): array
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
-        $id3->expects($this->any())->method('getType')->willReturn(MockGroup::class);
-        $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
+        $id3->expects(static::any())->method('getType')->willReturn(MockGroup::class);
+        $id3->expects(static::any())->method('getIdentifier')->willReturn('identifier');
 
         return [
             [new GroupSecurityIdentity(MockGroup::class, 'identifier'), true],
@@ -66,54 +66,54 @@ final class GroupSecurityIdentityTest extends TestCase
     {
         $identity = new GroupSecurityIdentity(MockGroup::class, 'identifier');
 
-        $this->assertSame($result, $identity->equals($value));
+        static::assertSame($result, $identity->equals($value));
     }
 
     public function testFromAccount(): void
     {
         /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
-        $group->expects($this->once())
+        $group->expects(static::once())
             ->method('getName')
             ->willReturn('GROUP_TEST')
         ;
 
         $sid = GroupSecurityIdentity::fromAccount($group);
 
-        $this->assertInstanceOf(GroupSecurityIdentity::class, $sid);
-        $this->assertSame(\get_class($group), $sid->getType());
-        $this->assertSame('GROUP_TEST', $sid->getIdentifier());
+        static::assertInstanceOf(GroupSecurityIdentity::class, $sid);
+        static::assertSame(\get_class($group), $sid->getType());
+        static::assertSame('GROUP_TEST', $sid->getIdentifier());
     }
 
     public function testFormToken(): void
     {
         /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
-        $group->expects($this->once())
+        $group->expects(static::once())
             ->method('getName')
             ->willReturn('GROUP_TEST')
         ;
 
         /** @var GroupableInterface|MockObject $user */
         $user = $this->getMockBuilder(GroupableInterface::class)->getMock();
-        $user->expects($this->once())
+        $user->expects(static::once())
             ->method('getGroups')
             ->willReturn([$group])
         ;
 
         /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $token->expects($this->once())
+        $token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
         $sids = GroupSecurityIdentity::fromToken($token);
 
-        $this->assertCount(1, $sids);
-        $this->assertInstanceOf(GroupSecurityIdentity::class, $sids[0]);
-        $this->assertSame(\get_class($group), $sids[0]->getType());
-        $this->assertSame('GROUP_TEST', $sids[0]->getIdentifier());
+        static::assertCount(1, $sids);
+        static::assertInstanceOf(GroupSecurityIdentity::class, $sids[0]);
+        static::assertSame(\get_class($group), $sids[0]->getType());
+        static::assertSame('GROUP_TEST', $sids[0]->getIdentifier());
     }
 
     public function testFormTokenWithInvalidInterface(): void
@@ -126,7 +126,7 @@ final class GroupSecurityIdentityTest extends TestCase
 
         /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $token->expects($this->once())
+        $token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;

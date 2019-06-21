@@ -50,28 +50,28 @@ final class PermissionFactoryTest extends TestCase
     public function testCreateConfigurations(): void
     {
         $config1 = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
-        $config1->expects($this->atLeast(2))
+        $config1->expects(static::atLeast(2))
             ->method('getType')
             ->willReturn(FixtureMockObject::class)
         ;
 
         $config2 = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
-        $config2->expects($this->atLeast(1))
+        $config2->expects(static::atLeast(1))
             ->method('getType')
             ->willReturn(FixtureMockObject::class)
         ;
 
-        $config1->expects($this->atLeast(1))
+        $config1->expects(static::atLeast(1))
             ->method('merge')
             ->with($config2)
         ;
 
-        $this->loader->expects($this->once())
+        $this->loader->expects(static::once())
             ->method('loadConfigurations')
             ->willReturn([$config1, $config2])
         ;
 
-        $this->assertSame([FixtureMockObject::class => $config1], $this->factory->createConfigurations());
+        static::assertSame([FixtureMockObject::class => $config1], $this->factory->createConfigurations());
     }
 
     public function testCreateConfigurationsWithDefaultFields(): void
@@ -85,29 +85,29 @@ final class PermissionFactoryTest extends TestCase
         ]);
 
         $config = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('getType')
             ->willReturn(FixtureMockObject::class)
         ;
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('buildFields')
             ->willReturn(true)
         ;
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('buildDefaultFields')
             ->willReturn(true)
         ;
 
-        $this->loader->expects($this->once())
+        $this->loader->expects(static::once())
             ->method('loadConfigurations')
             ->willReturn([$config])
         ;
 
-        $config->expects($this->once())
+        $config->expects(static::once())
             ->method('merge')
         ;
 
-        $this->assertSame([FixtureMockObject::class => $config], $this->factory->createConfigurations());
+        static::assertSame([FixtureMockObject::class => $config], $this->factory->createConfigurations());
     }
 
     public function testCreateConfigurationsWithDefaultMasterFieldMapping(): void
@@ -122,36 +122,36 @@ final class PermissionFactoryTest extends TestCase
         ]);
 
         $config = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('getType')
             ->willReturn(FixtureMockObject::class)
         ;
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('getMaster')
             ->willReturn('foo')
         ;
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('getMasterFieldMappingPermissions')
             ->willReturn([])
         ;
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('buildFields')
             ->willReturn(true)
         ;
-        $config->expects($this->atLeast(1))
+        $config->expects(static::atLeast(1))
             ->method('buildDefaultFields')
             ->willReturn(true)
         ;
 
-        $this->loader->expects($this->once())
+        $this->loader->expects(static::once())
             ->method('loadConfigurations')
             ->willReturn([$config])
         ;
 
-        $config->expects($this->atLeast(2))
+        $config->expects(static::atLeast(2))
             ->method('merge')
         ;
 
-        $this->assertSame([FixtureMockObject::class => $config], $this->factory->createConfigurations());
+        static::assertSame([FixtureMockObject::class => $config], $this->factory->createConfigurations());
     }
 }

@@ -48,33 +48,33 @@ final class OrganizationSecurityIdentitySubscriberTest extends TestCase
         $this->orgContext = $this->getMockBuilder(OrganizationalContextInterface::class)->getMock();
         $this->listener = new OrganizationSecurityIdentitySubscriber($this->roleHierarchy, $this->orgContext);
 
-        $this->assertCount(1, OrganizationSecurityIdentitySubscriber::getSubscribedEvents());
+        static::assertCount(1, OrganizationSecurityIdentitySubscriber::getSubscribedEvents());
     }
 
     public function testCacheIdWithPersonalOrganization(): void
     {
-        $this->orgContext->expects($this->once())
+        $this->orgContext->expects(static::once())
             ->method('getCurrentOrganization')
             ->willReturn(null)
         ;
 
-        $this->assertSame('', $this->listener->getCacheId());
+        static::assertSame('', $this->listener->getCacheId());
     }
 
     public function testCacheIdWithOrganization(): void
     {
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        $org->expects($this->once())
+        $org->expects(static::once())
             ->method('getId')
             ->willReturn(42)
         ;
 
-        $this->orgContext->expects($this->once())
+        $this->orgContext->expects(static::once())
             ->method('getCurrentOrganization')
             ->willReturn($org)
         ;
 
-        $this->assertSame('org42', $this->listener->getCacheId());
+        static::assertSame('org42', $this->listener->getCacheId());
     }
 
     public function testAddOrganizationSecurityIdentities(): void
@@ -86,7 +86,7 @@ final class OrganizationSecurityIdentitySubscriberTest extends TestCase
 
         $this->listener->addOrganizationSecurityIdentities($event);
 
-        $this->assertSame($sids, $event->getSecurityIdentities());
+        static::assertSame($sids, $event->getSecurityIdentities());
     }
 
     public function testAddOrganizationSecurityIdentitiesWithInvalidArgument(): void
@@ -96,13 +96,13 @@ final class OrganizationSecurityIdentitySubscriberTest extends TestCase
         $sids = [];
         $event = new AddSecurityIdentityEvent($token, $sids);
 
-        $token->expects($this->once())
+        $token->expects(static::once())
             ->method('getUser')
             ->willThrowException(new \InvalidArgumentException('Test'))
         ;
 
         $this->listener->addOrganizationSecurityIdentities($event);
 
-        $this->assertSame($sids, $event->getSecurityIdentities());
+        static::assertSame($sids, $event->getSecurityIdentities());
     }
 }

@@ -76,7 +76,7 @@ final class ObjectFilterTest extends TestCase
 
     public function testGetUnitOfWork(): void
     {
-        $this->assertSame($this->uow, $this->of->getUnitOfWork());
+        static::assertSame($this->uow, $this->of->getUnitOfWork());
     }
 
     public function testCommitEvents(): void
@@ -95,15 +95,15 @@ final class ObjectFilterTest extends TestCase
             $this->assertSame($objects, $event->getObjects());
         });
 
-        $this->pm->expects($this->once())
+        $this->pm->expects(static::once())
             ->method('preloadPermissions')
             ->with($objects)
         ;
 
         $this->of->commit();
 
-        $this->assertTrue($preEventAction);
-        $this->assertTrue($postEventAction);
+        static::assertTrue($preEventAction);
+        static::assertTrue($postEventAction);
     }
 
     public function testFilter(): void
@@ -112,14 +112,14 @@ final class ObjectFilterTest extends TestCase
 
         $this->prepareFilterTest($object);
 
-        $this->ac->expects($this->once())
+        $this->ac->expects(static::once())
             ->method('isGranted')
             ->willReturn(false)
         ;
 
         $this->of->filter($object);
 
-        $this->assertNull($object->getName());
+        static::assertNull($object->getName());
     }
 
     public function testFilterTransactional(): void
@@ -128,7 +128,7 @@ final class ObjectFilterTest extends TestCase
 
         $this->prepareFilterTest($object);
 
-        $this->ac->expects($this->once())
+        $this->ac->expects(static::once())
             ->method('isGranted')
             ->willReturn(false)
         ;
@@ -137,8 +137,8 @@ final class ObjectFilterTest extends TestCase
         $this->of->filter($object);
         $this->of->commit();
 
-        $this->assertSame(42, $object->getId());
-        $this->assertNull($object->getName());
+        static::assertSame(42, $object->getId());
+        static::assertNull($object->getName());
     }
 
     public function testFilterSkipAuthorizationChecker(): void
@@ -148,7 +148,7 @@ final class ObjectFilterTest extends TestCase
 
         $this->prepareFilterTest($object);
 
-        $this->ac->expects($this->never())
+        $this->ac->expects(static::never())
             ->method('isGranted')
         ;
 
@@ -164,8 +164,8 @@ final class ObjectFilterTest extends TestCase
 
         $this->of->filter($object);
 
-        $this->assertSame(2, $eventAction);
-        $this->assertNull($object->getName());
+        static::assertSame(2, $eventAction);
+        static::assertNull($object->getName());
     }
 
     public function testFilterWithInvalidType(): void
@@ -185,26 +185,26 @@ final class ObjectFilterTest extends TestCase
 
         $this->prepareRestoreTest($object);
 
-        $this->ac->expects($this->once())
+        $this->ac->expects(static::once())
             ->method('isGranted')
             ->willReturn(false)
         ;
 
         $this->of->restore($object);
 
-        $this->assertSame('bar', $object->getName());
+        static::assertSame('bar', $object->getName());
     }
 
     public function testRestoreTransactional(): void
     {
         $object = new MockObject('foo');
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('attach')
             ->with($object)
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getObjectChangeSet')
             ->with($object)
             ->willReturn([
@@ -215,12 +215,12 @@ final class ObjectFilterTest extends TestCase
             ])
         ;
 
-        $this->pm->expects($this->once())
+        $this->pm->expects(static::once())
             ->method('preloadPermissions')
             ->with([$object])
         ;
 
-        $this->ac->expects($this->once())
+        $this->ac->expects(static::once())
             ->method('isGranted')
             ->willReturn(false)
         ;
@@ -229,7 +229,7 @@ final class ObjectFilterTest extends TestCase
         $this->of->restore($object);
         $this->of->commit();
 
-        $this->assertSame('bar', $object->getName());
+        static::assertSame('bar', $object->getName());
     }
 
     public function testRestoreSkipAuthorizationChecker(): void
@@ -239,7 +239,7 @@ final class ObjectFilterTest extends TestCase
 
         $this->prepareRestoreTest($object);
 
-        $this->ac->expects($this->never())
+        $this->ac->expects(static::never())
             ->method('isGranted')
         ;
 
@@ -250,8 +250,8 @@ final class ObjectFilterTest extends TestCase
 
         $this->of->restore($object);
 
-        $this->assertTrue($eventAction);
-        $this->assertSame('bar', $object->getName());
+        static::assertTrue($eventAction);
+        static::assertSame('bar', $object->getName());
     }
 
     public function getRestoreActions(): array
@@ -292,14 +292,14 @@ final class ObjectFilterTest extends TestCase
             ],
         ]);
 
-        $this->ac->expects($this->at(0))
+        $this->ac->expects(static::at(0))
             ->method('isGranted')
             ->with('perm_read', $fv)
             ->willReturn($allowView)
         ;
 
         if ($allowView) {
-            $this->ac->expects($this->at(1))
+            $this->ac->expects(static::at(1))
                 ->method('isGranted')
                 ->with('perm_edit', $fv)
                 ->willReturn($allowEdit)
@@ -308,7 +308,7 @@ final class ObjectFilterTest extends TestCase
 
         $this->of->restore($object);
 
-        $this->assertSame($validValue, $object->getName());
+        static::assertSame($validValue, $object->getName());
     }
 
     public function testExcludedClasses(): void
@@ -319,25 +319,25 @@ final class ObjectFilterTest extends TestCase
 
         $object = new MockObject('foo');
 
-        $this->uow->expects($this->never())
+        $this->uow->expects(static::never())
             ->method('attach')
         ;
 
-        $this->ofe->expects($this->never())
+        $this->ofe->expects(static::never())
             ->method('filterValue')
         ;
 
-        $this->pm->expects($this->never())
+        $this->pm->expects(static::never())
             ->method('preloadPermissions')
         ;
 
-        $this->ac->expects($this->never())
+        $this->ac->expects(static::never())
             ->method('isGranted')
         ;
 
         $this->of->filter($object);
 
-        $this->assertNotNull($object->getName());
+        static::assertNotNull($object->getName());
     }
 
     public function testRestoreWithInvalidType(): void
@@ -358,17 +358,17 @@ final class ObjectFilterTest extends TestCase
      */
     protected function prepareFilterTest($object): void
     {
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('attach')
             ->with($object)
         ;
 
-        $this->ofe->expects($this->once())
+        $this->ofe->expects(static::once())
             ->method('filterValue')
             ->willReturn(null)
         ;
 
-        $this->pm->expects($this->once())
+        $this->pm->expects(static::once())
             ->method('preloadPermissions')
             ->with([$object])
         ;
@@ -391,17 +391,17 @@ final class ObjectFilterTest extends TestCase
             ];
         }
 
-        $this->pm->expects($this->once())
+        $this->pm->expects(static::once())
             ->method('preloadPermissions')
             ->with([$object])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('attach')
             ->with($object)
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getObjectChangeSet')
             ->with($object)
             ->willReturn($changeSet)

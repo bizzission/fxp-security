@@ -30,10 +30,10 @@ final class FieldVoteTest extends TestCase
 
         $fv = new FieldVote($object, $field);
 
-        $this->assertNotNull($fv->getSubject());
-        $this->assertSame($object, $fv->getSubject()->getObject());
-        $this->assertSame(\get_class($object), $fv->getSubject()->getType());
-        $this->assertSame($field, $fv->getField());
+        static::assertNotNull($fv->getSubject());
+        static::assertSame($object, $fv->getSubject()->getObject());
+        static::assertSame(\get_class($object), $fv->getSubject()->getType());
+        static::assertSame($field, $fv->getField());
     }
 
     public function testFieldVoteWithSubjectIdentity(): void
@@ -43,8 +43,8 @@ final class FieldVoteTest extends TestCase
 
         $fv = new FieldVote($object, $field);
 
-        $this->assertSame($object, $fv->getSubject());
-        $this->assertSame($field, $fv->getField());
+        static::assertSame($object, $fv->getSubject());
+        static::assertSame($field, $fv->getField());
     }
 
     public function testFieldVoteWithClassname(): void
@@ -54,9 +54,9 @@ final class FieldVoteTest extends TestCase
 
         $fv = new FieldVote($object, $field);
 
-        $this->assertNull($fv->getSubject()->getObject());
-        $this->assertSame(\stdClass::class, $fv->getSubject()->getType());
-        $this->assertSame($field, $fv->getField());
+        static::assertNull($fv->getSubject()->getObject());
+        static::assertSame(\stdClass::class, $fv->getSubject()->getType());
+        static::assertSame($field, $fv->getField());
     }
 
     public function testFieldVoteWithInvalidSubject(): void

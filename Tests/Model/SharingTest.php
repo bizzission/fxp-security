@@ -38,23 +38,23 @@ final class SharingTest extends TestCase
         $sharing->setStartedAt($startDate);
         $sharing->setEndedAt($endDate);
 
-        $this->assertNull($sharing->getId());
-        $this->assertSame(MockObject::class, $sharing->getSubjectClass());
-        $this->assertSame('42', $sharing->getSubjectId());
-        $this->assertSame(MockRole::class, $sharing->getIdentityClass());
-        $this->assertSame('23', $sharing->getIdentityName());
-        $this->assertTrue($sharing->isEnabled());
-        $this->assertSame($startDate, $sharing->getStartedAt());
-        $this->assertSame($endDate, $sharing->getEndedAt());
-        $this->assertCount(0, $sharing->getRoles());
+        static::assertNull($sharing->getId());
+        static::assertSame(MockObject::class, $sharing->getSubjectClass());
+        static::assertSame('42', $sharing->getSubjectId());
+        static::assertSame(MockRole::class, $sharing->getIdentityClass());
+        static::assertSame('23', $sharing->getIdentityName());
+        static::assertTrue($sharing->isEnabled());
+        static::assertSame($startDate, $sharing->getStartedAt());
+        static::assertSame($endDate, $sharing->getEndedAt());
+        static::assertCount(0, $sharing->getRoles());
 
         $perm = new MockPermission();
-        $this->assertFalse($sharing->hasPermission($perm));
+        static::assertFalse($sharing->hasPermission($perm));
 
         $sharing->addPermission($perm);
-        $this->assertTrue($sharing->hasPermission($perm));
+        static::assertTrue($sharing->hasPermission($perm));
 
         $sharing->removePermission($perm);
-        $this->assertFalse($sharing->hasPermission($perm));
+        static::assertFalse($sharing->hasPermission($perm));
     }
 }

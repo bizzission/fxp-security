@@ -44,7 +44,7 @@ final class AnnotationLoaderTest extends TestCase
             ->getMock()
         ;
 
-        $finder->expects($this->once())
+        $finder->expects(static::once())
             ->method('findClasses')
             ->willReturn([
                 MockObjectWithAnnotation::class,
@@ -58,30 +58,30 @@ final class AnnotationLoaderTest extends TestCase
         /** @var PermissionConfigInterface[] $configs */
         $configs = $loader->loadConfigurations();
 
-        $this->assertCount(2, $configs);
+        static::assertCount(2, $configs);
 
         foreach ($configs as $config) {
-            $this->assertInstanceOf(PermissionConfigInterface::class, $config);
+            static::assertInstanceOf(PermissionConfigInterface::class, $config);
 
             if (MockObjectWithAnnotation::class === $config->getType()) {
-                $this->assertSame(MockObjectWithAnnotation::class, $config->getType());
-                $this->assertSame(['view', 'create', 'update', 'delete'], $config->getOperations());
-                $this->assertSame('foo', $config->getMaster());
+                static::assertSame(MockObjectWithAnnotation::class, $config->getType());
+                static::assertSame(['view', 'create', 'update', 'delete'], $config->getOperations());
+                static::assertSame('foo', $config->getMaster());
 
-                $this->assertCount(2, $config->getFields());
-                $this->assertTrue($config->hasField('id'));
-                $this->assertTrue($config->hasField('name'));
+                static::assertCount(2, $config->getFields());
+                static::assertTrue($config->hasField('id'));
+                static::assertTrue($config->hasField('name'));
 
-                $this->assertSame(['read', 'view'], $config->getField('id')->getOperations());
-                $this->assertSame(['read', 'edit'], $config->getField('name')->getOperations());
+                static::assertSame(['read', 'view'], $config->getField('id')->getOperations());
+                static::assertSame(['read', 'edit'], $config->getField('name')->getOperations());
             } elseif (MockObjectWithOnlyFieldAnnotation::class === $config->getType()) {
-                $this->assertSame(MockObjectWithOnlyFieldAnnotation::class, $config->getType());
-                $this->assertSame([], $config->getOperations());
+                static::assertSame(MockObjectWithOnlyFieldAnnotation::class, $config->getType());
+                static::assertSame([], $config->getOperations());
 
-                $this->assertCount(1, $config->getFields());
-                $this->assertTrue($config->hasField('name'));
+                static::assertCount(1, $config->getFields());
+                static::assertTrue($config->hasField('name'));
 
-                $this->assertSame(['read', 'edit'], $config->getField('name')->getOperations());
+                static::assertSame(['read', 'edit'], $config->getField('name')->getOperations());
             }
         }
     }

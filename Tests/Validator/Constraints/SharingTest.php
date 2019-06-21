@@ -26,6 +26,6 @@ final class SharingTest extends TestCase
     {
         $constraint = new Sharing();
 
-        $this->assertEquals(Constraint::CLASS_CONSTRAINT, $constraint->getTargets());
+        static::assertEquals(Constraint::CLASS_CONSTRAINT, $constraint->getTargets());
     }
 }

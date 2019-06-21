@@ -26,10 +26,10 @@ final class PermissionFieldConfigTest extends TestCase
     {
         $config = new PermissionFieldConfig('foo');
 
-        $this->assertSame('foo', $config->getField());
-        $this->assertSame([], $config->getOperations());
-        $this->assertFalse($config->hasOperation('foo'));
-        $this->assertTrue($config->isEditable());
+        static::assertSame('foo', $config->getField());
+        static::assertSame([], $config->getOperations());
+        static::assertFalse($config->hasOperation('foo'));
+        static::assertTrue($config->isEditable());
     }
 
     public function testPermissionFieldConfig(): void
@@ -40,30 +40,30 @@ final class PermissionFieldConfigTest extends TestCase
         ];
         $config = new PermissionFieldConfig('foo', $operations, $alias);
 
-        $this->assertSame('foo', $config->getField());
-        $this->assertSame($operations, $config->getOperations());
-        $this->assertTrue($config->hasOperation('read'));
-        $this->assertFalse($config->hasOperation('foo'));
-        $this->assertSame($alias, $config->getMappingPermissions());
-        $this->assertTrue($config->hasOperation('test'));
-        $this->assertFalse($config->isEditable());
+        static::assertSame('foo', $config->getField());
+        static::assertSame($operations, $config->getOperations());
+        static::assertTrue($config->hasOperation('read'));
+        static::assertFalse($config->hasOperation('foo'));
+        static::assertSame($alias, $config->getMappingPermissions());
+        static::assertTrue($config->hasOperation('test'));
+        static::assertFalse($config->isEditable());
     }
 
     public function testMerge(): void
     {
         $config = new PermissionFieldConfig('foo', ['read'], ['update' => 'edit'], false);
 
-        $this->assertSame('foo', $config->getField());
-        $this->assertSame(['read'], $config->getOperations());
-        $this->assertSame(['update' => 'edit'], $config->getMappingPermissions());
-        $this->assertFalse($config->isEditable());
+        static::assertSame('foo', $config->getField());
+        static::assertSame(['read'], $config->getOperations());
+        static::assertSame(['update' => 'edit'], $config->getMappingPermissions());
+        static::assertFalse($config->isEditable());
 
         $config->merge(new PermissionFieldConfig('foo', ['update'], ['view' => 'read'], true));
 
-        $this->assertSame('foo', $config->getField());
-        $this->assertSame(['read', 'update'], $config->getOperations());
-        $this->assertSame(['update' => 'edit', 'view' => 'read'], $config->getMappingPermissions());
-        $this->assertTrue($config->isEditable());
+        static::assertSame('foo', $config->getField());
+        static::assertSame(['read', 'update'], $config->getOperations());
+        static::assertSame(['update' => 'edit', 'view' => 'read'], $config->getMappingPermissions());
+        static::assertTrue($config->isEditable());
     }
 
     public function testMergeWithInvalidType(): void

@@ -86,29 +86,29 @@ final class SharingFilterTest extends TestCase
 
         $connection = $this->getMockBuilder(Connection::class)->getMock();
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getEventManager')
             ->willReturn($this->eventManager)
         ;
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getFilters')
             ->willReturn(new FilterCollection($this->em))
         ;
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getConnection')
             ->willReturn($connection)
         ;
 
-        $connection->expects($this->any())
+        $connection->expects(static::any())
             ->method('quote')
             ->willReturnCallback(static function ($v) {
                 return '\''.$v.'\'';
             })
         ;
 
-        $this->targetEntity->expects($this->any())
+        $this->targetEntity->expects(static::any())
             ->method('getName')
             ->willReturn(MockObject::class)
         ;
@@ -117,7 +117,7 @@ final class SharingFilterTest extends TestCase
     public function testAddFilterConstraintWithoutSupports(): void
     {
         $this->eventDispatcher = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
-        $this->eventDispatcher->expects($this->never())
+        $this->eventDispatcher->expects(static::never())
             ->method('dispatch')
         ;
 
@@ -141,18 +141,18 @@ final class SharingFilterTest extends TestCase
             }
         );
 
-        $this->sharingManager->expects($this->once())
+        $this->sharingManager->expects(static::once())
             ->method('hasSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(true)
         ;
 
-        $this->sharingManager->expects($this->once())
+        $this->sharingManager->expects(static::once())
             ->method('getSharingVisibility')
             ->with(SubjectIdentity::fromClassname(MockObject::class))
             ->willReturn(SharingVisibilities::TYPE_PRIVATE)
         ;
 
-        $this->assertSame('FILTER_TEST', $this->filter->addFilterConstraint($this->targetEntity, 't'));
+        static::assertSame('FILTER_TEST', $this->filter->addFilterConstraint($this->targetEntity, 't'));
     }
 }

@@ -33,12 +33,12 @@ final class AddSecurityIdentityEventTest extends TestCase
 
         $event = new AddSecurityIdentityEvent($token, $sids);
 
-        $this->assertSame($token, $event->getToken());
-        $this->assertSame($sids, $event->getSecurityIdentities());
+        static::assertSame($token, $event->getToken());
+        static::assertSame($sids, $event->getSecurityIdentities());
 
         $sids[] = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
         $event->setSecurityIdentities($sids);
 
-        $this->assertSame($sids, $event->getSecurityIdentities());
+        static::assertSame($sids, $event->getSecurityIdentities());
     }
 }

@@ -29,8 +29,8 @@ final class ChainLoaderTest extends TestCase
     {
         $loader = new ChainLoader([]);
 
-        $this->assertSame([], $loader->loadSubjectConfigurations());
-        $this->assertSame([], $loader->loadIdentityConfigurations());
+        static::assertSame([], $loader->loadSubjectConfigurations());
+        static::assertSame([], $loader->loadIdentityConfigurations());
     }
 
     public function testWithLoaders(): void
@@ -52,29 +52,29 @@ final class ChainLoaderTest extends TestCase
         $expectedIdentities = array_merge($loader1Identities, $loader2Identities);
 
         $loader1 = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $loader1->expects($this->once())
+        $loader1->expects(static::once())
             ->method('loadSubjectConfigurations')
             ->willReturn($loader1Subjects)
         ;
-        $loader1->expects($this->once())
+        $loader1->expects(static::once())
             ->method('loadIdentityConfigurations')
             ->willReturn($loader1Identities)
         ;
 
         $loader2 = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $loader2->expects($this->once())
+        $loader2->expects(static::once())
             ->method('loadSubjectConfigurations')
             ->willReturn($loader2Subjects)
         ;
-        $loader2->expects($this->once())
+        $loader2->expects(static::once())
             ->method('loadIdentityConfigurations')
             ->willReturn($loader2Identities)
         ;
 
         $loader = new ChainLoader([$loader1, $loader2]);
 
-        $this->assertSame($expectedSubjects, $loader->loadSubjectConfigurations());
-        $this->assertSame($expectedIdentities, $loader->loadIdentityConfigurations());
+        static::assertSame($expectedSubjects, $loader->loadSubjectConfigurations());
+        static::assertSame($expectedIdentities, $loader->loadIdentityConfigurations());
     }
 
     public function testWithInvalidLoader(): void

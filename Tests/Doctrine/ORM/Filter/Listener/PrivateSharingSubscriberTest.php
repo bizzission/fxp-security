@@ -88,28 +88,28 @@ final class PrivateSharingSubscriberTest extends TestCase
         );
         $this->listener = new PrivateSharingSubscriber();
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getFilters')
             ->willReturn(new FilterCollection($this->entityManager))
         ;
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getConnection')
             ->willReturn($this->connection)
         ;
 
-        $this->connection->expects($this->any())
+        $this->connection->expects(static::any())
             ->method('getDatabasePlatform')
             ->willReturn($this->getMockForAbstractClass(AbstractPlatform::class))
         ;
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getClassMetadata')
             ->with(MockSharing::class)
             ->willReturn($this->sharingMeta)
         ;
 
-        $this->connection->expects($this->any())
+        $this->connection->expects(static::any())
             ->method('quote')
             ->willReturnCallback(static function ($v) {
                 if (\is_array($v)) {
@@ -120,7 +120,7 @@ final class PrivateSharingSubscriberTest extends TestCase
             })
         ;
 
-        $this->assertCount(1, PrivateSharingSubscriber::getSubscribedEvents());
+        static::assertCount(1, PrivateSharingSubscriber::getSubscribedEvents());
     }
 
     public function testGetFilter(): void
@@ -130,17 +130,17 @@ final class PrivateSharingSubscriberTest extends TestCase
             MockUserRoleable::class => '\'user.test\'',
         ]);
 
-        $this->targetEntity->expects($this->any())
+        $this->targetEntity->expects(static::any())
             ->method('getName')
             ->willReturn(MockObject::class)
         ;
 
-        $this->sharingMeta->expects($this->once())
+        $this->sharingMeta->expects(static::once())
             ->method('getTableName')
             ->willReturn('test_sharing')
         ;
 
-        $this->sharingMeta->expects($this->atLeastOnce())
+        $this->sharingMeta->expects(static::atLeastOnce())
             ->method('getColumnName')
             ->willReturnCallback(static function ($value) {
                 $map = [
@@ -174,7 +174,7 @@ GROUP BY
 SELECTCLAUSE;
 
         $this->listener->getFilter($this->event);
-        $this->assertSame($validFilter, $this->event->getFilterConstraint());
+        static::assertSame($validFilter, $this->event->getFilterConstraint());
     }
 
     public function getCurrentUserValues(): array
@@ -204,12 +204,12 @@ SELECTCLAUSE;
             ]
         );
 
-        $this->targetEntity->expects($this->atLeastOnce())
+        $this->targetEntity->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn($objectClass)
         ;
 
-        $this->targetEntity->expects($this->atLeastOnce())
+        $this->targetEntity->expects(static::atLeastOnce())
             ->method('getAssociationMapping')
             ->willReturnCallback(static function ($value) {
                 $map = [
@@ -224,12 +224,12 @@ SELECTCLAUSE;
             })
         ;
 
-        $this->sharingMeta->expects($this->once())
+        $this->sharingMeta->expects(static::once())
             ->method('getTableName')
             ->willReturn('test_sharing')
         ;
 
-        $this->sharingMeta->expects($this->atLeastOnce())
+        $this->sharingMeta->expects(static::atLeastOnce())
             ->method('getColumnName')
             ->willReturnCallback(static function ($value) {
                 $map = [
@@ -273,7 +273,7 @@ GROUP BY
 SELECTCLAUSE;
 
         $this->listener->getFilter($this->event);
-        $this->assertSame($validFilter, $this->event->getFilterConstraint());
+        static::assertSame($validFilter, $this->event->getFilterConstraint());
     }
 
     /**

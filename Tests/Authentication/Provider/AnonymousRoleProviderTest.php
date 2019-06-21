@@ -28,7 +28,7 @@ final class AnonymousRoleProviderTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $provider = new AnonymousRoleProvider();
 
-        $this->assertSame($token, $provider->authenticate($token));
-        $this->assertFalse($provider->supports($token));
+        static::assertSame($token, $provider->authenticate($token));
+        static::assertFalse($provider->supports($token));
     }
 }

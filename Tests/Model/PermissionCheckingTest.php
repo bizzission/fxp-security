@@ -27,8 +27,8 @@ final class PermissionCheckingTest extends TestCase
         $perm = new MockPermission();
         $permChecking = new PermissionChecking($perm, true, true);
 
-        $this->assertSame($perm, $permChecking->getPermission());
-        $this->assertTrue($permChecking->isGranted());
-        $this->assertTrue($permChecking->isLocked());
+        static::assertSame($perm, $permChecking->getPermission());
+        static::assertTrue($permChecking->isGranted());
+        static::assertTrue($permChecking->isLocked());
     }
 }

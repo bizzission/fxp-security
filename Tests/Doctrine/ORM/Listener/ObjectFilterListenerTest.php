@@ -70,7 +70,7 @@ final class ObjectFilterListenerTest extends TestCase
         $this->uow = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
         $this->listener = new ObjectFilterListener();
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getUnitOfWork')
             ->willReturn($this->uow)
         ;
@@ -79,7 +79,7 @@ final class ObjectFilterListenerTest extends TestCase
         $this->listener->setPermissionManager($this->permissionManager);
         $this->listener->setObjectFilter($this->objectFilter);
 
-        $this->assertCount(3, $this->listener->getSubscribedEvents());
+        static::assertCount(3, $this->listener->getSubscribedEvents());
     }
 
     public function getInvalidInitMethods(): array
@@ -126,7 +126,7 @@ final class ObjectFilterListenerTest extends TestCase
 
     public function testPostFlush(): void
     {
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('resetPreloadPermissions')
             ->with([])
         ;
@@ -140,17 +140,17 @@ final class ObjectFilterListenerTest extends TestCase
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(false)
         ;
 
-        $this->objectFilter->expects($this->never())
+        $this->objectFilter->expects(static::never())
             ->method('filter')
         ;
 
@@ -162,12 +162,12 @@ final class ObjectFilterListenerTest extends TestCase
         /** @var LifecycleEventArgs $args */
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn(null)
         ;
 
-        $this->objectFilter->expects($this->never())
+        $this->objectFilter->expects(static::never())
             ->method('filter')
         ;
 
@@ -180,12 +180,12 @@ final class ObjectFilterListenerTest extends TestCase
         $args = $this->getMockBuilder(LifecycleEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(ConsoleToken::class)->disableOriginalConstructor()->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->objectFilter->expects($this->never())
+        $this->objectFilter->expects(static::never())
             ->method('filter')
         ;
 
@@ -199,22 +199,22 @@ final class ObjectFilterListenerTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $entity = new \stdClass();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntity')
             ->willReturn($entity)
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('filter')
             ->with($entity)
         ;
@@ -228,17 +228,17 @@ final class ObjectFilterListenerTest extends TestCase
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(false)
         ;
 
-        $this->objectFilter->expects($this->never())
+        $this->objectFilter->expects(static::never())
             ->method('filter')
         ;
 
@@ -250,12 +250,12 @@ final class ObjectFilterListenerTest extends TestCase
         /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn(null)
         ;
 
-        $this->objectFilter->expects($this->never())
+        $this->objectFilter->expects(static::never())
             ->method('filter')
         ;
 
@@ -268,12 +268,12 @@ final class ObjectFilterListenerTest extends TestCase
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(ConsoleToken::class)->disableOriginalConstructor()->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->objectFilter->expects($this->never())
+        $this->objectFilter->expects(static::never())
             ->method('filter')
         ;
 
@@ -287,41 +287,41 @@ final class ObjectFilterListenerTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('beginTransaction')
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([$object])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([])
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('restore')
         ;
 
@@ -335,41 +335,41 @@ final class ObjectFilterListenerTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('beginTransaction')
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([$object])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([])
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('restore')
         ;
 
@@ -383,36 +383,36 @@ final class ObjectFilterListenerTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('beginTransaction')
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([$object])
         ;
@@ -426,41 +426,41 @@ final class ObjectFilterListenerTest extends TestCase
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('beginTransaction')
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([])
         ;
 
-        $this->objectFilter->expects($this->once())
+        $this->objectFilter->expects(static::once())
             ->method('commit')
         ;
 

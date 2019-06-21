@@ -110,76 +110,76 @@ final class SharingProviderTest extends TestCase
             new MockRole('ROLE_USER'),
         ];
 
-        $this->roleRepo->expects($this->once())
+        $this->roleRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('r')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('addSelect')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('leftJoin')
             ->with('r.permissions', 'p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('where')
             ->with('UPPER(r.name) IN (:roles)')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('setParameter')
             ->with('roles', $roles)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($result)
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame($result, $provider->getPermissionRoles($roles));
+        static::assertSame($result, $provider->getPermissionRoles($roles));
     }
 
     public function testGetPermissionRolesWithEmptyRoles(): void
     {
-        $this->roleRepo->expects($this->never())
+        $this->roleRepo->expects(static::never())
             ->method('createQueryBuilder')
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame([], $provider->getPermissionRoles([]));
+        static::assertSame([], $provider->getPermissionRoles([]));
     }
 
     public function testGetSharingEntries(): void
@@ -190,100 +190,100 @@ final class SharingProviderTest extends TestCase
         ];
         $result = [];
 
-        $this->sharingRepo->expects($this->once())
+        $this->sharingRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('s')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('addSelect')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('leftJoin')
             ->with('s.permissions', 'p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('where')
             ->with('(s.subjectClass = :subject0_class AND s.subjectId = :subject0_id) OR (s.subjectClass = :subject1_class AND s.subjectId = :subject1_id)')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('setParameter')
             ->with('subject0_class', MockObject::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('subject0_id', 42)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('setParameter')
             ->with('subject1_class', MockObject::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('setParameter')
             ->with('subject1_id', 23)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('andWhere')
             ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(8))
+        $this->qb->expects(static::at(8))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(9))
+        $this->qb->expects(static::at(9))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(10))
+        $this->qb->expects(static::at(10))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(11))
+        $this->qb->expects(static::at(11))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($result)
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame($result, $provider->getSharingEntries($subjects));
+        static::assertSame($result, $provider->getSharingEntries($subjects));
     }
 
     public function testGetSharingEntriesWithEmptySubjects(): void
     {
-        $this->sharingRepo->expects($this->never())
+        $this->sharingRepo->expects(static::never())
             ->method('createQueryBuilder')
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame([], $provider->getSharingEntries([]));
+        static::assertSame([], $provider->getSharingEntries([]));
     }
 
     public function testGetPermissionRolesWithSecurityIdentities(): void
@@ -298,132 +298,132 @@ final class SharingProviderTest extends TestCase
         ];
         $result = [];
 
-        $this->sharingManager->expects($this->at(0))
+        $this->sharingManager->expects(static::at(0))
             ->method('getIdentityConfig')
             ->with(MockRole::class)
             ->willReturn(new SharingIdentityConfig(MockRole::class, 'role'))
         ;
 
-        $this->sharingManager->expects($this->at(1))
+        $this->sharingManager->expects(static::at(1))
             ->method('getIdentityConfig')
             ->with(MockUserRoleable::class)
             ->willReturn(new SharingIdentityConfig(MockUserRoleable::class, 'role'))
         ;
 
-        $this->sharingRepo->expects($this->once())
+        $this->sharingRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('s')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('addSelect')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('leftJoin')
             ->with('s.permissions', 'p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('where')
             ->with('(s.subjectClass = :subject0_class AND s.subjectId = :subject0_id) OR (s.subjectClass = :subject1_class AND s.subjectId = :subject1_id)')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('setParameter')
             ->with('subject0_class', MockObject::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('subject0_id', 42)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('setParameter')
             ->with('subject1_class', MockObject::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('setParameter')
             ->with('subject1_id', 23)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('andWhere')
             ->with('(s.identityClass = :sid0_class AND s.identityName IN (:sid0_ids)) OR (s.identityClass = :sid1_class AND s.identityName IN (:sid1_ids))')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(8))
+        $this->qb->expects(static::at(8))
             ->method('setParameter')
             ->with('sid0_class', MockRole::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(9))
+        $this->qb->expects(static::at(9))
             ->method('setParameter')
             ->with('sid0_ids', ['ROLE_USER'])
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(10))
+        $this->qb->expects(static::at(10))
             ->method('setParameter')
             ->with('sid1_class', MockUserRoleable::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(11))
+        $this->qb->expects(static::at(11))
             ->method('setParameter')
             ->with('sid1_ids', ['user.test'])
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(12))
+        $this->qb->expects(static::at(12))
             ->method('andWhere')
             ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(13))
+        $this->qb->expects(static::at(13))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(14))
+        $this->qb->expects(static::at(14))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(15))
+        $this->qb->expects(static::at(15))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(16))
+        $this->qb->expects(static::at(16))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($result)
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame($result, $provider->getSharingEntries($subjects, $sids));
+        static::assertSame($result, $provider->getSharingEntries($subjects, $sids));
     }
 
     public function testGetPermissionRolesWithEmptySecurityIdentities(): void
@@ -437,94 +437,94 @@ final class SharingProviderTest extends TestCase
         ];
         $result = [];
 
-        $this->sharingManager->expects($this->never())
+        $this->sharingManager->expects(static::never())
             ->method('getIdentityConfig')
         ;
 
-        $this->sharingRepo->expects($this->once())
+        $this->sharingRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('s')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('addSelect')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('leftJoin')
             ->with('s.permissions', 'p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('where')
             ->with('(s.subjectClass = :subject0_class AND s.subjectId = :subject0_id) OR (s.subjectClass = :subject1_class AND s.subjectId = :subject1_id)')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('setParameter')
             ->with('subject0_class', MockObject::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('subject0_id', 42)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('setParameter')
             ->with('subject1_class', MockObject::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('setParameter')
             ->with('subject1_id', 23)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('andWhere')
             ->with('s.enabled = TRUE AND (s.startedAt IS NULL OR s.startedAt <= CURRENT_TIMESTAMP()) AND (s.endedAt IS NULL OR s.endedAt >= CURRENT_TIMESTAMP())')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(8))
+        $this->qb->expects(static::at(8))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(9))
+        $this->qb->expects(static::at(9))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(10))
+        $this->qb->expects(static::at(10))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(11))
+        $this->qb->expects(static::at(11))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($result)
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame($result, $provider->getSharingEntries($subjects, $sids));
+        static::assertSame($result, $provider->getSharingEntries($subjects, $sids));
     }
 
     public function testGetSharingEntriesWithoutSharingManager(): void
@@ -541,19 +541,19 @@ final class SharingProviderTest extends TestCase
             SubjectIdentity::fromObject(new MockObject('bar', 23)),
         ];
 
-        $this->sharingRepo->expects($this->once())
+        $this->sharingRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('s')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('addSelect')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('leftJoin')
             ->with('s.permissions', 'p')
             ->willReturn($this->qb)
@@ -565,60 +565,60 @@ final class SharingProviderTest extends TestCase
 
     public function testRenameIdentity(): void
     {
-        $this->sharingRepo->expects($this->once())
+        $this->sharingRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('s')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('update')
             ->with(MockSharing::class, 's')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('set')
             ->with('s.identityName', ':newName')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('where')
             ->with('s.identityClass = :type')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('andWhere')
             ->with('s.identityName = :oldName')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('type', MockRole::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('setParameter')
             ->with('oldName', 'ROLE_FOO')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('setParameter')
             ->with('newName', 'ROLE_BAR')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('execute')
             ->willReturn('RESULT')
         ;
@@ -629,48 +629,48 @@ final class SharingProviderTest extends TestCase
 
     public function testDeleteIdentity(): void
     {
-        $this->sharingRepo->expects($this->once())
+        $this->sharingRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('s')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('delete')
             ->with(MockSharing::class, 's')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('where')
             ->with('s.identityClass = :type')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('andWhere')
             ->with('s.identityName = :name')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('setParameter')
             ->with('type', MockRole::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('name', 'ROLE_FOO')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('execute')
             ->willReturn('RESULT')
         ;
@@ -683,36 +683,36 @@ final class SharingProviderTest extends TestCase
     {
         $ids = [42, 50];
 
-        $this->sharingRepo->expects($this->once())
+        $this->sharingRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('s')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('delete')
             ->with(MockSharing::class, 's')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('where')
             ->with('s.id IN (:ids)')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('setParameter')
             ->with('ids', $ids)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('execute')
             ->willReturn('RESULT')
         ;
@@ -728,24 +728,24 @@ final class SharingProviderTest extends TestCase
 
         $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
 
-        $this->roleRepo->expects($this->any())
+        $this->roleRepo->expects(static::any())
             ->method('getClassName')
             ->willReturn($roleClass)
         ;
 
-        $this->sharingRepo->expects($this->any())
+        $this->sharingRepo->expects(static::any())
             ->method('getClassName')
             ->willReturn($sharingClass)
         ;
 
-        $registry->expects($this->any())
+        $registry->expects(static::any())
             ->method('getManagerForClass')
             ->willReturnCallback(static function ($class) use ($em) {
                 return \in_array($class, [RoleInterface::class, SharingInterface::class], true) ? $em : null;
             })
         ;
 
-        $em->expects($this->any())
+        $em->expects(static::any())
             ->method('getRepository')
             ->willReturnCallback(function ($class) {
                 $repo = null;

@@ -89,70 +89,70 @@ final class PermissionProviderTest extends TestCase
             new MockPermission(),
         ];
 
-        $this->permissionRepo->expects($this->once())
+        $this->permissionRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('leftJoin')
             ->with('p.roles', 'r')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('where')
             ->with('UPPER(r.name) IN (:roles)')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('setParameter')
             ->with('roles', $roles)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($result)
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame($result, $provider->getPermissions($roles));
+        static::assertSame($result, $provider->getPermissions($roles));
     }
 
     public function testGetPermissionsOptimizationWithEmptyRoles(): void
     {
-        $this->permissionRepo->expects($this->never())
+        $this->permissionRepo->expects(static::never())
             ->method('createQueryBuilder')
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame([], $provider->getPermissions([]));
+        static::assertSame([], $provider->getPermissions([]));
     }
 
     public function testGetMasterClass(): void
@@ -162,37 +162,37 @@ final class PermissionProviderTest extends TestCase
         /** @var PermissionConfigInterface|\PHPUnit\Framework\MockObject\MockObject $permConfig */
         $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
 
-        $permConfig->expects($this->once())
+        $permConfig->expects(static::once())
             ->method('getType')
             ->willReturn(MockOrganizationUser::class)
         ;
 
-        $permConfig->expects($this->atLeast(2))
+        $permConfig->expects(static::atLeast(2))
             ->method('getMaster')
             ->willReturn('organization')
         ;
 
-        $this->registry->expects($this->once())
+        $this->registry->expects(static::once())
             ->method('getManagerForClass')
             ->willReturn($om)
         ;
 
         $meta = $this->getMockBuilder(ClassMetadata::class)->getMock();
 
-        $meta->expects($this->once())
+        $meta->expects(static::once())
             ->method('getAssociationTargetClass')
             ->with('organization')
             ->willReturn(MockOrganization::class)
         ;
 
-        $om->expects($this->once())
+        $om->expects(static::once())
             ->method('getClassMetadata')
             ->with(MockOrganizationUser::class)
             ->willReturn($meta)
         ;
 
         $provider = $this->createProvider();
-        $this->assertSame(MockOrganization::class, $provider->getMasterClass($permConfig));
+        static::assertSame(MockOrganization::class, $provider->getMasterClass($permConfig));
     }
 
     public function testGetMasterClassWithoutObjectManagerForClass(): void
@@ -203,14 +203,14 @@ final class PermissionProviderTest extends TestCase
         /** @var PermissionConfigInterface|\PHPUnit\Framework\MockObject\MockObject $permConfig */
         $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
 
-        $permConfig->expects($this->atLeast(2))
+        $permConfig->expects(static::atLeast(2))
             ->method('getType')
             ->willReturn(MockObject::class)
         ;
 
         $provider = $this->createProvider();
 
-        $this->registry->expects($this->once())
+        $this->registry->expects(static::once())
             ->method('getManagers')
             ->willReturn([])
         ;
@@ -228,17 +228,17 @@ final class PermissionProviderTest extends TestCase
         /** @var PermissionConfigInterface|\PHPUnit\Framework\MockObject\MockObject $permConfig */
         $permConfig = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
 
-        $permConfig->expects($this->atLeast(2))
+        $permConfig->expects(static::atLeast(2))
             ->method('getType')
             ->willReturn(MockObject::class)
         ;
 
-        $permConfig->expects($this->once())
+        $permConfig->expects(static::once())
             ->method('getMaster')
             ->willReturn(null)
         ;
 
-        $this->registry->expects($this->once())
+        $this->registry->expects(static::once())
             ->method('getManagerForClass')
             ->willReturn($om)
         ;
@@ -254,60 +254,60 @@ final class PermissionProviderTest extends TestCase
             new MockPermission(),
         ];
 
-        $this->permissionRepo->expects($this->once())
+        $this->permissionRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('andWhere')
             ->with('p.class = :class')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('class', $subject->getSubject()->getType())
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('andWhere')
             ->with('p.field = :field')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('setParameter')
             ->with('field', $subject->getField())
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($expected)
         ;
@@ -315,7 +315,7 @@ final class PermissionProviderTest extends TestCase
         $provider = $this->createProvider();
         $res = $provider->getPermissionsBySubject($subject);
 
-        $this->assertSame($expected, $res);
+        static::assertSame($expected, $res);
     }
 
     public function testGetPermissionsBySubjectAndContexts(): void
@@ -325,84 +325,84 @@ final class PermissionProviderTest extends TestCase
             new MockPermission(),
         ];
 
-        $this->permissionRepo->expects($this->once())
+        $this->permissionRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('setParameter')
             ->with('context_role', '%"'.PermissionContexts::ROLE.'"%')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('context_organization_role', '%"'.PermissionContexts::ORGANIZATION_ROLE.'"%')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('setParameter')
             ->with('context_sharing', '%"'.PermissionContexts::SHARING.'"%')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('andWhere')
             ->with('p.contexts IS NULL OR p.contexts LIKE :context_role OR p.contexts LIKE :context_organization_role OR p.contexts LIKE :context_sharing')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('andWhere')
             ->with('p.class = :class')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(8))
+        $this->qb->expects(static::at(8))
             ->method('setParameter')
             ->with('class', $subject->getSubject()->getType())
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(9))
+        $this->qb->expects(static::at(9))
             ->method('andWhere')
             ->with('p.field = :field')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(10))
+        $this->qb->expects(static::at(10))
             ->method('setParameter')
             ->with('field', $subject->getField())
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(11))
+        $this->qb->expects(static::at(11))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($expected)
         ;
@@ -414,7 +414,7 @@ final class PermissionProviderTest extends TestCase
             PermissionContexts::SHARING,
         ]);
 
-        $this->assertSame($expected, $res);
+        static::assertSame($expected, $res);
     }
 
     public function testGetPermissionsBySubjectWithoutSubject(): void
@@ -424,48 +424,48 @@ final class PermissionProviderTest extends TestCase
             new MockPermission(),
         ];
 
-        $this->permissionRepo->expects($this->once())
+        $this->permissionRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('andWhere')
             ->with('p.class IS NULL')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('andWhere')
             ->with('p.field IS NULL')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($expected)
         ;
@@ -473,7 +473,7 @@ final class PermissionProviderTest extends TestCase
         $provider = $this->createProvider();
         $res = $provider->getPermissionsBySubject($subject);
 
-        $this->assertSame($expected, $res);
+        static::assertSame($expected, $res);
     }
 
     public function testGetConfigPermissions(): void
@@ -482,48 +482,48 @@ final class PermissionProviderTest extends TestCase
             new MockPermission(),
         ];
 
-        $this->permissionRepo->expects($this->once())
+        $this->permissionRepo->expects(static::once())
             ->method('createQueryBuilder')
             ->with('p')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('orderBy')
             ->with('p.class', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('addOrderBy')
             ->with('p.field', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('addOrderBy')
             ->with('p.operation', 'asc')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('andWhere')
             ->with('p.class = :class')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('setParameter')
             ->with('class', PermissionProviderInterface::CONFIG_CLASS)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('getResult')
             ->willReturn($expected)
         ;
@@ -531,21 +531,21 @@ final class PermissionProviderTest extends TestCase
         $provider = $this->createProvider();
         $res = $provider->getConfigPermissions();
 
-        $this->assertSame($expected, $res);
+        static::assertSame($expected, $res);
     }
 
     protected function createProvider(): PermissionProvider
     {
         $em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
 
-        $this->registry->expects($this->any())
+        $this->registry->expects(static::any())
             ->method('getManagerForClass')
             ->willReturnCallback(static function ($class) use ($em) {
                 return PermissionInterface::class === $class ? $em : null;
             })
         ;
 
-        $em->expects($this->any())
+        $em->expects(static::any())
             ->method('getRepository')
             ->willReturnCallback(function ($class) {
                 return PermissionInterface::class === $class ? $this->permissionRepo : null;

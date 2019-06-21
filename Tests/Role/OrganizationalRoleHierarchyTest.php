@@ -106,19 +106,19 @@ final class OrganizationalRoleHierarchyTest extends TestCase
 
         $this->roleHierarchy->setEventDispatcher($this->eventDispatcher);
 
-        $this->registry->expects($this->any())
+        $this->registry->expects(static::any())
             ->method('getManagerForClass')
             ->with($this->roleClassname)
             ->willReturn($this->em)
         ;
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getRepository')
             ->with($this->roleClassname)
             ->willReturn($this->repo)
         ;
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getFilters')
             ->willReturn($this->filters)
         ;
@@ -154,18 +154,18 @@ final class OrganizationalRoleHierarchyTest extends TestCase
 
         $cacheItem = $this->getMockBuilder(CacheItemInterface::class)->getMock();
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('getItem')
             ->willReturn($cacheItem)
         ;
 
-        $cacheItem->expects($this->once())
+        $cacheItem->expects(static::once())
             ->method('get')
             ->with()
             ->willReturn(null)
         ;
 
-        $this->eventDispatcher->expects($this->atLeastOnce())
+        $this->eventDispatcher->expects(static::atLeastOnce())
             ->method('dispatch')
         ;
 
@@ -173,12 +173,12 @@ final class OrganizationalRoleHierarchyTest extends TestCase
             'test_filter' => $this->getMockForAbstractClass(SQLFilter::class, [], '', false),
         ];
 
-        $this->filters->expects($this->once())
+        $this->filters->expects(static::once())
             ->method('getEnabledFilters')
             ->willReturn($sqlFilters)
         ;
 
-        $this->filters->expects($this->once())
+        $this->filters->expects(static::once())
             ->method('disable')
             ->with('test_filter')
         ;
@@ -186,44 +186,44 @@ final class OrganizationalRoleHierarchyTest extends TestCase
         $dbRole = $this->getMockBuilder(RoleHierarchicalInterface::class)->getMock();
         $dbRoleChildren = $this->getMockBuilder(Collection::class)->getMock();
 
-        $dbRole->expects($this->atLeastOnce())
+        $dbRole->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('ROLE_ADMIN')
         ;
 
-        $dbRole->expects($this->once())
+        $dbRole->expects(static::once())
             ->method('getChildren')
             ->willReturn($dbRoleChildren)
         ;
 
-        $dbRoleChildren->expects($this->once())
+        $dbRoleChildren->expects(static::once())
             ->method('toArray')
             ->willReturn([])
         ;
 
-        $this->repo->expects($this->once())
+        $this->repo->expects(static::once())
             ->method('findBy')
             ->with(['name' => ['ROLE_ADMIN']])
             ->willReturn([$dbRole])
         ;
 
-        $this->filters->expects($this->once())
+        $this->filters->expects(static::once())
             ->method('enable')
             ->with('test_filter')
         ;
 
-        $cacheItem->expects($this->once())
+        $cacheItem->expects(static::once())
             ->method('set')
         ;
 
-        $this->cache->expects($this->once())
+        $this->cache->expects(static::once())
             ->method('save')
         ;
 
         $fullRoles = $this->roleHierarchy->getReachableRoleNames($roles);
 
-        $this->assertCount(2, $fullRoles);
-        $this->assertEquals($validRoles, $fullRoles);
+        static::assertCount(2, $fullRoles);
+        static::assertEquals($validRoles, $fullRoles);
     }
 
     /**
@@ -237,13 +237,13 @@ final class OrganizationalRoleHierarchyTest extends TestCase
 
         if (\in_array($orgContextType, ['user', 'organization'], true)) {
             $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-            $org->expects($this->once())
+            $org->expects(static::once())
                 ->method('isUserOrganization')
                 ->willReturn('user' === $orgContextType)
             ;
         }
 
-        $this->context->expects($this->once())
+        $this->context->expects(static::once())
             ->method('getCurrentOrganization')
             ->willReturn($org)
         ;

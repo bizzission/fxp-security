@@ -34,6 +34,6 @@ final class OrganizationalRequiredTraitTest extends TestCase
         $model = $this->getMockForTrait(OrganizationalRequiredTrait::class);
         $model->setOrganization($org);
 
-        $this->assertSame($org, $model->getOrganization());
+        static::assertSame($org, $model->getOrganization());
     }
 }

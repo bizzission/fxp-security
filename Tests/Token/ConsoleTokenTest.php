@@ -27,16 +27,16 @@ final class ConsoleTokenTest extends TestCase
             'ROLE_TEST',
         ]);
 
-        $this->assertSame('', $token->getCredentials());
-        $this->assertSame('key', $token->getKey());
+        static::assertSame('', $token->getCredentials());
+        static::assertSame('key', $token->getKey());
 
         $tokenSerialized = $token->serialize();
         $value = \is_string($tokenSerialized);
-        $this->assertTrue($value);
+        static::assertTrue($value);
 
         $token2 = new ConsoleToken('', '');
         $token2->unserialize($tokenSerialized);
 
-        $this->assertEquals($token, $token2);
+        static::assertEquals($token, $token2);
     }
 }

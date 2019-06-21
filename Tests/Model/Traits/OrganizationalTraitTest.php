@@ -27,17 +27,17 @@ final class OrganizationalTraitTest extends TestCase
     {
         /** @var MockObject|OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        $org->expects($this->once())
+        $org->expects(static::once())
             ->method('getId')
             ->willReturn(42)
         ;
 
         $user = new MockUserOrganizationUsers();
 
-        $this->assertNull($user->getOrganization());
+        static::assertNull($user->getOrganization());
 
         $user->setOrganization($org);
-        $this->assertSame($org, $user->getOrganization());
-        $this->assertSame(42, $user->getOrganizationId());
+        static::assertSame($org, $user->getOrganization());
+        static::assertSame(42, $user->getOrganizationId());
     }
 }

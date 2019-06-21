@@ -28,7 +28,7 @@ final class RoleableTraitTest extends TestCase
     {
         $roleable = new MockRoleable();
 
-        $this->assertFalse($roleable->hasRole('ROLE_TEST'));
+        static::assertFalse($roleable->hasRole('ROLE_TEST'));
 
         $roleable->setRoles([
             'ROLE_TEST',
@@ -36,21 +36,21 @@ final class RoleableTraitTest extends TestCase
             'ROLE_ORGANIZATION_USER',
         ]);
 
-        $this->assertTrue($roleable->hasRole('ROLE_TEST'));
-        $this->assertFalse($roleable->hasRole('ROLE_USER')); // Skip the ROLE_USER role
-        $this->assertFalse($roleable->hasRole('ROLE_ORGANIZATION_USER')); // Skip the ROLE_ORGANIZATION_USER role
+        static::assertTrue($roleable->hasRole('ROLE_TEST'));
+        static::assertFalse($roleable->hasRole('ROLE_USER')); // Skip the ROLE_USER role
+        static::assertFalse($roleable->hasRole('ROLE_ORGANIZATION_USER')); // Skip the ROLE_ORGANIZATION_USER role
 
-        $this->assertEquals(['ROLE_TEST'], $roleable->getRoles());
+        static::assertEquals(['ROLE_TEST'], $roleable->getRoles());
 
         $roleable->removeRole('ROLE_TEST');
-        $this->assertFalse($roleable->hasRole('ROLE_TEST'));
+        static::assertFalse($roleable->hasRole('ROLE_TEST'));
     }
 
     public function testUserModel(): void
     {
         $roleable = new MockUserRoleable();
 
-        $this->assertEquals(['ROLE_USER'], $roleable->getRoles());
+        static::assertEquals(['ROLE_USER'], $roleable->getRoles());
 
         $roleable->addRole('ROLE_TEST');
 
@@ -58,7 +58,7 @@ final class RoleableTraitTest extends TestCase
             'ROLE_TEST',
             'ROLE_USER',
         ];
-        $this->assertEquals($validRoles, $roleable->getRoles());
+        static::assertEquals($validRoles, $roleable->getRoles());
     }
 
     public function testOrganizationUserModel(): void
@@ -67,7 +67,7 @@ final class RoleableTraitTest extends TestCase
         $user = new MockUserRoleable();
         $roleable = new MockOrganizationUserRoleableGroupable($org, $user);
 
-        $this->assertEquals(['ROLE_ORGANIZATION_USER'], $roleable->getRoles());
+        static::assertEquals(['ROLE_ORGANIZATION_USER'], $roleable->getRoles());
 
         $roleable->addRole('ROLE_TEST');
 
@@ -75,6 +75,6 @@ final class RoleableTraitTest extends TestCase
             'ROLE_TEST',
             'ROLE_ORGANIZATION_USER',
         ];
-        $this->assertEquals($validRoles, $roleable->getRoles());
+        static::assertEquals($validRoles, $roleable->getRoles());
     }
 }

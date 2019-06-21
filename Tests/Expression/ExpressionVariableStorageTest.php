@@ -72,11 +72,11 @@ final class ExpressionVariableStorageTest extends TestCase
             new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
         ];
 
-        $this->token->expects($this->never())
+        $this->token->expects(static::never())
             ->method('getRoleNames')
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('getSecurityIdentities')
             ->with($this->token)
             ->willReturn($sids)
@@ -93,20 +93,20 @@ final class ExpressionVariableStorageTest extends TestCase
         $variableStorage->inject($event);
 
         $variables = $event->getVariables();
-        $this->assertCount(6, $variables);
-        $this->assertArrayHasKey('token', $variables);
-        $this->assertArrayHasKey('user', $variables);
-        $this->assertArrayHasKey('roles', $variables);
-        $this->assertArrayHasKey('trust_resolver', $variables);
-        $this->assertArrayHasKey('organizational_context', $variables);
-        $this->assertArrayHasKey('organizational_role', $variables);
-        $this->assertEquals(['ROLE_USER'], $variables['roles']);
-        $this->assertCount(1, ExpressionVariableStorage::getSubscribedEvents());
+        static::assertCount(6, $variables);
+        static::assertArrayHasKey('token', $variables);
+        static::assertArrayHasKey('user', $variables);
+        static::assertArrayHasKey('roles', $variables);
+        static::assertArrayHasKey('trust_resolver', $variables);
+        static::assertArrayHasKey('organizational_context', $variables);
+        static::assertArrayHasKey('organizational_role', $variables);
+        static::assertEquals(['ROLE_USER'], $variables['roles']);
+        static::assertCount(1, ExpressionVariableStorage::getSubscribedEvents());
     }
 
     public function testSetVariablesWithoutSecurityIdentityManager(): void
     {
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getRoleNames')
             ->willReturn([
                 'ROLE_USER',
@@ -119,13 +119,13 @@ final class ExpressionVariableStorageTest extends TestCase
         $variableStorage->inject($event);
 
         $variables = $event->getVariables();
-        $this->assertCount(4, $variables);
-        $this->assertArrayHasKey('token', $variables);
-        $this->assertArrayHasKey('user', $variables);
-        $this->assertArrayHasKey('roles', $variables);
-        $this->assertArrayHasKey('trust_resolver', $variables);
-        $this->assertEquals(['ROLE_USER'], $variables['roles']);
-        $this->assertCount(1, ExpressionVariableStorage::getSubscribedEvents());
+        static::assertCount(4, $variables);
+        static::assertArrayHasKey('token', $variables);
+        static::assertArrayHasKey('user', $variables);
+        static::assertArrayHasKey('roles', $variables);
+        static::assertArrayHasKey('trust_resolver', $variables);
+        static::assertEquals(['ROLE_USER'], $variables['roles']);
+        static::assertCount(1, ExpressionVariableStorage::getSubscribedEvents());
     }
 
     public function testHasVariable(): void
@@ -134,22 +134,22 @@ final class ExpressionVariableStorageTest extends TestCase
             'foo' => 'bar',
         ]);
 
-        $this->assertFalse($variableStorage->has('bar'));
-        $this->assertTrue($variableStorage->has('foo'));
+        static::assertFalse($variableStorage->has('bar'));
+        static::assertTrue($variableStorage->has('foo'));
     }
 
     public function testAddVariable(): void
     {
         $variableStorage = new ExpressionVariableStorage();
 
-        $this->assertFalse($variableStorage->has('foo'));
-        $this->assertNull($variableStorage->get('foo'));
+        static::assertFalse($variableStorage->has('foo'));
+        static::assertNull($variableStorage->get('foo'));
 
         $variableStorage->add('foo', 'bar');
 
-        $this->assertTrue($variableStorage->has('foo'));
-        $this->assertSame('bar', $variableStorage->get('foo'));
-        $this->assertCount(1, $variableStorage->getAll());
+        static::assertTrue($variableStorage->has('foo'));
+        static::assertSame('bar', $variableStorage->get('foo'));
+        static::assertCount(1, $variableStorage->getAll());
     }
 
     public function testRemoveVariable(): void
@@ -158,10 +158,10 @@ final class ExpressionVariableStorageTest extends TestCase
             'foo' => 'bar',
         ]);
 
-        $this->assertTrue($variableStorage->has('foo'));
+        static::assertTrue($variableStorage->has('foo'));
 
         $variableStorage->remove('foo');
 
-        $this->assertFalse($variableStorage->has('foo'));
+        static::assertFalse($variableStorage->has('foo'));
     }
 }

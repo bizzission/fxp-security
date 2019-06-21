@@ -29,9 +29,9 @@ final class PermissionConfigTest extends TestCase
         $operations = ['create', 'view', 'update', 'delete'];
         $config = new PermissionConfig(MockObject::class, $operations);
 
-        $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame([], $config->getFields());
-        $this->assertNull($config->getMaster());
+        static::assertSame(MockObject::class, $config->getType());
+        static::assertSame([], $config->getFields());
+        static::assertNull($config->getMaster());
     }
 
     public function testPermissionConfig(): void
@@ -59,22 +59,22 @@ final class PermissionConfigTest extends TestCase
             false
         );
 
-        $this->assertSame(MockObject::class, $config->getType());
+        static::assertSame(MockObject::class, $config->getType());
 
-        $this->assertSame($fields, $config->getFields());
-        $this->assertSame($fields['name'], $config->getField('name'));
-        $this->assertNull($config->getField('foo'));
+        static::assertSame($fields, $config->getFields());
+        static::assertSame($fields['name'], $config->getField('name'));
+        static::assertNull($config->getField('foo'));
 
-        $this->assertSame($master, $config->getMaster());
-        $this->assertSame($masterMapping, $config->getMasterFieldMappingPermissions());
-        $this->assertFalse($config->buildFields());
-        $this->assertFalse($config->buildDefaultFields());
+        static::assertSame($master, $config->getMaster());
+        static::assertSame($masterMapping, $config->getMasterFieldMappingPermissions());
+        static::assertFalse($config->buildFields());
+        static::assertFalse($config->buildDefaultFields());
 
-        $this->assertSame($operations, $config->getOperations());
-        $this->assertTrue($config->hasOperation('view'));
-        $this->assertFalse($config->hasOperation('foo'));
-        $this->assertSame($alias, $config->getMappingPermissions());
-        $this->assertTrue($config->hasOperation('create'));
+        static::assertSame($operations, $config->getOperations());
+        static::assertTrue($config->hasOperation('view'));
+        static::assertFalse($config->hasOperation('foo'));
+        static::assertSame($alias, $config->getMappingPermissions());
+        static::assertTrue($config->hasOperation('create'));
     }
 
     public function testMerge(): void
@@ -98,14 +98,14 @@ final class PermissionConfigTest extends TestCase
             ]
         );
 
-        $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame(['name' => $nameField], $config->getFields());
-        $this->assertSame(['invite', 'view', 'update', 'revoke'], $config->getOperations());
-        $this->assertSame(['create' => 'invite', 'delete' => 'revoke'], $config->getMappingPermissions());
-        $this->assertSame('foo', $config->getMaster());
-        $this->assertSame(['view' => 'read'], $config->getMasterFieldMappingPermissions());
-        $this->assertTrue($config->buildFields());
-        $this->assertTrue($config->buildDefaultFields());
+        static::assertSame(MockObject::class, $config->getType());
+        static::assertSame(['name' => $nameField], $config->getFields());
+        static::assertSame(['invite', 'view', 'update', 'revoke'], $config->getOperations());
+        static::assertSame(['create' => 'invite', 'delete' => 'revoke'], $config->getMappingPermissions());
+        static::assertSame('foo', $config->getMaster());
+        static::assertSame(['view' => 'read'], $config->getMasterFieldMappingPermissions());
+        static::assertTrue($config->buildFields());
+        static::assertTrue($config->buildDefaultFields());
 
         $config->merge(new PermissionConfig(
             MockObject::class,
@@ -124,14 +124,14 @@ final class PermissionConfigTest extends TestCase
             false
         ));
 
-        $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame(['id' => $idField, 'name' => $nameField], $config->getFields());
-        $this->assertSame(['invite', 'view', 'update', 'revoke', 'delete'], $config->getOperations());
-        $this->assertSame(['create' => 'invite', 'delete' => 'revoke', 'view' => 'read'], $config->getMappingPermissions());
-        $this->assertSame('foo', $config->getMaster());
-        $this->assertSame(['view' => 'read', 'create' => 'edit'], $config->getMasterFieldMappingPermissions());
-        $this->assertFalse($config->buildFields());
-        $this->assertFalse($config->buildDefaultFields());
+        static::assertSame(MockObject::class, $config->getType());
+        static::assertSame(['id' => $idField, 'name' => $nameField], $config->getFields());
+        static::assertSame(['invite', 'view', 'update', 'revoke', 'delete'], $config->getOperations());
+        static::assertSame(['create' => 'invite', 'delete' => 'revoke', 'view' => 'read'], $config->getMappingPermissions());
+        static::assertSame('foo', $config->getMaster());
+        static::assertSame(['view' => 'read', 'create' => 'edit'], $config->getMasterFieldMappingPermissions());
+        static::assertFalse($config->buildFields());
+        static::assertFalse($config->buildDefaultFields());
     }
 
     public function testMergeWithInvalidType(): void

@@ -30,29 +30,29 @@ final class OrganizationTest extends TestCase
     {
         $org = new MockOrganization('FOO');
 
-        $this->assertSame(23, $org->getId());
-        $this->assertSame('FOO', $org->getName());
-        $this->assertNull($org->getUser());
-        $this->assertFalse($org->isUserOrganization());
-        $this->assertCount(0, $org->getOrganizationRoles());
-        $this->assertCount(0, $org->getOrganizationRoleNames());
-        $this->assertFalse($org->hasOrganizationRole('ROLE_ADMIN'));
-        $this->assertCount(0, $org->getOrganizationGroups());
-        $this->assertCount(0, $org->getOrganizationGroupNames());
-        $this->assertFalse($org->hasOrganizationGroup('GROUP_DEFAULT'));
-        $this->assertCount(0, $org->getOrganizationUsers());
-        $this->assertCount(0, $org->getOrganizationUserNames());
-        $this->assertFalse($org->hasOrganizationUser('user.test'));
-        $this->assertSame('FOO', (string) $org);
+        static::assertSame(23, $org->getId());
+        static::assertSame('FOO', $org->getName());
+        static::assertNull($org->getUser());
+        static::assertFalse($org->isUserOrganization());
+        static::assertCount(0, $org->getOrganizationRoles());
+        static::assertCount(0, $org->getOrganizationRoleNames());
+        static::assertFalse($org->hasOrganizationRole('ROLE_ADMIN'));
+        static::assertCount(0, $org->getOrganizationGroups());
+        static::assertCount(0, $org->getOrganizationGroupNames());
+        static::assertFalse($org->hasOrganizationGroup('GROUP_DEFAULT'));
+        static::assertCount(0, $org->getOrganizationUsers());
+        static::assertCount(0, $org->getOrganizationUserNames());
+        static::assertFalse($org->hasOrganizationUser('user.test'));
+        static::assertSame('FOO', (string) $org);
     }
 
     public function testModelName(): void
     {
         $org = new MockOrganization('FOO');
 
-        $this->assertSame('FOO', $org->getName());
+        static::assertSame('FOO', $org->getName());
         $org->setName('BAR');
-        $this->assertSame('BAR', $org->getName());
+        static::assertSame('BAR', $org->getName());
     }
 
     public function testModelUser(): void
@@ -61,12 +61,12 @@ final class OrganizationTest extends TestCase
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
         $org = new MockOrganization('FOO');
 
-        $this->assertNull($org->getUser());
-        $this->assertFalse($org->isUserOrganization());
+        static::assertNull($org->getUser());
+        static::assertFalse($org->isUserOrganization());
 
         $org->setUser($user);
-        $this->assertSame($user, $org->getUser());
-        $this->assertTrue($org->isUserOrganization());
+        static::assertSame($user, $org->getUser());
+        static::assertTrue($org->isUserOrganization());
     }
 
     public function testModelRoles(): void
@@ -74,86 +74,86 @@ final class OrganizationTest extends TestCase
         $role = new MockRole('ROLE_ADMIN');
         $org = new MockOrganization('FOO');
 
-        $this->assertCount(0, $org->getOrganizationRoles());
-        $this->assertCount(0, $org->getOrganizationRoleNames());
-        $this->assertFalse($org->hasOrganizationRole('ROLE_ADMIN'));
+        static::assertCount(0, $org->getOrganizationRoles());
+        static::assertCount(0, $org->getOrganizationRoleNames());
+        static::assertFalse($org->hasOrganizationRole('ROLE_ADMIN'));
 
         $org->addOrganizationRole($role);
 
-        $this->assertCount(1, $org->getOrganizationRoles());
-        $this->assertCount(1, $org->getOrganizationRoleNames());
-        $this->assertTrue($org->hasOrganizationRole('ROLE_ADMIN'));
-        $this->assertSame('ROLE_ADMIN', current($org->getOrganizationRoleNames()));
+        static::assertCount(1, $org->getOrganizationRoles());
+        static::assertCount(1, $org->getOrganizationRoleNames());
+        static::assertTrue($org->hasOrganizationRole('ROLE_ADMIN'));
+        static::assertSame('ROLE_ADMIN', current($org->getOrganizationRoleNames()));
 
         $org->removeOrganizationRole($role);
 
-        $this->assertCount(0, $org->getOrganizationRoles());
-        $this->assertCount(0, $org->getOrganizationRoleNames());
-        $this->assertFalse($org->hasOrganizationRole('ROLE_ADMIN'));
+        static::assertCount(0, $org->getOrganizationRoles());
+        static::assertCount(0, $org->getOrganizationRoleNames());
+        static::assertFalse($org->hasOrganizationRole('ROLE_ADMIN'));
     }
 
     public function testModelGroups(): void
     {
         /** @var GroupInterface|MockObject $group */
         $group = $this->getMockBuilder(GroupInterface::class)->getMock();
-        $group->expects($this->atLeastOnce())
+        $group->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('GROUP_DEFAULT')
         ;
 
         $org = new MockOrganization('FOO');
 
-        $this->assertCount(0, $org->getOrganizationGroups());
-        $this->assertCount(0, $org->getOrganizationGroupNames());
-        $this->assertFalse($org->hasOrganizationRole('GROUP_DEFAULT'));
+        static::assertCount(0, $org->getOrganizationGroups());
+        static::assertCount(0, $org->getOrganizationGroupNames());
+        static::assertFalse($org->hasOrganizationRole('GROUP_DEFAULT'));
 
         $org->addOrganizationGroup($group);
 
-        $this->assertCount(1, $org->getOrganizationGroups());
-        $this->assertCount(1, $org->getOrganizationGroupNames());
-        $this->assertTrue($org->hasOrganizationGroup('GROUP_DEFAULT'));
-        $this->assertSame('GROUP_DEFAULT', current($org->getOrganizationGroupNames()));
+        static::assertCount(1, $org->getOrganizationGroups());
+        static::assertCount(1, $org->getOrganizationGroupNames());
+        static::assertTrue($org->hasOrganizationGroup('GROUP_DEFAULT'));
+        static::assertSame('GROUP_DEFAULT', current($org->getOrganizationGroupNames()));
 
         $org->removeOrganizationGroup($group);
 
-        $this->assertCount(0, $org->getOrganizationGroups());
-        $this->assertCount(0, $org->getOrganizationGroupNames());
-        $this->assertFalse($org->hasOrganizationGroup('GROUP_DEFAULT'));
+        static::assertCount(0, $org->getOrganizationGroups());
+        static::assertCount(0, $org->getOrganizationGroupNames());
+        static::assertFalse($org->hasOrganizationGroup('GROUP_DEFAULT'));
     }
 
     public function testModelUsers(): void
     {
         /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->atLeastOnce())
+        $user->expects(static::atLeastOnce())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
 
         /** @var MockObject|OrganizationUserInterface $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
-        $orgUser->expects($this->atLeastOnce())
+        $orgUser->expects(static::atLeastOnce())
             ->method('getUser')
             ->willReturn($user)
         ;
 
         $org = new MockOrganization('FOO');
 
-        $this->assertCount(0, $org->getOrganizationUsers());
-        $this->assertCount(0, $org->getOrganizationUserNames());
-        $this->assertFalse($org->hasOrganizationUser($user->getUsername()));
+        static::assertCount(0, $org->getOrganizationUsers());
+        static::assertCount(0, $org->getOrganizationUserNames());
+        static::assertFalse($org->hasOrganizationUser($user->getUsername()));
 
         $org->addOrganizationUser($orgUser);
 
-        $this->assertCount(1, $org->getOrganizationUsers());
-        $this->assertCount(1, $org->getOrganizationUserNames());
-        $this->assertTrue($org->hasOrganizationUser($user->getUsername()));
-        $this->assertSame($user->getUsername(), current($org->getOrganizationUserNames()));
+        static::assertCount(1, $org->getOrganizationUsers());
+        static::assertCount(1, $org->getOrganizationUserNames());
+        static::assertTrue($org->hasOrganizationUser($user->getUsername()));
+        static::assertSame($user->getUsername(), current($org->getOrganizationUserNames()));
 
         $org->removeOrganizationUser($orgUser);
 
-        $this->assertCount(0, $org->getOrganizationUsers());
-        $this->assertCount(0, $org->getOrganizationUserNames());
-        $this->assertFalse($org->hasOrganizationUser($user->getUsername()));
+        static::assertCount(0, $org->getOrganizationUsers());
+        static::assertCount(0, $org->getOrganizationUserNames());
+        static::assertFalse($org->hasOrganizationUser($user->getUsername()));
     }
 }

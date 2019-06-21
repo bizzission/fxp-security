@@ -76,7 +76,7 @@ final class SharingDeleteListenerTest extends TestCase
 
         $this->listener->setSharingManager($this->sharingManager);
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getUnitOfWork')
             ->willReturn($this->uow)
         ;
@@ -93,7 +93,7 @@ final class SharingDeleteListenerTest extends TestCase
             ]
         );
 
-        $this->assertCount(2, $this->listener->getSubscribedEvents());
+        static::assertCount(2, $this->listener->getSubscribedEvents());
     }
 
     public function getInvalidInitMethods(): array
@@ -127,7 +127,7 @@ final class SharingDeleteListenerTest extends TestCase
 
     public function testGetSharingManager(): void
     {
-        $this->assertSame($this->sharingManager, $this->listener->getSharingManager());
+        static::assertSame($this->sharingManager, $this->listener->getSharingManager());
     }
 
     public function testOnFlush(): void
@@ -137,12 +137,12 @@ final class SharingDeleteListenerTest extends TestCase
         /** @var \PHPUnit\Framework\MockObject\MockObject|PostFlushEventArgs $postArgs */
         $postArgs = $this->getMockBuilder(PostFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
-        $args->expects($this->atLeast(1))
+        $args->expects(static::atLeast(1))
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $postArgs->expects($this->atLeast(1))
+        $postArgs->expects(static::atLeast(1))
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
@@ -154,19 +154,19 @@ final class SharingDeleteListenerTest extends TestCase
         $group = new MockGroup('GROUP_TEST', 32);
         $deletions = [$object, $role, $object2, $group];
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn($deletions)
         ;
 
-        $this->sharingManager->expects($this->atLeastOnce())
+        $this->sharingManager->expects(static::atLeastOnce())
             ->method('hasSubjectConfig')
             ->willReturnCallback(static function ($type) {
                 return MockObject::class === $type;
             })
         ;
 
-        $this->sharingManager->expects($this->atLeastOnce())
+        $this->sharingManager->expects(static::atLeastOnce())
             ->method('hasIdentityConfig')
             ->willReturnCallback(static function ($type) {
                 return MockRole::class === $type || MockGroup::class === $type;
@@ -174,71 +174,71 @@ final class SharingDeleteListenerTest extends TestCase
         ;
 
         // post flush: query builder
-        $this->em->expects($this->once())
+        $this->em->expects(static::once())
             ->method('createQueryBuilder')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(0))
+        $this->qb->expects(static::at(0))
             ->method('delete')
             ->with(MockSharing::class, 's')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(1))
+        $this->qb->expects(static::at(1))
             ->method('andWhere')
             ->with('(s.subjectClass = :subjectClass_0 AND s.subjectId IN (:subjectIds_0))')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(2))
+        $this->qb->expects(static::at(2))
             ->method('setParameter')
             ->with('subjectClass_0', MockObject::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(3))
+        $this->qb->expects(static::at(3))
             ->method('setParameter')
             ->with('subjectIds_0', [42, 50])
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(4))
+        $this->qb->expects(static::at(4))
             ->method('andWhere')
             ->with('(s.identityClass = :identityClass_0 AND s.identityName IN (:identityNames_0)) OR (s.identityClass = :identityClass_1 AND s.identityName IN (:identityNames_1))')
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(5))
+        $this->qb->expects(static::at(5))
             ->method('setParameter')
             ->with('identityClass_0', MockRole::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(6))
+        $this->qb->expects(static::at(6))
             ->method('setParameter')
             ->with('identityNames_0', [23])
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(7))
+        $this->qb->expects(static::at(7))
             ->method('setParameter')
             ->with('identityClass_1', MockGroup::class)
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(8))
+        $this->qb->expects(static::at(8))
             ->method('setParameter')
             ->with('identityNames_1', [32])
             ->willReturn($this->qb)
         ;
 
-        $this->qb->expects($this->at(9))
+        $this->qb->expects(static::at(9))
             ->method('getQuery')
             ->willReturn($this->query)
         ;
 
-        $this->query->expects($this->once())
+        $this->query->expects(static::once())
             ->method('execute')
         ;
 

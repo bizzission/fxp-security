@@ -65,25 +65,25 @@ final class CacheSecurityIdentityManagerTest extends TestCase
     {
         $token = new MockToken();
 
-        $this->roleHierarchy->expects($this->exactly(2))
+        $this->roleHierarchy->expects(static::exactly(2))
             ->method('getReachableRoleNames')
             ->with([])
             ->willReturn([])
         ;
 
-        $this->authenticationTrustResolver->expects($this->exactly(2))
+        $this->authenticationTrustResolver->expects(static::exactly(2))
             ->method('isFullFledged')
             ->with($token)
             ->willReturn(false)
         ;
 
-        $this->authenticationTrustResolver->expects($this->exactly(2))
+        $this->authenticationTrustResolver->expects(static::exactly(2))
             ->method('isRememberMe')
             ->with($token)
             ->willReturn(false)
         ;
 
-        $this->authenticationTrustResolver->expects($this->exactly(2))
+        $this->authenticationTrustResolver->expects(static::exactly(2))
             ->method('isAnonymous')
             ->with($token)
             ->willReturn(true)
@@ -98,18 +98,18 @@ final class CacheSecurityIdentityManagerTest extends TestCase
 
         $newSids = $this->sidManager->getSecurityIdentities($token);
 
-        $this->assertSame($sids, $cacheSids);
-        $this->assertEquals($sids, $newSids);
+        static::assertSame($sids, $cacheSids);
+        static::assertEquals($sids, $newSids);
     }
 
     public function testGetSecurityIdentitiesWithoutToken(): void
     {
-        $this->roleHierarchy->expects($this->never())
+        $this->roleHierarchy->expects(static::never())
             ->method('getReachableRoles')
         ;
 
         $sids = $this->sidManager->getSecurityIdentities();
 
-        $this->assertCount(0, $sids);
+        static::assertCount(0, $sids);
     }
 }

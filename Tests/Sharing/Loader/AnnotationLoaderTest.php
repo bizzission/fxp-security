@@ -45,7 +45,7 @@ final class AnnotationLoaderTest extends TestCase
             ->getMock()
         ;
 
-        $finder->expects($this->once())
+        $finder->expects(static::once())
             ->method('findClasses')
             ->willReturn([
                 MockObjectWithAnnotation::class,
@@ -58,11 +58,11 @@ final class AnnotationLoaderTest extends TestCase
         /** @var SharingSubjectConfigInterface[] $configs */
         $configs = $loader->loadSubjectConfigurations();
 
-        $this->assertCount(1, $configs);
+        static::assertCount(1, $configs);
 
         $config = current($configs);
-        $this->assertSame(MockObjectWithAnnotation::class, $config->getType());
-        $this->assertSame(SharingVisibilities::TYPE_PRIVATE, $config->getVisibility());
+        static::assertSame(MockObjectWithAnnotation::class, $config->getType());
+        static::assertSame(SharingVisibilities::TYPE_PRIVATE, $config->getVisibility());
     }
 
     /**
@@ -76,7 +76,7 @@ final class AnnotationLoaderTest extends TestCase
             ->getMock()
         ;
 
-        $finder->expects($this->once())
+        $finder->expects(static::once())
             ->method('findClasses')
             ->willReturn([
                 MockObjectWithAnnotation::class,
@@ -89,12 +89,12 @@ final class AnnotationLoaderTest extends TestCase
         /** @var SharingIdentityConfigInterface[] $configs */
         $configs = $loader->loadIdentityConfigurations();
 
-        $this->assertCount(1, $configs);
+        static::assertCount(1, $configs);
 
         $config = current($configs);
-        $this->assertSame(MockObjectWithAnnotation::class, $config->getType());
-        $this->assertSame('object', $config->getAlias());
-        $this->assertTrue($config->isRoleable());
-        $this->assertTrue($config->isPermissible());
+        static::assertSame(MockObjectWithAnnotation::class, $config->getType());
+        static::assertSame('object', $config->getAlias());
+        static::assertTrue($config->isRoleable());
+        static::assertTrue($config->isPermissible());
     }
 }

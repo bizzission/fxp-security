@@ -30,22 +30,22 @@ final class UserSecurityIdentityTest extends TestCase
     {
         $sid = new UserSecurityIdentity(MockUserRoleable::class, 'user.test');
 
-        $this->assertSame('UserSecurityIdentity(user.test)', (string) $sid);
+        static::assertSame('UserSecurityIdentity(user.test)', (string) $sid);
     }
 
     public function testTypeAndIdentifier(): void
     {
         $identity = new UserSecurityIdentity(MockUserRoleable::class, 'identifier');
 
-        $this->assertSame(MockUserRoleable::class, $identity->getType());
-        $this->assertSame('identifier', $identity->getIdentifier());
+        static::assertSame(MockUserRoleable::class, $identity->getType());
+        static::assertSame('identifier', $identity->getIdentifier());
     }
 
     public function getIdentities(): array
     {
         $id3 = $this->getMockBuilder(SecurityIdentityInterface::class)->getMock();
-        $id3->expects($this->any())->method('getType')->willReturn(MockUserRoleable::class);
-        $id3->expects($this->any())->method('getIdentifier')->willReturn('identifier');
+        $id3->expects(static::any())->method('getType')->willReturn(MockUserRoleable::class);
+        $id3->expects(static::any())->method('getIdentifier')->willReturn('identifier');
 
         return [
             [new UserSecurityIdentity(MockUserRoleable::class, 'identifier'), true],
@@ -64,44 +64,44 @@ final class UserSecurityIdentityTest extends TestCase
     {
         $identity = new UserSecurityIdentity(MockUserRoleable::class, 'identifier');
 
-        $this->assertSame($result, $identity->equals($value));
+        static::assertSame($result, $identity->equals($value));
     }
 
     public function testFromAccount(): void
     {
         /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->once())
+        $user->expects(static::once())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
 
         $sid = UserSecurityIdentity::fromAccount($user);
 
-        $this->assertSame(\get_class($user), $sid->getType());
-        $this->assertSame('user.test', $sid->getIdentifier());
+        static::assertSame(\get_class($user), $sid->getType());
+        static::assertSame('user.test', $sid->getIdentifier());
     }
 
     public function testFormToken(): void
     {
         /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->once())
+        $user->expects(static::once())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
 
         /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $token->expects($this->once())
+        $token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;
 
         $sid = UserSecurityIdentity::fromToken($token);
 
-        $this->assertSame(\get_class($user), $sid->getType());
-        $this->assertSame('user.test', $sid->getIdentifier());
+        static::assertSame(\get_class($user), $sid->getType());
+        static::assertSame('user.test', $sid->getIdentifier());
     }
 
     public function testFormTokenWithInvalidInterface(): void
@@ -114,7 +114,7 @@ final class UserSecurityIdentityTest extends TestCase
 
         /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
-        $token->expects($this->once())
+        $token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;

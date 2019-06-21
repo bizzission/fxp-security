@@ -110,7 +110,7 @@ final class SecurityIdentityManagerTest extends TestCase
         });
 
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->once())
+        $user->expects(static::once())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
@@ -121,14 +121,14 @@ final class SecurityIdentityManagerTest extends TestCase
         $token = new MockToken($tokenRoles);
         $token->setUser($user);
 
-        $this->roleHierarchy->expects($this->once())
+        $this->roleHierarchy->expects(static::once())
             ->method('getReachableRoleNames')
             ->with($tokenRoles)
             ->willReturn($tokenRoles)
         ;
 
         if (\in_array($trustMethod, ['isRememberMe', 'isAnonymous'], true)) {
-            $this->authenticationTrustResolver->expects($this->once())
+            $this->authenticationTrustResolver->expects(static::once())
                 ->method('isFullFledged')
                 ->with($token)
                 ->willReturn(false)
@@ -136,14 +136,14 @@ final class SecurityIdentityManagerTest extends TestCase
         }
 
         if ('isAnonymous' === $trustMethod) {
-            $this->authenticationTrustResolver->expects($this->once())
+            $this->authenticationTrustResolver->expects(static::once())
                 ->method('isRememberMe')
                 ->with($token)
                 ->willReturn(false)
             ;
         }
 
-        $this->authenticationTrustResolver->expects($this->once())
+        $this->authenticationTrustResolver->expects(static::once())
             ->method($trustMethod)
             ->with($token)
             ->willReturn(true)
@@ -153,19 +153,19 @@ final class SecurityIdentityManagerTest extends TestCase
 
         $this->sidManager->getSecurityIdentities($token);
 
-        $this->assertTrue($preEventAction);
-        $this->assertTrue($addEventAction);
-        $this->assertTrue($postEventAction);
+        static::assertTrue($preEventAction);
+        static::assertTrue($addEventAction);
+        static::assertTrue($postEventAction);
     }
 
     public function testGetSecurityIdentitiesWithoutToken(): void
     {
-        $this->roleHierarchy->expects($this->never())
+        $this->roleHierarchy->expects(static::never())
             ->method('getReachableRoles')
         ;
 
         $sids = $this->sidManager->getSecurityIdentities();
 
-        $this->assertCount(0, $sids);
+        static::assertCount(0, $sids);
     }
 }

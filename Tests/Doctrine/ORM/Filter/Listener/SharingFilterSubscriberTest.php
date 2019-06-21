@@ -100,109 +100,109 @@ final class SharingFilterSubscriberTest extends TestCase
             $this->sharingManager
         );
         $connection = $this->getMockBuilder(Connection::class)->getMock();
-        $connection->expects($this->any())
+        $connection->expects(static::any())
             ->method('quote')
             ->willReturnCallback(static function ($v) {
                 return $v;
             })
         ;
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getFilters')
             ->willReturn($this->filterCollection)
         ;
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getConnection')
             ->willReturn($connection)
         ;
 
-        $this->sharingManager->expects($this->any())
+        $this->sharingManager->expects(static::any())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $this->assertCount(4, SharingFilterSubscriber::getSubscribedEvents());
+        static::assertCount(4, SharingFilterSubscriber::getSubscribedEvents());
     }
 
     public function testOnSharingManagerChange(): void
     {
-        $this->filterCollection->expects($this->once())
+        $this->filterCollection->expects(static::once())
             ->method('getEnabledFilters')
             ->willReturn([
                 'sharing' => $this->filter,
             ])
         ;
 
-        $this->sharingManager->expects($this->once())
+        $this->sharingManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $this->assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
+        static::assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
         $this->listener->onSharingManagerChange();
-        $this->assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
+        static::assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
     }
 
     public function testOnEventWithoutSecurityIdentities(): void
     {
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->filterCollection->expects($this->once())
+        $this->filterCollection->expects(static::once())
             ->method('getEnabledFilters')
             ->willReturn([
                 'sharing' => $this->filter,
             ])
         ;
 
-        $this->tokenStorage->expects($this->atLeastOnce())
+        $this->tokenStorage->expects(static::atLeastOnce())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('getSecurityIdentities')
             ->with($token)
             ->willReturn([])
         ;
 
-        $this->assertFalse($this->filter->hasParameter('has_security_identities'));
-        $this->assertFalse($this->filter->hasParameter('map_security_identities'));
-        $this->assertFalse($this->filter->hasParameter('user_id'));
-        $this->assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
+        static::assertFalse($this->filter->hasParameter('has_security_identities'));
+        static::assertFalse($this->filter->hasParameter('map_security_identities'));
+        static::assertFalse($this->filter->hasParameter('user_id'));
+        static::assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
 
         /** @var KernelEvent $event */
         $event = $this->getMockBuilder(KernelEvent::class)->disableOriginalConstructor()->getMock();
         $this->listener->onEvent($event);
 
-        $this->assertTrue($this->filter->hasParameter('has_security_identities'));
-        $this->assertTrue($this->filter->hasParameter('map_security_identities'));
-        $this->assertTrue($this->filter->hasParameter('user_id'));
-        $this->assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
+        static::assertTrue($this->filter->hasParameter('has_security_identities'));
+        static::assertTrue($this->filter->hasParameter('map_security_identities'));
+        static::assertTrue($this->filter->hasParameter('user_id'));
+        static::assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
 
-        $this->assertFalse($this->filter->getParameter('has_security_identities'));
-        $this->assertSame([], $this->filter->getParameter('map_security_identities'));
-        $this->assertNull($this->filter->getParameter('user_id'));
-        $this->assertTrue($this->filter->getParameter('sharing_manager_enabled'));
+        static::assertFalse($this->filter->getParameter('has_security_identities'));
+        static::assertSame([], $this->filter->getParameter('map_security_identities'));
+        static::assertNull($this->filter->getParameter('user_id'));
+        static::assertTrue($this->filter->getParameter('sharing_manager_enabled'));
     }
 
     public function testOnEvent(): void
     {
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->filterCollection->expects($this->once())
+        $this->filterCollection->expects(static::once())
             ->method('getEnabledFilters')
             ->willReturn([
                 'sharing' => $this->filter,
             ])
         ;
 
-        $this->tokenStorage->expects($this->atLeastOnce())
+        $this->tokenStorage->expects(static::atLeastOnce())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('getSecurityIdentities')
             ->with($token)
             ->willReturn([
@@ -211,7 +211,7 @@ final class SharingFilterSubscriberTest extends TestCase
             ])
         ;
 
-        $this->sharingManager->expects($this->atLeastOnce())
+        $this->sharingManager->expects(static::atLeastOnce())
             ->method('getIdentityConfig')
             ->willReturnCallback(function ($v) {
                 $config = $this->getMockBuilder(SharingIdentityConfigInterface::class)->getMock();
@@ -230,30 +230,30 @@ final class SharingFilterSubscriberTest extends TestCase
 
         $user = new MockUserRoleable();
 
-        $token->expects($this->atLeastOnce())
+        $token->expects(static::atLeastOnce())
             ->method('getUser')
             ->willReturn($user)
         ;
 
-        $this->assertFalse($this->filter->hasParameter('has_security_identities'));
-        $this->assertFalse($this->filter->hasParameter('map_security_identities'));
-        $this->assertFalse($this->filter->hasParameter('user_id'));
-        $this->assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
+        static::assertFalse($this->filter->hasParameter('has_security_identities'));
+        static::assertFalse($this->filter->hasParameter('map_security_identities'));
+        static::assertFalse($this->filter->hasParameter('user_id'));
+        static::assertFalse($this->filter->hasParameter('sharing_manager_enabled'));
 
         /** @var KernelEvent $event */
         $event = $this->getMockBuilder(KernelEvent::class)->disableOriginalConstructor()->getMock();
         $this->listener->onEvent($event);
 
-        $this->assertTrue($this->filter->hasParameter('has_security_identities'));
-        $this->assertTrue($this->filter->hasParameter('map_security_identities'));
-        $this->assertTrue($this->filter->hasParameter('user_id'));
-        $this->assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
+        static::assertTrue($this->filter->hasParameter('has_security_identities'));
+        static::assertTrue($this->filter->hasParameter('map_security_identities'));
+        static::assertTrue($this->filter->hasParameter('user_id'));
+        static::assertTrue($this->filter->hasParameter('sharing_manager_enabled'));
 
-        $this->assertTrue($this->filter->getParameter('has_security_identities'));
-        $this->assertSame([
+        static::assertTrue($this->filter->getParameter('has_security_identities'));
+        static::assertSame([
             MockRole::class => 'ROLE_USER, ROLE_ADMIN',
         ], $this->filter->getParameter('map_security_identities'));
-        $this->assertSame(50, $this->filter->getParameter('user_id'));
-        $this->assertTrue($this->filter->getParameter('sharing_manager_enabled'));
+        static::assertSame(50, $this->filter->getParameter('user_id'));
+        static::assertTrue($this->filter->getParameter('sharing_manager_enabled'));
     }
 }

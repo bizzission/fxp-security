@@ -43,31 +43,31 @@ final class SharingFactoryTest extends TestCase
     public function testCreateConfigurations($configInterface, $loadMethod, $createMethod): void
     {
         $config1 = $this->getMockBuilder($configInterface)->getMock();
-        $config1->expects($this->atLeast(2))
+        $config1->expects(static::atLeast(2))
             ->method('getType')
             ->willReturn(MockObject::class)
         ;
 
         $config2 = $this->getMockBuilder($configInterface)->getMock();
-        $config2->expects($this->atLeast(1))
+        $config2->expects(static::atLeast(1))
             ->method('getType')
             ->willReturn(MockObject::class)
         ;
 
-        $config1->expects($this->atLeast(1))
+        $config1->expects(static::atLeast(1))
             ->method('merge')
             ->with($config2)
         ;
 
         /** @var LoaderInterface|MockObject $loader */
         $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $loader->expects($this->once())
+        $loader->expects(static::once())
             ->method($loadMethod)
             ->willReturn([$config1, $config2])
         ;
 
         $factory = new SharingFactory($loader);
 
-        $this->assertSame([MockObject::class => $config1], $factory->{$createMethod}());
+        static::assertSame([MockObject::class => $config1], $factory->{$createMethod}());
     }
 }

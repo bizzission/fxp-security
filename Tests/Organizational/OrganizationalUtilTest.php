@@ -29,7 +29,7 @@ final class OrganizationalUtilTest extends TestCase
         $object = new MockObject('foo');
         $res = OrganizationalUtil::formatName($object, 'ROLE_TEST');
 
-        $this->assertSame('ROLE_TEST', $res);
+        static::assertSame('ROLE_TEST', $res);
     }
 
     public function testFormatNameWithOrganization(): void
@@ -38,34 +38,34 @@ final class OrganizationalUtilTest extends TestCase
         $object->setOrganization(new MockOrganization('foo'));
         $res = OrganizationalUtil::formatName($object, 'ROLE_TEST');
 
-        $this->assertSame('ROLE_TEST__foo', $res);
+        static::assertSame('ROLE_TEST__foo', $res);
     }
 
     public function testFormat(): void
     {
         $res = OrganizationalUtil::format('ROLE_TEST');
 
-        $this->assertSame('ROLE_TEST', $res);
+        static::assertSame('ROLE_TEST', $res);
     }
 
     public function testFormatWithOrganization(): void
     {
         $res = OrganizationalUtil::format('ROLE_TEST__foo');
 
-        $this->assertSame('ROLE_TEST', $res);
+        static::assertSame('ROLE_TEST', $res);
     }
 
     public function testGetSuffix(): void
     {
         $res = OrganizationalUtil::getSuffix('ROLE_TEST');
 
-        $this->assertSame('', $res);
+        static::assertSame('', $res);
     }
 
     public function testGetSuffixWithOrganization(): void
     {
         $res = OrganizationalUtil::getSuffix('ROLE_TEST__foo');
 
-        $this->assertSame('__foo', $res);
+        static::assertSame('__foo', $res);
     }
 }

@@ -33,7 +33,7 @@ final class RoleUtilTest extends TestCase
             'ROLE_TEST',
         ];
 
-        $this->assertEquals($expected, RoleUtil::formatNames($value));
+        static::assertEquals($expected, RoleUtil::formatNames($value));
     }
 
     public function testFormatName(): void
@@ -41,6 +41,6 @@ final class RoleUtilTest extends TestCase
         $value = new MockRole('ROLE_TEST');
         $expected = 'ROLE_TEST';
 
-        $this->assertEquals($expected, RoleUtil::formatName($value));
+        static::assertEquals($expected, RoleUtil::formatName($value));
     }
 }

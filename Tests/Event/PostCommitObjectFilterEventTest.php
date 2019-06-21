@@ -30,6 +30,6 @@ final class PostCommitObjectFilterEventTest extends TestCase
         ];
 
         $event = new PostCommitObjectFilterEvent($objects);
-        $this->assertSame($objects, $event->getObjects());
+        static::assertSame($objects, $event->getObjects());
     }
 }

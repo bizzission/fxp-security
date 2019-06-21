@@ -41,17 +41,17 @@ final class DisablePermissionSubscriberTest extends TestCase
     public function testDisable(): void
     {
         $listener = new DisablePermissionSubscriber($this->permManager);
-        $this->assertCount(4, DisablePermissionSubscriber::getSubscribedEvents());
+        static::assertCount(4, DisablePermissionSubscriber::getSubscribedEvents());
 
         /** @var AbstractEditableSecurityEvent|MockObject $event */
         $event = $this->getMockForAbstractClass(AbstractEditableSecurityEvent::class);
 
-        $this->permManager->expects($this->once())
+        $this->permManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $this->permManager->expects($this->once())
+        $this->permManager->expects(static::once())
             ->method('setEnabled')
             ->with(false)
         ;
@@ -62,11 +62,11 @@ final class DisablePermissionSubscriberTest extends TestCase
     public function testEnable(): void
     {
         $listener = new DisablePermissionSubscriber($this->permManager);
-        $this->assertCount(4, DisablePermissionSubscriber::getSubscribedEvents());
+        static::assertCount(4, DisablePermissionSubscriber::getSubscribedEvents());
 
         $event = new PostReachableRoleEvent([], true);
 
-        $this->permManager->expects($this->once())
+        $this->permManager->expects(static::once())
             ->method('setEnabled')
             ->with(true)
         ;

@@ -29,7 +29,7 @@ final class IsBasicAuthProviderTest extends TestCase
         $token = $this->getMockBuilder(UsernamePasswordToken::class)->disableOriginalConstructor()->getMock();
         $trustResolver = $this->getMockBuilder(AuthenticationTrustResolverInterface::class)->getMock();
 
-        $trustResolver->expects($this->once())
+        $trustResolver->expects(static::once())
             ->method('isAnonymous')
             ->with($token)
             ->willReturn(false)
@@ -41,9 +41,9 @@ final class IsBasicAuthProviderTest extends TestCase
             'trust_resolver' => $trustResolver,
         ];
 
-        $this->assertTrue($expressionLanguage->evaluate('is_basic_auth()', $variables));
+        static::assertTrue($expressionLanguage->evaluate('is_basic_auth()', $variables));
 
         $compiled = '$token && $token instanceof \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken && !$trust_resolver->isAnonymous($token)';
-        $this->assertEquals($compiled, $expressionLanguage->compile('is_basic_auth()'));
+        static::assertEquals($compiled, $expressionLanguage->compile('is_basic_auth()'));
     }
 }

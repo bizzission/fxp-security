@@ -27,21 +27,21 @@ final class PermissionFactoryCacheWarmerTest extends TestCase
     public function testWarmUp(): void
     {
         $cacheLoader = $this->getMockBuilder(WarmableInterface::class)->getMock();
-        $cacheLoader->expects($this->once())
+        $cacheLoader->expects(static::once())
             ->method('warmUp')
             ->with('cache_dir')
         ;
 
         /** @var ContainerInterface|MockObject $container */
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $container->expects($this->once())
+        $container->expects(static::once())
             ->method('get')
             ->with('fxp_security.permission_factory')
             ->willReturn($cacheLoader)
         ;
 
         $warmer = new PermissionFactoryCacheWarmer($container);
-        $this->assertTrue($warmer->isOptional());
+        static::assertTrue($warmer->isOptional());
 
         $warmer->warmUp('cache_dir');
     }

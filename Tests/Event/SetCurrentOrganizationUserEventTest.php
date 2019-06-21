@@ -29,6 +29,6 @@ final class SetCurrentOrganizationUserEventTest extends TestCase
 
         $event = new SetCurrentOrganizationUserEvent($orgUser);
 
-        $this->assertSame($orgUser, $event->getOrganizationUser());
+        static::assertSame($orgUser, $event->getOrganizationUser());
     }
 }

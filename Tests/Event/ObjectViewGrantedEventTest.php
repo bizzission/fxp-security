@@ -26,12 +26,12 @@ final class ObjectViewGrantedEventTest extends TestCase
         $object = new \stdClass();
         $event = new ObjectViewGrantedEvent($object);
 
-        $this->assertSame($object, $event->getObject());
-        $this->assertFalse($event->isSkipAuthorizationChecker());
-        $this->assertTrue($event->isGranted());
+        static::assertSame($object, $event->getObject());
+        static::assertFalse($event->isSkipAuthorizationChecker());
+        static::assertTrue($event->isGranted());
 
         $event->setGranted(false);
-        $this->assertTrue($event->isSkipAuthorizationChecker());
-        $this->assertFalse($event->isGranted());
+        static::assertTrue($event->isSkipAuthorizationChecker());
+        static::assertFalse($event->isGranted());
     }
 }

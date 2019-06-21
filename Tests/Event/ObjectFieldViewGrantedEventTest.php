@@ -30,14 +30,14 @@ final class ObjectFieldViewGrantedEventTest extends TestCase
 
         $event = new ObjectFieldViewGrantedEvent($fieldVote);
 
-        $this->assertSame($fieldVote, $event->getFieldVote());
-        $this->assertSame($fieldVote->getSubject()->getObject(), $event->getObject());
-        $this->assertFalse($event->isSkipAuthorizationChecker());
-        $this->assertTrue($event->isGranted());
+        static::assertSame($fieldVote, $event->getFieldVote());
+        static::assertSame($fieldVote->getSubject()->getObject(), $event->getObject());
+        static::assertFalse($event->isSkipAuthorizationChecker());
+        static::assertTrue($event->isGranted());
 
         $event->setGranted(false);
-        $this->assertTrue($event->isSkipAuthorizationChecker());
-        $this->assertFalse($event->isGranted());
+        static::assertTrue($event->isSkipAuthorizationChecker());
+        static::assertFalse($event->isGranted());
     }
 
     public function testEventWithInvalidFieldVote(): void

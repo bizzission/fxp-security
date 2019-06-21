@@ -45,7 +45,7 @@ final class MixedValueTest extends TestCase
     {
         $mv = new MixedValue();
 
-        $this->assertTrue($mv->supports($value));
-        $this->assertSame($expected, $mv->getValue($value));
+        static::assertTrue($mv->supports($value));
+        static::assertSame($expected, $mv->getValue($value));
     }
 }

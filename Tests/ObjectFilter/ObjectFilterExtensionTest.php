@@ -25,29 +25,29 @@ final class ObjectFilterExtensionTest extends TestCase
     public function testFilterValue(): void
     {
         $voter1 = $this->getMockBuilder(ObjectFilterVoterInterface::class)->getMock();
-        $voter1->expects($this->once())
+        $voter1->expects(static::once())
             ->method('supports')
             ->willReturn(false)
         ;
-        $voter1->expects($this->never())
+        $voter1->expects(static::never())
             ->method('getValue')
         ;
 
         $voter2 = $this->getMockBuilder(ObjectFilterVoterInterface::class)->getMock();
-        $voter2->expects($this->once())
+        $voter2->expects(static::once())
             ->method('supports')
             ->willReturn(true)
         ;
-        $voter2->expects($this->once())
+        $voter2->expects(static::once())
             ->method('getValue')
             ->willReturn('TEST')
         ;
 
         $voter3 = $this->getMockBuilder(ObjectFilterVoterInterface::class)->getMock();
-        $voter3->expects($this->never())
+        $voter3->expects(static::never())
             ->method('supports')
         ;
-        $voter3->expects($this->never())
+        $voter3->expects(static::never())
             ->method('getValue')
         ;
 
@@ -57,6 +57,6 @@ final class ObjectFilterExtensionTest extends TestCase
             $voter3,
         ]);
 
-        $this->assertSame('TEST', $ofe->filterValue(42));
+        static::assertSame('TEST', $ofe->filterValue(42));
     }
 }

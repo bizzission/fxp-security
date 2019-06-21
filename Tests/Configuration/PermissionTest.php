@@ -38,12 +38,12 @@ final class PermissionTest extends TestCase
             'buildDefaultFields' => false,
         ]);
 
-        $this->assertSame(['read'], $config->getOperations());
-        $this->assertSame(['update' => 'edit'], $config->getMappingPermissions());
-        $this->assertSame(['foo' => $field], $config->getFields());
-        $this->assertSame('foo', $config->getMaster());
-        $this->assertSame(['view' => 'read'], $config->getMasterFieldMappingPermissions());
-        $this->assertFalse($config->getBuildFields());
-        $this->assertFalse($config->getBuildDefaultFields());
+        static::assertSame(['read'], $config->getOperations());
+        static::assertSame(['update' => 'edit'], $config->getMappingPermissions());
+        static::assertSame(['foo' => $field], $config->getFields());
+        static::assertSame('foo', $config->getMaster());
+        static::assertSame(['view' => 'read'], $config->getMasterFieldMappingPermissions());
+        static::assertFalse($config->getBuildFields());
+        static::assertFalse($config->getBuildDefaultFields());
     }
 }

@@ -33,8 +33,8 @@ final class PostSecurityIdentityEventTest extends TestCase
 
         $event = new PostSecurityIdentityEvent($token, $sids);
 
-        $this->assertSame($token, $event->getToken());
-        $this->assertSame($sids, $event->getSecurityIdentities());
-        $this->assertTrue($event->isPermissionEnabled());
+        static::assertSame($token, $event->getToken());
+        static::assertSame($sids, $event->getSecurityIdentities());
+        static::assertTrue($event->isPermissionEnabled());
     }
 }

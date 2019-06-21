@@ -63,22 +63,22 @@ final class GetNoneFilterEventTest extends TestCase
         $this->targetEntity = $this->getMockBuilder(ClassMetadata::class)->disableOriginalConstructor()->getMock();
         $this->filter = $this->getMockForAbstractClass(SQLFilter::class, [$this->entityManager]);
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getFilters')
             ->willReturn(new FilterCollection($this->entityManager))
         ;
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getConnection')
             ->willReturn($this->connection)
         ;
 
-        $this->entityManager->expects($this->any())
+        $this->entityManager->expects(static::any())
             ->method('getClassMetadata')
             ->willReturn($this->targetEntity)
         ;
 
-        $this->connection->expects($this->any())
+        $this->connection->expects(static::any())
             ->method('quote')
             ->willReturnCallback(static function ($v) {
                 return '\''.$v.'\'';
@@ -96,12 +96,12 @@ final class GetNoneFilterEventTest extends TestCase
 
     public function testGetters(): void
     {
-        $this->assertSame($this->entityManager, $this->event->getEntityManager());
-        $this->assertSame($this->entityManager->getConnection(), $this->event->getConnection());
-        $this->assertSame($this->entityManager->getClassMetadata(MockSharing::class), $this->event->getClassMetadata(MockSharing::class));
-        $this->assertSame($this->entityManager->getClassMetadata(MockSharing::class), $this->event->getSharingClassMetadata());
-        $this->assertSame($this->targetEntity, $this->event->getTargetEntity());
-        $this->assertSame('t0', $this->event->getTargetTableAlias());
+        static::assertSame($this->entityManager, $this->event->getEntityManager());
+        static::assertSame($this->entityManager->getConnection(), $this->event->getConnection());
+        static::assertSame($this->entityManager->getClassMetadata(MockSharing::class), $this->event->getClassMetadata(MockSharing::class));
+        static::assertSame($this->entityManager->getClassMetadata(MockSharing::class), $this->event->getSharingClassMetadata());
+        static::assertSame($this->targetEntity, $this->event->getTargetEntity());
+        static::assertSame('t0', $this->event->getTargetTableAlias());
     }
 
     /**
@@ -109,18 +109,18 @@ final class GetNoneFilterEventTest extends TestCase
      */
     public function testSetParameter(): void
     {
-        $this->assertFalse($this->event->hasParameter('foo'));
+        static::assertFalse($this->event->hasParameter('foo'));
         $this->event->setParameter('foo', true, 'boolean');
-        $this->assertSame('\'1\'', $this->event->getParameter('foo'));
-        $this->assertTrue($this->event->getRealParameter('foo'));
+        static::assertSame('\'1\'', $this->event->getParameter('foo'));
+        static::assertTrue($this->event->getRealParameter('foo'));
     }
 
     public function testSetFilterConstraint(): void
     {
-        $this->assertSame('', $this->event->getFilterConstraint());
+        static::assertSame('', $this->event->getFilterConstraint());
 
         $this->event->setFilterConstraint('TEST_FILTER');
 
-        $this->assertSame('TEST_FILTER', $this->event->getFilterConstraint());
+        static::assertSame('TEST_FILTER', $this->event->getFilterConstraint());
     }
 }

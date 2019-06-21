@@ -36,7 +36,7 @@ final class PreLoadPermissionsEventTest extends TestCase
 
         $event = new PreLoadPermissionsEvent($sids, $roles);
 
-        $this->assertSame($sids, $event->getSecurityIdentities());
-        $this->assertSame($roles, $event->getRoles());
+        static::assertSame($sids, $event->getSecurityIdentities());
+        static::assertSame($roles, $event->getRoles());
     }
 }

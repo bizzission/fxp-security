@@ -36,6 +36,6 @@ final class IdentityUtilsTest extends TestCase
 
         $sids = IdentityUtils::merge($sids, $newSids);
 
-        $this->assertEquals($valid, $sids);
+        static::assertEquals($valid, $sids);
     }
 }

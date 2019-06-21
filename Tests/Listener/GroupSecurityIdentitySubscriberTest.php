@@ -28,7 +28,7 @@ final class GroupSecurityIdentitySubscriberTest extends TestCase
     public function testAddGroupSecurityIdentitiesWithException(): void
     {
         $listener = new GroupSecurityIdentitySubscriber();
-        $this->assertCount(1, GroupSecurityIdentitySubscriber::getSubscribedEvents());
+        static::assertCount(1, GroupSecurityIdentitySubscriber::getSubscribedEvents());
 
         /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
@@ -42,7 +42,7 @@ final class GroupSecurityIdentitySubscriberTest extends TestCase
     public function testAddGroupSecurityIdentities(): void
     {
         $listener = new GroupSecurityIdentitySubscriber();
-        $this->assertCount(1, GroupSecurityIdentitySubscriber::getSubscribedEvents());
+        static::assertCount(1, GroupSecurityIdentitySubscriber::getSubscribedEvents());
 
         /** @var MockObject|TokenInterface $token */
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
@@ -50,7 +50,7 @@ final class GroupSecurityIdentitySubscriberTest extends TestCase
 
         $user = new MockUserGroupable();
 
-        $token->expects($this->once())
+        $token->expects(static::once())
             ->method('getUser')
             ->willReturn($user)
         ;

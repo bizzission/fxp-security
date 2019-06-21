@@ -31,12 +31,12 @@ final class DoctrineUtilsTest extends TestCase
     {
         /** @var ClassMetadata|MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('TestIdentifier')
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'identifier',
@@ -44,7 +44,7 @@ final class DoctrineUtilsTest extends TestCase
             ])
         ;
 
-        $this->assertSame('identifier', DoctrineUtils::getIdentifier($targetClass));
+        static::assertSame('identifier', DoctrineUtils::getIdentifier($targetClass));
         DoctrineUtils::clearCaches();
     }
 
@@ -52,17 +52,17 @@ final class DoctrineUtilsTest extends TestCase
     {
         /** @var ClassMetadata|MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('TestIdentifier')
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getIdentifierFieldNames')
             ->willReturn([])
         ;
 
-        $this->assertSame('id', DoctrineUtils::getIdentifier($targetClass));
+        static::assertSame('id', DoctrineUtils::getIdentifier($targetClass));
         DoctrineUtils::clearCaches();
     }
 
@@ -92,25 +92,25 @@ final class DoctrineUtilsTest extends TestCase
     {
         /** @var ClassMetadata|MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('TestIdentifier')
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
             ])
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getTypeOfField')
             ->with('id')
             ->willReturn($type)
         ;
 
-        $this->assertSame($validValue, DoctrineUtils::getMockZeroId($targetClass));
+        static::assertSame($validValue, DoctrineUtils::getMockZeroId($targetClass));
         DoctrineUtils::clearCaches();
     }
 
@@ -121,19 +121,19 @@ final class DoctrineUtilsTest extends TestCase
     {
         /** @var ClassMetadata|MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('TestIdentifier')
         ;
 
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
             ])
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getTypeOfField')
             ->with('id')
             ->willReturn(Type::GUID)
@@ -150,7 +150,7 @@ final class DoctrineUtilsTest extends TestCase
                 'getGuidTypeDeclarationSQL',
             ]
         );
-        $dbPlatform->expects($this->once())
+        $dbPlatform->expects(static::once())
             ->method('getGuidTypeDeclarationSQL')
             ->with(['id'])
             ->willReturn('UUID')
@@ -158,16 +158,16 @@ final class DoctrineUtilsTest extends TestCase
 
         /** @var Connection|MockObject $conn */
         $conn = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
-        $conn->expects($this->atLeastOnce())
+        $conn->expects(static::atLeastOnce())
             ->method('getDatabasePlatform')
             ->willReturn($dbPlatform)
         ;
-        $conn->expects($this->atLeastOnce())
+        $conn->expects(static::atLeastOnce())
             ->method('getDriver')
             ->willReturn($this->getMockBuilder(Driver::class)->disableOriginalConstructor()->getMock())
         ;
 
-        $this->assertSame('::UUID', DoctrineUtils::castIdentifier($targetClass, $conn));
+        static::assertSame('::UUID', DoctrineUtils::castIdentifier($targetClass, $conn));
         DoctrineUtils::clearCaches();
     }
 
@@ -178,12 +178,12 @@ final class DoctrineUtilsTest extends TestCase
     {
         /** @var ClassMetadata|MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('TestIdentifier')
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
@@ -192,13 +192,13 @@ final class DoctrineUtilsTest extends TestCase
 
         $type = Type::getType(Type::GUID);
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getTypeOfField')
             ->with('id')
             ->willReturn($type)
         ;
 
-        $this->assertEquals($type, DoctrineUtils::getIdentifierType($targetClass));
+        static::assertEquals($type, DoctrineUtils::getIdentifierType($targetClass));
         DoctrineUtils::clearCaches();
     }
 
@@ -209,12 +209,12 @@ final class DoctrineUtilsTest extends TestCase
     {
         /** @var ClassMetadata|MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('TestIdentifier')
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
@@ -223,13 +223,13 @@ final class DoctrineUtilsTest extends TestCase
 
         $type = Type::getType(Type::GUID);
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getTypeOfField')
             ->with('id')
             ->willReturn($type)
         ;
 
-        $this->assertSame($type, DoctrineUtils::getIdentifierType($targetClass));
+        static::assertSame($type, DoctrineUtils::getIdentifierType($targetClass));
         DoctrineUtils::clearCaches();
     }
 
@@ -243,19 +243,19 @@ final class DoctrineUtilsTest extends TestCase
 
         /** @var ClassMetadata|MockObject $targetClass */
         $targetClass = $this->getMockBuilder(ClassMetadata::class)->getMock();
-        $targetClass->expects($this->atLeastOnce())
+        $targetClass->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('TestIdentifier')
         ;
 
-        $targetClass->expects($this->once())
+        $targetClass->expects(static::once())
             ->method('getIdentifierFieldNames')
             ->willReturn([
                 'id',
             ])
         ;
 
-        $this->assertSame(42, DoctrineUtils::getIdentifierType($targetClass));
+        static::assertSame(42, DoctrineUtils::getIdentifierType($targetClass));
         DoctrineUtils::clearCaches();
     }
 }

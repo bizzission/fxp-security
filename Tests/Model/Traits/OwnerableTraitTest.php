@@ -27,12 +27,12 @@ final class OwnerableTraitTest extends TestCase
         $user = new MockUserRoleable();
         $ownerable = new MockObjectOwnerable('foo');
 
-        $this->assertNull($ownerable->getOwner());
-        $this->assertNull($ownerable->getOwnerId());
+        static::assertNull($ownerable->getOwner());
+        static::assertNull($ownerable->getOwnerId());
 
         $ownerable->setOwner($user);
 
-        $this->assertSame($user, $ownerable->getOwner());
-        $this->assertSame(50, $ownerable->getOwnerId());
+        static::assertSame($user, $ownerable->getOwner());
+        static::assertSame(50, $ownerable->getOwnerId());
     }
 }

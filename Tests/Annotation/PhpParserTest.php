@@ -31,6 +31,6 @@ final class PhpParserTest extends TestCase
             MockObject::class,
         ];
 
-        $this->assertSame($expected, $classes);
+        static::assertSame($expected, $classes);
     }
 }

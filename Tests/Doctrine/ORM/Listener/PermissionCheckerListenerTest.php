@@ -69,7 +69,7 @@ final class PermissionCheckerListenerTest extends TestCase
         $this->uow = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
         $this->listener = new PermissionCheckerListener();
 
-        $this->em->expects($this->any())
+        $this->em->expects(static::any())
             ->method('getUnitOfWork')
             ->willReturn($this->uow)
         ;
@@ -78,7 +78,7 @@ final class PermissionCheckerListenerTest extends TestCase
         $this->listener->setAuthorizationChecker($this->authChecker);
         $this->listener->setPermissionManager($this->permissionManager);
 
-        $this->assertCount(2, $this->listener->getSubscribedEvents());
+        static::assertCount(2, $this->listener->getSubscribedEvents());
     }
 
     public function getInvalidInitMethods(): array
@@ -125,7 +125,7 @@ final class PermissionCheckerListenerTest extends TestCase
 
     public function testPostFlush(): void
     {
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('resetPreloadPermissions')
             ->with([])
         ;
@@ -139,12 +139,12 @@ final class PermissionCheckerListenerTest extends TestCase
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(false)
         ;
@@ -157,7 +157,7 @@ final class PermissionCheckerListenerTest extends TestCase
         /** @var OnFlushEventArgs $args */
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn(null)
         ;
@@ -171,7 +171,7 @@ final class PermissionCheckerListenerTest extends TestCase
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(ConsoleToken::class)->disableOriginalConstructor()->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
@@ -189,42 +189,42 @@ final class PermissionCheckerListenerTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([$object])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([])
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('preloadPermissions')
             ->with([$object])
         ;
 
-        $this->authChecker->expects($this->once())
+        $this->authChecker->expects(static::once())
             ->method('isGranted')
             ->with('perm_create', $object)
             ->willReturn(false)
@@ -243,42 +243,42 @@ final class PermissionCheckerListenerTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([$object])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([])
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('preloadPermissions')
             ->with([$object])
         ;
 
-        $this->authChecker->expects($this->once())
+        $this->authChecker->expects(static::once())
             ->method('isGranted')
             ->with('perm_update', $object)
             ->willReturn(false)
@@ -297,42 +297,42 @@ final class PermissionCheckerListenerTest extends TestCase
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
         $object = $this->getMockBuilder(\stdClass::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([$object])
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('preloadPermissions')
             ->with([$object])
         ;
 
-        $this->authChecker->expects($this->once())
+        $this->authChecker->expects(static::once())
             ->method('isGranted')
             ->with('perm_delete', $object)
             ->willReturn(false)
@@ -347,37 +347,37 @@ final class PermissionCheckerListenerTest extends TestCase
         $args = $this->getMockBuilder(OnFlushEventArgs::class)->disableOriginalConstructor()->getMock();
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('isEnabled')
             ->willReturn(true)
         ;
 
-        $args->expects($this->once())
+        $args->expects(static::once())
             ->method('getEntityManager')
             ->willReturn($this->em)
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityInsertions')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityUpdates')
             ->willReturn([])
         ;
 
-        $this->uow->expects($this->once())
+        $this->uow->expects(static::once())
             ->method('getScheduledEntityDeletions')
             ->willReturn([])
         ;
 
-        $this->permissionManager->expects($this->once())
+        $this->permissionManager->expects(static::once())
             ->method('preloadPermissions')
             ->with([])
         ;

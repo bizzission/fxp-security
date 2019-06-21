@@ -43,7 +43,7 @@ final class DoctrineOrmCollectionValueTest extends TestCase
     {
         $collectionValue = new DoctrineOrmCollectionValue();
 
-        $this->assertSame($result, $collectionValue->supports($value));
+        static::assertSame($result, $collectionValue->supports($value));
     }
 
     /**
@@ -57,8 +57,8 @@ final class DoctrineOrmCollectionValueTest extends TestCase
 
         $newValue = $collectionValue->getValue($value);
 
-        $this->assertNotSame($value, $newValue);
-        $this->assertInstanceOf(ArrayCollection::class, $newValue);
-        $this->assertCount(0, $newValue);
+        static::assertNotSame($value, $newValue);
+        static::assertInstanceOf(ArrayCollection::class, $newValue);
+        static::assertCount(0, $newValue);
     }
 }

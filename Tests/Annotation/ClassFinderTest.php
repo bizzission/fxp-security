@@ -39,6 +39,6 @@ final class ClassFinderTest extends TestCase
             MockToken::class,
         ];
 
-        $this->assertSame($expected, $finder->findClasses());
+        static::assertSame($expected, $finder->findClasses());
     }
 }

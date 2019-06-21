@@ -65,11 +65,11 @@ final class CachePermissionFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createConfigurations')
         ;
 
-        $this->configCacheFactory->expects($this->never())
+        $this->configCacheFactory->expects(static::never())
             ->method('cache')
         ;
 
@@ -83,11 +83,11 @@ final class CachePermissionFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createConfigurations')
         ;
 
-        $this->configCacheFactory->expects($this->never())
+        $this->configCacheFactory->expects(static::never())
             ->method('cache')
         ;
 
@@ -106,20 +106,20 @@ final class CachePermissionFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createConfigurations')
         ;
 
         $cache = $this->getMockBuilder(ConfigCacheInterface::class)->getMock();
-        $cache->expects($this->at(0))
+        $cache->expects(static::at(0))
             ->method('write')
         ;
-        $cache->expects($this->at(1))
+        $cache->expects(static::at(1))
             ->method('getPath')
             ->willReturn($cacheFileConfigs)
         ;
 
-        $this->configCacheFactory->expects($this->atLeastOnce())
+        $this->configCacheFactory->expects(static::atLeastOnce())
             ->method('cache')
             ->willReturnCallback(static function ($file, $callable) use ($cache) {
                 $callable($cache);
@@ -138,7 +138,7 @@ final class CachePermissionFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->never())
+        $this->factory->expects(static::never())
             ->method('createConfigurations')
         ;
 
@@ -153,7 +153,7 @@ final class CachePermissionFactoryTest extends TestCase
         ]);
         $cacheFactory->setConfigCacheFactory($this->configCacheFactory);
 
-        $this->factory->expects($this->once())
+        $this->factory->expects(static::once())
             ->method('createConfigurations')
         ;
 

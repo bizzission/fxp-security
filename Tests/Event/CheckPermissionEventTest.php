@@ -43,15 +43,15 @@ final class CheckPermissionEventTest extends TestCase
 
         $event = new CheckPermissionEvent($sids, $permissionMap, $operation, $subject, $field);
 
-        $this->assertSame($sids, $event->getSecurityIdentities());
-        $this->assertSame($permissionMap, $event->getPermissionMap());
-        $this->assertSame($operation, $event->getOperation());
-        $this->assertSame($subject, $event->getSubject());
-        $this->assertSame($field, $event->getField());
-        $this->assertNull($event->isGranted());
+        static::assertSame($sids, $event->getSecurityIdentities());
+        static::assertSame($permissionMap, $event->getPermissionMap());
+        static::assertSame($operation, $event->getOperation());
+        static::assertSame($subject, $event->getSubject());
+        static::assertSame($field, $event->getField());
+        static::assertNull($event->isGranted());
 
         $event->setGranted(true);
 
-        $this->assertTrue($event->isGranted());
+        static::assertTrue($event->isGranted());
     }
 }

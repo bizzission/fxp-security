@@ -28,7 +28,7 @@ final class ChainLoaderTest extends TestCase
     {
         $loader = new ChainLoader([]);
 
-        $this->assertSame([], $loader->loadConfigurations());
+        static::assertSame([], $loader->loadConfigurations());
     }
 
     public function testWithLoaders(): void
@@ -43,20 +43,20 @@ final class ChainLoaderTest extends TestCase
         $expectedConfigs = array_merge($loader1Configs, $loader2Configs);
 
         $loader1 = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $loader1->expects($this->once())
+        $loader1->expects(static::once())
             ->method('loadConfigurations')
             ->willReturn($loader1Configs)
         ;
 
         $loader2 = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $loader2->expects($this->once())
+        $loader2->expects(static::once())
             ->method('loadConfigurations')
             ->willReturn($loader2Configs)
         ;
 
         $loader = new ChainLoader([$loader1, $loader2]);
 
-        $this->assertSame($expectedConfigs, $loader->loadConfigurations());
+        static::assertSame($expectedConfigs, $loader->loadConfigurations());
     }
 
     public function testWithInvalidLoader(): void

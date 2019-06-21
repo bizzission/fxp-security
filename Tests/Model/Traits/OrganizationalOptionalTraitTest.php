@@ -34,9 +34,9 @@ final class OrganizationalOptionalTraitTest extends TestCase
         $model = $this->getMockForTrait(OrganizationalOptionalTrait::class);
         $model->setOrganization($org);
 
-        $this->assertSame($org, $model->getOrganization());
+        static::assertSame($org, $model->getOrganization());
 
         $model->setOrganization(null);
-        $this->assertNull($model->getOrganization());
+        static::assertNull($model->getOrganization());
     }
 }

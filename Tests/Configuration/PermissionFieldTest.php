@@ -29,8 +29,8 @@ final class PermissionFieldTest extends TestCase
             'editable' => true,
         ]);
 
-        $this->assertSame(['read'], $config->getOperations());
-        $this->assertSame(['update' => 'edit'], $config->getMappingPermissions());
-        $this->assertTrue($config->getEditable());
+        static::assertSame(['read'], $config->getOperations());
+        static::assertSame(['update' => 'edit'], $config->getMappingPermissions());
+        static::assertTrue($config->getEditable());
     }
 }

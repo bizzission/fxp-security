@@ -29,11 +29,11 @@ final class PostReachableRoleEventTest extends TestCase
         ];
 
         $event = new PostReachableRoleEvent($roles);
-        $this->assertSame($roles, $event->getReachableRoleNames());
-        $this->assertTrue($event->isPermissionEnabled());
+        static::assertSame($roles, $event->getReachableRoleNames());
+        static::assertTrue($event->isPermissionEnabled());
 
         $roles[] = 'ROLE_BAZ';
         $event->setReachableRoleNames($roles);
-        $this->assertSame($roles, $event->getReachableRoleNames());
+        static::assertSame($roles, $event->getReachableRoleNames());
     }
 }

@@ -28,41 +28,41 @@ final class UserOrganizationUsersTraitTest extends TestCase
     {
         $user = new MockUserOrganizationUsers();
 
-        $this->assertCount(0, $user->getUserOrganizations());
-        $this->assertCount(0, $user->getUserOrganizationNames());
-        $this->assertFalse($user->hasUserOrganization('foo'));
-        $this->assertNull($user->getUserOrganization('foo'));
+        static::assertCount(0, $user->getUserOrganizations());
+        static::assertCount(0, $user->getUserOrganizationNames());
+        static::assertFalse($user->hasUserOrganization('foo'));
+        static::assertNull($user->getUserOrganization('foo'));
 
         /** @var MockObject|OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        $org->expects($this->atLeastOnce())
+        $org->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('foo')
         ;
-        $org->expects($this->once())
+        $org->expects(static::once())
             ->method('isUserOrganization')
             ->willReturn(false)
         ;
 
         /** @var MockObject|OrganizationUserInterface $orgUser */
         $orgUser = $this->getMockBuilder(OrganizationUserInterface::class)->getMock();
-        $orgUser->expects($this->atLeastOnce())
+        $orgUser->expects(static::atLeastOnce())
             ->method('getOrganization')
             ->willReturn($org)
         ;
 
         $user->addUserOrganization($orgUser);
 
-        $this->assertCount(1, $user->getUserOrganizations());
-        $this->assertCount(1, $user->getUserOrganizationNames());
-        $this->assertTrue($user->hasUserOrganization('foo'));
-        $this->assertSame($orgUser, $user->getUserOrganization('foo'));
+        static::assertCount(1, $user->getUserOrganizations());
+        static::assertCount(1, $user->getUserOrganizationNames());
+        static::assertTrue($user->hasUserOrganization('foo'));
+        static::assertSame($orgUser, $user->getUserOrganization('foo'));
 
         $user->removeUserOrganization($orgUser);
 
-        $this->assertCount(0, $user->getUserOrganizations());
-        $this->assertCount(0, $user->getUserOrganizationNames());
-        $this->assertFalse($user->hasUserOrganization('foo'));
-        $this->assertNull($user->getUserOrganization('foo'));
+        static::assertCount(0, $user->getUserOrganizations());
+        static::assertCount(0, $user->getUserOrganizationNames());
+        static::assertFalse($user->hasUserOrganization('foo'));
+        static::assertNull($user->getUserOrganization('foo'));
     }
 }

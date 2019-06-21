@@ -30,20 +30,20 @@ final class GroupableTraitTest extends TestCase
         $groupable = new MockUserGroupable(false);
         $group = new MockGroup('GROUP_TEST');
 
-        $this->assertEmpty($groupable->getGroups());
+        static::assertEmpty($groupable->getGroups());
 
         $groupable->addGroup($group);
 
-        $this->assertFalse($groupable->hasGroup('GROUP_FOO'));
-        $this->assertTrue($groupable->hasGroup('GROUP_TEST'));
-        $this->assertEquals(['GROUP_TEST'], $groupable->getGroupNames());
-        $this->assertEquals([$group], $groupable->getGroups()->toArray());
+        static::assertFalse($groupable->hasGroup('GROUP_FOO'));
+        static::assertTrue($groupable->hasGroup('GROUP_TEST'));
+        static::assertEquals(['GROUP_TEST'], $groupable->getGroupNames());
+        static::assertEquals([$group], $groupable->getGroups()->toArray());
 
         $groupable->removeGroup($group);
 
-        $this->assertFalse($groupable->hasGroup('GROUP_TEST'));
-        $this->assertEquals([], $groupable->getGroupNames());
-        $this->assertEquals([], $groupable->getGroups()->toArray());
+        static::assertFalse($groupable->hasGroup('GROUP_TEST'));
+        static::assertEquals([], $groupable->getGroupNames());
+        static::assertEquals([], $groupable->getGroups()->toArray());
     }
 
     public function testOrganizationUserModel(): void
@@ -53,19 +53,19 @@ final class GroupableTraitTest extends TestCase
         $groupable = new MockOrganizationUserRoleableGroupable($org, $user);
         $group = new MockGroup('GROUP_TEST');
 
-        $this->assertEmpty($groupable->getGroups());
+        static::assertEmpty($groupable->getGroups());
 
         $groupable->addGroup($group);
 
-        $this->assertFalse($groupable->hasGroup('GROUP_FOO'));
-        $this->assertTrue($groupable->hasGroup('GROUP_TEST'));
-        $this->assertEquals(['GROUP_TEST'], $groupable->getGroupNames());
-        $this->assertEquals([$group], $groupable->getGroups()->toArray());
+        static::assertFalse($groupable->hasGroup('GROUP_FOO'));
+        static::assertTrue($groupable->hasGroup('GROUP_TEST'));
+        static::assertEquals(['GROUP_TEST'], $groupable->getGroupNames());
+        static::assertEquals([$group], $groupable->getGroups()->toArray());
 
         $groupable->removeGroup($group);
 
-        $this->assertFalse($groupable->hasGroup('GROUP_TEST'));
-        $this->assertEquals([], $groupable->getGroupNames());
-        $this->assertEquals([], $groupable->getGroups()->toArray());
+        static::assertFalse($groupable->hasGroup('GROUP_TEST'));
+        static::assertEquals([], $groupable->getGroupNames());
+        static::assertEquals([], $groupable->getGroups()->toArray());
     }
 }

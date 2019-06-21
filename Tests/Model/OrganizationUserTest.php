@@ -28,40 +28,40 @@ final class OrganizationUserTest extends TestCase
     {
         /** @var MockObject|OrganizationInterface $org */
         $org = $this->getMockBuilder(OrganizationInterface::class)->getMock();
-        $org->expects($this->atLeastOnce())
+        $org->expects(static::atLeastOnce())
             ->method('getName')
             ->willReturn('foo')
         ;
 
         /** @var MockObject|UserInterface $user */
         $user = $this->getMockBuilder(UserInterface::class)->getMock();
-        $user->expects($this->atLeastOnce())
+        $user->expects(static::atLeastOnce())
             ->method('getUsername')
             ->willReturn('user.test')
         ;
 
         $orgUser = new MockOrganizationUser($org, $user);
 
-        $this->assertSame(42, $orgUser->getId());
-        $this->assertSame($org, $orgUser->getOrganization());
-        $this->assertSame($user, $orgUser->getUser());
+        static::assertSame(42, $orgUser->getId());
+        static::assertSame($org, $orgUser->getOrganization());
+        static::assertSame($user, $orgUser->getUser());
 
-        $this->assertSame('foo:user.test', (string) $orgUser);
+        static::assertSame('foo:user.test', (string) $orgUser);
 
         /** @var MockObject|OrganizationInterface $org2 */
         $org2 = $this->getMockBuilder(OrganizationInterface::class)->getMock();
 
         $orgUser->setOrganization($org2);
 
-        $this->assertNotSame($org, $orgUser->getOrganization());
-        $this->assertSame($org2, $orgUser->getOrganization());
+        static::assertNotSame($org, $orgUser->getOrganization());
+        static::assertSame($org2, $orgUser->getOrganization());
 
         /** @var MockObject|UserInterface $user2 */
         $user2 = $this->getMockBuilder(UserInterface::class)->getMock();
 
         $orgUser->setUser($user2);
 
-        $this->assertNotSame($user, $orgUser->getUser());
-        $this->assertSame($user2, $orgUser->getUser());
+        static::assertNotSame($user, $orgUser->getUser());
+        static::assertSame($user2, $orgUser->getUser());
     }
 }

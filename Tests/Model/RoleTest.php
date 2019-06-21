@@ -28,20 +28,20 @@ final class RoleTest extends TestCase
         $nameAdmin = 'ROLE_ADMIN';
         $role = new MockRole($nameUser);
 
-        $this->assertSame(23, $role->getId());
-        $this->assertSame($nameUser, $role->getName());
+        static::assertSame(23, $role->getId());
+        static::assertSame($nameUser, $role->getName());
 
         $role->setName($nameAdmin);
-        $this->assertSame($nameAdmin, $role->getName());
-        $this->assertSame($nameAdmin, (string) $role);
+        static::assertSame($nameAdmin, $role->getName());
+        static::assertSame($nameAdmin, (string) $role);
 
-        $this->assertCount(0, $role->getParents());
-        $this->assertCount(0, $role->getParentNames());
-        $this->assertFalse($role->hasParent('PARENT'));
+        static::assertCount(0, $role->getParents());
+        static::assertCount(0, $role->getParentNames());
+        static::assertFalse($role->hasParent('PARENT'));
 
-        $this->assertCount(0, $role->getChildren());
-        $this->assertCount(0, $role->getChildrenNames());
-        $this->assertFalse($role->hasChild('CHILD'));
+        static::assertCount(0, $role->getChildren());
+        static::assertCount(0, $role->getChildrenNames());
+        static::assertFalse($role->hasChild('CHILD'));
     }
 
     public function testModelPermissions(): void
@@ -49,14 +49,14 @@ final class RoleTest extends TestCase
         $role = new MockRole('ROLE_USER');
         $perm = new MockPermission();
 
-        $this->assertCount(0, $role->getPermissions());
-        $this->assertFalse($role->hasPermission($perm));
+        static::assertCount(0, $role->getPermissions());
+        static::assertFalse($role->hasPermission($perm));
 
         $role->addPermission($perm);
-        $this->assertTrue($role->hasPermission($perm));
+        static::assertTrue($role->hasPermission($perm));
 
         $role->removePermission($perm);
-        $this->assertFalse($role->hasPermission($perm));
+        static::assertFalse($role->hasPermission($perm));
     }
 
     public function testParent(): void
@@ -64,27 +64,27 @@ final class RoleTest extends TestCase
         $roleUser = new MockRole('ROLE_USER');
         $roleAdmin = new MockRole('ROLE_ADMIN');
 
-        $this->assertCount(0, $roleUser->getParents());
-        $this->assertCount(0, $roleUser->getChildren());
-        $this->assertCount(0, $roleAdmin->getParents());
-        $this->assertCount(0, $roleAdmin->getChildren());
+        static::assertCount(0, $roleUser->getParents());
+        static::assertCount(0, $roleUser->getChildren());
+        static::assertCount(0, $roleAdmin->getParents());
+        static::assertCount(0, $roleAdmin->getChildren());
 
         $roleUser->addParent($roleAdmin);
 
-        $this->assertCount(1, $roleUser->getParents());
-        $this->assertCount(0, $roleUser->getChildren());
-        $this->assertCount(0, $roleAdmin->getParents());
-        $this->assertCount(1, $roleAdmin->getChildren());
+        static::assertCount(1, $roleUser->getParents());
+        static::assertCount(0, $roleUser->getChildren());
+        static::assertCount(0, $roleAdmin->getParents());
+        static::assertCount(1, $roleAdmin->getChildren());
 
-        $this->assertSame('ROLE_ADMIN', current($roleUser->getParentNames()));
-        $this->assertSame('ROLE_USER', current($roleAdmin->getChildrenNames()));
+        static::assertSame('ROLE_ADMIN', current($roleUser->getParentNames()));
+        static::assertSame('ROLE_USER', current($roleAdmin->getChildrenNames()));
 
         $roleUser->removeParent($roleAdmin);
 
-        $this->assertCount(0, $roleUser->getParents());
-        $this->assertCount(0, $roleUser->getChildren());
-        $this->assertCount(0, $roleAdmin->getParents());
-        $this->assertCount(0, $roleAdmin->getChildren());
+        static::assertCount(0, $roleUser->getParents());
+        static::assertCount(0, $roleUser->getChildren());
+        static::assertCount(0, $roleAdmin->getParents());
+        static::assertCount(0, $roleAdmin->getChildren());
     }
 
     public function testChildren(): void
@@ -92,25 +92,25 @@ final class RoleTest extends TestCase
         $roleUser = new MockRole('ROLE_USER');
         $roleAdmin = new MockRole('ROLE_ADMIN');
 
-        $this->assertCount(0, $roleUser->getParents());
-        $this->assertCount(0, $roleUser->getChildren());
-        $this->assertCount(0, $roleAdmin->getParents());
-        $this->assertCount(0, $roleAdmin->getChildren());
+        static::assertCount(0, $roleUser->getParents());
+        static::assertCount(0, $roleUser->getChildren());
+        static::assertCount(0, $roleAdmin->getParents());
+        static::assertCount(0, $roleAdmin->getChildren());
 
         $roleAdmin->addChild($roleUser);
 
-        $this->assertCount(0, $roleUser->getParents());
-        $this->assertCount(0, $roleUser->getChildren());
-        $this->assertCount(0, $roleAdmin->getParents());
-        $this->assertCount(1, $roleAdmin->getChildren());
+        static::assertCount(0, $roleUser->getParents());
+        static::assertCount(0, $roleUser->getChildren());
+        static::assertCount(0, $roleAdmin->getParents());
+        static::assertCount(1, $roleAdmin->getChildren());
 
-        $this->assertSame('ROLE_USER', current($roleAdmin->getChildrenNames()));
+        static::assertSame('ROLE_USER', current($roleAdmin->getChildrenNames()));
 
         $roleAdmin->removeChild($roleUser);
 
-        $this->assertCount(0, $roleUser->getParents());
-        $this->assertCount(0, $roleUser->getChildren());
-        $this->assertCount(0, $roleAdmin->getParents());
-        $this->assertCount(0, $roleAdmin->getChildren());
+        static::assertCount(0, $roleUser->getParents());
+        static::assertCount(0, $roleUser->getChildren());
+        static::assertCount(0, $roleAdmin->getParents());
+        static::assertCount(0, $roleAdmin->getChildren());
     }
 }

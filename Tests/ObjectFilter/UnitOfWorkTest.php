@@ -26,7 +26,7 @@ final class UnitOfWorkTest extends TestCase
     {
         $uow = new UnitOfWork();
 
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
     }
 
     public function testAttachAndDetach(): void
@@ -34,13 +34,13 @@ final class UnitOfWorkTest extends TestCase
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
 
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
 
         $uow->attach($obj);
-        $this->assertCount(1, $uow->getObjectIdentifiers());
+        static::assertCount(1, $uow->getObjectIdentifiers());
 
         $uow->detach($obj);
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
     }
 
     public function testAttachExistingObject(): void
@@ -48,13 +48,13 @@ final class UnitOfWorkTest extends TestCase
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
 
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
 
         $uow->attach($obj);
-        $this->assertCount(1, $uow->getObjectIdentifiers());
+        static::assertCount(1, $uow->getObjectIdentifiers());
 
         $uow->attach($obj);
-        $this->assertCount(1, $uow->getObjectIdentifiers());
+        static::assertCount(1, $uow->getObjectIdentifiers());
     }
 
     public function testDetachNonExistingObject(): void
@@ -62,10 +62,10 @@ final class UnitOfWorkTest extends TestCase
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
 
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
 
         $uow->detach($obj);
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
     }
 
     public function testFlush(): void
@@ -76,10 +76,10 @@ final class UnitOfWorkTest extends TestCase
 
         $uow->attach($obj1);
         $uow->attach($obj2);
-        $this->assertCount(2, $uow->getObjectIdentifiers());
+        static::assertCount(2, $uow->getObjectIdentifiers());
 
         $uow->flush();
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
     }
 
     public function testGetObjectChangeSet(): void
@@ -87,10 +87,10 @@ final class UnitOfWorkTest extends TestCase
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
 
-        $this->assertCount(0, $uow->getObjectIdentifiers());
+        static::assertCount(0, $uow->getObjectIdentifiers());
 
         $uow->attach($obj);
-        $this->assertCount(1, $uow->getObjectIdentifiers());
+        static::assertCount(1, $uow->getObjectIdentifiers());
 
         $obj->setName('bar');
 
@@ -101,7 +101,7 @@ final class UnitOfWorkTest extends TestCase
             ],
         ];
 
-        $this->assertSame($valid, $uow->getObjectChangeSet($obj));
+        static::assertSame($valid, $uow->getObjectChangeSet($obj));
     }
 
     public function testGetObjectChangeSetWithNonExistingObject(): void
@@ -109,7 +109,7 @@ final class UnitOfWorkTest extends TestCase
         $uow = new UnitOfWork();
         $obj = new MockObject('foo');
 
-        $this->assertCount(0, $uow->getObjectIdentifiers());
-        $this->assertSame([], $uow->getObjectChangeSet($obj));
+        static::assertCount(0, $uow->getObjectIdentifiers());
+        static::assertSame([], $uow->getObjectChangeSet($obj));
     }
 }

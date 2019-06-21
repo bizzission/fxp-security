@@ -115,7 +115,7 @@ final class ExpressionVoterTest extends TestCase
         /** @var ExpressionFunctionProviderInterface $provider */
         $provider = $this->getMockBuilder(ExpressionFunctionProviderInterface::class)->getMock();
 
-        $this->expressionLanguage->expects($this->once())
+        $this->expressionLanguage->expects(static::once())
             ->method('registerProvider')
             ->with($provider)
         ;
@@ -127,7 +127,7 @@ final class ExpressionVoterTest extends TestCase
     {
         $res = $this->voter->vote($this->token, null, [42]);
 
-        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $res);
+        static::assertSame(VoterInterface::ACCESS_ABSTAIN, $res);
     }
 
     public function getExpressionResults(): array
@@ -151,13 +151,13 @@ final class ExpressionVoterTest extends TestCase
             new RoleSecurityIdentity('role', AuthenticatedVoter::IS_AUTHENTICATED_FULLY),
         ];
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('getSecurityIdentities')
             ->with($this->token)
             ->willReturn($sids)
         ;
 
-        $this->expressionLanguage->expects($this->once())
+        $this->expressionLanguage->expects(static::once())
             ->method('evaluate')
             ->willReturnCallback(function ($attribute, array $variables) use ($resultExpression) {
                 $this->assertInstanceOf(Expression::class, $attribute);
@@ -181,17 +181,17 @@ final class ExpressionVoterTest extends TestCase
         $expression = new Expression('"ROLE_USER" in roles');
         $res = $this->voter->vote($this->token, null, [$expression]);
 
-        $this->assertSame($resultVoter, $res);
+        static::assertSame($resultVoter, $res);
     }
 
     public function testWithoutSecurityIdentityManagerButWithRequestSubject(): void
     {
-        $this->token->expects($this->once())
+        $this->token->expects(static::once())
             ->method('getRoleNames')
             ->willReturn(['ROLE_USER'])
         ;
 
-        $this->expressionLanguage->expects($this->once())
+        $this->expressionLanguage->expects(static::once())
             ->method('evaluate')
             ->willReturnCallback(function ($attribute, array $variables) {
                 $this->assertInstanceOf(Expression::class, $attribute);
@@ -225,6 +225,6 @@ final class ExpressionVoterTest extends TestCase
         );
         $res = $voter->vote($this->token, $request, [$expression]);
 
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $res);
+        static::assertSame(VoterInterface::ACCESS_GRANTED, $res);
     }
 }

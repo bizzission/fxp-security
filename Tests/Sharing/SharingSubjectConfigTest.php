@@ -28,27 +28,27 @@ final class SharingSubjectConfigTest extends TestCase
     {
         $config = new SharingSubjectConfig(MockObject::class);
 
-        $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame(SharingVisibilities::TYPE_NONE, $config->getVisibility());
+        static::assertSame(MockObject::class, $config->getType());
+        static::assertSame(SharingVisibilities::TYPE_NONE, $config->getVisibility());
     }
 
     public function testSharingSubjectConfig(): void
     {
         $config = new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PRIVATE);
 
-        $this->assertSame(MockObject::class, $config->getType());
-        $this->assertSame(SharingVisibilities::TYPE_PRIVATE, $config->getVisibility());
+        static::assertSame(MockObject::class, $config->getType());
+        static::assertSame(SharingVisibilities::TYPE_PRIVATE, $config->getVisibility());
     }
 
     public function testMerge(): void
     {
         $config = new SharingSubjectConfig(MockObject::class);
 
-        $this->assertSame(SharingVisibilities::TYPE_NONE, $config->getVisibility());
+        static::assertSame(SharingVisibilities::TYPE_NONE, $config->getVisibility());
 
         $config->merge(new SharingSubjectConfig(MockObject::class, SharingVisibilities::TYPE_PUBLIC));
 
-        $this->assertSame(SharingVisibilities::TYPE_PUBLIC, $config->getVisibility());
+        static::assertSame(SharingVisibilities::TYPE_PUBLIC, $config->getVisibility());
     }
 
     public function testMergeWithInvalidType(): void

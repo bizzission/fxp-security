@@ -67,12 +67,12 @@ final class RoleVoterTest extends TestCase
             new RoleSecurityIdentity(MockRole::class, 'TEST_ADMIN'),
         ];
 
-        $this->sidManager->expects($this->atLeast(2))
+        $this->sidManager->expects(static::atLeast(2))
             ->method('getSecurityIdentities')
             ->willReturn($sids)
         ;
 
-        $this->assertSame($access, $this->voter->vote($token, null, $attributes));
-        $this->assertSame($access, $this->voter->vote($token, null, $attributes));
+        static::assertSame($access, $this->voter->vote($token, null, $attributes));
+        static::assertSame($access, $this->voter->vote($token, null, $attributes));
     }
 }

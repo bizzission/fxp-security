@@ -68,13 +68,13 @@ final class GroupVoterTest extends TestCase
         ];
 
         if (VoterInterface::ACCESS_ABSTAIN !== $access) {
-            $this->sidManager->expects($this->atLeast(2))
+            $this->sidManager->expects(static::atLeast(2))
                 ->method('getSecurityIdentities')
                 ->willReturn($sids)
             ;
         }
 
-        $this->assertSame($access, $this->voter->vote($token, null, $attributes));
-        $this->assertSame($access, $this->voter->vote($token, null, $attributes));
+        static::assertSame($access, $this->voter->vote($token, null, $attributes));
+        static::assertSame($access, $this->voter->vote($token, null, $attributes));
     }
 }

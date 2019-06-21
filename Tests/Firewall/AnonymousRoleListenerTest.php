@@ -73,7 +73,7 @@ final class AnonymousRoleListenerTest extends TestCase
         $this->tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->getMock();
         $this->request = $this->getMockBuilder(Request::class)->getMock();
         $this->event = $this->getMockBuilder(RequestEvent::class)->disableOriginalConstructor()->getMock();
-        $this->event->expects($this->any())
+        $this->event->expects(static::any())
             ->method('getRequest')
             ->willReturn($this->request)
         ;
@@ -88,22 +88,22 @@ final class AnonymousRoleListenerTest extends TestCase
 
     public function testBasic(): void
     {
-        $this->assertTrue($this->listener->isEnabled());
+        static::assertTrue($this->listener->isEnabled());
         $this->listener->setEnabled(false);
-        $this->assertFalse($this->listener->isEnabled());
+        static::assertFalse($this->listener->isEnabled());
     }
 
     public function testInvokeWithDisabledListener(): void
     {
-        $this->sidManager->expects($this->never())
+        $this->sidManager->expects(static::never())
             ->method('addSpecialRole')
         ;
 
-        $this->tokenStorage->expects($this->never())
+        $this->tokenStorage->expects(static::never())
             ->method('getToken')
         ;
 
-        $this->trustResolver->expects($this->never())
+        $this->trustResolver->expects(static::never())
             ->method('isAnonymous')
         ;
 
@@ -122,15 +122,15 @@ final class AnonymousRoleListenerTest extends TestCase
             $this->tokenStorage
         );
 
-        $this->sidManager->expects($this->never())
+        $this->sidManager->expects(static::never())
             ->method('addSpecialRole')
         ;
 
-        $this->tokenStorage->expects($this->never())
+        $this->tokenStorage->expects(static::never())
             ->method('getToken')
         ;
 
-        $this->trustResolver->expects($this->never())
+        $this->trustResolver->expects(static::never())
             ->method('isAnonymous')
         ;
 
@@ -139,16 +139,16 @@ final class AnonymousRoleListenerTest extends TestCase
 
     public function testInvokeWithoutToken(): void
     {
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn(null)
         ;
 
-        $this->trustResolver->expects($this->never())
+        $this->trustResolver->expects(static::never())
             ->method('isAnonymous')
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('addSpecialRole')
             ->with('ROLE_CUSTOM_ANONYMOUS')
         ;
@@ -160,18 +160,18 @@ final class AnonymousRoleListenerTest extends TestCase
     {
         $token = $this->getMockBuilder(TokenInterface::class)->getMock();
 
-        $this->tokenStorage->expects($this->once())
+        $this->tokenStorage->expects(static::once())
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $this->trustResolver->expects($this->once())
+        $this->trustResolver->expects(static::once())
             ->method('isAnonymous')
             ->with($token)
             ->willReturn(true)
         ;
 
-        $this->sidManager->expects($this->once())
+        $this->sidManager->expects(static::once())
             ->method('addSpecialRole')
             ->with('ROLE_CUSTOM_ANONYMOUS')
         ;

@@ -32,16 +32,16 @@ final class RestoreViewGrantedEventTest extends TestCase
 
         $event = new RestoreViewGrantedEvent($fieldVote, $oldValue, $newValue);
 
-        $this->assertSame($fieldVote, $event->getFieldVote());
-        $this->assertSame($fieldVote->getSubject()->getObject(), $event->getObject());
-        $this->assertSame($oldValue, $event->getOldValue());
-        $this->assertSame($newValue, $event->getNewValue());
-        $this->assertFalse($event->isSkipAuthorizationChecker());
-        $this->assertTrue($event->isGranted());
+        static::assertSame($fieldVote, $event->getFieldVote());
+        static::assertSame($fieldVote->getSubject()->getObject(), $event->getObject());
+        static::assertSame($oldValue, $event->getOldValue());
+        static::assertSame($newValue, $event->getNewValue());
+        static::assertFalse($event->isSkipAuthorizationChecker());
+        static::assertTrue($event->isGranted());
 
         $event->setGranted(false);
-        $this->assertTrue($event->isSkipAuthorizationChecker());
-        $this->assertFalse($event->isGranted());
+        static::assertTrue($event->isSkipAuthorizationChecker());
+        static::assertFalse($event->isGranted());
     }
 
     public function testEventWithInvalidFieldVote(): void
