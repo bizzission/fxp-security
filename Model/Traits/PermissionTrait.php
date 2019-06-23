@@ -26,7 +26,7 @@ trait PermissionTrait
     /**
      * @var string[]
      *
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     protected $contexts = [];
 
