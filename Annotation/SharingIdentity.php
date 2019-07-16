@@ -9,7 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Configuration;
+namespace Fxp\Component\Security\Annotation;
+
+use Fxp\Component\Config\Annotation\AbstractAnnotation;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -17,7 +19,7 @@ namespace Fxp\Component\Security\Configuration;
  * @Annotation
  * @Target({"CLASS"})
  */
-class SharingIdentity extends AbstractConfiguration
+class SharingIdentity extends AbstractAnnotation
 {
     /**
      * @var null|string

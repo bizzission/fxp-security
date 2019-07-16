@@ -11,9 +11,9 @@
 
 namespace Fxp\Component\Security\Permission\Loader;
 
-use Fxp\Component\Security\Annotation\AbstractAnnotationLoader;
-use Fxp\Component\Security\Configuration\Permission;
-use Fxp\Component\Security\Configuration\PermissionField;
+use Fxp\Component\Config\Loader\AbstractAnnotationLoader;
+use Fxp\Component\Security\Annotation\Permission;
+use Fxp\Component\Security\Annotation\PermissionField;
 use Fxp\Component\Security\Permission\PermissionConfig;
 use Fxp\Component\Security\Permission\PermissionConfigInterface;
 use Fxp\Component\Security\Permission\PermissionFieldConfig;

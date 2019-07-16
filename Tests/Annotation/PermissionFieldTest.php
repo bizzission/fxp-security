@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\Configuration;
+namespace Fxp\Component\Security\Tests\Annotation;
 
-use Fxp\Component\Security\Configuration\PermissionField;
+use Fxp\Component\Security\Annotation\PermissionField;
 use PHPUnit\Framework\TestCase;
 
 /**

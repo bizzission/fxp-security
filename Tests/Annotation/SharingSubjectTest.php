@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\Configuration;
+namespace Fxp\Component\Security\Tests\Annotation;
 
-use Fxp\Component\Security\Configuration\SharingSubject;
+use Fxp\Component\Security\Annotation\SharingSubject;
 use Fxp\Component\Security\SharingVisibilities;
 use PHPUnit\Framework\TestCase;
 

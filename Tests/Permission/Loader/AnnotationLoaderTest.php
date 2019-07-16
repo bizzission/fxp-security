@@ -13,7 +13,7 @@ namespace Fxp\Component\Security\Tests\Permission\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Fxp\Component\Security\Annotation\ClassFinder;
+use Fxp\Component\Config\Loader\ClassFinder;
 use Fxp\Component\Security\Permission\Loader\AnnotationLoader;
 use Fxp\Component\Security\Permission\PermissionConfigInterface;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObjectWithAnnotation;

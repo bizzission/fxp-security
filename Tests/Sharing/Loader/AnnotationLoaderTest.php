@@ -13,7 +13,7 @@ namespace Fxp\Component\Security\Tests\Sharing\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Fxp\Component\Security\Annotation\ClassFinder;
+use Fxp\Component\Config\Loader\ClassFinder;
 use Fxp\Component\Security\Sharing\Loader\AnnotationLoader;
 use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
 use Fxp\Component\Security\Sharing\SharingSubjectConfigInterface;

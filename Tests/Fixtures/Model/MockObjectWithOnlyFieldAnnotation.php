@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Tests\Fixtures\Model;
 
-use Fxp\Component\Security\Configuration as FxpSecurity;
+use Fxp\Component\Security\Annotation as FxpSecurity;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>

@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Tests\Configuration;
+namespace Fxp\Component\Security\Tests\Annotation;
 
-use Fxp\Component\Security\Configuration\SharingIdentity;
+use Fxp\Component\Security\Annotation\SharingIdentity;
 use PHPUnit\Framework\TestCase;
 
 /**

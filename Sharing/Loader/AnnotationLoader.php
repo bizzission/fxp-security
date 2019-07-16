@@ -11,9 +11,9 @@
 
 namespace Fxp\Component\Security\Sharing\Loader;
 
-use Fxp\Component\Security\Annotation\AbstractAnnotationLoader;
-use Fxp\Component\Security\Configuration\SharingIdentity;
-use Fxp\Component\Security\Configuration\SharingSubject;
+use Fxp\Component\Config\Loader\AbstractAnnotationLoader;
+use Fxp\Component\Security\Annotation\SharingIdentity;
+use Fxp\Component\Security\Annotation\SharingSubject;
 use Fxp\Component\Security\Sharing\SharingIdentityConfig;
 use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
 use Fxp\Component\Security\Sharing\SharingSubjectConfig;
