@@ -74,7 +74,7 @@ class AnnotationLoader extends AbstractAnnotationLoader
         foreach ($classAnnotations as $annotation) {
             if ($annotation instanceof Permission) {
                 $configs->add(new PermissionConfig(
-                    $refClass->getName(),
+                    $refClass->name,
                     $annotation->getOperations(),
                     $annotation->getMappingPermissions(),
                     $this->convertPermissionFields($annotation->getFields()),
@@ -102,7 +102,7 @@ class AnnotationLoader extends AbstractAnnotationLoader
 
         foreach ($refClass->getProperties() as $refProperty) {
             $propertyAnnotations = $this->reader->getPropertyAnnotations($refProperty);
-            $field = $refProperty->getName();
+            $field = $refProperty->name;
 
             foreach ($propertyAnnotations as $annotation) {
                 if ($annotation instanceof PermissionField) {
