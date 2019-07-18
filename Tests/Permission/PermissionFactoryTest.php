@@ -11,12 +11,13 @@
 
 namespace Fxp\Component\Security\Tests\Permission;
 
-use Fxp\Component\Security\Permission\Loader\LoaderInterface;
+use Fxp\Component\Security\Permission\PermissionConfigCollection;
 use Fxp\Component\Security\Permission\PermissionConfigInterface;
 use Fxp\Component\Security\Permission\PermissionFactory;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObject as FixtureMockObject;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -38,7 +39,7 @@ final class PermissionFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $this->factory = new PermissionFactory($this->loader);
+        $this->factory = new PermissionFactory($this->loader, 'resource');
     }
 
     protected function tearDown(): void
@@ -49,34 +50,20 @@ final class PermissionFactoryTest extends TestCase
 
     public function testCreateConfigurations(): void
     {
-        $config1 = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
-        $config1->expects(static::atLeast(2))
-            ->method('getType')
-            ->willReturn(FixtureMockObject::class)
-        ;
-
-        $config2 = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
-        $config2->expects(static::atLeast(1))
-            ->method('getType')
-            ->willReturn(FixtureMockObject::class)
-        ;
-
-        $config1->expects(static::atLeast(1))
-            ->method('merge')
-            ->with($config2)
-        ;
+        $expected = new PermissionConfigCollection();
 
         $this->loader->expects(static::once())
-            ->method('loadConfigurations')
-            ->willReturn([$config1, $config2])
+            ->method('load')
+            ->with('resource')
+            ->willReturn($expected)
         ;
 
-        static::assertSame([FixtureMockObject::class => $config1], $this->factory->createConfigurations());
+        static::assertSame($expected, $this->factory->createConfigurations());
     }
 
     public function testCreateConfigurationsWithDefaultFields(): void
     {
-        $this->factory = new PermissionFactory($this->loader, [
+        $this->factory = new PermissionFactory($this->loader, 'resource', [
             'fields' => [
                 'id' => [
                     'operations' => ['read'],
@@ -84,6 +71,7 @@ final class PermissionFactoryTest extends TestCase
             ],
         ]);
 
+        /** @var MockObject|PermissionConfigInterface $config */
         $config = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
         $config->expects(static::atLeast(1))
             ->method('getType')
@@ -98,21 +86,25 @@ final class PermissionFactoryTest extends TestCase
             ->willReturn(true)
         ;
 
+        $expected = new PermissionConfigCollection();
+        $expected->add($config);
+
         $this->loader->expects(static::once())
-            ->method('loadConfigurations')
-            ->willReturn([$config])
+            ->method('load')
+            ->with('resource')
+            ->willReturn($expected)
         ;
 
         $config->expects(static::once())
             ->method('merge')
         ;
 
-        static::assertSame([FixtureMockObject::class => $config], $this->factory->createConfigurations());
+        static::assertSame($expected, $this->factory->createConfigurations());
     }
 
     public function testCreateConfigurationsWithDefaultMasterFieldMapping(): void
     {
-        $this->factory = new PermissionFactory($this->loader, [
+        $this->factory = new PermissionFactory($this->loader, 'resource', [
             'master_mapping_permissions' => [
                 'view' => 'read',
                 'update' => 'edit',
@@ -121,6 +113,7 @@ final class PermissionFactoryTest extends TestCase
             ],
         ]);
 
+        /** @var MockObject|PermissionConfigInterface $config */
         $config = $this->getMockBuilder(PermissionConfigInterface::class)->getMock();
         $config->expects(static::atLeast(1))
             ->method('getType')
@@ -143,15 +136,19 @@ final class PermissionFactoryTest extends TestCase
             ->willReturn(true)
         ;
 
+        $expected = new PermissionConfigCollection();
+        $expected->add($config);
+
         $this->loader->expects(static::once())
-            ->method('loadConfigurations')
-            ->willReturn([$config])
+            ->method('load')
+            ->with('resource')
+            ->willReturn($expected)
         ;
 
         $config->expects(static::atLeast(2))
             ->method('merge')
         ;
 
-        static::assertSame([FixtureMockObject::class => $config], $this->factory->createConfigurations());
+        static::assertSame($expected, $this->factory->createConfigurations());
     }
 }

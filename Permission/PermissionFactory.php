@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Permission;
 
-use Fxp\Component\Security\Permission\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Permission factory.
@@ -26,6 +26,11 @@ class PermissionFactory implements PermissionFactoryInterface
     protected $loader;
 
     /**
+     * @var mixed
+     */
+    protected $resource;
+
+    /**
      * @var array
      */
     protected $defaultPermissions;
@@ -34,29 +39,25 @@ class PermissionFactory implements PermissionFactoryInterface
      * Constructor.
      *
      * @param LoaderInterface $loader             The permission loader
+     * @param mixed           $resource           The main resource to load
      * @param array           $defaultPermissions The map of the default permissions
      */
-    public function __construct(LoaderInterface $loader, array $defaultPermissions = [])
+    public function __construct(LoaderInterface $loader, $resource, array $defaultPermissions = [])
     {
         $this->loader = $loader;
         $this->defaultPermissions = $defaultPermissions;
+        $this->resource = $resource;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws
      */
-    public function createConfigurations(): array
+    public function createConfigurations(): PermissionConfigCollection
     {
-        /** @var PermissionConfigInterface[] $configs */
-        $configs = [];
-
-        foreach ($this->loader->loadConfigurations() as $config) {
-            if (isset($configs[$config->getType()])) {
-                $configs[$config->getType()]->merge($config);
-            } else {
-                $configs[$config->getType()] = $config;
-            }
-        }
+        /** @var PermissionConfigCollection $configs */
+        $configs = $this->loader->load($this->resource);
 
         foreach ($configs as $config) {
             $this->configureDefaultMasterFieldMappingPermissions($config);

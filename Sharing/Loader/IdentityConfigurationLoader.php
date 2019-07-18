@@ -9,32 +9,32 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Permission\Loader;
+namespace Fxp\Component\Security\Sharing\Loader;
 
-use Fxp\Component\Security\Permission\PermissionConfigCollection;
-use Fxp\Component\Security\Permission\PermissionConfigInterface;
+use Fxp\Component\Security\Sharing\SharingIdentityConfigCollection;
+use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
 use Symfony\Component\Config\Loader\Loader;
 
 /**
- * Permission configuration loader.
+ * Sharing identity configuration loader.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class ConfigurationLoader extends Loader
+class IdentityConfigurationLoader extends Loader
 {
     /**
-     * @var PermissionConfigCollection
+     * @var SharingIdentityConfigCollection
      */
     protected $configs;
 
     /**
      * Constructor.
      *
-     * @param PermissionConfigInterface[] $configs The permission configs
+     * @param SharingIdentityConfigInterface[] $configs The sharing identity configs
      */
     public function __construct(array $configs = [])
     {
-        $this->configs = new PermissionConfigCollection();
+        $this->configs = new SharingIdentityConfigCollection();
 
         foreach ($configs as $config) {
             $this->configs->add($config);
@@ -44,7 +44,7 @@ class ConfigurationLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null): PermissionConfigCollection
+    public function load($resource, $type = null): SharingIdentityConfigCollection
     {
         return $this->configs;
     }

@@ -99,7 +99,7 @@ final class CachePermissionFactoryTest extends TestCase
         $fs = new Filesystem();
 
         $cacheFileConfigs = $this->cacheDir.'/cache_file_configs.php';
-        $fs->dumpFile($cacheFileConfigs, '<?php'.PHP_EOL.'    return [];'.PHP_EOL);
+        $fs->dumpFile($cacheFileConfigs, '<?php'.PHP_EOL.'    return new \Fxp\Component\Security\Permission\PermissionConfigCollection();'.PHP_EOL);
 
         $cacheFactory = new CachePermissionFactory($this->factory, [
             'cache_dir' => $this->cacheDir,

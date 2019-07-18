@@ -9,32 +9,32 @@
  * file that was distributed with this source code.
  */
 
-namespace Fxp\Component\Security\Permission\Loader;
+namespace Fxp\Component\Security\Sharing\Loader;
 
-use Fxp\Component\Security\Permission\PermissionConfigCollection;
-use Fxp\Component\Security\Permission\PermissionConfigInterface;
+use Fxp\Component\Security\Sharing\SharingSubjectConfigCollection;
+use Fxp\Component\Security\Sharing\SharingSubjectConfigInterface;
 use Symfony\Component\Config\Loader\Loader;
 
 /**
- * Permission configuration loader.
+ * Sharing subject configuration loader.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class ConfigurationLoader extends Loader
+class SubjectConfigurationLoader extends Loader
 {
     /**
-     * @var PermissionConfigCollection
+     * @var SharingSubjectConfigCollection
      */
     protected $configs;
 
     /**
      * Constructor.
      *
-     * @param PermissionConfigInterface[] $configs The permission configs
+     * @param SharingSubjectConfigInterface[] $configs The sharing subject configs
      */
     public function __construct(array $configs = [])
     {
-        $this->configs = new PermissionConfigCollection();
+        $this->configs = new SharingSubjectConfigCollection();
 
         foreach ($configs as $config) {
             $this->configs->add($config);
@@ -44,7 +44,7 @@ class ConfigurationLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null): PermissionConfigCollection
+    public function load($resource, $type = null): SharingSubjectConfigCollection
     {
         return $this->configs;
     }

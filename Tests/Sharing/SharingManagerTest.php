@@ -15,7 +15,8 @@ use Fxp\Component\Security\Event\SharingDisabledEvent;
 use Fxp\Component\Security\Event\SharingEnabledEvent;
 use Fxp\Component\Security\Identity\SubjectIdentity;
 use Fxp\Component\Security\Identity\SubjectIdentityInterface;
-use Fxp\Component\Security\Sharing\Loader\ConfigurationLoader;
+use Fxp\Component\Security\Sharing\Loader\IdentityConfigurationLoader;
+use Fxp\Component\Security\Sharing\Loader\SubjectConfigurationLoader;
 use Fxp\Component\Security\Sharing\SharingFactory;
 use Fxp\Component\Security\Sharing\SharingIdentityConfig;
 use Fxp\Component\Security\Sharing\SharingManager;
@@ -89,18 +90,26 @@ final class SharingManagerTest extends TestCase
 
     public function testHasSubjectConfig(): void
     {
-        $pm = new SharingManager($this->provider, new SharingFactory(new ConfigurationLoader([
-            new SharingSubjectConfig(MockObject::class),
-        ])));
+        $pm = new SharingManager($this->provider, new SharingFactory(
+            new SubjectConfigurationLoader([
+                new SharingSubjectConfig(MockObject::class),
+            ]),
+            new IdentityConfigurationLoader([]),
+            'resource'
+        ));
 
         static::assertTrue($pm->hasSubjectConfig(MockObject::class));
     }
 
     public function testHasIdentityConfig(): void
     {
-        $pm = new SharingManager($this->provider, new SharingFactory(new ConfigurationLoader([], [
-            new SharingIdentityConfig(MockRole::class),
-        ])));
+        $pm = new SharingManager($this->provider, new SharingFactory(
+            new SubjectConfigurationLoader([]),
+            new IdentityConfigurationLoader([
+                new SharingIdentityConfig(MockRole::class),
+            ]),
+            'resource'
+        ));
 
         static::assertTrue($pm->hasIdentityConfig(MockRole::class));
     }

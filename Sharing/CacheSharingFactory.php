@@ -11,14 +11,16 @@
 
 namespace Fxp\Component\Security\Sharing;
 
-use Fxp\Component\Security\Cache\AbstractCache;
+use Fxp\Component\Config\Cache\AbstractCache;
+use Fxp\Component\Config\ConfigCollectionInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 
 /**
  * Cache sharing factory.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class CacheSharingFactory extends AbstractCache implements SharingFactoryInterface
+class CacheSharingFactory extends AbstractCache implements SharingFactoryInterface, WarmableInterface
 {
     /**
      * @var SharingFactoryInterface
@@ -40,8 +42,10 @@ class CacheSharingFactory extends AbstractCache implements SharingFactoryInterfa
 
     /**
      * {@inheritdoc}
+     *
+     * @return ConfigCollectionInterface|SharingSubjectConfigCollection
      */
-    public function createSubjectConfigurations(): array
+    public function createSubjectConfigurations(): SharingSubjectConfigCollection
     {
         if (null === $this->options['cache_dir'] || $this->options['debug']) {
             return $this->factory->createSubjectConfigurations();
@@ -54,8 +58,10 @@ class CacheSharingFactory extends AbstractCache implements SharingFactoryInterfa
 
     /**
      * {@inheritdoc}
+     *
+     * @return ConfigCollectionInterface|SharingIdentityConfigCollection
      */
-    public function createIdentityConfigurations(): array
+    public function createIdentityConfigurations(): SharingIdentityConfigCollection
     {
         if (null === $this->options['cache_dir'] || $this->options['debug']) {
             return $this->factory->createIdentityConfigurations();

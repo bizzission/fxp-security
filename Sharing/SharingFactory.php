@@ -11,7 +11,7 @@
 
 namespace Fxp\Component\Security\Sharing;
 
-use Fxp\Component\Security\Sharing\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Sharing factory.
@@ -23,53 +23,45 @@ class SharingFactory implements SharingFactoryInterface
     /**
      * @var LoaderInterface
      */
-    protected $loader;
+    protected $subjectLoader;
+
+    /**
+     * @var LoaderInterface
+     */
+    protected $identityLoader;
+
+    /**
+     * @var mixed
+     */
+    protected $resource;
 
     /**
      * Constructor.
      *
-     * @param LoaderInterface $loader The sharing loader
+     * @param LoaderInterface $subjectLoader  The sharing subject loader
+     * @param LoaderInterface $identityLoader The sharing identity loader
+     * @param mixed           $resource       The main resource to load
      */
-    public function __construct(LoaderInterface $loader)
+    public function __construct(LoaderInterface $subjectLoader, LoaderInterface $identityLoader, $resource)
     {
-        $this->loader = $loader;
+        $this->subjectLoader = $subjectLoader;
+        $this->identityLoader = $identityLoader;
+        $this->resource = $resource;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createSubjectConfigurations(): array
+    public function createSubjectConfigurations(): SharingSubjectConfigCollection
     {
-        return $this->mergeConfigs($this->loader->loadSubjectConfigurations());
+        return $this->subjectLoader->load($this->resource);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createIdentityConfigurations(): array
+    public function createIdentityConfigurations(): SharingIdentityConfigCollection
     {
-        return $this->mergeConfigs($this->loader->loadIdentityConfigurations());
-    }
-
-    /**
-     * Merge the sharing configurations.
-     *
-     * @param SharingIdentityConfigInterface[]|SharingSubjectConfigInterface[] $configs The configuration
-     *
-     * @return SharingIdentityConfigInterface[]|SharingSubjectConfigInterface[]
-     */
-    private function mergeConfigs(array $configs): array
-    {
-        $mergedConfigs = [];
-
-        foreach ($configs as $config) {
-            if (isset($mergedConfigs[$config->getType()])) {
-                $mergedConfigs[$config->getType()]->merge($config);
-            } else {
-                $mergedConfigs[$config->getType()] = $config;
-            }
-        }
-
-        return $mergedConfigs;
+        return $this->identityLoader->load($this->resource);
     }
 }

@@ -14,10 +14,7 @@ namespace Fxp\Component\Security\Tests\Sharing\Loader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Fxp\Component\Config\Loader\ClassFinder;
-use Fxp\Component\Security\Sharing\Loader\AnnotationLoader;
-use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
-use Fxp\Component\Security\Sharing\SharingSubjectConfigInterface;
-use Fxp\Component\Security\SharingVisibilities;
+use Fxp\Component\Security\Sharing\Loader\IdentityAnnotationLoader;
 use Fxp\Component\Security\Tests\Fixtures\Model\MockObjectWithAnnotation;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -27,48 +24,27 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-final class AnnotationLoaderTest extends TestCase
+final class IdentityAnnotationLoaderTest extends TestCase
 {
     protected function setUp(): void
     {
         AnnotationRegistry::registerLoader('class_exists');
     }
 
-    /**
-     * @throws
-     */
-    public function testLoadSubjectConfigurations(): void
+    public function testSupports(): void
     {
-        /** @var ClassFinder|MockObject $finder */
-        $finder = $this->getMockBuilder(ClassFinder::class)
-            ->setMethods(['findClasses'])
-            ->getMock()
-        ;
-
-        $finder->expects(static::once())
-            ->method('findClasses')
-            ->willReturn([
-                MockObjectWithAnnotation::class,
-                'InvalidClass',
-            ])
-        ;
-
         $reader = new AnnotationReader();
-        $loader = new AnnotationLoader($reader, $finder);
-        /** @var SharingSubjectConfigInterface[] $configs */
-        $configs = $loader->loadSubjectConfigurations();
+        $loader = new IdentityAnnotationLoader($reader);
 
-        static::assertCount(1, $configs);
-
-        $config = current($configs);
-        static::assertSame(MockObjectWithAnnotation::class, $config->getType());
-        static::assertSame(SharingVisibilities::TYPE_PRIVATE, $config->getVisibility());
+        static::assertTrue($loader->supports(__DIR__, 'annotation'));
+        static::assertFalse($loader->supports(__DIR__, 'config'));
+        static::assertFalse($loader->supports(new \stdClass(), 'annotation'));
     }
 
     /**
      * @throws
      */
-    public function testLoadIdentityConfigurations(): void
+    public function testLoad(): void
     {
         /** @var ClassFinder|MockObject $finder */
         $finder = $this->getMockBuilder(ClassFinder::class)
@@ -85,13 +61,13 @@ final class AnnotationLoaderTest extends TestCase
         ;
 
         $reader = new AnnotationReader();
-        $loader = new AnnotationLoader($reader, $finder);
-        /** @var SharingIdentityConfigInterface[] $configs */
-        $configs = $loader->loadIdentityConfigurations();
+        $loader = new IdentityAnnotationLoader($reader, $finder);
+
+        $configs = $loader->load(__DIR__, 'annotation');
 
         static::assertCount(1, $configs);
 
-        $config = current($configs);
+        $config = current($configs->all());
         static::assertSame(MockObjectWithAnnotation::class, $config->getType());
         static::assertSame('object', $config->getAlias());
         static::assertTrue($config->isRoleable());

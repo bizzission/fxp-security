@@ -11,14 +11,16 @@
 
 namespace Fxp\Component\Security\Permission;
 
-use Fxp\Component\Security\Cache\AbstractCache;
+use Fxp\Component\Config\Cache\AbstractCache;
+use Fxp\Component\Config\ConfigCollectionInterface;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 
 /**
  * Cache permission factory.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class CachePermissionFactory extends AbstractCache implements PermissionFactoryInterface
+class CachePermissionFactory extends AbstractCache implements PermissionFactoryInterface, WarmableInterface
 {
     /**
      * @var PermissionFactoryInterface
@@ -40,8 +42,10 @@ class CachePermissionFactory extends AbstractCache implements PermissionFactoryI
 
     /**
      * {@inheritdoc}
+     *
+     * @return ConfigCollectionInterface|PermissionConfigCollection
      */
-    public function createConfigurations(): array
+    public function createConfigurations(): PermissionConfigCollection
     {
         if (null === $this->options['cache_dir'] || $this->options['debug']) {
             return $this->factory->createConfigurations();

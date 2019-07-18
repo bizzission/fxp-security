@@ -109,10 +109,10 @@ final class CacheSharingFactoryTest extends TestCase
         $fs = new Filesystem();
 
         $cacheFileSubjects = $this->cacheDir.'/cache_file_subjects.php';
-        $fs->dumpFile($cacheFileSubjects, '<?php'.PHP_EOL.'    return [];'.PHP_EOL);
+        $fs->dumpFile($cacheFileSubjects, '<?php'.PHP_EOL.'    return new \Fxp\Component\Security\Sharing\SharingSubjectConfigCollection();'.PHP_EOL);
 
         $cacheFileIdentities = $this->cacheDir.'/cache_file_identities.php';
-        $fs->dumpFile($cacheFileIdentities, '<?php'.PHP_EOL.'    return [];'.PHP_EOL);
+        $fs->dumpFile($cacheFileIdentities, '<?php'.PHP_EOL.'    return new \Fxp\Component\Security\Sharing\SharingIdentityConfigCollection();'.PHP_EOL);
 
         $cacheFactory = new CacheSharingFactory($this->factory, [
             'cache_dir' => $this->cacheDir,

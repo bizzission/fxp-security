@@ -15,61 +15,66 @@ use Fxp\Component\Config\Loader\AbstractAnnotationLoader;
 use Fxp\Component\Security\Annotation\Permission;
 use Fxp\Component\Security\Annotation\PermissionField;
 use Fxp\Component\Security\Permission\PermissionConfig;
-use Fxp\Component\Security\Permission\PermissionConfigInterface;
+use Fxp\Component\Security\Permission\PermissionConfigCollection;
 use Fxp\Component\Security\Permission\PermissionFieldConfig;
 use Fxp\Component\Security\Permission\PermissionFieldConfigInterface;
+use Symfony\Component\Config\Resource\DirectoryResource;
 
 /**
  * Permission annotation loader.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class AnnotationLoader extends AbstractAnnotationLoader implements LoaderInterface
+class AnnotationLoader extends AbstractAnnotationLoader
 {
     /**
      * {@inheritdoc}
      */
-    public function loadConfigurations(): array
+    public function supports($resource, $type = null): bool
     {
-        $configs = [];
+        return 'annotation' === $type && \is_string($resource) && is_dir($resource);
+    }
 
-        foreach ($this->classFinder->findClasses() as $class) {
+    /**
+     * {@inheritdoc}
+     */
+    public function load($resource, $type = null): PermissionConfigCollection
+    {
+        $configs = new PermissionConfigCollection();
+        $configs->addResource(new DirectoryResource($resource));
+
+        foreach ($this->classFinder->findClasses([$resource]) as $class) {
             try {
                 $refClass = new \ReflectionClass($class);
                 $configs = $this->getConfigurations($refClass, $configs);
 
                 if (!empty($fieldConfigurations = $this->getFieldConfigurations($refClass))) {
-                    if (isset($configs[$class])) {
-                        $configs[$class]->merge(new PermissionConfig($class, [], [], $fieldConfigurations));
-                    } else {
-                        $configs[$class] = new PermissionConfig($class, [], [], $fieldConfigurations);
-                    }
+                    $configs->add(new PermissionConfig($class, [], [], $fieldConfigurations));
                 }
             } catch (\ReflectionException $e) {
                 // skip
             }
         }
 
-        return array_values($configs);
+        return $configs;
     }
 
     /**
      * Get the permission configurations.
      *
-     * @param \ReflectionClass            $refClass The reflection class
-     * @param PermissionConfigInterface[] $configs  The map of permission config
+     * @param \ReflectionClass           $refClass The reflection class
+     * @param PermissionConfigCollection $configs  The permission config collection
      *
-     * @return PermissionConfigInterface[]
+     * @return PermissionConfigCollection
      */
-    private function getConfigurations(\ReflectionClass $refClass, array $configs): array
+    private function getConfigurations(\ReflectionClass $refClass, PermissionConfigCollection $configs): PermissionConfigCollection
     {
-        $class = $refClass->name;
         $classAnnotations = $this->reader->getClassAnnotations($refClass);
 
         foreach ($classAnnotations as $annotation) {
             if ($annotation instanceof Permission) {
-                $config = new PermissionConfig(
-                    $class,
+                $configs->add(new PermissionConfig(
+                    $refClass->getName(),
                     $annotation->getOperations(),
                     $annotation->getMappingPermissions(),
                     $this->convertPermissionFields($annotation->getFields()),
@@ -77,13 +82,7 @@ class AnnotationLoader extends AbstractAnnotationLoader implements LoaderInterfa
                     $annotation->getMasterFieldMappingPermissions(),
                     $annotation->getBuildFields(),
                     $annotation->getBuildDefaultFields()
-                );
-
-                if (isset($configs[$class])) {
-                    $configs[$class]->merge($config);
-                } else {
-                    $configs[$class] = $config;
-                }
+                ));
             }
         }
 

@@ -21,7 +21,7 @@ interface PermissionFactoryInterface
     /**
      * Create the permission configurations.
      *
-     * @return PermissionConfigInterface[]
+     * @return PermissionConfigCollection
      */
-    public function createConfigurations(): array;
+    public function createConfigurations(): PermissionConfigCollection;
 }

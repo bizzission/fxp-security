@@ -118,7 +118,7 @@ final class PermissionManagerTest extends TestCase
             $this->propertyAccessor,
             new PermissionFactory(new ConfigurationLoader([
                 new PermissionConfig(MockObject::class),
-            ]))
+            ]), 'resource')
         );
 
         static::assertTrue($pm->hasConfig(MockObject::class));

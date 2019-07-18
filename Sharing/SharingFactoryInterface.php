@@ -21,14 +21,18 @@ interface SharingFactoryInterface
     /**
      * Create the sharing subject configurations.
      *
-     * @return SharingSubjectConfigInterface[]
+     * @throws
+     *
+     * @return SharingSubjectConfigCollection
      */
-    public function createSubjectConfigurations(): array;
+    public function createSubjectConfigurations(): SharingSubjectConfigCollection;
 
     /**
      * Create the sharing identity configurations.
      *
-     * @return SharingIdentityConfigInterface[]
+     * @throws
+     *
+     * @return SharingIdentityConfigCollection
      */
-    public function createIdentityConfigurations(): array;
+    public function createIdentityConfigurations(): SharingIdentityConfigCollection;
 }

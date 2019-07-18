@@ -33,10 +33,20 @@ final class AnnotationLoaderTest extends TestCase
         AnnotationRegistry::registerLoader('class_exists');
     }
 
+    public function testSupports(): void
+    {
+        $reader = new AnnotationReader();
+        $loader = new AnnotationLoader($reader);
+
+        static::assertTrue($loader->supports(__DIR__, 'annotation'));
+        static::assertFalse($loader->supports(__DIR__, 'config'));
+        static::assertFalse($loader->supports(new \stdClass(), 'annotation'));
+    }
+
     /**
      * @throws
      */
-    public function testLoadConfigurations(): void
+    public function testLoad(): void
     {
         /** @var ClassFinder|MockObject $finder */
         $finder = $this->getMockBuilder(ClassFinder::class)
@@ -56,7 +66,7 @@ final class AnnotationLoaderTest extends TestCase
         $reader = new AnnotationReader();
         $loader = new AnnotationLoader($reader, $finder);
         /** @var PermissionConfigInterface[] $configs */
-        $configs = $loader->loadConfigurations();
+        $configs = $loader->load(__DIR__, 'annotation');
 
         static::assertCount(2, $configs);
 

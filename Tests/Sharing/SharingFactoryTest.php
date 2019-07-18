@@ -11,12 +11,12 @@
 
 namespace Fxp\Component\Security\Tests\Sharing;
 
-use Fxp\Component\Security\Sharing\Loader\LoaderInterface;
 use Fxp\Component\Security\Sharing\SharingFactory;
-use Fxp\Component\Security\Sharing\SharingIdentityConfigInterface;
-use Fxp\Component\Security\Sharing\SharingSubjectConfigInterface;
+use Fxp\Component\Security\Sharing\SharingIdentityConfigCollection;
+use Fxp\Component\Security\Sharing\SharingSubjectConfigCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@gmail.com>
@@ -28,46 +28,34 @@ final class SharingFactoryTest extends TestCase
     public function getConfigTypes(): array
     {
         return [
-            [SharingSubjectConfigInterface::class, 'loadSubjectConfigurations', 'createSubjectConfigurations'],
-            [SharingIdentityConfigInterface::class, 'loadIdentityConfigurations', 'createIdentityConfigurations'],
+            [SharingSubjectConfigCollection::class, 'createSubjectConfigurations'],
+            [SharingIdentityConfigCollection::class, 'createIdentityConfigurations'],
         ];
     }
 
     /**
      * @dataProvider getConfigTypes
      *
-     * @param string $configInterface
-     * @param string $loadMethod
+     * @param string $collectionClass
      * @param string $createMethod
      */
-    public function testCreateConfigurations($configInterface, $loadMethod, $createMethod): void
+    public function testCreateConfigurations($collectionClass, $createMethod): void
     {
-        $config1 = $this->getMockBuilder($configInterface)->getMock();
-        $config1->expects(static::atLeast(2))
-            ->method('getType')
-            ->willReturn(MockObject::class)
-        ;
+        /** @var LoaderInterface|MockObject $subjectLoader */
+        $subjectLoader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        /** @var LoaderInterface|MockObject $identityLoader */
+        $identityLoader = $this->getMockBuilder(LoaderInterface::class)->getMock();
 
-        $config2 = $this->getMockBuilder($configInterface)->getMock();
-        $config2->expects(static::atLeast(1))
-            ->method('getType')
-            ->willReturn(MockObject::class)
-        ;
-
-        $config1->expects(static::atLeast(1))
-            ->method('merge')
-            ->with($config2)
-        ;
-
-        /** @var LoaderInterface|MockObject $loader */
-        $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+        $expected = new $collectionClass();
+        $loader = 'createSubjectConfigurations' === $createMethod ? $subjectLoader : $identityLoader;
         $loader->expects(static::once())
-            ->method($loadMethod)
-            ->willReturn([$config1, $config2])
+            ->method('load')
+            ->with('resource')
+            ->willReturn($expected)
         ;
 
-        $factory = new SharingFactory($loader);
+        $factory = new SharingFactory($subjectLoader, $identityLoader, 'resource');
 
-        static::assertSame([MockObject::class => $config1], $factory->{$createMethod}());
+        static::assertSame($expected, $factory->{$createMethod}());
     }
 }
